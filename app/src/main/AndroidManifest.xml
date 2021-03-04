@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.aliernfrog.LacMapTool">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/lactool"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@drawable/lactool"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LACMapTool">
+        <activity android:name=".FeedbackActivity"></activity>
+        <activity android:name=".PostsActivity" />
+        <activity
+            android:name=".SplashActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".WallpaperActivity" />
+        <activity
+            android:name=".MapsOptionsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".OptionsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".RestoreActivity"
+            android:noHistory="true" />
+    </application>
+
+</manifest>
