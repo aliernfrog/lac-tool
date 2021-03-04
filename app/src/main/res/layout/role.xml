@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/role_bg"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/linear_button"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_horizontal|center_vertical"
+    android:textColor="#FFFFFF">
+
+    <TextView
+        android:id="@+id/role_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:text="Role name"
+        android:textAllCaps="false"
+        android:textColor="#F8F8F8"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/role_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="0"
+        android:background="@drawable/linear_red"
+        android:padding="8dp"
+        android:text="@string/action_delete"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:backgroundTint="#960000" />
+</LinearLayout>
