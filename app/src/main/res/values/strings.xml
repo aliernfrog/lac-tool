@@ -70,6 +70,7 @@
     <string name="optionDeleteTemp">Delete temporary data</string>
     <string name="optionDiscordRcs">LAC Discord server</string>
     <string name="optionsDiscordBbots">My Discord server</string>
+    <string name="optionsGithub">Source code on GitHub</string>
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>
