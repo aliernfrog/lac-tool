@@ -219,6 +219,19 @@
                     app:backgroundTint="#FF0E0E0E" />
 
                 <Button
+                    android:id="@+id/options_github"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionsGithub"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+                <Button
                     android:id="@+id/options_app_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
