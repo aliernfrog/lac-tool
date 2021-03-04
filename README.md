@@ -6,10 +6,10 @@ An open source app, lets you manage your <a href="https://play.google.com/store/
 - Android 4.4 or above recommended
 
 # Notes
-<b>In android 11:</b><br />
+- <b>In android 11:</b><br />
 -App currently isn't able to access LAC data<br />
 -You won't be able to import & manage maps until i find a solution<br />
--You can edit options and roles of your unimported maps
+-You can edit options and roles of your unimported maps<br />
 -App requests all files access to access the maps you pick
 
 All features (should) work in other Android versions
