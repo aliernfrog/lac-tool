@@ -12,4 +12,4 @@ An open source app, lets you manage your <a href="https://play.google.com/store/
 -You can edit options and roles of your unimported maps<br />
 -App requests all files access to access the maps you pick
 
-All features (should) work in other Android versions
+- All features (should) work in other Android versions
