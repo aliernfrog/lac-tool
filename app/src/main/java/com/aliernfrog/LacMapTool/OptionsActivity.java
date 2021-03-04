@@ -39,6 +39,7 @@ public class OptionsActivity extends AppCompatActivity {
     LinearLayout discord_linear;
     Button discord_bbots;
     Button discord_rcs;
+    Button github;
     Button app_feedback;
 
     SharedPreferences update;
@@ -71,6 +72,7 @@ public class OptionsActivity extends AppCompatActivity {
         discord_linear = findViewById(R.id.options_dc);
         discord_bbots = findViewById(R.id.options_discord_bbots);
         discord_rcs = findViewById(R.id.options_discord_rcs);
+        github = findViewById(R.id.options_github);
         app_feedback = findViewById(R.id.options_app_feedback);
         changelog = findViewById(R.id.options_changelog);
         changelog.setText(update.getString("changelog", null));
@@ -214,6 +216,16 @@ public class OptionsActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     redirectURL("https://discord.gg/ExY9V4T");
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            }
+        });
+        github.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    redirectURL("https://github.com/aliernfrog/lac-tool");
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;
