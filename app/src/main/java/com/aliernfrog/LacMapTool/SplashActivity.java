@@ -21,11 +21,7 @@ import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.BackgroundTask;
 import com.aliernfrog.LacMapTool.utils.WebUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity {
     ImageView icon;
