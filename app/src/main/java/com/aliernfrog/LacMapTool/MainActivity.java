@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= 30) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                     Toast.makeText(getApplicationContext(), R.string.info_storageAndroid11, Toast.LENGTH_LONG).show();
-                    startActivityForResult(intent, 4);
+                    startActivityForResult(intent, 3);
                 }
 
             } else {
