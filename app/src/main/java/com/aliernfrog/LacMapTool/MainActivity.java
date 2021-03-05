@@ -12,7 +12,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
 import android.os.StrictMode;
+import android.provider.DocumentsContract;
 import android.provider.Settings;
 import android.text.Html;
 import android.view.MotionEvent;
@@ -56,8 +58,13 @@ public class MainActivity extends AppCompatActivity {
     String backupPath;
     String aBackupPath;
 
+    Uri lacTreeUri;
+    Uri lacUri;
+    int takeFlags;
+
     SharedPreferences update;
     SharedPreferences config;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -92,6 +99,22 @@ public class MainActivity extends AppCompatActivity {
         updateLinear = findViewById(R.id.main_updates);
         warnLinear = findViewById(R.id.main_warnings);
 
+        if (Build.VERSION.SDK_INT >= 30) {
+            devLog("android 11 detected", false);
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/data/com.MA.LAC/files");
+            lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Android/data/com.MA.LAC/files");
+            takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+                devLog("no permissions to lac data, attempting to request", false);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
+                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                        .addFlags(takeFlags);
+                startActivityForResult(intent, 4);
+            }
+        }
+
         if (!devMode) log.setVisibility(View.GONE);
         setListeners();
         checkPerms();
@@ -99,13 +122,6 @@ public class MainActivity extends AppCompatActivity {
         createFiles();
         autoBackup();
         getLog();
-
-        if (Build.VERSION.SDK_INT == 30 && update.getBoolean("showAndroid11warning", false)) {
-            warnLinear.setVisibility(View.VISIBLE);
-            android11warning.setVisibility(View.VISIBLE);
-            devLog("Android 11 detected", false);
-            //Uri uri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/data/")
-        }
     }
 
     public void checkPostUpdate() {
@@ -291,6 +307,13 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == 1) {
                 switchActivity(SplashActivity.class, true);
                 finish();
+            }
+        }
+        if (requestCode == 4) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                int toTake = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+                grantUriPermission(getApplicationContext().getPackageName(), data.getData(), toTake);
+                getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), toTake);
             }
         }
     }
