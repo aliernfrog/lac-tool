@@ -167,7 +167,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(this.getApplicationContext(), i);
             devLog("attempting to redirect to "+i.toString(), false);
-            startActivity(intent);
+            if (i == OptionsActivity.class) {
+                startActivityForResult(intent, 5);
+            } else {
+                startActivity(intent);
+            }
         }
     }
 
@@ -283,16 +287,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (Build.VERSION.SDK_INT == 30) {
-                //Uri treeUri = data.getData();
-                //getApplicationContext().grantUriPermission(getApplicationContext().getPackageName(), treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                //getApplicationContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                //Uri uri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/data/com.aliernfrog.LacMapTool");
-                //Intent intent = new Intent(Intent.ACTION_VIEW)
-                //        .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                //        .setData(uri);
-                //startActivity(intent);
+        if (requestCode == 5) {
+            if (resultCode == 1) {
+                switchActivity(SplashActivity.class, true);
+                finish();
             }
         }
     }
