@@ -48,6 +48,8 @@ public class OptionsActivity extends AppCompatActivity {
 
     PickiT pickiT;
 
+    Integer activityResult = 0;
+
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void changeOption(String name, Boolean set) {
+        if (name == "enableAutoBackups" || name == "enableDebug" || name == "enableTest") activityResult = 1;
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -112,12 +115,17 @@ public class OptionsActivity extends AppCompatActivity {
         startActivity(viewIntent);
     }
 
+    void finishActivity() {
+        setResult(activityResult);
+        finish();
+    }
+
     void setListener() {
         home.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
+                    finishActivity();
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;
@@ -251,5 +259,10 @@ public class OptionsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishActivity();
     }
 }
