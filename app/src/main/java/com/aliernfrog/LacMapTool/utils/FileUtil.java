@@ -38,4 +38,9 @@ public class FileUtil {
         reader.close();
         return _full;
     }
+
+    public static String getFileNameFromPath(String path) {
+        String[] arr = path.split("/");
+        return arr[arr.length-1];
+    }
 }
