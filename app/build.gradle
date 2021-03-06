@@ -19,9 +19,10 @@ android {
     defaultConfig {
         applicationId "com.aliernfrog.LacMapTool"
         minSdkVersion 17
-        targetSdkVersion 30
-        versionCode 7
-        versionName '1.6'
+        //noinspection OldTargetApi
+        targetSdkVersion 29
+        versionCode 8
+        versionName '1.6.1'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
