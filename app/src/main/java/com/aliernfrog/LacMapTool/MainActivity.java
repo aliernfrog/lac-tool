@@ -310,9 +310,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (requestCode == 4) {
-            int toTake = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-            grantUriPermission(getApplicationContext().getPackageName(), data.getData(), toTake);
-            getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), toTake);
+            if (Build.VERSION.SDK_INT >= 30) {
+                int toTake = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+                grantUriPermission(getApplicationContext().getPackageName(), data.getData(), toTake);
+                getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), toTake);
+            }
         }
     }
 
