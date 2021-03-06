@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= 30) {
             devLog("android 11 detected", false);
-            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/data/com.MA.LAC/files");
-            lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Android/data/com.MA.LAC/files");
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:");
+            lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:");
             takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
             if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
                 devLog("no permissions to lac data, attempting to request", false);
@@ -227,12 +227,6 @@ public class MainActivity extends AppCompatActivity {
                 devLog("permission denied, attempting to request permission", false);
                 Toast.makeText(getApplicationContext(), R.string.info_storagePerm, Toast.LENGTH_SHORT).show();
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-                if (Build.VERSION.SDK_INT >= 30) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    Toast.makeText(getApplicationContext(), R.string.info_storageAndroid11, Toast.LENGTH_LONG).show();
-                    startActivityForResult(intent, 4);
-                }
-
             } else {
                 hasPerms = true;
                 missingPerms.setVisibility(View.GONE);
