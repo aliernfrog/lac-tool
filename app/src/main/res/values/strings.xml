@@ -3,7 +3,7 @@
     <string name="warning_missingPerms">Missing permissions</string>
     <string name="warning_android11">Some features does not work in Android 11</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
-    <string name="info_storageAndroid11">LAC Tool needs all files access to access the maps &amp; wallpapers you pick</string>
+    <string name="info_treePerm">LAC Tool needs access to your LAC files in order to manage them, click "use this folder" option and it will get required permissions</string>
     <string name="info_done">Done!</string>
     <string name="info_error">Something went wrong</string>
     <string name="info_wait">Please wait..</string>
