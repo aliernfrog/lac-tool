@@ -1,17 +1,22 @@
 package com.aliernfrog.LacMapTool;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Process;
+import android.provider.DocumentsContract;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,9 +48,14 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
 
     Boolean devMode;
     String rawPath;
+    String wpTreePath;
     String wpPath;
     String backupPath;
+    String tempPath;
     String logs = "";
+
+    Uri lacTreeUri;
+    DocumentFile lacTreeFile;
 
     PickiT pickiT;
 
@@ -57,8 +67,10 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         devMode = config.getBoolean("enableDebug", false);
-        wpPath = update.getString("path-lac", null).replace("/editor/", "/wallpaper/wallpaper.jpg");
+        wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
+        wpPath = wpTreePath+"/wallpaper.jpg";
         backupPath = update.getString("path-app", null)+"wp-backup.jpg";
+        tempPath = update.getString("path-app", null)+"temp/wp/";
 
         goback = findViewById(R.id.wallpaper_goback);
         desc = findViewById(R.id.wallpaper_desc);
@@ -70,27 +82,41 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
 
         pickiT = new PickiT(this, this, this);
 
+        if (!devMode) logView.setVisibility(View.GONE);
+        devLog("==== DEBUG LOGS ====", false);
+        devLog("wpPath = "+wpPath, false);
+        devLog("", false);
+        setListeners();
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            String lacTreeId = wpTreePath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
+            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+                devLog("no permissions to lac data, attempting to request", false);
+                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
+                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                        .addFlags(takeFlags);
+                startActivityForResult(intent, 1);
+            } else {
+                useTempPath();
+            }
+        }
+
         File wpFile = new File(wpPath);
         if (wpFile.exists()) {
             Bitmap wpbitmap = BitmapFactory.decodeFile(wpFile.getAbsolutePath());
             wallpaperView.setImageBitmap(wpbitmap);
         }
-
-        if (Build.VERSION.SDK_INT == 30) {
-            desc.setBackgroundResource(R.drawable.linear_red);
-            desc.setText(R.string.wallpaperDescAndroid11);
-        }
-
-        if (!devMode) logView.setVisibility(View.GONE);
-        devLog("==== DEBUG LOGS ====", false);
-        devLog("", false);
-        setListeners();
     }
 
     public void getWp(String path) {
         rawPath = path.replace("/document/primary:", Environment.getExternalStorageDirectory().toString()+"/").replace("/document/raw:/", "");
         if (rawPath.startsWith(wpPath)) {
-            //if imported
             importFile.setVisibility(View.GONE);
         } else {
             importFile.setVisibility(View.VISIBLE);
@@ -104,9 +130,9 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         File check = new File(wpPath);
         if (check.exists()) {
             devLog("a wallpaper already exists, attempting to copy", false);
-            copyFile(check.getPath(), backupPath, false);
+            copyFile(check.getPath(), backupPath);
         }
-        copyFile(rawPath, wpPath, true);
+        copyFile(rawPath, wpPath);
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
@@ -117,23 +143,20 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         devLog("attempting to pick a file with request code 2", false);
     }
 
-    public void checkFiles() {
-        File wpFile = new File(wpPath.replace("wallpaper.jpg", ""));
-        File backupFile = new File(backupPath.replace("wp-backup.jpg", ""));
-        if (!wpFile.exists()) wpFile.mkdirs();
-        if (!backupFile.exists()) backupFile.mkdirs();
-    }
-
-    public void devLog(String toLog, Boolean error) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            logView.setText(Html.fromHtml(logs));
+    public void useTempPath() {
+        lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
+        File tempFile = new File(tempPath);
+        if (!tempFile.exists()) tempFile.mkdirs();
+        if (lacTreeFile != null) {
+            DocumentFile[] files = lacTreeFile.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                copyFile(files[i], tempPath+files[i].getName());
+            }
         }
+        wpPath = tempPath+"wallpaper.jpg";
     }
 
-    public void copyFile(String src, String dst, Boolean getWp) {
+    public void copyFile(String src, String dst) {
         devLog("attempting to copy "+src+" to "+dst, false);
         try {
             FileUtil.copyFile(src, dst);
@@ -141,6 +164,60 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         } catch (Exception e) {
             e.printStackTrace();
             devLog(e.toString(), true);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void copyFile(String src, DocumentFile dst) {
+        devLog("attempting to copy "+src+" to "+dst, false);
+        try {
+            FileUtil.copyFile(src, dst, getApplicationContext());
+            devLog("copied successfully", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            devLog(e.toString(), true);
+        }
+    }
+
+    public void copyFile(DocumentFile src, String dst) {
+        devLog("attempting to copy "+src.getUri()+" to "+dst, false);
+        try {
+            FileUtil.copyFile(src, dst, getApplicationContext());
+            devLog("copied successfully", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            devLog(e.toString(), true);
+        }
+    }
+
+    public void saveChangesAndFinish() {
+        if (Build.VERSION.SDK_INT >= 30) {
+            devLog("attempting to save changes", false);
+            File file = new File(tempPath);
+            File[] files = file.listFiles();
+            try {
+                for (int i = 0; i < files.length; i++) {
+                    DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
+                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
+                    copyFile(files[i].getPath(), fileInLac);
+                }
+            } finally {
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
+                finish();
+            }
+        } else {
+            finish();
+        }
+    }
+
+    void devLog(String toLog, Boolean error) {
+        if (devMode) {
+            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
+            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
+            logView.setText(Html.fromHtml(logs));
         }
     }
 
@@ -156,6 +233,18 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                 devLog("2: "+file.getPath(), false);
                 pickiT.getPath(data.getData(), Build.VERSION.SDK_INT);
             }
+        } else if (requestCode == 1) {
+            if (data == null) {
+                devLog(requestCode+": no data", false);
+            } else {
+                if (Build.VERSION.SDK_INT >= 30) {
+                    int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+                    grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
+                    getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+                    devLog(requestCode+": granted permissions for: "+data.getData(), false);
+                    useTempPath();
+                }
+            }
         }
     }
 
@@ -164,7 +253,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
+                    saveChangesAndFinish();
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;
@@ -255,6 +344,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     @Override
     public void onBackPressed() {
         pickiT.deleteTemporaryFile(this);
+        saveChangesAndFinish();
         super.onBackPressed();
     }
 
@@ -263,6 +353,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         super.onDestroy();
         if (!isChangingConfigurations()) {
             pickiT.deleteTemporaryFile(this);
+            saveChangesAndFinish();
         }
     }
 }
