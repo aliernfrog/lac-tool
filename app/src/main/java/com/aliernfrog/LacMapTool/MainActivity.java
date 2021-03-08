@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         checkPerms();
         checkPostUpdate();
         createFiles();
-        autoBackup();
         getLog();
     }
 
@@ -109,25 +108,6 @@ public class MainActivity extends AppCompatActivity {
         if (updated != current) {
             devLog("posts aren't updated", false);
             redirectPosts.setBackground(ContextCompat.getDrawable(this, R.drawable.linear_blue));
-        }
-    }
-
-    public void autoBackup() {
-        if (config.getBoolean("enableAutoBackups", false)) {
-            devLog("attempting to backup", false);
-            String _dest = aBackupPath+timeString("yyMMddhhmmss");
-            if (!new File(_dest).exists()) mkdirs(new File(_dest));
-            File[] _maps = new File(lacPath).listFiles();
-            if (_maps == null) {
-                devLog("file list is null", false);
-            } else {
-                for (int i = 0; i < _maps.length; i++) {
-                    String _path = _maps[i].getPath();
-                    String[] _arr = _path.split("/");
-                    String _name = _arr[_arr.length - 1];
-                    if (!_maps[i].isDirectory()) copyFile(_path, _dest+"/"+_name);
-                }
-            }
         }
     }
 

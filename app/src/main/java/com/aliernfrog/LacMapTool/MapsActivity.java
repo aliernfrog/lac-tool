@@ -159,6 +159,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         }
 
         setListener();
+        autoBackup();
         getImportedMaps();
     }
 
@@ -394,6 +395,25 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
             devLog(e.toString(), true);
             e.printStackTrace();
+        }
+    }
+
+    public void autoBackup() {
+        if (config.getBoolean("enableAutoBackups", false)) {
+            devLog("attempting to backup", false);
+            String _dest = aBackupPath+timeString("yyMMddhhmmss");
+            if (!new File(_dest).exists()) new File(_dest).mkdirs();
+            File[] _maps = new File(lacPath).listFiles();
+            if (_maps == null) {
+                devLog("file list is null", false);
+            } else {
+                for (int i = 0; i < _maps.length; i++) {
+                    String _path = _maps[i].getPath();
+                    String[] _arr = _path.split("/");
+                    String _name = _arr[_arr.length - 1];
+                    if (!_maps[i].isDirectory()) copyFile(_path, _dest+"/"+_name, false);
+                }
+            }
         }
     }
 
