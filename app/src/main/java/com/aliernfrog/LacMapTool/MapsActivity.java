@@ -107,7 +107,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         dataPath = update.getString("path-app", null);
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
-        tempPath = dataPath+"temp/";
+        tempPath = dataPath+"temp/maps/";
         if (config.getBoolean("enableLacd",false)) lacPath = update.getString("path-lacd", null);
         if (config.getBoolean("enableLegacyPath", false)) lacPath = update.getString("path-legacy", null);
         pickiT = new PickiT(this, this, this);
@@ -154,6 +154,8 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             } else {
                 useTempPath();
             }
+        } else {
+            lacPath += "/";
         }
 
         setListener();
