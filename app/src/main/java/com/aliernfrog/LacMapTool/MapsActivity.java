@@ -95,10 +95,6 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        //StrictMode.setThreadPolicy(policy);
-        //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        //StrictMode.setVmPolicy(builder.build());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -141,13 +137,14 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         devLog("dataPath: "+dataPath, false);
         devLog("", false);
 
-        if (Build.VERSION.SDK_INT >= 27) {
+        if (Build.VERSION.SDK_INT >= 30) {
             String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
             int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
             if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
                 devLog("no permissions to lac data, attempting to request", false);
+                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
                         .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -219,22 +216,27 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     }
 
     public void deleteMap() {
-        if (!isDeleting) {
-            fileDelete.setText(R.string.mapDelete_confirm);
-            isDeleting = true;
-            Toast.makeText(getApplicationContext(), R.string.mapDelete_clickAgain, Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT < 30) {
+            if (!isDeleting) {
+                fileDelete.setText(R.string.mapDelete_confirm);
+                isDeleting = true;
+                Toast.makeText(getApplicationContext(), R.string.mapDelete_clickAgain, Toast.LENGTH_SHORT).show();
+            } else {
+                devLog("attempting to delete", false);
+                File mapFile = new File(rawPath);
+                File thumbnailFile = new File(rawPath.replace(".txt", ".jpg"));
+                File dataFile = new File(rawPath.replace(".txt", ""));
+                fileDelete.setText(R.string.mapDelete);
+                isDeleting = false;
+                if (mapFile.delete())
+                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+                if (thumbnailFile.exists()) thumbnailFile.delete();
+                if (dataFile.exists()) dataFile.delete();
+                switchActivity(MapsActivity.class);
+                finish();
+            }
         } else {
-            devLog("attempting to delete", false);
-            File mapFile = new File(rawPath);
-            File thumbnailFile = new File(rawPath.replace(".txt", ".jpg"));
-            File dataFile = new File(rawPath.replace(".txt", ""));
-            fileDelete.setText(R.string.mapDelete);
-            isDeleting = false;
-            if (mapFile.delete()) Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            if (thumbnailFile.exists()) thumbnailFile.delete();
-            if (dataFile.exists()) dataFile.delete();
-            switchActivity(MapsActivity.class);
-            finish();
+            Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -334,7 +336,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     }
 
     public void copyFile(DocumentFile src, String dst, Boolean GetMap) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src.getUri()+" to "+dst, false);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
             devLog("copied successfully", false);
@@ -400,7 +402,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     }
 
     public void saveChangesAndFinish() {
-        if (Build.VERSION.SDK_INT >= 27) {
+        if (Build.VERSION.SDK_INT >= 30) {
             devLog("attempting to save changes", false);
             File file = new File(tempPath);
             File[] files = file.listFiles();
