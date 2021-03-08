@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.provider.Settings;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences update;
     SharedPreferences config;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -97,15 +97,7 @@ public class MainActivity extends AppCompatActivity {
         checkPerms();
         checkPostUpdate();
         createFiles();
-        autoBackup();
         getLog();
-
-        if (Build.VERSION.SDK_INT == 30 && update.getBoolean("showAndroid11warning", false)) {
-            warnLinear.setVisibility(View.VISIBLE);
-            android11warning.setVisibility(View.VISIBLE);
-            devLog("Android 11 detected", false);
-            //Uri uri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/data/")
-        }
     }
 
     public void checkPostUpdate() {
@@ -116,25 +108,6 @@ public class MainActivity extends AppCompatActivity {
         if (updated != current) {
             devLog("posts aren't updated", false);
             redirectPosts.setBackground(ContextCompat.getDrawable(this, R.drawable.linear_blue));
-        }
-    }
-
-    public void autoBackup() {
-        if (config.getBoolean("enableAutoBackups", false)) {
-            devLog("attempting to backup", false);
-            String _dest = aBackupPath+timeString("yyMMddhhmmss");
-            if (!new File(_dest).exists()) mkdirs(new File(_dest));
-            File[] _maps = new File(lacPath).listFiles();
-            if (_maps == null) {
-                devLog("file list is null", false);
-            } else {
-                for (int i = 0; i < _maps.length; i++) {
-                    String _path = _maps[i].getPath();
-                    String[] _arr = _path.split("/");
-                    String _name = _arr[_arr.length - 1];
-                    if (!_maps[i].isDirectory()) copyFile(_path, _dest+"/"+_name);
-                }
-            }
         }
     }
 
@@ -211,12 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 devLog("permission denied, attempting to request permission", false);
                 Toast.makeText(getApplicationContext(), R.string.info_storagePerm, Toast.LENGTH_SHORT).show();
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-                if (Build.VERSION.SDK_INT >= 30) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    Toast.makeText(getApplicationContext(), R.string.info_storageAndroid11, Toast.LENGTH_LONG).show();
-                    startActivityForResult(intent, 4);
-                }
-
             } else {
                 hasPerms = true;
                 missingPerms.setVisibility(View.GONE);
