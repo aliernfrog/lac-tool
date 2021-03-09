@@ -19,7 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.hbisoft.pickit.PickiT;
+
+import java.io.File;
 
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
@@ -192,6 +195,8 @@ public class OptionsActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     pickiT.deleteTemporaryFile(getApplicationContext());
+                    File tempFile = new File(update.getString("path-app", null)+"temp");
+                    FileUtil.deleteDirectory(tempFile);
                     Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
                 }
                 AppUtil.handleOnPressEvent(v, event);

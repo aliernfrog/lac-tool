@@ -138,6 +138,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         devLog("", false);
 
         if (Build.VERSION.SDK_INT >= 30) {
+            android11warning.setVisibility(View.VISIBLE);
             String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
@@ -429,15 +430,15 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             File file = new File(tempPath);
             File[] files = file.listFiles();
             try {
-                for (int i = 0; i < files.length; i++) {
-                    DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
-                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
-                    copyFile(files[i].getPath(), fileInLac);
+                if (files != null) {
+                    for (int i = 0; i < files.length; i++) {
+                        DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
+                        if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
+                        copyFile(files[i].getPath(), fileInLac);
+                    }
                 }
             } finally {
-                for (int i = 0; i < files.length; i++) {
-                    files[i].delete();
-                }
+                FileUtil.deleteDirectory(file);
                 finish();
             }
         } else {

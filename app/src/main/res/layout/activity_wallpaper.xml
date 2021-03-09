@@ -101,6 +101,39 @@
                     android:textStyle="bold"
                     app:backgroundTint="#005DFF" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/wallpaper_picked_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/wallpaper_picked_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/wallpaperPickedWallpaper"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/wallpaper_picked_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp" />
+
                 <Button
                     android:id="@+id/wallpaper_importFile"
                     android:layout_width="match_parent"
@@ -112,18 +145,14 @@
                     android:text="@string/wallpaperImport"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    app:backgroundTint="#005DFF"
-                    tools:visibility="visible" />
+                    app:backgroundTint="#005DFF" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/wallpaper_wallpaperView"
+            <LinearLayout
+                android:id="@+id/wallpaper_rootLinear"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:padding="8dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
 
             <TextView
                 android:id="@+id/wallpaper_log"
