@@ -436,9 +436,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
                     copyFile(files[i].getPath(), fileInLac);
                 }
             } finally {
-                for (int i = 0; i < files.length; i++) {
-                    files[i].delete();
-                }
+                FileUtil.deleteDirectory(file);
                 finish();
             }
         } else {
