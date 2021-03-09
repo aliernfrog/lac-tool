@@ -68,6 +68,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     TextView devlog;
 
     SharedPreferences update;
+    SharedPreferences.Editor updateEdit;
     SharedPreferences config;
     SharedPreferences.Editor configEdit;
 
@@ -95,7 +96,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
 
     PickiT pickiT;
 
-    @SuppressLint("CommitPrefEdits")
+    @SuppressLint({"CommitPrefEdits", "ApplySharedPref"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +104,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
+        updateEdit = update.edit();
         configEdit = config.edit();
 
         devMode = config.getBoolean("enableDebug", false);
@@ -162,6 +164,9 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         } else {
             lacPath += "/";
         }
+
+        updateEdit.putString("path-lac-restore", lacPath);
+        updateEdit.commit();
 
         setListener();
         autoBackup();

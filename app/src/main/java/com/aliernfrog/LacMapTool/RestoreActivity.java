@@ -18,18 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.LacMapTool.utils.FileUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 @SuppressLint("ClickableViewAccessibility")
 public class RestoreActivity extends AppCompatActivity {
-    //private RestoreActivity restoreActivity;
-
     ImageView goHome;
     LinearLayout mapsselect;
     Spinner mapsList;
@@ -60,7 +54,7 @@ public class RestoreActivity extends AppCompatActivity {
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         backupPath = update.getString("path-app", null)+"/backups/";
-        lacPath = update.getString("path-lac", null);
+        lacPath = update.getString("path-lac-restore", null);
 
         setOnClick();
         refreshMaps();
@@ -84,7 +78,7 @@ public class RestoreActivity extends AppCompatActivity {
         try {
             copyFile(rawPath, savePath);
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -96,19 +90,8 @@ public class RestoreActivity extends AppCompatActivity {
         mapname.setText(mapName);
     }
 
-    void copyFile(String src, String dst) throws IOException {
-        InputStream in = new FileInputStream(new File(src));
-        OutputStream out = new FileOutputStream(new File(dst));
-        try {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer, 0, length);
-            }
-        } finally {
-            in.close();
-            out.close();
-        }
+    void copyFile(String src, String dst) throws Exception {
+        FileUtil.copyFile(src, dst);
     }
 
     void setOnClick() {
