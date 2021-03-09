@@ -51,16 +51,23 @@
             android:paddingStart="24dp"
             android:paddingEnd="24dp">
 
-            <ImageView
-                android:id="@+id/options_goback"
+            <LinearLayout
+                android:id="@+id/options_topbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="1dp"
-                app:srcCompat="@drawable/goback" />
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:id="@+id/options_goback"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/goback" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/options_app"

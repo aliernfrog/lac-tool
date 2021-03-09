@@ -104,24 +104,17 @@ public class FileUtil {
         return _full;
     }
 
-    public static String readFile(Uri uri, Context context) throws Exception {
-        InputStream in = context.getContentResolver().openInputStream(uri);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String _full = "";
-        String _line;
-        while ((_line = reader.readLine()) != null) {
-            if (_full.length() > 0) {
-                _full += "\n"+_line;
-            } else {
-                _full += _line;
+    static public boolean deleteDirectory(File path) {
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    deleteDirectory(files[i]);
+                } else {
+                    files[i].delete();
+                }
             }
         }
-        reader.close();
-        return _full;
-    }
-
-    public static String getFileNameFromPath(String path) {
-        String[] arr = path.split("/");
-        return arr[arr.length-1];
+        return (path.delete());
     }
 }
