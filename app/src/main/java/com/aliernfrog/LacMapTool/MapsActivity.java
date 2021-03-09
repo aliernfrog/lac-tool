@@ -138,6 +138,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         devLog("", false);
 
         if (Build.VERSION.SDK_INT >= 30) {
+            android11warning.setVisibility(View.VISIBLE);
             String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
