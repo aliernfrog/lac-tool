@@ -57,9 +57,10 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     EditText mapname;
     Button fileRename;
     TextView mapInfo;
+    LinearLayout map_linear;
     Button fileImport;
     Button editMapSettings;
-    LinearLayout map_linear;
+    Button setThumbnail;
     Button fileBackup;
     Button fileShare;
     Button fileDownload;
@@ -87,8 +88,10 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
 
+    int CURRENT_REQUEST_CODE;
+    int PICK_MAP_REQUEST_CODE = 2;
+    int PICK_THUMBNAIL_REQUEST_CODE = 3;
     int TREE_REQUEST_CODE = 4;
-    int FILE_PICK_CODE = 2;
 
     PickiT pickiT;
 
@@ -122,9 +125,10 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         nameLinear = findViewById(R.id.maps_name_linear);
         fileRename = findViewById(R.id.maps_rename);
         mapInfo = findViewById(R.id.maps_mapInfo);
+        map_linear = findViewById(R.id.maps_map_linear);
         fileImport = findViewById(R.id.maps_fileImport);
         editMapSettings = findViewById(R.id.maps_editmapsettings);
-        map_linear = findViewById(R.id.maps_map_linear);
+        setThumbnail = findViewById(R.id.maps_setThumbnail);
         fileBackup = findViewById(R.id.maps_backuprestore);
         fileShare = findViewById(R.id.maps_shareMap);
         mapname = findViewById(R.id.maps_editname);
@@ -164,11 +168,61 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         getImportedMaps();
     }
 
-    public void pickFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/*");
-        startActivityForResult(intent, FILE_PICK_CODE);
-        devLog("attempting to pick a file with request code 2", false);
+    public void getMap(String path) {
+        File mapFile = new File(path);
+        map_linear.setVisibility(View.VISIBLE);
+        rawPath = path;
+        mapName = mapFile.getName().replace(".txt", "");
+        if (rawPath.startsWith(lacPath)) { isImported = true; } else { isImported = false; }
+        mapname.setText(mapName);
+        getImportedMaps();
+        if (isImported) getMapThumb();
+        refreshVisibility();
+        mapInfo.setText(Html.fromHtml("<b>"+getString(R.string.mapInfo_size)+":</b> "+mapFile.length()/1024+" kB"));
+        configEdit.putString("lastPath", rawPath);
+        configEdit.commit();
+        devLog("rawPath: "+ rawPath, false);
+        devLog("mapName: "+ mapName, false);
+        devLog("isImported: "+ isImported.toString(), false);
+    }
+
+    public void getMapThumb() {
+        String thumbnailDir = lacPath+mapName+".jpg";
+        File thumb = new File(thumbnailDir);
+        ImageView thumbView = findViewById(R.id.maps_thumbnail);
+        if (thumb.exists()) {
+            Bitmap thumbBitmap = BitmapFactory.decodeFile(thumb.getAbsolutePath());
+            thumbView.setImageBitmap(thumbBitmap);
+            devLog("attempting to set thumbnail", false);
+        } else {
+            thumbView.setImageBitmap(null);
+            devLog("thumbnail doesn't exist", false);
+        }
+    }
+
+    public void setMapThumb(String path) {
+        devLog("attempting to set thumbnail file to "+path);
+        copyFile(path, lacPath+mapName+".jpg", false);
+    }
+
+    public void getImportedMaps() {
+        String _mapname;
+        File directory = new File(lacPath);
+        File[] files = directory.listFiles();
+        if (files == null) {
+            devLog("directory "+directory+" is null", false);
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isFile() && files[i].getName().endsWith(".txt")) {
+                    _mapname = files[i].getName().replace(".txt", "");
+                    adapter.add(_mapname);
+                    devLog("found map: "+files[i].getName(), false);
+                }
+            }
+            mapsSpinner.setAdapter(adapter);
+            devLog("done getting files from "+directory, false);
+        }
     }
 
     public void renameMap() {
@@ -244,55 +298,39 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         }
     }
 
-    public void getMap(String path) {
-        File mapFile = new File(path);
-        map_linear.setVisibility(View.VISIBLE);
-        rawPath = path;
-        mapName = mapFile.getName().replace(".txt", "");
-        if (rawPath.startsWith(lacPath)) { isImported = true; } else { isImported = false; }
-        mapname.setText(mapName);
-        getImportedMaps();
-        if (isImported) getMapThumb();
-        refreshVisibility();
-        mapInfo.setText(Html.fromHtml("<b>"+getString(R.string.mapInfo_size)+":</b> "+mapFile.length()/1024+" kB"));
-        configEdit.putString("lastPath", rawPath);
-        configEdit.commit();
-        devLog("rawPath: "+ rawPath, false);
-        devLog("mapName: "+ mapName, false);
-        devLog("isImported: "+ isImported.toString(), false);
-    }
-
-    public void getMapThumb() {
-        String thumbnailDir = lacPath+mapName+".jpg";
-        File thumb = new File(thumbnailDir);
-        ImageView thumbView = findViewById(R.id.maps_thumbnail);
-        if (thumb.exists()) {
-            Bitmap thumbBitmap = BitmapFactory.decodeFile(thumb.getAbsolutePath());
-            thumbView.setImageBitmap(thumbBitmap);
-            devLog("attempting to set thumbnail", false);
+    public void shareFile(String path) {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        File file = new File(path);
+        if (file.exists()) {
+            devLog("attempting to share: "+path, false);
+            share.setType("application/txt");
+            share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+file.getPath()));
+            share.putExtra(Intent.EXTRA_SUBJECT, R.string.mapSharing);
+            share.putExtra(Intent.EXTRA_TEXT, R.string.mapSharing);
+            startActivity(Intent.createChooser(share, "Share Map"));
         } else {
-            thumbView.setImageBitmap(null);
-            devLog("thumbnail doesn't exist", false);
+            Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
+            devLog("file does not exist", false);
         }
     }
 
-    public void getImportedMaps() {
-        String _mapname;
-        File directory = new File(lacPath);
-        File[] files = directory.listFiles();
-        if (files == null) {
-            devLog("directory "+directory+" is null", false);
-        } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isFile() && files[i].getName().endsWith(".txt")) {
-                    _mapname = files[i].getName().replace(".txt", "");
-                    adapter.add(_mapname);
-                    devLog("found map: "+files[i].getName(), false);
-                }
-            }
-            mapsSpinner.setAdapter(adapter);
-            devLog("done getting files from "+directory, false);
+    public void downloadMap(String link) {
+        try {
+            String _downloaded = URLUtil.guessFileName(link, null, null);
+            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            Uri uri = Uri.parse(link);
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, _downloaded)
+                    .setTitle(_downloaded) .setDescription("Downloaded via LAC Map Tool")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            downloadManager.enqueue(request);
+            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+            getMap(Environment.getExternalStorageDirectory().toString()+"/Download/"+_downloaded);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
+            devLog(e.toString(), true);
+            e.printStackTrace();
         }
     }
 
@@ -300,12 +338,14 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         if (isImported) {
             fileRename.setVisibility(View.VISIBLE);
             fileImport.setVisibility(View.GONE);
+            setThumbnail.setVisibility(View.VISIBLE);
             fileBackup.setVisibility(View.VISIBLE);
             fileShare.setVisibility(View.VISIBLE);
             fileDelete.setVisibility(View.VISIBLE);
         } else {
             fileRename.setVisibility(View.GONE);
             fileImport.setVisibility(View.VISIBLE);
+            setThumbnail.setVisibility(View.GONE);
             fileBackup.setVisibility(View.GONE);
             fileShare.setVisibility(View.GONE);
             fileDelete.setVisibility(View.GONE);
@@ -351,54 +391,6 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         }
     }
 
-    public void shareFile(String path) {
-        Intent share = new Intent(Intent.ACTION_SEND);
-        File file = new File(path);
-        if (file.exists()) {
-            devLog("attempting to share: "+path, false);
-            share.setType("application/txt");
-            share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+file.getPath()));
-            share.putExtra(Intent.EXTRA_SUBJECT, R.string.mapSharing);
-            share.putExtra(Intent.EXTRA_TEXT, R.string.mapSharing);
-            startActivity(Intent.createChooser(share, "Share Map"));
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
-            devLog("file does not exist", false);
-        }
-    }
-
-    public void switchActivity(Class i) {
-        devLog("attempting to redirect to class: "+i.toString(), false);
-        Intent intent = new Intent(this.getApplicationContext(), i);
-        startActivity(intent);
-    }
-
-    public String timeString(String frmString) {
-        SimpleDateFormat frm = new SimpleDateFormat(frmString);
-        Date now = Calendar.getInstance().getTime();
-        return frm.format(now);
-    }
-
-    public void downloadMap(String link) {
-        try {
-            String _downloaded = URLUtil.guessFileName(link, null, null);
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            Uri uri = Uri.parse(link);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, _downloaded)
-                    .setTitle(_downloaded) .setDescription("Downloaded via LAC Map Tool")
-                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            downloadManager.enqueue(request);
-            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            getMap(Environment.getExternalStorageDirectory().toString()+"/Download/"+_downloaded);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
-            devLog(e.toString(), true);
-            e.printStackTrace();
-        }
-    }
-
     public void autoBackup() {
         if (config.getBoolean("enableAutoBackups", false)) {
             devLog("attempting to backup", false);
@@ -418,10 +410,19 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         }
     }
 
-    public void redirectURL(String url) {
-        devLog("redirecting to: "+url, false);
-        Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-        startActivity(viewIntent);
+    public void pickMapFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("text/*");
+        startActivityForResult(intent, PICK_MAP_REQUEST_CODE);
+        devLog("attempting to pick a file with request code "+PICK_MAP_REQUEST_CODE, false);
+    }
+
+    public void pickThumbnailFile() {
+        Toast.makeText(getApplicationContext(), R.string.info_setThumbnail, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_THUMBNAIL_REQUEST_CODE);
+        devLog("attempting to pick a file with request code "+PICK_THUMBNAIL_REQUEST_CODE, false);
     }
 
     public void saveChangesAndFinish() {
@@ -459,6 +460,18 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         lacPath = tempPath;
     }
 
+    public void switchActivity(Class i) {
+        devLog("attempting to redirect to class: "+i.toString(), false);
+        Intent intent = new Intent(this.getApplicationContext(), i);
+        startActivity(intent);
+    }
+
+    public String timeString(String frmString) {
+        SimpleDateFormat frm = new SimpleDateFormat(frmString);
+        Date now = Calendar.getInstance().getTime();
+        return frm.format(now);
+    }
+
     void handleCmd(String cmdText) {
         String cmd = cmdText.replace("cmd://", "").replace("_", "");
         if (cmd.startsWith("hidden-enable")) {
@@ -491,7 +504,8 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         devLog("received result for: "+requestCode, false);
-        if (requestCode == FILE_PICK_CODE) {
+        CURRENT_REQUEST_CODE = requestCode;
+        if (requestCode == PICK_MAP_REQUEST_CODE || requestCode == PICK_THUMBNAIL_REQUEST_CODE) {
             if (data == null) {
                 devLog(requestCode+": no data", false);
             } else {
@@ -588,7 +602,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    pickFile();
+                    pickMapFile();
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;
@@ -622,6 +636,17 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     importMap();
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            }
+        });
+
+        setThumbnail.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    pickThumbnailFile();
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;
@@ -748,7 +773,12 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         if (pickitProgress != null && pickitProgress.isShowing()) pickitProgress.cancel();
         if (wasSuccessful) {
             devLog("got path: "+path, false);
-            getMap(path);
+            devLog("current request code: "+CURRENT_REQUEST_CODE, false);
+            if (CURRENT_REQUEST_CODE == PICK_MAP_REQUEST_CODE) {
+                getMap(path);
+            } else if (CURRENT_REQUEST_CODE == PICK_THUMBNAIL_REQUEST_CODE) {
+                setMapThumb(path);
+            }
         } else {
             devLog(Reason, true);
         }
