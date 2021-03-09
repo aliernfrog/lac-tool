@@ -20,6 +20,7 @@ import android.provider.DocumentsContract;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,11 +37,13 @@ import java.io.File;
 @SuppressLint("ClickableViewAccessibility")
 public class WallpaperActivity extends AppCompatActivity implements PickiTCallbacks {
     ImageView goback;
+    LinearLayout rootLayout;
     TextView desc;
     LinearLayout actionsLinear;
     Button pickFile;
-    Button importFile;
+    LinearLayout pickedWpLinear;
     ImageView wallpaperView;
+    Button importFile;
     TextView logView;
 
     SharedPreferences config;
@@ -53,6 +56,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     String backupPath;
     String tempPath;
     String logs = "";
+
+    String wpName;
 
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
@@ -68,24 +73,23 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         devMode = config.getBoolean("enableDebug", false);
         wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
-        wpPath = wpTreePath+"/wallpaper.jpg";
         backupPath = update.getString("path-app", null)+"wp-backup.jpg";
         tempPath = update.getString("path-app", null)+"temp/wp/";
 
         goback = findViewById(R.id.wallpaper_goback);
+        rootLayout = findViewById(R.id.wallpaper_rootLinear);
         desc = findViewById(R.id.wallpaper_desc);
         actionsLinear = findViewById(R.id.wallpaper_actionsLinear);
         pickFile = findViewById(R.id.wallpaper_pickFile);
+        pickedWpLinear = findViewById(R.id.wallpaper_picked_linear);
+        wallpaperView = findViewById(R.id.wallpaper_picked_image);
         importFile = findViewById(R.id.wallpaper_importFile);
-        wallpaperView = findViewById(R.id.wallpaper_wallpaperView);
         logView = findViewById(R.id.wallpaper_log);
 
         pickiT = new PickiT(this, this, this);
 
         if (!devMode) logView.setVisibility(View.GONE);
         devLog("==== DEBUG LOGS ====", false);
-        devLog("wpPath = "+wpPath, false);
-        devLog("", false);
         setListeners();
 
         if (Build.VERSION.SDK_INT >= 30) {
@@ -107,32 +111,81 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             }
         }
 
-        File wpFile = new File(wpPath);
-        if (wpFile.exists()) {
-            Bitmap wpbitmap = BitmapFactory.decodeFile(wpFile.getAbsolutePath());
-            wallpaperView.setImageBitmap(wpbitmap);
-        }
+        wpPath = wpTreePath+"/";
+        devLog("wpPath = "+wpPath, false);
+        devLog("", false);
+
+        getImportedWallpapers();
     }
 
     public void getWp(String path) {
-        rawPath = path.replace("/document/primary:", Environment.getExternalStorageDirectory().toString()+"/").replace("/document/raw:/", "");
-        if (rawPath.startsWith(wpPath)) {
-            importFile.setVisibility(View.GONE);
-        } else {
-            importFile.setVisibility(View.VISIBLE);
-        }
+        wpName = new File(path).getName().replace(".png", ".jpg").replace(".jpeg", ".jpg");
+        rawPath = path;
+        pickedWpLinear.setVisibility(View.VISIBLE);
         Bitmap wpBitmap = BitmapFactory.decodeFile(new File(rawPath).getAbsolutePath());
         wallpaperView.setImageBitmap(wpBitmap);
-        devLog("rawPath: "+ rawPath, false);
+        devLog("wpName = "+wpName, false);
+        devLog("rawPath = "+ rawPath, false);
+    }
+
+    public void getImportedWallpapers() {
+        devLog("attempting to get imported wallpapers", false);
+        rootLayout.removeAllViews();
+        File wpFile = new File(wpPath);
+        if (wpFile.exists()) {
+            File[] files = wpFile.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].getName().endsWith(".jpg")) {
+                    devLog("found: "+files[i].getName(), false);
+                    ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.wallpaper, rootLayout, false);
+                    setWallpaperView(layout, files[i]);
+                }
+            }
+        } else {
+            devLog("wallpaper file doesnt exist", false);
+        }
+    }
+
+    public void setWallpaperView(ViewGroup layout, File file) {
+        LinearLayout bg = layout.findViewById(R.id.wp_bg);
+        TextView name = layout.findViewById(R.id.wp_name);
+        ImageView image = layout.findViewById(R.id.wp_image);
+        Button delete = layout.findViewById(R.id.wp_remove);
+        name.setText(file.getName());
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+        image.setImageBitmap(bitmap);
+        rootLayout.addView(layout);
+        bg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            }
+        });
+        delete.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (Build.VERSION.SDK_INT < 30) {
+                        file.delete();
+                        rootLayout.removeView(layout);
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            }
+        });
     }
 
     public void importWp() {
-        File check = new File(wpPath);
-        if (check.exists()) {
-            devLog("a wallpaper already exists, attempting to copy", false);
-            copyFile(check.getPath(), backupPath);
-        }
-        copyFile(rawPath, wpPath);
+        copyFile(rawPath, wpPath+wpName);
+        pickedWpLinear.setVisibility(View.GONE);
+        getImportedWallpapers();
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
@@ -304,7 +357,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             }
         });
 
-        wallpaperView.setOnTouchListener(new View.OnTouchListener() {
+        pickedWpLinear.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
