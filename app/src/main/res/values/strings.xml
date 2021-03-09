@@ -76,6 +76,7 @@
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>
+    <string name="wallpaperPickedWallpaper">Picked wallpaper</string>
     <string name="wallpaperDesc">In LAC 1.5.6, local wallpaper option was replaced with URL option. But you still can choose the wallpaper locally, simply switch FPP camera, then select custom wallpaper option from the in game cellphone.</string>
     <string name="wallpaperDescAndroid11">In Android 11, apps are not able to access data of other apps anymore, so sadly LAC Tool won\'t be able to access LAC wallpapers anymore. You still can upload your wallpaper to a website, copy its URL and download it with pasting that URL to in game cellphone. (URL option is only available in LAC 1.5.6)</string>
     <string name="giveFeedback">Suggest features &amp; Report bugs</string>
