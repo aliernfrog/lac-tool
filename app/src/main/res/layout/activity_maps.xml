@@ -269,6 +269,19 @@
                     app:backgroundTint="#FF0E0E0E" />
 
                 <Button
+                    android:id="@+id/maps_setThumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/mapSetThumbnail"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:backgroundTint="#FF0E0E0E"
+                    tools:visibility="visible" />
+
+                <Button
                     android:id="@+id/maps_shareMap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
