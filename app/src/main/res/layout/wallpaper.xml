@@ -34,7 +34,20 @@
         android:padding="8dp" />
 
     <Button
-        android:id="@+id/wp_remove"
+        android:id="@+id/wp_copyUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/linear_button"
+        android:padding="8dp"
+        android:text="@string/wallpaperCopyUrl"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:backgroundTint="#FF0E0E0E" />
+
+    <Button
+        android:id="@+id/wp_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -45,4 +58,5 @@
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:backgroundTint="#960000" />
+
 </LinearLayout>
