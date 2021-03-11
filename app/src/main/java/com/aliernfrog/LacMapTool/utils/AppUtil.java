@@ -2,6 +2,8 @@ package com.aliernfrog.LacMapTool.utils;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,6 +22,12 @@ public class AppUtil {
         PackageManager pm = context.getPackageManager();
         PackageInfo pInfo = pm.getPackageInfo(context.getPackageName(), 0);
         return pInfo.versionCode;
+    }
+
+    public static void copyToClipboard(String string, Context context) {
+        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("LAC Tool", string);
+        manager.setPrimaryClip(clip);
     }
 
     public static void handleOnPressEvent(View view, MotionEvent event) {
