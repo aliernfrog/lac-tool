@@ -182,15 +182,11 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     public void shareFile(String path) {
-        Intent share = new Intent(Intent.ACTION_SEND);
         File file = new File(path);
         if (file.exists()) {
             devLog("attempting to share: "+path, false);
-            share.setType("image/*");
-            share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+path));
-            share.putExtra(Intent.EXTRA_SUBJECT, R.string.info_sharing);
-            share.putExtra(Intent.EXTRA_TEXT, R.string.info_sharing);
-            startActivity(Intent.createChooser(share, "Share Map"));
+            Intent share = FileUtil.shareFile(path, "image/*");
+            startActivity(Intent.createChooser(share, "Share Screenshot"));
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
             devLog("file does not exist", false);
