@@ -2,11 +2,14 @@ package com.aliernfrog.LacMapTool.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.documentfile.provider.DocumentFile;
+
+import com.aliernfrog.LacMapTool.R;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 public class FileUtil {
@@ -104,7 +106,20 @@ public class FileUtil {
         return _full;
     }
 
-    static public boolean deleteDirectory(File path) {
+    public static Intent shareFile(String source, String type) {
+        File file = new File(source);
+        Intent intent = null;
+        if (file.exists()) {
+            intent = new Intent(Intent.ACTION_SEND)
+                    .setType(type)
+                    .putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+source))
+                    .putExtra(Intent.EXTRA_SUBJECT, R.string.info_sharing)
+                    .putExtra(Intent.EXTRA_TEXT, R.string.info_sharing);
+        }
+        return intent;
+    }
+
+    public static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
