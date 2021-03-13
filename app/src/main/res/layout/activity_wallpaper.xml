@@ -9,7 +9,6 @@
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/wallpaper_appbar"
 
         android:layout_width="match_parent"
         android:layout_height="192dp"
@@ -24,7 +23,6 @@
             >
 
             <TextView
-                android:id="@+id/wallpaper_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal|center_vertical"
@@ -49,7 +47,6 @@
             android:paddingEnd="24dp">
 
             <LinearLayout
-                android:id="@+id/wallpaper_topbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -115,7 +112,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/wallpaper_picked_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -152,7 +148,7 @@
                 android:id="@+id/wallpaper_rootLinear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/wallpaper_log"
