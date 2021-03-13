@@ -310,8 +310,8 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             devLog("attempting to share: "+path, false);
             share.setType("application/txt");
             share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+file.getPath()));
-            share.putExtra(Intent.EXTRA_SUBJECT, R.string.mapSharing);
-            share.putExtra(Intent.EXTRA_TEXT, R.string.mapSharing);
+            share.putExtra(Intent.EXTRA_SUBJECT, R.string.info_sharing);
+            share.putExtra(Intent.EXTRA_TEXT, R.string.info_sharing);
             startActivity(Intent.createChooser(share, "Share Map"));
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
