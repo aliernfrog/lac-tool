@@ -50,6 +50,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     SharedPreferences update;
 
     Boolean devMode;
+    String lacPath;
     String rawPath;
     String wpTreePath;
     String wpPath;
@@ -73,6 +74,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         devMode = config.getBoolean("enableDebug", false);
         wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
+        lacPath = wpTreePath+"/";
         backupPath = update.getString("path-app", null)+"wp-backup.jpg";
         tempPath = update.getString("path-app", null)+"temp/wp/";
 
@@ -150,7 +152,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         LinearLayout bg = layout.findViewById(R.id.wp_bg);
         TextView name = layout.findViewById(R.id.wp_name);
         ImageView image = layout.findViewById(R.id.wp_image);
-        Button delete = layout.findViewById(R.id.wp_remove);
+        Button copyUrl = layout.findViewById(R.id.wp_copyUrl);
+        Button delete = layout.findViewById(R.id.wp_delete);
         name.setText(file.getName());
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
@@ -160,6 +163,17 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
 
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            }
+        });
+        copyUrl.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
+                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;

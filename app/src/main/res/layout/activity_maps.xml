@@ -9,7 +9,6 @@
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
 
         android:layout_width="match_parent"
         android:layout_height="192dp"
@@ -24,7 +23,6 @@
             app:toolbarId="@+id/toolbar">
 
             <TextView
-                android:id="@+id/maps_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal|center_vertical"
@@ -54,7 +52,6 @@
             android:paddingRight="24dp">
 
             <LinearLayout
-                android:id="@+id/maps_topbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -111,7 +108,6 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/maps_imported"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
@@ -119,7 +115,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/maps_importedExplanation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/mapImportedMaps"
@@ -171,7 +166,6 @@
                 android:padding="1dp">
 
                 <LinearLayout
-                    android:id="@+id/maps_name"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="8dp"

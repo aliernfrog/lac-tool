@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/wp_bg"
+    android:id="@+id/ss_bg"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -13,20 +13,8 @@
     android:padding="8dp"
     android:textColor="#FFFFFF">
 
-    <TextView
-        android:id="@+id/wp_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="File name"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold" />
-
     <ImageView
-        android:id="@+id/wp_image"
+        android:id="@+id/ss_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -34,29 +22,16 @@
         android:padding="8dp" />
 
     <Button
-        android:id="@+id/wp_copyUrl"
+        android:id="@+id/ss_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_weight="1"
         android:background="@drawable/linear_button"
         android:padding="8dp"
-        android:text="@string/wallpaperCopyUrl"
+        android:text="@string/action_share"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:backgroundTint="#FF0E0E0E" />
-
-    <Button
-        android:id="@+id/wp_delete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_weight="0"
-        android:background="@drawable/linear_red"
-        android:padding="8dp"
-        android:text="@string/action_delete"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        app:backgroundTint="#960000" />
 
 </LinearLayout>

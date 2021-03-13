@@ -32,7 +32,6 @@ import java.util.Date;
 
 @SuppressLint("ClickableViewAccessibility")
 public class MainActivity extends AppCompatActivity {
-    Button android11warning;
     Button missingPerms;
     LinearLayout optionsLinear;
     LinearLayout redirectMaps;
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout appOptionsLinear;
     LinearLayout redirectPosts;
     LinearLayout redirectOptions;
+    LinearLayout redirectGallery;
     LinearLayout updateLinear;
     TextView updateText;
     TextView updateNotes;
@@ -77,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
 
-        android11warning = findViewById(R.id.main_android11warning);
         missingPerms = findViewById(R.id.main_missingPerms);
         optionsLinear = findViewById(R.id.main_options);
         redirectMaps = findViewById(R.id.main_maps_linear);
         redirectWallpaper = findViewById(R.id.main_wallpaper_linear);
+        redirectGallery = findViewById(R.id.main_gallery_linear);
         appOptionsLinear = findViewById(R.id.main_appOptions);
         redirectPosts = findViewById(R.id.main_posts_linear);
         redirectOptions = findViewById(R.id.main_settings_linear);
@@ -297,6 +297,17 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     switchActivity(WallpaperActivity.class, false);
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            }
+        });
+
+        redirectGallery.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    switchActivity(GalleryActivity.class, false);
                 }
                 AppUtil.handleOnPressEvent(v, event);
                 return true;
