@@ -9,7 +9,6 @@
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/restore_appbar"
 
         android:layout_width="match_parent"
         android:layout_height="192dp"
@@ -23,7 +22,6 @@
             app:toolbarId="@+id/toolbar">
 
             <TextView
-                android:id="@+id/restore_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal|center_vertical"
@@ -48,7 +46,6 @@
             android:paddingRight="24dp">
 
             <LinearLayout
-                android:id="@+id/restore_topbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"

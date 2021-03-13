@@ -8,7 +8,6 @@
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mapsOptions_appbar"
 
         android:layout_width="match_parent"
         android:layout_height="192dp"
@@ -23,7 +22,6 @@
             >
 
             <TextView
-                android:id="@+id/mapsOptions_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal|center_vertical"
@@ -48,7 +46,6 @@
             android:paddingRight="24dp">
 
             <LinearLayout
-                android:id="@+id/mapsOptions_topbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -88,7 +85,6 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/mapsOptions_serverName_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -123,7 +119,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/mapsOptions_mapType_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -151,7 +146,6 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/mapsOptions_maxveh_linear"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
@@ -159,7 +153,6 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/mapsOptions_maxveh_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -182,7 +175,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/mapsOptions_fuelconsume_linear"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
@@ -190,7 +182,6 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/mapsOptions_fuelconsume_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -213,7 +204,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/mapsOptions_idleveh_linear"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
@@ -221,7 +211,6 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/mapsOptions_idleveh_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -391,7 +380,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/mapsOptions_actions_linear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"

@@ -9,7 +9,6 @@
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/main_appbar"
 
         android:layout_width="match_parent"
         android:layout_height="192dp"
@@ -25,7 +24,6 @@
 
 
             <TextView
-                android:id="@+id/main_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal|center_vertical"
@@ -102,14 +100,12 @@
                     android:scaleY="1">
 
                     <ImageView
-                        android:id="@+id/main_maps_icon"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/location" />
 
                     <TextView
-                        android:id="@+id/main_maps_text"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
@@ -131,14 +127,12 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:id="@+id/main_wallpaper_icon"
                         android:layout_width="10dp"
                         android:layout_height="30dp"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/wallpaper" />
 
                     <TextView
-                        android:id="@+id/main_wallpaper_text"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
@@ -159,14 +153,12 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:id="@+id/main_gallery_icon"
                         android:layout_width="10dp"
                         android:layout_height="30dp"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/gallery" />
 
                     <TextView
-                        android:id="@+id/main_gallery_text"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
@@ -198,14 +190,12 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:id="@+id/main_posts_icon"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/news" />
 
                     <TextView
-                        android:id="@+id/main_posts_text"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
@@ -225,14 +215,12 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:id="@+id/main_settings_icon"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/options" />
 
                     <TextView
-                        android:id="@+id/main_settings_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"

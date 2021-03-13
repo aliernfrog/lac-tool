@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">LAC Tool</string>
     <string name="warning_missingPerms">Missing permissions</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
@@ -19,7 +19,7 @@
     <string name="action_share">Share</string>
     <string name="action_add">Add</string>
     <string name="action_done">Done</string>
-    <string name="action_ok">Okay</string>
+    <string name="action_ok" tools:keep="@string/action_ok">Okay</string>
     <string name="select">Select</string>
     <string name="rename">Rename</string>
     <string name="manageMaps">Manage maps</string>
@@ -36,13 +36,12 @@
     <string name="mapImport">Import the map</string>
     <string name="mapEdit">Edit map options &amp; roles</string>
     <string name="mapSetThumbnail">Set thumbnail</string>
-    <string name="mapCopyUrl">Copy map URL</string>
     <string name="mapShare">Share the map</string>
     <string name="mapBackup">Backup the map</string>
     <string name="mapDelete">Delete the map</string>
     <string name="mapDelete_confirm">Confirm delete</string>
     <string name="mapDelete_clickAgain">Click again to delete the map</string>
-    <string name="mapInfo_date">Last modified:</string>
+    <string name="mapInfo_date" tools:keep="@string/mapInfo_date">Last modified:</string>
     <string name="mapInfo_size">Size</string>
     <string name="mapEdit_serverName">Server name</string>
     <string name="mapEdit_mapType">Map type</string>
@@ -65,7 +64,6 @@
     <string name="mapEdit_roles">Roles</string>
     <string name="optionAutoBackup">Auto backups</string>
     <string name="optionDisableUpdates">Disable updates</string>
-    <string name="optionDisableNotes">Disable notes</string>
     <string name="optionLacd">LACD path</string>
     <string name="optionLegacyPath">Legacy path</string>
     <string name="optionOnlineFix">Online map fixing</string>

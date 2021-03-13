@@ -9,7 +9,6 @@
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/posts_appbar"
 
         android:layout_width="match_parent"
         android:layout_height="192dp"
@@ -24,7 +23,6 @@
             >
 
             <TextView
-                android:id="@+id/posts_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal|center_vertical"
@@ -42,7 +40,6 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
-            android:id="@+id/posts_linear_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -50,7 +47,6 @@
             android:paddingEnd="24dp">
 
             <LinearLayout
-                android:id="@+id/posts_topbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
