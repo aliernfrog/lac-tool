@@ -10,7 +10,7 @@ The app supports Android 11, and can manage LAC datas. But, you should create <a
 
 # Required folders
 - `/Android/data/com.MA.LAC/files/editor`
-- `/Android/data/com.MA.LAC/files/editor`<br />
+- `/Android/data/com.MA.LAC/files/wallpaper`<br />
 App should run without any problem if these folders are created.
 No need to create these folders if you're not using Android 11 or these folders are already created.
 
