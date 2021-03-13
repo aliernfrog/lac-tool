@@ -32,7 +32,6 @@ import java.util.Date;
 
 @SuppressLint("ClickableViewAccessibility")
 public class MainActivity extends AppCompatActivity {
-    Button android11warning;
     Button missingPerms;
     LinearLayout optionsLinear;
     LinearLayout redirectMaps;
@@ -78,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
 
-        android11warning = findViewById(R.id.main_android11warning);
         missingPerms = findViewById(R.id.main_missingPerms);
         optionsLinear = findViewById(R.id.main_options);
         redirectMaps = findViewById(R.id.main_maps_linear);

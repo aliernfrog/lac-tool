@@ -74,17 +74,6 @@
                     android:visibility="visible"
                     app:backgroundTint="#C50000" />
 
-                <Button
-                    android:id="@+id/main_android11warning"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_red"
-                    android:text="@string/warning_android11"
-                    android:textColor="#FFFFFF"
-                    android:visibility="gone"
-                    app:backgroundTint="#C50000"
-                    tools:visibility="visible" />
             </LinearLayout>
 
             <LinearLayout
