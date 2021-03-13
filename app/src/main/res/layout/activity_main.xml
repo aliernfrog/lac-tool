@@ -159,6 +159,34 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/main_gallery_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/linear_button"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/main_gallery_icon"
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/gallery" />
+
+                    <TextView
+                        android:id="@+id/main_gallery_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:text="@string/manageScreenshots"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
