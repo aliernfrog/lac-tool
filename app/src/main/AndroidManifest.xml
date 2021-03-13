@@ -17,22 +17,23 @@
         android:roundIcon="@drawable/lactool"
         android:supportsRtl="true"
         android:theme="@style/Theme.LACMapTool">
-        <activity android:name=".SplashActivity" android:noHistory="true">
+        <activity
+            android:name=".SplashActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".MainActivity" />
         <activity android:name=".FeedbackActivity" />
+        <activity android:name=".GalleryActivity" />
         <activity android:name=".PostsActivity" />
         <activity android:name=".MapsActivity" />
-        <activity android:name=".WallpaperActivity"/>
-        <activity android:name=".MapsOptionsActivity"/>
-        <activity android:name=".OptionsActivity"/>
-        <activity android:name=".RestoreActivity"/>
+        <activity android:name=".WallpaperActivity" />
+        <activity android:name=".MapsOptionsActivity" />
+        <activity android:name=".OptionsActivity" />
+        <activity android:name=".RestoreActivity" />
     </application>
 
 </manifest>

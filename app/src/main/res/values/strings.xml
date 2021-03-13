@@ -1,12 +1,12 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">LAC Tool</string>
     <string name="warning_missingPerms">Missing permissions</string>
-    <string name="warning_android11">Some features does not work in Android 11</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
     <string name="info_treePerm">LAC Tool needs access to your LAC files in order to manage them, click "use this folder" option and it will get required permissions</string>
     <string name="info_saveChangesAndroid11">Click your device\'s back button or in app back button to save the changes you did</string>
     <string name="info_setThumbnail">Pick the image that you want it to be the thumbnail of your map</string>
     <string name="info_done">Done!</string>
+    <string name="info_sharing">Sharing file</string>
     <string name="info_error">Something went wrong</string>
     <string name="info_wait">Please wait..</string>
     <string name="info_android11notAvailable">This feature currently isn\'t available for Android 11</string>
@@ -16,14 +16,15 @@
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
     <string name="action_restore">Restore</string>
+    <string name="action_share">Share</string>
     <string name="action_add">Add</string>
     <string name="action_done">Done</string>
-    <string name="action_ok">Okay</string>
-    <string name="dialog_android11">Due to limitations in Android 11, LAC Tool is no longer able to access LAC maps. You still can import maps with uploading them to a website (like Discord) and get its link, then paste that link to Map Name in LAC when creating a map. You still can edit options of unimported maps using LAC Tool.</string>
+    <string name="action_ok" tools:keep="@string/action_ok">Okay</string>
     <string name="select">Select</string>
     <string name="rename">Rename</string>
     <string name="manageMaps">Manage maps</string>
     <string name="manageWallpapers">Manage wallpapers</string>
+    <string name="manageScreenshots">View screenshots</string>
     <string name="news">Posts &amp; News</string>
     <string name="options">Options &amp; Info</string>
     <string name="updateAvailable">Update available!</string>
@@ -35,15 +36,13 @@
     <string name="mapImport">Import the map</string>
     <string name="mapEdit">Edit map options &amp; roles</string>
     <string name="mapSetThumbnail">Set thumbnail</string>
-    <string name="mapCopyUrl">Copy map URL</string>
     <string name="mapShare">Share the map</string>
     <string name="mapBackup">Backup the map</string>
     <string name="mapDelete">Delete the map</string>
     <string name="mapDelete_confirm">Confirm delete</string>
     <string name="mapDelete_clickAgain">Click again to delete the map</string>
-    <string name="mapInfo_date">Last modified:</string>
+    <string name="mapInfo_date" tools:keep="@string/mapInfo_date">Last modified:</string>
     <string name="mapInfo_size">Size</string>
-    <string name="mapSharing">Sharing LAC map</string>
     <string name="mapEdit_serverName">Server name</string>
     <string name="mapEdit_mapType">Map type</string>
     <string name="mapEdit_maxVeh">Max vehicle count</string>
@@ -65,7 +64,6 @@
     <string name="mapEdit_roles">Roles</string>
     <string name="optionAutoBackup">Auto backups</string>
     <string name="optionDisableUpdates">Disable updates</string>
-    <string name="optionDisableNotes">Disable notes</string>
     <string name="optionLacd">LACD path</string>
     <string name="optionLegacyPath">Legacy path</string>
     <string name="optionOnlineFix">Online map fixing</string>
@@ -79,8 +77,9 @@
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>
     <string name="wallpaperPickedWallpaper">Picked wallpaper</string>
-    <string name="wallpaperDesc">In LAC 1.5.6, local wallpaper option was replaced with URL option. But you still can choose the wallpaper locally, simply switch FPP camera, then select custom wallpaper option from the in game cellphone.</string>
-    <string name="wallpaperDescAndroid11">In Android 11, apps are not able to access data of other apps anymore, so sadly LAC Tool won\'t be able to access LAC wallpapers anymore. You still can upload your wallpaper to a website, copy its URL and download it with pasting that URL to in game cellphone. (URL option is only available in LAC 1.5.6)</string>
+    <string name="wallpaperCopyUrl">Copy import URL</string>
+    <string name="wallpaperDesc">To import a wallpaper in LAC 1.5.6, copy import URL of a wallpaper and paste it in the in game cellphone settings</string>
+    <string name="galleryNoScreenshots">No screenshots to show</string>
     <string name="giveFeedback">Suggest features &amp; Report bugs</string>
     <string name="feedbackTitle">Feedback</string>
 </resources>
