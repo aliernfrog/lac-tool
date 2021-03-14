@@ -1,3 +1,4 @@
+[![Github All Releases](https://img.shields.io/github/downloads/aliernfrog/lac-tool/total.svg)]()
 # LAC Tool
 An open source app, lets you manage your <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> maps and wallpapers.
 
