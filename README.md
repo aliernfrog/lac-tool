@@ -19,8 +19,8 @@ The app can manage LAC data even in Android 11.
 # Required folders
 - `/Android/data/com.MA.LAC/files/editor`
 - `/Android/data/com.MA.LAC/files/wallpaper`<br />
-You need to have these folders created if you're using Android 11.<br />
-If these folders aren't created and you're using Android 11, the app will request access to wrong directories and probably crash.
+- You need to have these folders created if you're using Android 11.<br />
+- If these folders aren't created and you're using Android 11, the app will request access to wrong directories and probably crash.
 
 # Notes
 - The app needs `READ_EXTERNAL_STORAGE` and `WRITE_EXTERNAL_STORAGE` to access LAC & LAC tool data.
