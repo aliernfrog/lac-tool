@@ -425,11 +425,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     Boolean getBoolean(String boolString) {
-        if (boolString.contains("true") || boolString.contains("enabled")) {
-            return true;
-        } else {
-            return false;
-        }
+        return boolString.contains("true") || boolString.contains("enabled");
     }
 
     public void handlePostRes(String res) {

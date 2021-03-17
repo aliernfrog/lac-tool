@@ -4,7 +4,7 @@ import android.app.Activity;
 
 public abstract class BackgroundTask {
 
-    private Activity activity;
+    private final Activity activity;
     public BackgroundTask(Activity activity) {
         this.activity = activity;
     }
