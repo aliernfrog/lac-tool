@@ -178,7 +178,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         map_linear.setVisibility(View.VISIBLE);
         rawPath = path;
         mapName = mapFile.getName().replace(".txt", "");
-        if (rawPath.startsWith(lacPath)) { isImported = true; } else { isImported = false; }
+        isImported = rawPath.startsWith(lacPath);
         mapname.setText(mapName);
         getImportedMaps();
         if (isImported) getMapThumb();
