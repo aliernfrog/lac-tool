@@ -102,7 +102,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void changeOption(String name, Boolean set) {
-        if (name == "enableAutoBackups" || name == "enableDebug" || name == "enableTest") activityResult = 1;
+        if (name == "enableDebug" || name == "enableTest") activityResult = 1;
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
