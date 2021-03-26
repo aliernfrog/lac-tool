@@ -43,7 +43,6 @@ public class SplashActivity extends AppCompatActivity {
     String logs = "";
     Integer vers;
     Integer updatedVers = 0;
-    Integer postUpdate = 0;
     Integer icon_clickCount = 0;
 
     String current = null;
@@ -95,11 +94,7 @@ public class SplashActivity extends AppCompatActivity {
 
         setListeners();
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                checkUpdates();
-            }
-        }, 100);
+        handler.postDelayed(this::checkUpdates, 100);
     }
 
     public void checkUpdates() {
@@ -122,12 +117,9 @@ public class SplashActivity extends AppCompatActivity {
             updateEdit.putString("changelog", obj.getString("changelog"));
             updateEdit.putString("notes", obj.getString("notes").replace("%CHANGELOG%", obj.getString("changelog")));
             updateEdit.putString("path-lac", obj.getString("path-lac").replaceAll(">", "/"));
-            updateEdit.putString("path-lacd", obj.getString("path-lacd").replaceAll(">", "/"));
             updateEdit.putString("path-legacy", obj.getString("path-legacy").replaceAll(">", "/"));
             updateEdit.putString("path-app", obj.getString("path-app").replaceAll(">", "/"));
-            updateEdit.putBoolean("showAndroid11warning", obj.getBoolean("showAndroid11warning"));
             updateEdit.putBoolean("showLegacyMode", obj.getBoolean("showLegacyMode"));
-            updateEdit.putInt("postUpdate", postUpdate);
             updateEdit.commit();
             if (updatedVers > vers) {
                 devLog("an updated version file found", false);
@@ -168,10 +160,8 @@ public class SplashActivity extends AppCompatActivity {
             if (update.getString("changelog", null) == null) updateEdit.putString("changelog", obj.getString("changelog"));
             if (update.getString("notes", null) == null) updateEdit.putString("notes", obj.getString("notes").replace("%CHANGELOG%", obj.getString("changelog")));
             if (update.getString("path-lac", null) == null) updateEdit.putString("path-lac", obj.getString("path-lac").replaceAll(">", "/"));
-            if (update.getString("path-lacd", null) == null) updateEdit.putString("path-lacd", obj.getString("path-lacd").replaceAll(">", "/"));
             if (update.getString("path-legacy", null) == null) updateEdit.putString("path-legacy", obj.getString("path-legacy").replaceAll(">", "/"));
             if (update.getString("path-app", null) == null) updateEdit.putString("path-app", obj.getString("path-app").replaceAll(">", "/"));
-            if (update.getBoolean("showAndroid11warning", true)) updateEdit.putBoolean("showAndroid11warning", obj.getBoolean("showAndroid11warning"));
             if (!update.getBoolean("showLegacyMode", false)) updateEdit.putBoolean("showLegacyMode", obj.getBoolean("showLegacyMode"));
             updateEdit.commit();
             switchActivity(MainActivity.class);
@@ -187,7 +177,6 @@ public class SplashActivity extends AppCompatActivity {
             try {
                 if (request == VERSIONS_FILE_CODE) {
                     JSONObject object = new JSONObject(string);
-                    postUpdate = object.getInt("postUpdate");
                     updatedVers = object.getInt("latest");
                     getContentFromURL(updateURL+vers+".json", CURRENT_FILE_CODE);
                 }
@@ -209,10 +198,6 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    String replaceString(String string) {
-        return string.replaceAll("_EXTERNAL_", external).replaceAll("_DOCS_", docs);
-    }
-
     public void getContentFromURL(String urlString, int request) {
         devLog("attempting to get content from URL: "+urlString, false);
         final String[] str = {null};
@@ -223,12 +208,7 @@ public class SplashActivity extends AppCompatActivity {
                     str[0] = WebUtil.getContentFromURL(urlString);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            devLog(e.toString(), true);
-                        }
-                    });
+                    runOnUiThread(() -> devLog(e.toString(), true));
                 }
             }
             @Override
@@ -242,12 +222,14 @@ public class SplashActivity extends AppCompatActivity {
         devLog("attempting to switch to class: "+i.toString(), false);
         Intent intent = new Intent(this.getApplicationContext(), i);
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                startActivity(intent);
-                finishActivity(0);
-            }
+        handler.postDelayed(() -> {
+            startActivity(intent);
+            finishActivity(0);
         }, 1500);
+    }
+
+    String replaceString(String string) {
+        return string.replaceAll("_EXTERNAL_", external).replaceAll("_DOCS_", docs);
     }
 
     void devLog(String toLog, Boolean error) {
@@ -260,16 +242,13 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!devMode) {
-                    icon_clickCount = icon_clickCount+1;
-                    if (icon_clickCount >= 5) {
-                        configEdit.putBoolean("enableDebug", true);
-                        configEdit.commit();
-                        finish();
-                    }
+        icon.setOnClickListener(v -> {
+            if (!devMode) {
+                icon_clickCount = icon_clickCount+1;
+                if (icon_clickCount >= 5) {
+                    configEdit.putBoolean("enableDebug", true);
+                    configEdit.commit();
+                    finish();
                 }
             }
         });
