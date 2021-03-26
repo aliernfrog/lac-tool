@@ -95,20 +95,8 @@ public class MainActivity extends AppCompatActivity {
         if (!devMode) log.setVisibility(View.GONE);
         setListeners();
         checkPerms();
-        checkPostUpdate();
         createFiles();
         getLog();
-    }
-
-    public void checkPostUpdate() {
-        int updated = update.getInt("postUpdate", 0);
-        int current = config.getInt("postUpdate", 0);
-        devLog("updated post version = "+updated, false);
-        devLog("current post version = "+current, false);
-        if (updated != current) {
-            devLog("posts aren't updated", false);
-            redirectPosts.setBackground(ContextCompat.getDrawable(this, R.drawable.linear_blue));
-        }
     }
 
     public void createFiles() {
