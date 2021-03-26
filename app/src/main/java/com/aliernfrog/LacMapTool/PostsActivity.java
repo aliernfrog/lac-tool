@@ -42,7 +42,7 @@ public class PostsActivity extends AppCompatActivity {
     ProgressBar progressBar;
     TextView log;
 
-    String newsURL = "https://blursedbots.glitch.me/apps/lacmaptool/news.json";
+    String newsURL = "https://blursedbots.glitch.me/lacmaptool/news.json";
     String logs = "";
     JSONArray newsArray;
 
