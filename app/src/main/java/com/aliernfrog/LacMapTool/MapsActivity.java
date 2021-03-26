@@ -113,8 +113,6 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
         tempPath = dataPath+"temp/maps/";
-        if (config.getBoolean("enableLacd",false)) lacPath = update.getString("path-lacd", null);
-        if (config.getBoolean("enableLegacyPath", false)) lacPath = update.getString("path-legacy", null);
         pickiT = new PickiT(this, this, this);
 
         goback = findViewById(R.id.maps_goback);
