@@ -62,9 +62,12 @@
     <string name="mapEdit_type_5">water</string>
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
     <string name="mapEdit_roles">Roles</string>
-    <string name="optionAutoBackup">Auto backups</string>
-    <string name="optionDisableUpdates">Disable updates</string>
+    <string name="optionAutoBackup">Auto map backups</string>
+    <string name="optionDisableUpdates">Disable LAC Tool updates</string>
     <string name="optionLacd">LACD path</string>
+    <string name="optionLacdDesc">LACD path: manages files of LAC BETA app</string>
+    <string name="optionLacm">LACM path</string>
+    <string name="optionLacmDesc">LACM path: manages files of LAC MOD app</string>
     <string name="optionLegacyPath">Legacy path</string>
     <string name="optionOnlineFix">Online map fixing</string>
     <string name="optionDebug">Debug mode</string>

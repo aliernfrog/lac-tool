@@ -67,7 +67,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/options_app"
+                android:id="@+id/options_ex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -85,6 +85,76 @@
                     android:text="@string/optionAutoBackup"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/options_toggleLACD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLacd"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_toggleLACDdesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/optionLacdDesc"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/options_toggleLACM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLacm"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_toggleLACMdesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/optionLacmDesc"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/options_legacypath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLegacyPath"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/options_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="8dp">
 
                 <Switch
                     android:id="@+id/options_disableupdates"
@@ -105,39 +175,6 @@
                     android:background="@drawable/linear_button"
                     android:padding="8dp"
                     android:text="@string/optionOnlineFix"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/options_ex"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <Switch
-                    android:id="@+id/options_toggleLACD"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionLacd"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/options_legacypath"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionLegacyPath"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
@@ -174,6 +211,7 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
+
             </LinearLayout>
 
             <TextView
