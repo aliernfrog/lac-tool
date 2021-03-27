@@ -69,7 +69,6 @@
     <string name="optionLacm">LACM path</string>
     <string name="optionLacmDesc">LACM path: manages files of LAC MOD app</string>
     <string name="optionLegacyPath">Legacy path</string>
-    <string name="optionOnlineFix">Online map fixing</string>
     <string name="optionDebug">Debug mode</string>
     <string name="optionTestMode">Test mode</string>
     <string name="optionDeleteTemp">Delete temporary data</string>

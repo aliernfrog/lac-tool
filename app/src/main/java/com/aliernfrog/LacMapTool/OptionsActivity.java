@@ -34,7 +34,6 @@ public class OptionsActivity extends AppCompatActivity {
     Switch legacyPath;
     LinearLayout optionsEx;
     Switch disableUpdates;
-    Switch onlineFix;
     Switch dev;
     Switch test;
     Button deleteTemp;
@@ -71,7 +70,6 @@ public class OptionsActivity extends AppCompatActivity {
         legacyPath = findViewById(R.id.options_legacypath);
         optionsEx = findViewById(R.id.options_ex);
         disableUpdates = findViewById(R.id.options_disableupdates);
-        onlineFix = findViewById(R.id.options_enableOnlineSolution);
         dev = findViewById(R.id.options_devtoggle);
         test = findViewById(R.id.options_testtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
@@ -95,7 +93,6 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
         if (config.getBoolean("disableUpdates", false)) disableUpdates.setChecked(true);
-        if (config.getBoolean("enableOnlineFix", true)) onlineFix.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
         if (config.getBoolean("enableTest", false)) test.setChecked(true);
         if (!update.getBoolean("showLegacyMode", false) && !config.getBoolean("hidden-enable", false)) legacyPath.setVisibility(View.GONE);
@@ -152,7 +149,6 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
         disableUpdates.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("disableUpdates", isChecked));
-        onlineFix.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableOnlineFix", isChecked));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
         test.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableTest", isChecked));
         deleteTemp.setOnTouchListener((v, event) -> {

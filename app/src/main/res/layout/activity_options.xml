@@ -168,17 +168,6 @@
                     android:textStyle="bold" />
 
                 <Switch
-                    android:id="@+id/options_enableOnlineSolution"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionOnlineFix"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
                     android:id="@+id/options_devtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
