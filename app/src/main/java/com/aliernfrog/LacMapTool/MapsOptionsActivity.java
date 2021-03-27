@@ -27,11 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.BackgroundTask;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
-import com.aliernfrog.LacMapTool.utils.WebUtil;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -70,7 +66,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     String postUrl = "https://ensibot-discord.aliernfrog.repl.co";
     Boolean devMode;
-    Boolean onlineFix;
     String rawPath;
     Integer mapVers;
 
@@ -89,7 +84,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         rawPath = config.getString("lastPath", null);
         devMode = config.getBoolean("enableDebug", false);
-        onlineFix = config.getBoolean("enableOnlineFix", true);
 
         goback = findViewById(R.id.mapsOptions_goback);
         mapName = findViewById(R.id.mapsOptions_mapName);
@@ -296,24 +290,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     public void fixMap() {
         Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
-        if (onlineFix) {
-            try {
-                JSONObject object = new JSONObject();
-                object.put("type", "fixMap");
-                object.put("body", arrayJoin(updatedContent, "\n"));
-                doPostRequest(postUrl, object);
-            } catch (Exception e) {
-                devLog(e.toString(), true);
-                devLog("attempting to do offline fix", false);
-                offlineFix();
-            }
-        } else {
-            devLog("online fix disabled, attempting to do offline fix", false);
-            offlineFix();
-        }
-    }
-
-    public void offlineFix() {
+        devLog("attempting to fix the map", false);
         Boolean is155 = mapVers == 2;
 
         for (int i = 0; i < updatedContent.length; i++) {
@@ -426,57 +403,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     Boolean getBoolean(String boolString) {
         return boolString.contains("true") || boolString.contains("enabled");
-    }
-
-    public void handlePostRes(String res) {
-        devLog("got response: "+res, false);
-        if (res != null) {
-            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            updatedContent = res.split("<br />");
-        } else {
-            devLog("response is null! attempting to do offline fix", false);
-            offlineFix();
-        }
-    }
-
-    public void doPostRequest(String url, JSONObject obj) {
-        devLog("attempting to do post request to "+url, false);
-        String[] str = {null};
-        new BackgroundTask(this) {
-
-            @Override
-            public void doInBackground() {
-                try {
-                    String res = WebUtil.doPostRequest(url, obj);
-                    str[0] = res;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            devLog(e.toString(), true);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onPostExecute() {
-                handlePostRes(str[0]);
-            }
-        }.execute();
-    }
-
-    public String arrayJoin(String[] arr, String chr) {
-        String full = "";
-        for (int i = 0; i < arr.length; i++) {
-            if (i != 0) {
-                full = full+chr+arr[i];
-            } else {
-                full = full+arr[i];
-            }
-        }
-        return full;
     }
 
     void devLog(String toLog, Boolean error) {
