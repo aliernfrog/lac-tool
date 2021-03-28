@@ -19,17 +19,16 @@
             android:layout_height="match_parent"
             app:contentScrim="#00FFFFFF"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-
+            app:title="@string/options"
+            app:expandedTitleGravity="center"
             app:toolbarId="@+id/toolbar">
 
-
-            <TextView
+            <Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/options"
-                android:textColor="#FFFFFF"
-                android:textSize="34sp" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                tools:targetApi="lollipop" />
+
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,7 +66,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/options_app"
+                android:id="@+id/options_ex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -75,7 +74,7 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_autobkup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,40 +85,18 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
-                    android:id="@+id/options_disableupdates"
+                <CheckBox
+                    android:id="@+id/options_bkupOnEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:padding="8dp"
-                    android:text="@string/optionDisableUpdates"
+                    android:text="@string/optionBackupOnEdit"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
-                    android:id="@+id/options_enableOnlineSolution"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionOnlineFix"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/options_ex"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <Switch
+                <CheckBox
                     android:id="@+id/options_toggleLACD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,7 +107,44 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
+                <TextView
+                    android:id="@+id/options_toggleLACDdesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/optionLacdDesc"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/options_toggleLACM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLacm"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_toggleLACMdesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/optionLacmDesc"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
                     android:id="@+id/options_legacypath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +155,29 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/options_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <CheckBox
+                    android:id="@+id/options_disableupdates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionDisableUpdates"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <CheckBox
                     android:id="@+id/options_devtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -152,7 +188,7 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_testtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -174,6 +210,7 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
+
             </LinearLayout>
 
             <TextView

@@ -17,19 +17,18 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:toolbarId="@+id/toolbar"
+            app:contentScrim="#00FFFFFF"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/app_name"
+            app:expandedTitleGravity="center"
+            app:toolbarId="@+id/toolbar">
 
-            >
-
-
-            <TextView
+            <Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/app_name"
-                android:textColor="#FFFFFF"
-                android:textSize="34sp" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                tools:targetApi="lollipop" />
+
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -107,7 +106,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:gravity="start|center_vertical"
                         android:text="@string/manageMaps"
@@ -134,7 +133,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="@string/manageWallpapers"
                         android:textColor="#FFFFFF"
@@ -160,7 +159,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="@string/manageScreenshots"
                         android:textColor="#FFFFFF"
@@ -197,7 +196,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="@string/news"
                         android:textColor="#FFFFFF"

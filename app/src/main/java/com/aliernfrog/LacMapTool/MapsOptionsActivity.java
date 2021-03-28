@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,11 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.BackgroundTask;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
-import com.aliernfrog.LacMapTool.utils.WebUtil;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -62,15 +57,15 @@ public class MapsOptionsActivity extends AppCompatActivity {
     Button rolesAdd_button;
     TextView rolesAdd_desc;
     LinearLayout optionsLinear;
+    Button removeAllTdm;
+    Button removeAllRace;
     Button fixMapButton;
     Button saveChanges;
     TextView devLog;
 
     SharedPreferences config;
 
-    String postUrl = "https://ensibot-discord.aliernfrog.repl.co";
     Boolean devMode;
-    Boolean onlineFix;
     String rawPath;
     Integer mapVers;
 
@@ -89,7 +84,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         rawPath = config.getString("lastPath", null);
         devMode = config.getBoolean("enableDebug", false);
-        onlineFix = config.getBoolean("enableOnlineFix", true);
 
         goback = findViewById(R.id.mapsOptions_goback);
         mapName = findViewById(R.id.mapsOptions_mapName);
@@ -114,6 +108,8 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rolesAdd_button = findViewById(R.id.mapsOptions_roleAdd_button);
         rolesAdd_desc = findViewById(R.id.mapsOptions_roleAdd_desc);
         optionsLinear = findViewById(R.id.mapsOptions_options_linear);
+        removeAllTdm = findViewById(R.id.mapsOptions_removeAll_tdm);
+        removeAllRace = findViewById(R.id.mapsOptions_removeAll_race);
         fixMapButton = findViewById(R.id.mapsOptions_fix_button);
         saveChanges = findViewById(R.id.mapsOptions_save_button);
         devLog = findViewById(R.id.mapsOptions_log);
@@ -129,8 +125,8 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rawPath = path.replace("/document/primary:", Environment.getExternalStorageDirectory().toString()+"/").replace("/document/raw:/", "");
         String[] arr = path.replace(".txt", "").split("/");
         mapName.setText(arr[arr.length - 1]);
-        devLog("rawPath: "+ rawPath, false);
-        devLog("mapName: "+ mapName.getText(), false);
+        devLog("rawPath: "+ rawPath);
+        devLog("mapName: "+ mapName.getText());
         readMap(path);
     }
 
@@ -160,12 +156,12 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void setMapName(String name) {
-        devLog("attempting to change map name to: "+name, false);
+        devLog("attempting to change map name to: "+name);
         updatedContent[0] = "Map Name:"+name;
     }
 
     public void setMapType(Integer mapTypeNumber) {
-        devLog("attempting to change map type to: "+mapTypeNumber, false);
+        devLog("attempting to change map type to: "+mapTypeNumber);
         if (mapVers >= 3) {
             updatedContent[1] = "Map Type:"+mapTypeNumber.toString();
         } else {
@@ -174,7 +170,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void setString(Integer posAtContent, String string) {
-        devLog("attempting to change line at pos "+posAtContent.toString()+" to: "+string, false);
+        devLog("attempting to change line at pos "+posAtContent.toString()+" to: "+string);
         updatedContent[posAtContent] = string;
     }
 
@@ -192,13 +188,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void readMap(String path) {
         File mapFile = new File(path);
         if (mapFile.exists()) {
-            devLog("attempting to read: "+path, false);
+            devLog("attempting to read: "+path);
             try {
                 String _full = FileUtil.readFile(path);
                 updatedContent = _full.split("\n");
                 readMapVers();
             } catch (Exception e) {
-                devLog(e.toString(), true);
+                devLog(e.toString());
             }
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
@@ -214,7 +210,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         } else {
             mapVers = 1;
         }
-        devLog("mapVers = "+mapVers, false);
+        devLog("mapVers = "+mapVers);
         readMapProperties();
     }
 
@@ -230,7 +226,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             rolesLinear.removeAllViews();
             rolesLinear.addView(roles_title);
             rolesLinear.addView(rolesAdd_linear);
-            devLog("attempting to read roles", false);
+            devLog("attempting to read roles");
             rolesLinear.setVisibility(View.VISIBLE);
             String[] rolesString = updatedContent[13].replace("Roles List:", "").split(",");
             if (putRoles) {
@@ -247,26 +243,20 @@ public class MapsOptionsActivity extends AppCompatActivity {
                     Button roleDel = (Button) layout.findViewById(R.id.role_delete);
                     roleName.setText(name);
                     int finalI = i;
-                    roleLinear.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                    roleLinear.setOnTouchListener((v, event) -> {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                            }
-                            AppUtil.handleOnPressEvent(v, event);
-                            return true;
                         }
+                        AppUtil.handleOnPressEvent(v, event);
+                        return true;
                     });
-                    roleDel.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_UP) {
-                                roles.remove(finalI);
-                                readRoles(false);
-                            }
-                            AppUtil.handleOnPressEvent(v, event);
-                            return true;
+                    roleDel.setOnTouchListener((v, event) -> {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            roles.remove(finalI);
+                            readRoles(false);
                         }
+                        AppUtil.handleOnPressEvent(v, event);
+                        return true;
                     });
                     rolesLinear.addView(layout);
                     rolesLinear.removeView(rolesAdd_linear);
@@ -279,13 +269,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void addRole() {
         String roleName = rolesAdd_input.getText().toString();
         roles.add(roleName);
-        devLog("added role: " + roleName, false);
+        devLog("added role: " + roleName);
         readRoles(false);
     }
 
     public void saveRoles() {
         if (mapVers >= 3) {
-            devLog("attempting to save roles", false);
+            devLog("attempting to save roles");
             String finalRoles = "";
             for (int i = 0; i < roles.size(); i++) {
                 finalRoles += ","+roles.get(i);
@@ -294,26 +284,24 @@ public class MapsOptionsActivity extends AppCompatActivity {
         }
     }
 
-    public void fixMap() {
-        Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
-        if (onlineFix) {
-            try {
-                JSONObject object = new JSONObject();
-                object.put("type", "fixMap");
-                object.put("body", arrayJoin(updatedContent, "\n"));
-                doPostRequest(postUrl, object);
-            } catch (Exception e) {
-                devLog(e.toString(), true);
-                devLog("attempting to do offline fix", false);
-                offlineFix();
+    public void removeAllObjects(String object) {
+        devLog("attempting to remove all objects with name: "+object);
+        StringBuilder newContent = new StringBuilder();
+        for (int i = 0; i < updatedContent.length; i++) {
+            if (!updatedContent[i].startsWith(object)) {
+                newContent.append(updatedContent[i]).append("\n");
+            } else {
+                devLog("found "+object+" at "+i);
             }
-        } else {
-            devLog("online fix disabled, attempting to do offline fix", false);
-            offlineFix();
         }
+        updatedContent = newContent.toString().split("\n");
+        devLog("done deleting objects");
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
-    public void offlineFix() {
+    public void fixMap() {
+        Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
+        devLog("attempting to fix the map");
         Boolean is155 = mapVers == 2;
 
         for (int i = 0; i < updatedContent.length; i++) {
@@ -394,13 +382,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
                 updatedContent[i] = full;
             }
         }
-        devLog("done", false);
+        devLog("done");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     public void saveMap() {
         saveRoles();
-        devLog("attempting to save the map", false);
+        devLog("attempting to save the map");
         String newContent = "";
         for (int i = 0; i < updatedContent.length; i++) {
             if (newContent.length() > 0) {
@@ -417,113 +405,49 @@ public class MapsOptionsActivity extends AppCompatActivity {
             writer.flush();
             writer.close();
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            devLog("done saving the map", false);
+            devLog("done saving the map");
             finish();
         } catch (Exception e) {
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     Boolean getBoolean(String boolString) {
-        if (boolString.contains("true") || boolString.contains("enabled")) {
-            return true;
-        } else {
-            return false;
-        }
+        return boolString.contains("true") || boolString.contains("enabled");
     }
 
-    public void handlePostRes(String res) {
-        devLog("got response: "+res, false);
-        if (res != null) {
-            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            updatedContent = res.split("<br />");
-        } else {
-            devLog("response is null! attempting to do offline fix", false);
-            offlineFix();
-        }
-    }
-
-    public void doPostRequest(String url, JSONObject obj) {
-        devLog("attempting to do post request to "+url, false);
-        String[] str = {null};
-        new BackgroundTask(this) {
-
-            @Override
-            public void doInBackground() {
-                try {
-                    String res = WebUtil.doPostRequest(url, obj);
-                    str[0] = res;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            devLog(e.toString(), true);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onPostExecute() {
-                handlePostRes(str[0]);
-            }
-        }.execute();
-    }
-
-    public String arrayJoin(String[] arr, String chr) {
-        String full = "";
-        for (int i = 0; i < arr.length; i++) {
-            if (i != 0) {
-                full = full+chr+arr[i];
-            } else {
-                full = full+arr[i];
-            }
-        }
-        return full;
-    }
-
-    void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             devLog.setText(Html.fromHtml(logs));
         }
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                finish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        mapName.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        mapName.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        serverNameLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        serverNameLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         serverName.addTextChangedListener(new TextWatcher() {
@@ -543,22 +467,19 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        mapTypeLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        mapTypeLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         mapType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setMapType(position);
-                devLog("selected position: "+position, false);
+                devLog("selected position: "+position);
             }
 
             @Override
@@ -567,15 +488,12 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        optionsLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        optionsLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         maxVeh.addTextChangedListener(new TextWatcher() {
@@ -629,131 +547,100 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        healthRegeneration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setString(7, "Health Regeneration: "+isChecked);
+        healthRegeneration.setOnCheckedChangeListener((buttonView, isChecked) -> setString(7, "Health Regeneration: "+isChecked));
+
+        hideNames.setOnCheckedChangeListener((buttonView, isChecked) -> setString(8, "Hide Names: "+isChecked));
+
+        allowRespawn.setOnCheckedChangeListener((buttonView, isChecked) -> setString(9, "Allow Respawn: "+isChecked));
+
+        voiceChat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                setString(10, "Voice-Chat: enabled");
+            } else {
+                setString(10, "Voice-Chat: disabled");
             }
         });
 
-        hideNames.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setString(8, "Hide Names: "+isChecked);
+        voteRole.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                setString(11, "Vote For Role: enabled");
+            } else {
+                setString(11, "Vote For Role: disabled");
             }
         });
 
-        allowRespawn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setString(9, "Allow Respawn: "+isChecked);
+        rolePlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                setString(12, "Role-play: enabled");
+            } else {
+                setString(12, "Role-play: disabled");
             }
         });
 
-        voiceChat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setString(10, "Voice-Chat: enabled");
-                } else {
-                    setString(10, "Voice-Chat: disabled");
-                }
+        rolesLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        voteRole.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setString(11, "Vote For Role: enabled");
-                } else {
-                    setString(11, "Vote For Role: disabled");
-                }
+        rolesAdd_linear2.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setString(12, "Role-play: enabled");
-                } else {
-                    setString(12, "Role-play: disabled");
-                }
+        rolesAdd_button.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                addRole();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolesLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        rolesAdd_desc.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                rolesAdd_desc.setVisibility(View.GONE);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolesAdd_linear2.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        removeAllTdm.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                removeAllObjects("Team_");
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolesAdd_button.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    addRole();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        removeAllRace.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                removeAllObjects("Checkpoint_Editor");
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolesAdd_desc.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    rolesAdd_desc.setVisibility(View.GONE);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
-        });
+        fixMapButton.setOnClickListener(v -> fixMap());
 
-        fixMapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        fixMapButton.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
                 fixMap();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fixMapButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    fixMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        saveChanges.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveMap();
             }
-        });
-
-        saveChanges.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 }

@@ -79,7 +79,7 @@ public class GalleryActivity extends AppCompatActivity {
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
             int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
             if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request", false);
+                devLog("no permissions to lac data, attempting to request");
                 Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
@@ -99,20 +99,20 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     public void getScreenshots() {
-        devLog("attempting to get screenshots", false);
+        devLog("attempting to get screenshots");
         File file = new File(lacPath);
         if (file.exists()) {
             File[] files = file.listFiles();
             if (files.length < 1) noScreenshots.setVisibility(View.VISIBLE);
             for (int i = 0; i < files.length; i++) {
                 if (files[i].getName().endsWith(".jpg")) {
-                    devLog("found: "+files[i].getName(), false);
+                    devLog("found: "+files[i].getName());
                     ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.screenshot, rootLinear, false);
                     setScreenshotView(layout, files[i]);
                 }
             }
         } else {
-            devLog("screenshots file is null", false);
+            devLog("screenshots file is null");
             noScreenshots.setVisibility(View.VISIBLE);
         }
     }
@@ -123,32 +123,26 @@ public class GalleryActivity extends AppCompatActivity {
         Button share = layout.findViewById(R.id.ss_share);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
-        background.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        background.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
-        share.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    shareFile(file.getPath());
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        share.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                shareFile(file.getPath());
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
         rootLinear.addView(layout);
     }
 
     public void saveChangesAndFinish() {
         if (Build.VERSION.SDK_INT >= 30) {
-            devLog("attempting to save changes", false);
+            devLog("attempting to save changes");
             File file = new File(tempPath);
             File[] files = file.listFiles();
             try {
@@ -184,42 +178,42 @@ public class GalleryActivity extends AppCompatActivity {
     public void shareFile(String path) {
         File file = new File(path);
         if (file.exists()) {
-            devLog("attempting to share: "+path, false);
+            devLog("attempting to share: "+path);
             Intent share = FileUtil.shareFile(path, "image/*");
             startActivity(Intent.createChooser(share, "Share Screenshot"));
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
-            devLog("file does not exist", false);
+            devLog("file does not exist");
         }
     }
 
     public void copyFile(DocumentFile src, String dst) {
-        devLog("attempting to copy "+src.getUri()+" to "+dst, false);
+        devLog("attempting to copy "+src.getUri()+" to "+dst);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully", false);
+            devLog("copied successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void copyFile(String src, DocumentFile dst) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src+" to "+dst);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully", false);
+            devLog("copied successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
-    void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             log.setText(Html.fromHtml(logs));
         }
@@ -228,16 +222,16 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        devLog("received result for: "+requestCode, false);
+        devLog("received result for: "+requestCode);
         if (requestCode == TREE_REQUEST_CODE) {
             if (data == null) {
-                devLog(requestCode+": no data", false);
+                devLog(requestCode+": no data");
             } else {
                 if (Build.VERSION.SDK_INT >= 30) {
                     int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-                    devLog(requestCode+": granted permissions for: "+data.getData(), false);
+                    devLog(requestCode+": granted permissions for: "+data.getData());
                     useTempPath();
                 }
             }
@@ -245,26 +239,20 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveChangesAndFinish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveChangesAndFinish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        noScreenshots.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        noScreenshots.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 

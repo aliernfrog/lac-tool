@@ -16,18 +16,19 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:toolbarId="@+id/toolbar"
+            app:contentScrim="#00FFFFFF"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/mapEdit"
+            app:expandedTitleGravity="center"
+            app:toolbarId="@+id/toolbar">
 
-            >
-
-            <TextView
+            <Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/mapEdit"
-                android:textColor="#FFFFFF"
-                android:textSize="34sp" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                tools:targetApi="lollipop" />
+
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -388,6 +389,32 @@
                 android:padding="8dp">
 
                 <Button
+                    android:id="@+id/mapsOptions_removeAll_tdm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/mapEdit_removeAll_tdm"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+                <Button
+                    android:id="@+id/mapsOptions_removeAll_race"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/mapEdit_removeAll_race"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+                <Button
                     android:id="@+id/mapsOptions_fix_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -395,6 +422,7 @@
                     android:background="@drawable/linear_button"
                     android:padding="8dp"
                     android:text="@string/mapEdit_replaceOldObjects"
+                    android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
