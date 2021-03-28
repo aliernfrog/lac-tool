@@ -95,51 +95,39 @@ public class RestoreActivity extends AppCompatActivity {
     }
 
     void setOnClick() {
-        goHome.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goHome.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                finish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        mapsselect.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        mapsselect.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        select.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (mapsList.getSelectedItem() == null) return true;
-                    String mapname = mapsList.getSelectedItem().toString();
-                    if (mapname == null || mapname == "") return true;
-                    _getMap(backupPath+mapname+".txt");
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        select.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (mapsList.getSelectedItem() == null) return true;
+                String mapname = mapsList.getSelectedItem().toString();
+                if (mapname == null || mapname == "") return true;
+                _getMap(backupPath+mapname+".txt");
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        restoreLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        restoreLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         mapsList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -154,15 +142,12 @@ public class RestoreActivity extends AppCompatActivity {
             }
         });
 
-        restore.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    restore();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        restore.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                restore();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 }

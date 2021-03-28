@@ -91,7 +91,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         pickiT = new PickiT(this, this, this);
 
         if (!devMode) logView.setVisibility(View.GONE);
-        devLog("==== DEBUG LOGS ====", false);
+        devLog("==== DEBUG LOGS ====");
         setListeners();
 
         if (Build.VERSION.SDK_INT >= 30) {
@@ -100,7 +100,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
             int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
             if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request", false);
+                devLog("no permissions to lac data, attempting to request");
                 Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
@@ -114,8 +114,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         }
 
         wpPath = wpTreePath+"/";
-        devLog("wpPath = "+wpPath, false);
-        devLog("", false);
+        devLog("wpPath = "+wpPath);
+        devLog("");
 
         getImportedWallpapers();
     }
@@ -126,25 +126,25 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         pickedWpLinear.setVisibility(View.VISIBLE);
         Bitmap wpBitmap = BitmapFactory.decodeFile(new File(rawPath).getAbsolutePath());
         wallpaperView.setImageBitmap(wpBitmap);
-        devLog("wpName = "+wpName, false);
-        devLog("rawPath = "+ rawPath, false);
+        devLog("wpName = "+wpName);
+        devLog("rawPath = "+ rawPath);
     }
 
     public void getImportedWallpapers() {
-        devLog("attempting to get imported wallpapers", false);
+        devLog("attempting to get imported wallpapers");
         rootLayout.removeAllViews();
         File wpFile = new File(wpPath);
         if (wpFile.exists()) {
             File[] files = wpFile.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].getName().endsWith(".jpg")) {
-                    devLog("found: "+files[i].getName(), false);
+                    devLog("found: "+files[i].getName());
                     ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.wallpaper, rootLayout, false);
                     setWallpaperView(layout, files[i]);
                 }
             }
         } else {
-            devLog("wallpaper file doesnt exist", false);
+            devLog("wallpaper file doesnt exist");
         }
     }
 
@@ -158,41 +158,32 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
         rootLayout.addView(layout);
-        bg.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        bg.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
-        copyUrl.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
-                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        copyUrl.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
+                Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
-        delete.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (Build.VERSION.SDK_INT < 30) {
-                        file.delete();
-                        rootLayout.removeView(layout);
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
-                    }
+        delete.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (Build.VERSION.SDK_INT < 30) {
+                    file.delete();
+                    rootLayout.removeView(layout);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
                 }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 
@@ -207,7 +198,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, 2);
-        devLog("attempting to pick a file with request code 2", false);
+        devLog("attempting to pick a file with request code 2");
     }
 
     public void useTempPath() {
@@ -224,42 +215,42 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     }
 
     public void copyFile(String src, String dst) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src+" to "+dst);
         try {
             FileUtil.copyFile(src, dst);
-            devLog("copied from "+src+" to "+dst, false);
+            devLog("copied from "+src+" to "+dst);
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void copyFile(String src, DocumentFile dst) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src+" to "+dst);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully", false);
+            devLog("copied successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     public void copyFile(DocumentFile src, String dst) {
-        devLog("attempting to copy "+src.getUri()+" to "+dst, false);
+        devLog("attempting to copy "+src.getUri()+" to "+dst);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully", false);
+            devLog("copied successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     public void saveChangesAndFinish() {
         if (Build.VERSION.SDK_INT >= 30) {
-            devLog("attempting to save changes", false);
+            devLog("attempting to save changes");
             File file = new File(tempPath);
             File[] files = file.listFiles();
             try {
@@ -277,10 +268,10 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         }
     }
 
-    void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             logView.setText(Html.fromHtml(logs));
         }
@@ -291,22 +282,22 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
             if (data == null) {
-                devLog("2: no data", false);
+                devLog("2: no data");
             } else {
                 Uri URI = data.getData();
                 File file = new File(URI.getPath());
-                devLog("2: "+file.getPath(), false);
+                devLog("2: "+file.getPath());
                 pickiT.getPath(data.getData(), Build.VERSION.SDK_INT);
             }
         } else if (requestCode == 1) {
             if (data == null) {
-                devLog(requestCode+": no data", false);
+                devLog(requestCode+": no data");
             } else {
                 if (Build.VERSION.SDK_INT >= 30) {
                     int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-                    devLog(requestCode+": granted permissions for: "+data.getData(), false);
+                    devLog(requestCode+": granted permissions for: "+data.getData());
                     useTempPath();
                 }
             }
@@ -314,70 +305,52 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveChangesAndFinish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveChangesAndFinish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        desc.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    desc.setVisibility(View.GONE);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        desc.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                desc.setVisibility(View.GONE);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        actionsLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        actionsLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        pickFile.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    pickFile();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        pickFile.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                pickFile();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        importFile.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    importWp();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        importFile.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                importWp();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        pickedWpLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        pickedWpLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 
@@ -399,10 +372,10 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         if (wasSuccessful) {
-            devLog("got path: "+path, false);
+            devLog("got path: "+path);
             getWp(path);
         } else {
-            devLog(Reason, true);
+            devLog(Reason);
         }
     }
 

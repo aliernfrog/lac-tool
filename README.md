@@ -11,7 +11,7 @@ An open source app, lets you do most of <a href="https://play.google.com/store/a
 
 # Requirements
 - At least Android 4.2 to run
-- Android 4.4 or above recommended
+- Android 5.0 or above recommended
 
 # Android 11 support
 The app can manage LAC data even in Android 11.
