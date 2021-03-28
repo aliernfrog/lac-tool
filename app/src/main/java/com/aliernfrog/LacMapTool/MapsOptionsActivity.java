@@ -64,7 +64,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     SharedPreferences config;
 
-    String postUrl = "https://ensibot-discord.aliernfrog.repl.co";
     Boolean devMode;
     String rawPath;
     Integer mapVers;
