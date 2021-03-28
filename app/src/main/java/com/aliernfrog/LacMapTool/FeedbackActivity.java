@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Html;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
