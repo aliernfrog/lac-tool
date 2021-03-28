@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,7 +79,16 @@ public class OptionsActivity extends AppCompatActivity {
         github = findViewById(R.id.options_github);
         app_feedback = findViewById(R.id.options_app_feedback);
         changelog = findViewById(R.id.options_changelog);
-        changelog.setText(update.getString("changelog", null));
+
+        try {
+            String _log = update.getString("changelog", null).replaceAll("\n", "<br />");
+            String _versName = AppUtil.getVersName(getApplicationContext());
+            Integer _versCode = AppUtil.getVersCode(getApplicationContext());
+            changelog.setText(Html.fromHtml("<b>Changelog</b><br />"+_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            changelog.setText(e.toString());
+        }
 
         pickiT = new PickiT(getApplicationContext(), null, this);
 
