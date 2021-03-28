@@ -17,18 +17,17 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
-
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:contentScrim="#00FFFFFF"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/manageMaps"
+            app:expandedTitleGravity="center"
             app:toolbarId="@+id/toolbar">
 
-            <TextView
+            <Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/manageMaps"
-                android:textColor="#FFFFFF"
-                android:textSize="34sp" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                tools:targetApi="lollipop" />
 
             <ImageView
                 android:id="@+id/maps_thumbnail"
