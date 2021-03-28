@@ -57,6 +57,8 @@ public class MapsOptionsActivity extends AppCompatActivity {
     Button rolesAdd_button;
     TextView rolesAdd_desc;
     LinearLayout optionsLinear;
+    Button removeAllTdm;
+    Button removeAllRace;
     Button fixMapButton;
     Button saveChanges;
     TextView devLog;
@@ -106,6 +108,8 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rolesAdd_button = findViewById(R.id.mapsOptions_roleAdd_button);
         rolesAdd_desc = findViewById(R.id.mapsOptions_roleAdd_desc);
         optionsLinear = findViewById(R.id.mapsOptions_options_linear);
+        removeAllTdm = findViewById(R.id.mapsOptions_removeAll_tdm);
+        removeAllRace = findViewById(R.id.mapsOptions_removeAll_race);
         fixMapButton = findViewById(R.id.mapsOptions_fix_button);
         saveChanges = findViewById(R.id.mapsOptions_save_button);
         devLog = findViewById(R.id.mapsOptions_log);
@@ -278,6 +282,21 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
             updatedContent[13] = "Roles List:"+finalRoles;
         }
+    }
+
+    public void removeAllObjects(String object) {
+        devLog("attempting to remove all objects with name: "+object, false);
+        StringBuilder newContent = new StringBuilder();
+        for (int i = 0; i < updatedContent.length; i++) {
+            if (!updatedContent[i].startsWith(object)) {
+                newContent.append(updatedContent[i]).append("\n");
+            } else {
+                devLog("found "+object+" at "+i, false);
+            }
+        }
+        updatedContent = newContent.toString().split("\n");
+        devLog("done deleting objects", false);
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     public void fixMap() {
@@ -585,6 +604,22 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rolesAdd_desc.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 rolesAdd_desc.setVisibility(View.GONE);
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
+        removeAllTdm.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                removeAllObjects("Team_");
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
+        removeAllRace.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                removeAllObjects("Checkpoint_Editor");
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;

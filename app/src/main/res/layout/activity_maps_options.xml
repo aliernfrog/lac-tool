@@ -389,6 +389,32 @@
                 android:padding="8dp">
 
                 <Button
+                    android:id="@+id/mapsOptions_removeAll_tdm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/mapEdit_removeAll_tdm"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+                <Button
+                    android:id="@+id/mapsOptions_removeAll_race"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/mapEdit_removeAll_race"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+                <Button
                     android:id="@+id/mapsOptions_fix_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -396,6 +422,7 @@
                     android:background="@drawable/linear_button"
                     android:padding="8dp"
                     android:text="@string/mapEdit_replaceOldObjects"
+                    android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
