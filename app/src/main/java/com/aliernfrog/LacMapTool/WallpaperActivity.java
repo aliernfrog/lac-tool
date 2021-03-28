@@ -158,41 +158,32 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
         rootLayout.addView(layout);
-        bg.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        bg.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
-        copyUrl.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
-                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        copyUrl.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
+                Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
-        delete.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (Build.VERSION.SDK_INT < 30) {
-                        file.delete();
-                        rootLayout.removeView(layout);
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
-                    }
+        delete.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (Build.VERSION.SDK_INT < 30) {
+                    file.delete();
+                    rootLayout.removeView(layout);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
                 }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 
@@ -314,70 +305,52 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveChangesAndFinish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveChangesAndFinish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        desc.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    desc.setVisibility(View.GONE);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        desc.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                desc.setVisibility(View.GONE);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        actionsLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        actionsLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        pickFile.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    pickFile();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        pickFile.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                pickFile();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        importFile.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    importWp();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        importFile.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                importWp();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        pickedWpLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        pickedWpLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 

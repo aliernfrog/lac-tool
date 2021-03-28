@@ -109,48 +109,36 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     void setListener() {
-        goBack.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goBack.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                finish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        feedbackLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        feedbackLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        sendFeedback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    sendFeedback();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        sendFeedback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                sendFeedback();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        log.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        log.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 }

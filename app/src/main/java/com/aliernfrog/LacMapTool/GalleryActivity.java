@@ -123,25 +123,19 @@ public class GalleryActivity extends AppCompatActivity {
         Button share = layout.findViewById(R.id.ss_share);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
-        background.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        background.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
-        share.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    shareFile(file.getPath());
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        share.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                shareFile(file.getPath());
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
         rootLinear.addView(layout);
     }
@@ -245,26 +239,20 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveChangesAndFinish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveChangesAndFinish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        noScreenshots.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        noScreenshots.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 

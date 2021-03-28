@@ -126,12 +126,9 @@ public class PostsActivity extends AppCompatActivity {
                 URL imgUrl = new URL(object.getString("thumbnail"));
                 Bitmap bitmap = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
                 thumbnail.setImageBitmap(bitmap);
-                thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        redirectURL(imgUrl.toString());
-                        return true;
-                    }
+                thumbnail.setOnLongClickListener(v -> {
+                    redirectURL(imgUrl.toString());
+                    return true;
                 });
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -174,15 +171,12 @@ public class PostsActivity extends AppCompatActivity {
                 devLog(e.toString(), true);
             }
         }
-        background.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        background.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
         rootLinear.addView(layout);
     }
@@ -226,12 +220,7 @@ public class PostsActivity extends AppCompatActivity {
                         res[0] = str;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                devLog(e.toString(), true);
-                            }
-                        });
+                        runOnUiThread(() -> devLog(e.toString(), true));
                     }
                 }
 
@@ -247,15 +236,12 @@ public class PostsActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                finish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 }
