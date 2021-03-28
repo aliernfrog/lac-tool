@@ -81,7 +81,7 @@ public class PostsActivity extends AppCompatActivity {
 
     public void setPostUpdate() {
         Integer updated = update.getInt("postUpdate", 0);
-        devLog("attempting to set postUpdate to "+updated, false);
+        devLog("attempting to set postUpdate to "+updated);
         configEdit.putInt("postUpdate", updated);
         configEdit.commit();
     }
@@ -89,22 +89,22 @@ public class PostsActivity extends AppCompatActivity {
     public void getNews(String string) {
         try {
             newsArray = new JSONArray(string);
-            devLog("Found "+newsArray.length()+" objects", false);
+            devLog("Found "+newsArray.length()+" objects");
             for (int i = 0; i < newsArray.length(); i++) {
                 JSONObject object = newsArray.getJSONObject(i);
                 ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.news, rootLinear, false);
-                devLog(" inflated: "+i, false);
+                devLog(" inflated: "+i);
                 setNewsView(layout, object);
             }
             progressBar.setVisibility(View.GONE);
             setPostUpdate();
-            devLog(" done", false);
+            devLog(" done");
         } catch (JSONException e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         } catch (java.lang.NullPointerException e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
@@ -119,9 +119,9 @@ public class PostsActivity extends AppCompatActivity {
         description.setText(Html.fromHtml(object.getString("description")));
         if (!object.getString("thumbnail").contains("://")) {
             thumbnail.setVisibility(View.GONE);
-            devLog("thumbnail not found", false);
+            devLog("thumbnail not found");
         } else {
-            devLog("attempting to set thumbnail", false);
+            devLog("attempting to set thumbnail");
             try {
                 URL imgUrl = new URL(object.getString("thumbnail"));
                 Bitmap bitmap = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
@@ -132,15 +132,15 @@ public class PostsActivity extends AppCompatActivity {
                 });
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                devLog(e.toString(), true);
+                devLog(e.toString());
             } catch (IOException e) {
                 e.printStackTrace();
-                devLog(e.toString(), true);
+                devLog(e.toString());
             }
         }
         if (object.getString("footer").length() < 2) {
             footer.setVisibility(View.GONE);
-            devLog("footer not found", false);
+            devLog("footer not found");
         } else {
             footer.setText(Html.fromHtml(object.getString("footer")));
         }
@@ -149,7 +149,7 @@ public class PostsActivity extends AppCompatActivity {
         if (object.getString("color").contains("red")) background.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear_red));
         if (!object.getString("redirect").contains("://")) {
             redirect.setVisibility(View.GONE);
-            devLog("redirect not found", false);
+            devLog("redirect not found");
         } else {
             String[] arr = object.getString("redirect").split(";;;;");
             try {
@@ -168,7 +168,7 @@ public class PostsActivity extends AppCompatActivity {
                 }
             } catch (java.lang.ArrayIndexOutOfBoundsException e) {
                 redirect.setVisibility(View.GONE);
-                devLog(e.toString(), true);
+                devLog(e.toString());
             }
         }
         background.setOnTouchListener((v, event) -> {
@@ -186,30 +186,30 @@ public class PostsActivity extends AppCompatActivity {
             try {
                 String activity = string.replace("activity://", "");
                 Intent intent = new Intent(this.getApplicationContext(), Class.forName(getApplicationContext().getPackageName()+"."+activity));
-                devLog("attempting to redirect to "+activity, false);
+                devLog("attempting to redirect to "+activity);
                 startActivity(intent);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-                devLog(e.toString(), true);
+                devLog(e.toString());
             }
         } else {
-            devLog("attempting to redirect to: "+string, false);
+            devLog("attempting to redirect to: "+string);
             Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(string));
             startActivity(viewIntent);
         }
     }
 
-    void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             log.setText(Html.fromHtml(logs));
         }
     }
 
     public void getContentFromURL(String urlString) {
-        devLog("attempting to read: "+urlString, false);
+        devLog("attempting to read: "+urlString);
         String[] res = {null};
         try {
             new BackgroundTask(this) {
@@ -220,7 +220,7 @@ public class PostsActivity extends AppCompatActivity {
                         res[0] = str;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        runOnUiThread(() -> devLog(e.toString(), true));
+                        runOnUiThread(() -> devLog(e.toString()));
                     }
                 }
 
@@ -231,7 +231,7 @@ public class PostsActivity extends AppCompatActivity {
             }.execute();
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
