@@ -75,7 +75,7 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_autobkup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_toggleLACD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_toggleLACM"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_legacypath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_disableupdates"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_devtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <Switch
+                <CheckBox
                     android:id="@+id/options_testtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
