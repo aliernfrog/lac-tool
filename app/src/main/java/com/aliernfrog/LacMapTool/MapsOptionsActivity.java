@@ -240,26 +240,20 @@ public class MapsOptionsActivity extends AppCompatActivity {
                     Button roleDel = (Button) layout.findViewById(R.id.role_delete);
                     roleName.setText(name);
                     int finalI = i;
-                    roleLinear.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                    roleLinear.setOnTouchListener((v, event) -> {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                            }
-                            AppUtil.handleOnPressEvent(v, event);
-                            return true;
                         }
+                        AppUtil.handleOnPressEvent(v, event);
+                        return true;
                     });
-                    roleDel.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_UP) {
-                                roles.remove(finalI);
-                                readRoles(false);
-                            }
-                            AppUtil.handleOnPressEvent(v, event);
-                            return true;
+                    roleDel.setOnTouchListener((v, event) -> {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            roles.remove(finalI);
+                            readRoles(false);
                         }
+                        AppUtil.handleOnPressEvent(v, event);
+                        return true;
                     });
                     rolesLinear.addView(layout);
                     rolesLinear.removeView(rolesAdd_linear);
@@ -414,37 +408,28 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    finish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                finish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        mapName.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        mapName.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        serverNameLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        serverNameLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         serverName.addTextChangedListener(new TextWatcher() {
@@ -464,15 +449,12 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        mapTypeLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        mapTypeLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         mapType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -488,15 +470,12 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        optionsLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        optionsLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         maxVeh.addTextChangedListener(new TextWatcher() {
@@ -550,131 +529,84 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        healthRegeneration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setString(7, "Health Regeneration: "+isChecked);
+        healthRegeneration.setOnCheckedChangeListener((buttonView, isChecked) -> setString(7, "Health Regeneration: "+isChecked));
+
+        hideNames.setOnCheckedChangeListener((buttonView, isChecked) -> setString(8, "Hide Names: "+isChecked));
+
+        allowRespawn.setOnCheckedChangeListener((buttonView, isChecked) -> setString(9, "Allow Respawn: "+isChecked));
+
+        voiceChat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                setString(10, "Voice-Chat: enabled");
+            } else {
+                setString(10, "Voice-Chat: disabled");
             }
         });
 
-        hideNames.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setString(8, "Hide Names: "+isChecked);
+        voteRole.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                setString(11, "Vote For Role: enabled");
+            } else {
+                setString(11, "Vote For Role: disabled");
             }
         });
 
-        allowRespawn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setString(9, "Allow Respawn: "+isChecked);
+        rolePlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                setString(12, "Role-play: enabled");
+            } else {
+                setString(12, "Role-play: disabled");
             }
         });
 
-        voiceChat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setString(10, "Voice-Chat: enabled");
-                } else {
-                    setString(10, "Voice-Chat: disabled");
-                }
+        rolesLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        voteRole.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setString(11, "Vote For Role: enabled");
-                } else {
-                    setString(11, "Vote For Role: disabled");
-                }
+        rolesAdd_linear2.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setString(12, "Role-play: enabled");
-                } else {
-                    setString(12, "Role-play: disabled");
-                }
+        rolesAdd_button.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                addRole();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolesLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        rolesAdd_desc.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                rolesAdd_desc.setVisibility(View.GONE);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        rolesAdd_linear2.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        fixMapButton.setOnClickListener(v -> fixMap());
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
-        });
-
-        rolesAdd_button.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    addRole();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
-        });
-
-        rolesAdd_desc.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    rolesAdd_desc.setVisibility(View.GONE);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
-        });
-
-        fixMapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        fixMapButton.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
                 fixMap();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fixMapButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    fixMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        saveChanges.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveMap();
             }
-        });
-
-        saveChanges.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 }
