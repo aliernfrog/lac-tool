@@ -251,99 +251,70 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListeners() {
-        missingPerms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPerms();
+        missingPerms.setOnClickListener(v -> checkPerms());
+
+        optionsLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        optionsLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        redirectMaps.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switchActivity(MapsActivity.class, false);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        redirectMaps.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    switchActivity(MapsActivity.class, false);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        redirectWallpaper.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switchActivity(WallpaperActivity.class, false);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        redirectWallpaper.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    switchActivity(WallpaperActivity.class, false);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        redirectGallery.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switchActivity(GalleryActivity.class, false);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        redirectGallery.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    switchActivity(GalleryActivity.class, false);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        appOptionsLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        appOptionsLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        redirectPosts.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switchActivity(PostsActivity.class, true);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        redirectPosts.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    switchActivity(PostsActivity.class, true);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        redirectOptions.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switchActivity(OptionsActivity.class, true);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        redirectOptions.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    switchActivity(OptionsActivity.class, true);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
-        });
+        updateLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-        updateLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 }

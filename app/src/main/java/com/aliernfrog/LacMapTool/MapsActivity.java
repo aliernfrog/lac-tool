@@ -526,163 +526,121 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     }
 
     void setListener() {
-        goback.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    saveChangesAndFinish();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        goback.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                saveChangesAndFinish();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        backupManage.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    switchActivity(RestoreActivity.class);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        backupManage.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switchActivity(RestoreActivity.class);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        android11warning.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    android11warning.setVisibility(View.GONE);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        android11warning.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                android11warning.setVisibility(View.GONE);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        pickLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        pickLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        selectImported.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (mapsSpinner.getSelectedItem() != null) {
-                        String mapname = mapsSpinner.getSelectedItem().toString();
-                        if (mapname != null && mapname != "") {
-                            getMap(lacPath+mapname+".txt");
-                        }
+        selectImported.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (mapsSpinner.getSelectedItem() != null) {
+                    String mapname = mapsSpinner.getSelectedItem().toString();
+                    if (mapname != null && mapname != "") {
+                        getMap(lacPath+mapname+".txt");
                     }
                 }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fileRename.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    renameMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        fileRename.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                renameMap();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        filePick.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    pickMapFile();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        filePick.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                pickMapFile();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        nameLinear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        nameLinear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        map_linear.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
+        map_linear.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fileImport.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    importMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        fileImport.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                importMap();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        setThumbnail.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    pickThumbnailFile();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        setThumbnail.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                pickThumbnailFile();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fileBackup.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    backupMap(true);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        fileBackup.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                backupMap(true);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fileShare.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    shareFile(rawPath);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        fileShare.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                shareFile(rawPath);
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
-        fileDelete.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    deleteMap();
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+        fileDelete.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                deleteMap();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
 
         mapname.addTextChangedListener(new TextWatcher() {
@@ -708,44 +666,35 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             }
         });
 
-        fileDownload.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (mapname.getText().toString().startsWith("cmd://")) {
-                        handleCmd(mapname.getText().toString());
-                    } else {
-                        downloadMap(mapname.getText().toString());
-                    }
+        fileDownload.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (mapname.getText().toString().startsWith("cmd://")) {
+                    handleCmd(mapname.getText().toString());
+                } else {
+                    downloadMap(mapname.getText().toString());
                 }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
+        editMapSettings.setOnClickListener(v -> {
+            try {
+                backupMap(false);
+                switchActivity(MapsOptionsActivity.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                devLog(e.toString(), true);
             }
         });
 
-        editMapSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    backupMap(false);
-                    switchActivity(MapsOptionsActivity.class);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    devLog(e.toString(), true);
-                }
+        editMapSettings.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                backupMap(false);
+                switchActivity(MapsOptionsActivity.class);
             }
-        });
-
-        editMapSettings.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    backupMap(false);
-                    switchActivity(MapsOptionsActivity.class);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
         });
     }
 
