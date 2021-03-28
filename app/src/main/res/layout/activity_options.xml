@@ -86,6 +86,17 @@
                     android:textStyle="bold" />
 
                 <CheckBox
+                    android:id="@+id/options_bkupOnEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionBackupOnEdit"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <CheckBox
                     android:id="@+id/options_toggleLACD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

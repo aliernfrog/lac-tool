@@ -29,6 +29,7 @@ public class OptionsActivity extends AppCompatActivity {
     ImageView home;
     LinearLayout optionsApp;
     CheckBox autoBackups;
+    CheckBox backupOnEdit;
     CheckBox lacd;
     CheckBox lacm;
     CheckBox legacyPath;
@@ -65,6 +66,7 @@ public class OptionsActivity extends AppCompatActivity {
         home = findViewById(R.id.options_goback);
         optionsApp = findViewById(R.id.options_app);
         autoBackups = findViewById(R.id.options_autobkup);
+        backupOnEdit = findViewById(R.id.options_bkupOnEdit);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
         legacyPath = findViewById(R.id.options_legacypath);
@@ -98,6 +100,7 @@ public class OptionsActivity extends AppCompatActivity {
 
     void checkConfig() {
         if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
+        if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
@@ -147,6 +150,7 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
+        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));

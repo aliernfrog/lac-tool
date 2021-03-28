@@ -73,6 +73,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     SharedPreferences.Editor configEdit;
 
     Boolean devMode;
+    Boolean backupOnEdit;
     String lacPath;
     String dataPath;
     String backupPath;
@@ -108,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         configEdit = config.edit();
 
         devMode = config.getBoolean("enableDebug", false);
+        backupOnEdit = config.getBoolean("enableBackupOnEdit", true);
         lacPath = update.getString("path-lac", null);
         dataPath = update.getString("path-app", null);
         backupPath = dataPath+"backups/";
@@ -678,19 +680,9 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             return true;
         });
 
-        editMapSettings.setOnClickListener(v -> {
-            try {
-                backupMap(false);
-                switchActivity(MapsOptionsActivity.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-                devLog(e.toString(), true);
-            }
-        });
-
         editMapSettings.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                backupMap(false);
+                if (backupOnEdit) backupMap(false);
                 switchActivity(MapsOptionsActivity.class);
             }
             AppUtil.handleOnPressEvent(v, event);
