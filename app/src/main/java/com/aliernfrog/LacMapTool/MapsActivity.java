@@ -138,10 +138,10 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         fileDelete = findViewById(R.id.maps_deleteMap);
         devlog = findViewById(R.id.maps_log);
         if (!devMode) devlog.setVisibility(View.GONE);
-        devLog("==== DEBUG LOGS ====", false);
-        devLog("lacPath: "+lacPath, false);
-        devLog("dataPath: "+dataPath, false);
-        devLog("", false);
+        devLog("==== DEBUG LOGS ====");
+        devLog("lacPath: "+lacPath);
+        devLog("dataPath: "+dataPath);
+        devLog("");
 
         if (Build.VERSION.SDK_INT >= 30) {
             android11warning.setVisibility(View.VISIBLE);
@@ -150,7 +150,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
             int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
             if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request", false);
+                devLog("no permissions to lac data, attempting to request");
                 Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
@@ -186,9 +186,9 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         mapInfo.setText(Html.fromHtml("<b>"+getString(R.string.mapInfo_size)+":</b> "+mapFile.length()/1024+" kB"));
         configEdit.putString("lastPath", rawPath);
         configEdit.commit();
-        devLog("rawPath: "+ rawPath, false);
-        devLog("mapName: "+ mapName, false);
-        devLog("isImported: "+ isImported.toString(), false);
+        devLog("rawPath: "+ rawPath);
+        devLog("mapName: "+ mapName);
+        devLog("isImported: "+ isImported.toString());
     }
 
     public void getMapThumb() {
@@ -198,10 +198,10 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         if (thumb.exists()) {
             Bitmap thumbBitmap = BitmapFactory.decodeFile(thumb.getAbsolutePath());
             thumbView.setImageBitmap(thumbBitmap);
-            devLog("attempting to set thumbnail", false);
+            devLog("attempting to set thumbnail");
         } else {
             thumbView.setImageBitmap(null);
-            devLog("thumbnail doesn't exist", false);
+            devLog("thumbnail doesn't exist");
         }
     }
 
@@ -215,18 +215,18 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         File directory = new File(lacPath);
         File[] files = directory.listFiles();
         if (files == null) {
-            devLog("directory "+directory+" is null", false);
+            devLog("directory "+directory+" is null");
         } else {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isFile() && files[i].getName().endsWith(".txt")) {
                     _mapname = files[i].getName().replace(".txt", "");
                     adapter.add(_mapname);
-                    devLog("found map: "+files[i].getName(), false);
+                    devLog("found map: "+files[i].getName());
                 }
             }
             mapsSpinner.setAdapter(adapter);
-            devLog("done getting files from "+directory, false);
+            devLog("done getting files from "+directory);
         }
     }
 
@@ -240,13 +240,13 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         File _data = new File(lacPath+oldName);
         if (check.exists()) {
             Toast.makeText(getApplicationContext(), R.string.denied_alreadyExists, Toast.LENGTH_SHORT).show();
-            devLog(check.getPath()+" already exists", false);
+            devLog(check.getPath()+" already exists");
         } else {
-            devLog("oldName = "+oldName, false);
+            devLog("oldName = "+oldName);
             if (_thumbnail.exists() && _thumbnail.isFile()) _thumbnail.renameTo(new File(savePath+".jpg"));
             if (_data.exists() && _data.isDirectory()) _data.renameTo(new File(savePath));
             thisFile.renameTo(new File(savePath+".txt"));
-            devLog("Renamed: "+rawPath+" to: "+savePath, false);
+            devLog("Renamed: "+rawPath+" to: "+savePath);
             getMap(savePath);
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         }
@@ -256,16 +256,16 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         savePath = lacPath + mapName + ".txt";
         if (new File(savePath).exists()) {
             Toast.makeText(getApplicationContext(), R.string.denied_alreadyExists, Toast.LENGTH_SHORT).show();
-            devLog("map already exists", false);
+            devLog("map already exists");
         } else {
             copyFile(rawPath, savePath, true);
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            devLog("savePath: "+savePath, false);
+            devLog("savePath: "+savePath);
         }
     }
 
     public void backupMap(Boolean toast) {
-        devLog("attempting to backup with toast "+toast.toString(), false);
+        devLog("attempting to backup with toast "+toast.toString());
         try {
             savePath = backupPath + mapName + "-" + timeString("yyMMddhhmmss") + ".txt";
             copyFile(rawPath, savePath, false);
@@ -273,7 +273,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
-            devLog(e.toString(), true);
+            devLog(e.toString());
             refreshVisibility();
         }
     }
@@ -285,7 +285,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
                 isDeleting = true;
                 Toast.makeText(getApplicationContext(), R.string.mapDelete_clickAgain, Toast.LENGTH_SHORT).show();
             } else {
-                devLog("attempting to delete", false);
+                devLog("attempting to delete");
                 File mapFile = new File(rawPath);
                 File thumbnailFile = new File(rawPath.replace(".txt", ".jpg"));
                 File dataFile = new File(rawPath.replace(".txt", ""));
@@ -306,12 +306,12 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     public void shareFile(String path) {
         File file = new File(path);
         if (file.exists()) {
-            devLog("attempting to share: "+path, false);
+            devLog("attempting to share: "+path);
             Intent share = FileUtil.shareFile(path, "text/*");
             startActivity(Intent.createChooser(share, "Share Map"));
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
-            devLog("file does not exist", false);
+            devLog("file does not exist");
         }
     }
 
@@ -330,7 +330,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             getMap(Environment.getExternalStorageDirectory().toString()+"/Download/"+_downloaded);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
-            devLog(e.toString(), true);
+            devLog(e.toString());
             e.printStackTrace();
         }
     }
@@ -357,49 +357,49 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     }
 
     public void copyFile(String src, String dst, Boolean GetMap) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src+" to "+dst);
         try {
             FileUtil.copyFile(src, dst);
-            devLog("copied successfully", false);
+            devLog("copied successfully");
             if (GetMap) getMap(dst);
         } catch (Exception e) {
            e.printStackTrace();
-           devLog(e.toString(), true);
+           devLog(e.toString());
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void copyFile(String src, DocumentFile dst) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src+" to "+dst);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully", false);
+            devLog("copied successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     public void copyFile(DocumentFile src, String dst, Boolean GetMap) {
-        devLog("attempting to copy "+src.getUri()+" to "+dst, false);
+        devLog("attempting to copy "+src.getUri()+" to "+dst);
         try {
             FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully", false);
+            devLog("copied successfully");
             if (GetMap) getMap(dst);
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     public void autoBackup() {
         if (config.getBoolean("enableAutoBackups", false)) {
-            devLog("attempting to backup", false);
+            devLog("attempting to backup");
             String _dest = aBackupPath+timeString("yyMMddhhmmss");
             if (!new File(_dest).exists()) new File(_dest).mkdirs();
             File[] _maps = new File(lacPath).listFiles();
             if (_maps == null) {
-                devLog("file list is null", false);
+                devLog("file list is null");
             } else {
                 for (int i = 0; i < _maps.length; i++) {
                     String _path = _maps[i].getPath();
@@ -415,7 +415,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("text/*");
         startActivityForResult(intent, PICK_MAP_REQUEST_CODE);
-        devLog("attempting to pick a file with request code "+PICK_MAP_REQUEST_CODE, false);
+        devLog("attempting to pick a file with request code "+PICK_MAP_REQUEST_CODE);
     }
 
     public void pickThumbnailFile() {
@@ -423,12 +423,12 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_THUMBNAIL_REQUEST_CODE);
-        devLog("attempting to pick a file with request code "+PICK_THUMBNAIL_REQUEST_CODE, false);
+        devLog("attempting to pick a file with request code "+PICK_THUMBNAIL_REQUEST_CODE);
     }
 
     public void saveChangesAndFinish() {
         if (Build.VERSION.SDK_INT >= 30) {
-            devLog("attempting to save changes", false);
+            devLog("attempting to save changes");
             File file = new File(tempPath);
             File[] files = file.listFiles();
             try {
@@ -462,7 +462,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     }
 
     public void switchActivity(Class i) {
-        devLog("attempting to redirect to class: "+i.toString(), false);
+        devLog("attempting to redirect to class: "+i.toString());
         Intent intent = new Intent(this.getApplicationContext(), i);
         startActivity(intent);
     }
@@ -484,18 +484,10 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         }
     }
 
-    void devLog(String toLog, Boolean error) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            devlog.setText(Html.fromHtml(logs));
-        }
-    }
-
     void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             devlog.setText(Html.fromHtml(logs));
         }
@@ -504,17 +496,17 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        devLog("received result for: "+requestCode, false);
+        devLog("received result for: "+requestCode);
         CURRENT_REQUEST_CODE = requestCode;
         if (requestCode == PICK_MAP_REQUEST_CODE || requestCode == PICK_THUMBNAIL_REQUEST_CODE) {
             if (data == null) {
-                devLog(requestCode+": no data", false);
+                devLog(requestCode+": no data");
             } else {
                 pickiT.getPath(data.getData(), Build.VERSION.SDK_INT);
             }
         } else if (requestCode == TREE_REQUEST_CODE) {
             if (data == null) {
-                devLog(requestCode+": no data", false);
+                devLog(requestCode+": no data");
             } else {
                 if (Build.VERSION.SDK_INT >= 30) {
                     int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
@@ -712,15 +704,15 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         if (pickitProgress != null && pickitProgress.isShowing()) pickitProgress.cancel();
         if (wasSuccessful) {
-            devLog("got path: "+path, false);
-            devLog("current request code: "+CURRENT_REQUEST_CODE, false);
+            devLog("got path: "+path);
+            devLog("current request code: "+CURRENT_REQUEST_CODE);
             if (CURRENT_REQUEST_CODE == PICK_MAP_REQUEST_CODE) {
                 getMap(path);
             } else if (CURRENT_REQUEST_CODE == PICK_THUMBNAIL_REQUEST_CODE) {
                 setMapThumb(path);
             }
         } else {
-            devLog(Reason, true);
+            devLog(Reason);
         }
     }
 

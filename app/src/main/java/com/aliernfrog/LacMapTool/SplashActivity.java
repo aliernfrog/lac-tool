@@ -80,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
         } catch (Exception e) {
             vers = 10;
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
 
         if (!devMode) scrollView.setVisibility(View.GONE);
@@ -89,7 +89,7 @@ public class SplashActivity extends AppCompatActivity {
             docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
         } else {
             docs = external+"/Documents/";
-            devLog("SDK version is not greater than 19, using default path", false);
+            devLog("SDK version is not greater than 19, using default path");
         }
 
         setListeners();
@@ -101,7 +101,7 @@ public class SplashActivity extends AppCompatActivity {
         if (!skipUpdate) {
             getContentFromURL(versionsURL, VERSIONS_FILE_CODE);
         } else {
-            devLog("skipping updates", false);
+            devLog("skipping updates");
             switchActivity(MainActivity.class);
         }
     }
@@ -127,21 +127,21 @@ public class SplashActivity extends AppCompatActivity {
             if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
             updateEdit.commit();
             if (updatedVers > vers) {
-                devLog("an updated version file found", false);
+                devLog("an updated version file found");
                 getContentFromURL(updateURL+updatedVers+".json", UPDATED_FILE_CODE);
             } else {
                 switchActivity(MainActivity.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
             offlineUpdate();
         }
     }
 
     public void offlineUpdate() {
         try {
-            devLog("attempting to do offline update", false);
+            devLog("attempting to do offline update");
             String pathLacd = external+"/Android/data/com.MA.LACD/files/editor/";
             String pathLacm = external+"/Android/data/com.MA.LACM/files/editor/";
             String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor/";
@@ -161,7 +161,7 @@ public class SplashActivity extends AppCompatActivity {
             switchActivity(MainActivity.class);
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
@@ -175,13 +175,13 @@ public class SplashActivity extends AppCompatActivity {
             switchActivity(MainActivity.class);
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
             switchActivity(MainActivity.class);
         }
     }
 
     public void switchActivity(Class i) {
-        devLog("attempting to switch to class: "+i.toString(), false);
+        devLog("attempting to switch to class: "+i.toString());
         Intent intent = new Intent(this.getApplicationContext(), i);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -191,7 +191,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void handleBackgroundTasks(String string, int request) {
-        devLog("received: "+request, false);
+        devLog("received: "+request);
         if (string != null) {
             try {
                 if (request == VERSIONS_FILE_CODE) {
@@ -208,17 +208,17 @@ public class SplashActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                devLog(e.toString(), false);
+                devLog(e.toString());
                 offlineUpdate();
             }
         } else {
-            devLog(request+" is null!", false);
+            devLog(request+" is null!");
             offlineUpdate();
         }
     }
 
     public void getContentFromURL(String urlString, int request) {
-        devLog("attempting to get content from URL: "+urlString, false);
+        devLog("attempting to get content from URL: "+urlString);
         final String[] str = {null};
         new BackgroundTask(this) {
             @Override
@@ -227,7 +227,7 @@ public class SplashActivity extends AppCompatActivity {
                     str[0] = WebUtil.getContentFromURL(urlString);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    runOnUiThread(() -> devLog(e.toString(), true));
+                    runOnUiThread(() -> devLog(e.toString()));
                 }
             }
             @Override
@@ -241,10 +241,10 @@ public class SplashActivity extends AppCompatActivity {
         return string.replaceAll("_EXTERNAL_", external).replaceAll("_DOCS_", docs);
     }
 
-    void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             log.setText(Html.fromHtml(logs));
         }

@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 nomedia.createNewFile();
             } catch (IOException e) {
-                devLog(e.toString(), true);
+                devLog(e.toString());
             }
         }
     }
@@ -123,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
     public void switchActivity(Class i, Boolean allowWithoutPerms) {
         if (update.getBoolean("blockAccess", false)) return;
         if (!allowWithoutPerms && !hasPerms) {
-            devLog("no required permissions, checking again", false);
+            devLog("no required permissions, checking again");
             checkPerms();
         } else {
             Intent intent = new Intent(this.getApplicationContext(), i);
-            devLog("attempting to redirect to "+i.toString(), false);
+            devLog("attempting to redirect to "+i.toString());
             if (i == OptionsActivity.class) {
                 startActivityForResult(intent, 5);
             } else {
@@ -137,24 +137,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void redirectURL(String url) {
-        devLog("redirecting to: "+url, false);
+        devLog("redirecting to: "+url);
         Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
         startActivity(viewIntent);
     }
 
     public void copyFile(String src, String dst) {
-        devLog("attempting to copy "+src+" to "+dst, false);
+        devLog("attempting to copy "+src+" to "+dst);
         try {
             FileUtil.copyFile(src, dst);
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     public void mkdirs(File mk) {
         mk.mkdirs();
-        devLog("mkdirs: "+mk.getPath(), false);
+        devLog("mkdirs: "+mk.getPath());
     }
 
     public String timeString(String frmString) {
@@ -169,26 +169,26 @@ public class MainActivity extends AppCompatActivity {
                 hasPerms = false;
                 missingPerms.setVisibility(View.VISIBLE);
                 warnLinear.setVisibility(View.VISIBLE);
-                devLog("permission denied, attempting to request permission", false);
+                devLog("permission denied, attempting to request permission");
                 Toast.makeText(getApplicationContext(), R.string.info_storagePerm, Toast.LENGTH_SHORT).show();
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
             } else {
                 hasPerms = true;
                 missingPerms.setVisibility(View.GONE);
                 warnLinear.setVisibility(View.GONE);
-                devLog("permissions granted", false);
+                devLog("permissions granted");
             }
         } else {
             hasPerms = true;
             missingPerms.setVisibility(View.GONE);
             warnLinear.setVisibility(View.GONE);
-            devLog("old SDK version detected", false);
+            devLog("old SDK version detected");
         }
     }
 
     public void getLog() {
         if (update.getBoolean("update-available", false)) {
-            devLog("update found", false);
+            devLog("update found");
             updateLinear.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear_blue));
             updateNotes.setText(update.getString("update-changelog", null));
             if (updateNotes.getText().length() < 1) updateNotes.setVisibility(View.GONE);
@@ -205,10 +205,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         } else {
-            devLog("update not found", false);
+            devLog("update not found");
             String noteFull = update.getString("notes", "");
             if (noteFull.length() > 0) {
-                devLog("notes found", false);
+                devLog("notes found");
                 if (noteFull.contains("%BUTTON%")) {
                     updateLinear.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear_button));
                     noteFull = noteFull.replace("%BUTTON%", "");
@@ -223,17 +223,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 updateNotes.setText(noteFull);
             } else {
-                devLog("notes not found", false);
+                devLog("notes not found");
                 updateNotes.setVisibility(View.GONE);
                 updateLinear.setVisibility(View.GONE);
             }
         }
     }
 
-    public void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             log.setText(Html.fromHtml(logs));
         }

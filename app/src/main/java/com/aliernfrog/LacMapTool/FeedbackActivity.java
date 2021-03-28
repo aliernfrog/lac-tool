@@ -52,7 +52,8 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     public void doPostRequest(String Url, String body) {
-        devLog("attempting to do POST request to: "+Url+" with body: "+body, false);try {
+        devLog("attempting to do POST request to: "+Url+" with body: "+body);
+        try {
             JSONObject obj = new JSONObject();
             obj.put("type", "feedback");
             obj.put("body", body);
@@ -68,7 +69,7 @@ public class FeedbackActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                devLog(e.toString(), true);
+                                devLog(e.toString());
                             }
                         });
                     }
@@ -81,28 +82,28 @@ public class FeedbackActivity extends AppCompatActivity {
             }.execute();
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
     public void handleResponse(String res) {
-        devLog("received response: "+res, false);
+        devLog("received response: "+res);
         if (res == null) {
-            devLog("can't access server", false);
+            devLog("can't access server");
             Toast.makeText(getApplicationContext(), "can't access server", Toast.LENGTH_SHORT).show();
         } else {
             if (res.contains("received")) {
                 Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-                devLog("thanks for sharing your feedback!", false);
+                devLog("thanks for sharing your feedback!");
             } else {
                 Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-        if (error) toLog = "<font color=red>"+toLog+"</font>";
+        if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
         logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
         log.setText(Html.fromHtml(logs));
     }

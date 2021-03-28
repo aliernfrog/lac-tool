@@ -125,8 +125,8 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rawPath = path.replace("/document/primary:", Environment.getExternalStorageDirectory().toString()+"/").replace("/document/raw:/", "");
         String[] arr = path.replace(".txt", "").split("/");
         mapName.setText(arr[arr.length - 1]);
-        devLog("rawPath: "+ rawPath, false);
-        devLog("mapName: "+ mapName.getText(), false);
+        devLog("rawPath: "+ rawPath);
+        devLog("mapName: "+ mapName.getText());
         readMap(path);
     }
 
@@ -156,12 +156,12 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void setMapName(String name) {
-        devLog("attempting to change map name to: "+name, false);
+        devLog("attempting to change map name to: "+name);
         updatedContent[0] = "Map Name:"+name;
     }
 
     public void setMapType(Integer mapTypeNumber) {
-        devLog("attempting to change map type to: "+mapTypeNumber, false);
+        devLog("attempting to change map type to: "+mapTypeNumber);
         if (mapVers >= 3) {
             updatedContent[1] = "Map Type:"+mapTypeNumber.toString();
         } else {
@@ -170,7 +170,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void setString(Integer posAtContent, String string) {
-        devLog("attempting to change line at pos "+posAtContent.toString()+" to: "+string, false);
+        devLog("attempting to change line at pos "+posAtContent.toString()+" to: "+string);
         updatedContent[posAtContent] = string;
     }
 
@@ -188,13 +188,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void readMap(String path) {
         File mapFile = new File(path);
         if (mapFile.exists()) {
-            devLog("attempting to read: "+path, false);
+            devLog("attempting to read: "+path);
             try {
                 String _full = FileUtil.readFile(path);
                 updatedContent = _full.split("\n");
                 readMapVers();
             } catch (Exception e) {
-                devLog(e.toString(), true);
+                devLog(e.toString());
             }
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
@@ -210,7 +210,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         } else {
             mapVers = 1;
         }
-        devLog("mapVers = "+mapVers, false);
+        devLog("mapVers = "+mapVers);
         readMapProperties();
     }
 
@@ -226,7 +226,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             rolesLinear.removeAllViews();
             rolesLinear.addView(roles_title);
             rolesLinear.addView(rolesAdd_linear);
-            devLog("attempting to read roles", false);
+            devLog("attempting to read roles");
             rolesLinear.setVisibility(View.VISIBLE);
             String[] rolesString = updatedContent[13].replace("Roles List:", "").split(",");
             if (putRoles) {
@@ -269,13 +269,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void addRole() {
         String roleName = rolesAdd_input.getText().toString();
         roles.add(roleName);
-        devLog("added role: " + roleName, false);
+        devLog("added role: " + roleName);
         readRoles(false);
     }
 
     public void saveRoles() {
         if (mapVers >= 3) {
-            devLog("attempting to save roles", false);
+            devLog("attempting to save roles");
             String finalRoles = "";
             for (int i = 0; i < roles.size(); i++) {
                 finalRoles += ","+roles.get(i);
@@ -285,23 +285,23 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void removeAllObjects(String object) {
-        devLog("attempting to remove all objects with name: "+object, false);
+        devLog("attempting to remove all objects with name: "+object);
         StringBuilder newContent = new StringBuilder();
         for (int i = 0; i < updatedContent.length; i++) {
             if (!updatedContent[i].startsWith(object)) {
                 newContent.append(updatedContent[i]).append("\n");
             } else {
-                devLog("found "+object+" at "+i, false);
+                devLog("found "+object+" at "+i);
             }
         }
         updatedContent = newContent.toString().split("\n");
-        devLog("done deleting objects", false);
+        devLog("done deleting objects");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     public void fixMap() {
         Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
-        devLog("attempting to fix the map", false);
+        devLog("attempting to fix the map");
         Boolean is155 = mapVers == 2;
 
         for (int i = 0; i < updatedContent.length; i++) {
@@ -382,13 +382,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
                 updatedContent[i] = full;
             }
         }
-        devLog("done", false);
+        devLog("done");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     public void saveMap() {
         saveRoles();
-        devLog("attempting to save the map", false);
+        devLog("attempting to save the map");
         String newContent = "";
         for (int i = 0; i < updatedContent.length; i++) {
             if (newContent.length() > 0) {
@@ -405,10 +405,10 @@ public class MapsOptionsActivity extends AppCompatActivity {
             writer.flush();
             writer.close();
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            devLog("done saving the map", false);
+            devLog("done saving the map");
             finish();
         } catch (Exception e) {
-            devLog(e.toString(), true);
+            devLog(e.toString());
         }
     }
 
@@ -416,10 +416,10 @@ public class MapsOptionsActivity extends AppCompatActivity {
         return boolString.contains("true") || boolString.contains("enabled");
     }
 
-    void devLog(String toLog, Boolean error) {
+    void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (error) toLog = "<font color=red>"+toLog+"</font>";
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             devLog.setText(Html.fromHtml(logs));
         }
@@ -479,7 +479,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setMapType(position);
-                devLog("selected position: "+position, false);
+                devLog("selected position: "+position);
             }
 
             @Override
