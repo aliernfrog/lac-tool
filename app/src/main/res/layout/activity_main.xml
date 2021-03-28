@@ -107,7 +107,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:gravity="start|center_vertical"
                         android:text="@string/manageMaps"
@@ -134,7 +134,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="@string/manageWallpapers"
                         android:textColor="#FFFFFF"
@@ -160,7 +160,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="@string/manageScreenshots"
                         android:textColor="#FFFFFF"
@@ -197,7 +197,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="@string/news"
                         android:textColor="#FFFFFF"
