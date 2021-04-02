@@ -36,16 +36,13 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout optionsLinear;
     LinearLayout redirectMaps;
     LinearLayout redirectWallpaper;
-    LinearLayout appOptionsLinear;
-    LinearLayout redirectPosts;
-    LinearLayout redirectOptions;
     LinearLayout redirectGallery;
+    LinearLayout redirectOptions;
     LinearLayout updateLinear;
     TextView updateText;
     TextView updateNotes;
     Button updateButton;
     TextView log;
-    LinearLayout warnLinear;
 
     String logs = "";
     Boolean devMode;
@@ -82,15 +79,12 @@ public class MainActivity extends AppCompatActivity {
         redirectMaps = findViewById(R.id.main_maps_linear);
         redirectWallpaper = findViewById(R.id.main_wallpaper_linear);
         redirectGallery = findViewById(R.id.main_gallery_linear);
-        appOptionsLinear = findViewById(R.id.main_appOptions);
-        redirectPosts = findViewById(R.id.main_posts_linear);
         redirectOptions = findViewById(R.id.main_settings_linear);
         updateButton = findViewById(R.id.main_updateApp);
         updateNotes = findViewById(R.id.main_notes);
         log = findViewById(R.id.main_log);
         updateText = findViewById(R.id.main_updateText);
         updateLinear = findViewById(R.id.main_updates);
-        warnLinear = findViewById(R.id.main_warnings);
 
         if (!devMode) log.setVisibility(View.GONE);
         setListeners();
@@ -168,20 +162,17 @@ public class MainActivity extends AppCompatActivity {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 hasPerms = false;
                 missingPerms.setVisibility(View.VISIBLE);
-                warnLinear.setVisibility(View.VISIBLE);
                 devLog("permission denied, attempting to request permission");
                 Toast.makeText(getApplicationContext(), R.string.info_storagePerm, Toast.LENGTH_SHORT).show();
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
             } else {
                 hasPerms = true;
                 missingPerms.setVisibility(View.GONE);
-                warnLinear.setVisibility(View.GONE);
                 devLog("permissions granted");
             }
         } else {
             hasPerms = true;
             missingPerms.setVisibility(View.GONE);
-            warnLinear.setVisibility(View.GONE);
             devLog("old SDK version detected");
         }
     }
@@ -280,22 +271,6 @@ public class MainActivity extends AppCompatActivity {
         redirectGallery.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 switchActivity(GalleryActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        appOptionsLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectPosts.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(PostsActivity.class, true);
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
