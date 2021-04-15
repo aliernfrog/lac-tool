@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
         setConfig();
     }
 
-    public void setConfig() {
+    private void setConfig() {
         try {
             String pathLacd = external+"/Android/data/com.MA.LACD/files/editor/";
             String pathLacm = external+"/Android/data/com.MA.LACM/files/editor/";
@@ -67,7 +67,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    public void switchActivity(Class i) {
+    private void switchActivity(Class i) {
         Intent intent = new Intent(this.getApplicationContext(), i);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
