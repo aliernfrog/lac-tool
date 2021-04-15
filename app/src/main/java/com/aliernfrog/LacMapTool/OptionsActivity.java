@@ -27,16 +27,15 @@ import java.io.File;
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
-    LinearLayout optionsApp;
+    LinearLayout optionsEx;
     CheckBox autoBackups;
     CheckBox backupOnEdit;
     CheckBox lacd;
     CheckBox lacm;
     CheckBox legacyPath;
-    LinearLayout optionsEx;
     CheckBox dev;
     Button deleteTemp;
-    TextView changelog;
+    TextView version;
     LinearLayout discord_linear;
     Button discord_bbots;
     Button discord_rcs;
@@ -75,16 +74,16 @@ public class OptionsActivity extends AppCompatActivity {
         discord_rcs = findViewById(R.id.options_discord_rcs);
         github = findViewById(R.id.options_github);
         app_feedback = findViewById(R.id.options_app_feedback);
-        changelog = findViewById(R.id.options_changelog);
+        version = findViewById(R.id.options_version);
 
         try {
-            String _log = update.getString("changelog", null).replaceAll("\n", "<br />");
+            String _log = "LAC Tool app was made by aliernfrog#9747 and is NOT official";
             String _versName = AppUtil.getVersName(getApplicationContext());
             Integer _versCode = AppUtil.getVersCode(getApplicationContext());
-            changelog.setText(Html.fromHtml("<b>Changelog</b><br />"+_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
+            version.setText(Html.fromHtml(_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
         } catch (Exception e) {
             e.printStackTrace();
-            changelog.setText(e.toString());
+            version.setText(e.toString());
         }
 
         pickiT = new PickiT(getApplicationContext(), null, this);
@@ -133,7 +132,7 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
 
-        optionsApp.setOnTouchListener((v, event) -> {
+        optionsEx.setOnTouchListener((v, event) -> {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -190,7 +189,7 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        changelog.setOnTouchListener((v, event) -> {
+        version.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
 
             }

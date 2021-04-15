@@ -180,16 +180,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/options_changelog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:gravity="center_horizontal"
-                android:padding="8dp"
-                android:textColor="#FFFFFF" />
-
             <LinearLayout
                 android:id="@+id/options_dc"
                 android:layout_width="match_parent"
@@ -253,6 +243,16 @@
                     app:backgroundTint="#005DFF" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/options_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
 
