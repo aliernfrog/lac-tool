@@ -167,17 +167,6 @@
                 android:padding="8dp">
 
                 <CheckBox
-                    android:id="@+id/options_disableupdates"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionDisableUpdates"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <CheckBox
                     android:id="@+id/options_devtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

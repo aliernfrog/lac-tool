@@ -65,7 +65,6 @@
     <string name="mapEdit_roles">Roles</string>
     <string name="optionAutoBackup">Auto map backups</string>
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
-    <string name="optionDisableUpdates">Disable LAC Tool updates</string>
     <string name="optionLacd">LACD path</string>
     <string name="optionLacdDesc">LACD path: manages files of LAC BETA app</string>
     <string name="optionLacm">LACM path</string>
