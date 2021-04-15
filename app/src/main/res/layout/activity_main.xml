@@ -55,6 +55,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear_red"
                 android:text="@string/warning_missingPerms"
+                android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:visibility="visible"
                 app:backgroundTint="#C50000" />

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">LAC Tool</string>
-    <string name="warning_missingPerms">Missing permissions</string>
+    <string name="warning_missingPerms">Missing permissions, click to fix</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
     <string name="info_treePerm">LAC Tool needs access to your LAC files in order to manage them, click "use this folder" option and it will get required permissions</string>
     <string name="info_saveChangesAndroid11">Click your device\'s back button or in app back button to save the changes you did</string>
