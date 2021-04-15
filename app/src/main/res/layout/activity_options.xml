@@ -155,17 +155,6 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/options_app"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:orientation="vertical"
-                android:padding="8dp">
-
                 <CheckBox
                     android:id="@+id/options_devtoggle"
                     android:layout_width="match_parent"
@@ -174,17 +163,6 @@
                     android:background="@drawable/linear_button"
                     android:padding="8dp"
                     android:text="@string/optionDebug"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <CheckBox
-                    android:id="@+id/options_testtoggle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_red"
-                    android:padding="8dp"
-                    android:text="@string/optionTestMode"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
