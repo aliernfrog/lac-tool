@@ -161,7 +161,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListeners() {
-        missingPerms.setOnClickListener(v -> checkPerms());
+        missingPerms.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                checkPerms();
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
 
         optionsLinear.setOnTouchListener((v, event) -> {
             AppUtil.handleOnPressEvent(v, event);
