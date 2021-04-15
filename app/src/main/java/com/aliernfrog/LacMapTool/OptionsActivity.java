@@ -35,7 +35,6 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox legacyPath;
     LinearLayout optionsEx;
     CheckBox dev;
-    CheckBox test;
     Button deleteTemp;
     TextView changelog;
     LinearLayout discord_linear;
@@ -63,7 +62,6 @@ public class OptionsActivity extends AppCompatActivity {
         configEdit = config.edit();
 
         home = findViewById(R.id.options_goback);
-        optionsApp = findViewById(R.id.options_app);
         autoBackups = findViewById(R.id.options_autobkup);
         backupOnEdit = findViewById(R.id.options_bkupOnEdit);
         lacd = findViewById(R.id.options_toggleLACD);
@@ -71,7 +69,6 @@ public class OptionsActivity extends AppCompatActivity {
         legacyPath = findViewById(R.id.options_legacypath);
         optionsEx = findViewById(R.id.options_ex);
         dev = findViewById(R.id.options_devtoggle);
-        test = findViewById(R.id.options_testtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
         discord_bbots = findViewById(R.id.options_discord_bbots);
@@ -103,15 +100,11 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
-        if (config.getBoolean("enableTest", false)) test.setChecked(true);
-        if (!update.getBoolean("showLegacyMode", false) && !config.getBoolean("hidden-enable", false)) legacyPath.setVisibility(View.GONE);
-        if (!config.getBoolean("hidden-enable", false)) {
-            test.setVisibility(View.GONE);
-        }
+        if (!update.getBoolean("showLegacyMode", false)) legacyPath.setVisibility(View.GONE);
     }
 
     void changeOption(String name, Boolean set) {
-        if (name == "enableLacd" || name == "enableLacm" || name == "enableDebug" || name == "enableTest") activityResult = 1;
+        if (name == "enableLacd" || name == "enableLacm" || name == "enableDebug") activityResult = 1;
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -139,27 +132,19 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        optionsApp.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-            }
+        optionsApp.setOnTouchListener((v, event) -> {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
+
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));
-        optionsEx.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
-        test.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableTest", isChecked));
+
         deleteTemp.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 pickiT.deleteTemporaryFile(getApplicationContext());
