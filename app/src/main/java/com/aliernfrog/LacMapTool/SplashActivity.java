@@ -11,13 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.widget.TextView;
-
-import com.aliernfrog.LacMapTool.utils.AppUtil;
 
 public class SplashActivity extends AppCompatActivity {
-    TextView version;
-
     SharedPreferences update;
     SharedPreferences.Editor updateEdit;
     SharedPreferences config;
