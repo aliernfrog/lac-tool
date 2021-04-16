@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -17,8 +18,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.LacMapTool.utils.WebUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button redirectWallpaper;
     Button redirectGallery;
     LinearLayout appLinear;
+    Button checkUpdates;
     Button redirectOptions;
     LinearLayout updateLinear;
     TextView updateLog;
@@ -39,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
     String logs = "";
     Boolean devMode;
     Boolean hasPerms;
+    Integer version;
 
+    String updateUrl = "https://blursedbots.glitch.me/lacmaptool/updateTest.json";
     String dataPath;
     String lacPath;
     String backupPath;
@@ -73,15 +82,54 @@ public class MainActivity extends AppCompatActivity {
         redirectWallpaper = findViewById(R.id.main_wallpapers);
         redirectGallery = findViewById(R.id.main_screenshots);
         appLinear = findViewById(R.id.main_optionsApp);
+        checkUpdates = findViewById(R.id.main_checkUpdates);
         redirectOptions = findViewById(R.id.main_options);
         updateLinear = findViewById(R.id.main_update);
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
+        try {
+            version = AppUtil.getVersCode(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+            devLog(e.toString());
+            version = 11;
+        }
+
         if (!devMode) log.setVisibility(View.GONE);
         checkPerms();
         createFiles();
         setListeners();
+    }
+
+    public void checkUpdates() {
+        devLog("attempting to check updates");
+        try {
+            String jsonString = WebUtil.getContentFromURL(updateUrl);
+            JSONObject object = new JSONObject(jsonString);
+            boolean updateFound = object.getInt("latest") > version;
+            if (updateFound) {
+                updateLinear.setVisibility(View.VISIBLE);
+                updateLog.setText(object.getString("changelog"));
+                updateLinear.setOnTouchListener((v, event) -> {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        try {
+                            redirectURL(object.getString("download"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            devLog(e.toString());
+                        }
+                    }
+                    AppUtil.handleOnPressEvent(v, event);
+                    return true;
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.info_updateNotFound, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            devLog(e.toString());
+        }
     }
 
     public void checkPerms() {
@@ -145,6 +193,12 @@ public class MainActivity extends AppCompatActivity {
         devLog(mk.getPath()+" //"+state);
     }
 
+    public void redirectURL(String url) {
+        devLog("attempting to redirect to:"+url);
+        Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+        startActivity(viewIntent);
+    }
+
     void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
@@ -198,6 +252,19 @@ public class MainActivity extends AppCompatActivity {
         redirectGallery.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 switchActivity(GalleryActivity.class, false);
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
+        appLinear.setOnTouchListener((v, event) -> {
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
+        checkUpdates.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                checkUpdates();
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
