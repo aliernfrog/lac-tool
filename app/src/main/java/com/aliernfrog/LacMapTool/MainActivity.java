@@ -1,7 +1,6 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,6 +14,7 @@ import android.os.StrictMode;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,16 +26,20 @@ import java.io.IOException;
 @SuppressLint("ClickableViewAccessibility")
 public class MainActivity extends AppCompatActivity {
     LinearLayout missingPerms;
-    LinearLayout optionsLinear;
-    LinearLayout redirectMaps;
-    LinearLayout redirectWallpaper;
-    LinearLayout redirectGallery;
-    LinearLayout redirectOptions;
+    LinearLayout lacLinear;
+    Button redirectMaps;
+    Button redirectWallpaper;
+    Button redirectGallery;
+    LinearLayout appLinear;
+    Button redirectOptions;
+    LinearLayout updateLinear;
+    TextView updateLog;
     TextView log;
 
     String logs = "";
     Boolean devMode;
     Boolean hasPerms;
+
     String dataPath;
     String lacPath;
     String backupPath;
@@ -64,11 +68,14 @@ public class MainActivity extends AppCompatActivity {
         aBackupPath = dataPath+"auto-backups/";
 
         missingPerms = findViewById(R.id.main_missingPerms);
-        optionsLinear = findViewById(R.id.main_options);
-        redirectMaps = findViewById(R.id.main_maps_linear);
-        redirectWallpaper = findViewById(R.id.main_wallpaper_linear);
-        redirectGallery = findViewById(R.id.main_gallery_linear);
-        redirectOptions = findViewById(R.id.main_settings_linear);
+        lacLinear = findViewById(R.id.main_optionsLac);
+        redirectMaps = findViewById(R.id.main_maps);
+        redirectWallpaper = findViewById(R.id.main_wallpapers);
+        redirectGallery = findViewById(R.id.main_screenshots);
+        appLinear = findViewById(R.id.main_optionsApp);
+        redirectOptions = findViewById(R.id.main_options);
+        updateLinear = findViewById(R.id.main_update);
+        updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
         if (!devMode) log.setVisibility(View.GONE);
@@ -119,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchActivity(Class i, Boolean allowWithoutPerms) {
         if (!allowWithoutPerms && !hasPerms) {
+            //if no enough permissions, check them again
             devLog("no required permissions, checking again");
             checkPerms();
         } else {
@@ -166,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        optionsLinear.setOnTouchListener((v, event) -> {
+        lacLinear.setOnTouchListener((v, event) -> {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
