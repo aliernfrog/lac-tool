@@ -545,9 +545,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         });
 
         pickLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -556,7 +554,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (mapsSpinner.getSelectedItem() != null) {
                     String mapname = mapsSpinner.getSelectedItem().toString();
-                    if (mapname != null && mapname != "") {
+                    if (mapname != null && !mapname.equals("")) {
                         getMap(lacPath+mapname+".txt");
                     }
                 }
@@ -582,17 +580,13 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         });
 
         nameLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
 
         map_linear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

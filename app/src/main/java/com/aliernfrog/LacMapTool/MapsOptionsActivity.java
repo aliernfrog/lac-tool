@@ -244,9 +244,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
                     roleName.setText(name);
                     int finalI = i;
                     roleLinear.setOnTouchListener((v, event) -> {
-                        if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                        }
+                        event.getAction();
                         AppUtil.handleOnPressEvent(v, event);
                         return true;
                     });
@@ -435,17 +433,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
         });
 
         mapName.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
 
         serverNameLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -468,9 +462,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         });
 
         mapTypeLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -489,9 +481,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         });
 
         optionsLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -578,17 +568,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
         });
 
         rolesLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
 
         rolesAdd_linear2.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

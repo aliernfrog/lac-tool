@@ -11,20 +11,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class WebUtil {
 
-    public static boolean checkNetwork(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ninfo = cm.getActiveNetworkInfo();
-        boolean connected = ninfo != null && ninfo.isAvailable() && ninfo.isConnected();
-        return connected;
-    }
-
     public static String getContentFromURL(String urlString) throws Exception {
         URL url = new URL(urlString);
-        String _line = "";
+        String _line;
         String _full = "";
         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
         while ((_line = reader.readLine()) != null) {
@@ -62,7 +54,7 @@ public class WebUtil {
 
     public static String getResFromConnection(HttpURLConnection connection) throws Exception {
         StringBuilder res = new StringBuilder();
-        String resLine = null;
+        String resLine;
         try(BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
             while ((resLine = br.readLine()) != null) {
                 if (res.length() > 0) resLine = "<br />"+resLine;

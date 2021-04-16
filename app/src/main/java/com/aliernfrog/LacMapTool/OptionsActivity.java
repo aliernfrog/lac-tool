@@ -107,7 +107,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void changeOption(String name, Boolean set) {
-        if (name == "enableLacd" || name == "enableLacm" || name == "enableDebug") activityResult = 1; //set activityResult to 1 so the app will restart on exit
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableDebug")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -164,9 +164,7 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
         discord_linear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -199,9 +197,7 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
         version.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
