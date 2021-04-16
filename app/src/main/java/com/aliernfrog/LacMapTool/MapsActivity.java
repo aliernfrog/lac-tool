@@ -473,17 +473,6 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         return frm.format(now);
     }
 
-    void handleCmd(String cmdText) {
-        String cmd = cmdText.replace("cmd://", "").replace("_", "");
-        if (cmd.startsWith("hidden-enable")) {
-            configEdit.putBoolean("hidden-enable", true);
-            configEdit.commit();
-        } else if (cmd.startsWith("hidden-disable")) {
-            configEdit.putBoolean("hidden-enable", false);
-            configEdit.commit();
-        }
-    }
-
     void devLog(String toLog) {
         if (devMode) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
@@ -641,7 +630,8 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mapName = mapname.getText().toString();
                 String text = mapname.getText().toString();
-                if ((text.startsWith("http://") || text.startsWith("https://") || text.startsWith("cmd://")) && (text.endsWith(".txt") || text.endsWith("_"))) {
+                boolean isMapLink = (text.startsWith("http://") || text.startsWith("https://")) && text.endsWith(".txt");
+                if (isMapLink) {
                     fileDownload.setVisibility(View.VISIBLE);
                 } else {
                     fileDownload.setVisibility(View.GONE);
@@ -656,11 +646,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
 
         fileDownload.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (mapname.getText().toString().startsWith("cmd://")) {
-                    handleCmd(mapname.getText().toString());
-                } else {
-                    downloadMap(mapname.getText().toString());
-                }
+                downloadMap(mapname.getText().toString());
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
