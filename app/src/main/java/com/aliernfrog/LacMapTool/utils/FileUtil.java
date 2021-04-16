@@ -22,8 +22,8 @@ import java.io.OutputStream;
 public class FileUtil {
     public static void copyFile(String source, String destination) throws Exception {
         File src = new File(source);
-        InputStream in = null;
-        OutputStream out = null;
+        InputStream in;
+        OutputStream out;
         if (src.isFile()) {
             in =  new FileInputStream(new File(source));
             out = new FileOutputStream(new File(destination));
@@ -46,8 +46,8 @@ public class FileUtil {
     public static void copyFile(String source, DocumentFile destination, Context context) throws Exception {
         File src = new File(source);
         ContentResolver resolver = context.getContentResolver();
-        InputStream in = null;
-        OutputStream out = null;
+        InputStream in;
+        OutputStream out;
         if (src.isFile()) {
             in = new FileInputStream(new File(source));
             out = resolver.openOutputStream(destination.getUri());
@@ -70,8 +70,8 @@ public class FileUtil {
         DocumentFile src = source;
         File dst = new File(destination);
         ContentResolver resolver = context.getContentResolver();
-        InputStream in = null;
-        OutputStream out = null;
+        InputStream in;
+        OutputStream out;
         if (!src.isDirectory()) {
             in = resolver.openInputStream(source.getUri());
             out = new FileOutputStream(new File(destination));

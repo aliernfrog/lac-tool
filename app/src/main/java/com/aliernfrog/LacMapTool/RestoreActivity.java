@@ -73,7 +73,7 @@ public class RestoreActivity extends AppCompatActivity {
     }
 
     void restore() {
-        if (rawPath == null || rawPath == "") return;
+        if (rawPath == null || rawPath.equals("")) return;
         savePath = lacPath+mapName+".txt";
         try {
             copyFile(rawPath, savePath);
@@ -104,9 +104,7 @@ public class RestoreActivity extends AppCompatActivity {
         });
 
         mapsselect.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -115,7 +113,7 @@ public class RestoreActivity extends AppCompatActivity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (mapsList.getSelectedItem() == null) return true;
                 String mapname = mapsList.getSelectedItem().toString();
-                if (mapname == null || mapname == "") return true;
+                if (mapname == null || mapname.equals("")) return true;
                 _getMap(backupPath+mapname+".txt");
             }
             AppUtil.handleOnPressEvent(v, event);
@@ -123,9 +121,7 @@ public class RestoreActivity extends AppCompatActivity {
         });
 
         restoreLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

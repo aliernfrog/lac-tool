@@ -118,9 +118,7 @@ public class FeedbackActivity extends AppCompatActivity {
         });
 
         feedbackLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -134,9 +132,7 @@ public class FeedbackActivity extends AppCompatActivity {
         });
 
         log.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

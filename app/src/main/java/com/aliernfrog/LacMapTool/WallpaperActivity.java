@@ -159,9 +159,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         image.setImageBitmap(bitmap);
         rootLayout.addView(layout);
         bg.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -322,9 +320,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         });
 
         actionsLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -346,9 +342,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         });
 
         pickedWpLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
