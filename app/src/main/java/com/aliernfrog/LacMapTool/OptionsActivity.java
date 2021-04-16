@@ -103,7 +103,6 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
-        if (!update.getBoolean("showLegacyMode", false)) legacyPath.setVisibility(View.GONE);
     }
 
     void changeOption(String name, Boolean set) {
