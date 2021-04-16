@@ -28,7 +28,6 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".GalleryActivity" />
-        <activity android:name=".PostsActivity" />
         <activity android:name=".MapsActivity" />
         <activity android:name=".WallpaperActivity" />
         <activity android:name=".MapsOptionsActivity" />
