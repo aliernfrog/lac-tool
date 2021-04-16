@@ -1,9 +1,5 @@
 package com.aliernfrog.LacMapTool.utils;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
