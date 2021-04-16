@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     Boolean hasPerms;
     Integer version;
 
-    String updateUrl = "https://blursedbots.glitch.me/lacmaptool/updateTest.json";
+    String updateUrl = "https://blursedbots.glitch.me/lacmaptool/update.json";
     String dataPath;
     String lacPath;
     String backupPath;
