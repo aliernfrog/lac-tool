@@ -48,7 +48,9 @@ public class OptionsActivity extends AppCompatActivity {
 
     PickiT pickiT;
 
-    Integer activityResult = 0;
+    String tempPath;
+
+    Integer activityResult = 0; //this will be the result when exiting the activity, if 1 the app will restart
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -76,8 +78,10 @@ public class OptionsActivity extends AppCompatActivity {
         app_feedback = findViewById(R.id.options_app_feedback);
         version = findViewById(R.id.options_version);
 
+        tempPath = update.getString("path-app", null)+"temp";
+
         try {
-            String _log = "LAC Tool app was made by aliernfrog#9747 and is NOT official";
+            String _log = "LAC Tool app was made by aliernfrog#9747 and is NOT an official app";
             String _versName = AppUtil.getVersName(getApplicationContext());
             Integer _versCode = AppUtil.getVersCode(getApplicationContext());
             version.setText(Html.fromHtml(_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
@@ -103,9 +107,16 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void changeOption(String name, Boolean set) {
-        if (name == "enableLacd" || name == "enableLacm" || name == "enableDebug") activityResult = 1;
+        if (name == "enableLacd" || name == "enableLacm" || name == "enableDebug") activityResult = 1; //set activityResult to 1 so the app will restart on exit
         configEdit.putBoolean(name, set);
         configEdit.commit();
+    }
+
+    void deleteTempData() {
+        File tempFile = new File(tempPath);
+        FileUtil.deleteDirectory(tempFile); //delete app temp data
+        pickiT.deleteTemporaryFile(getApplicationContext()); //delete PickiT temp data
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     void switchActivity(Class i) {
@@ -119,6 +130,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void finishActivity() {
+        //sets the result and finishes the activity
         setResult(activityResult);
         finish();
     }
@@ -146,10 +158,7 @@ public class OptionsActivity extends AppCompatActivity {
 
         deleteTemp.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                pickiT.deleteTemporaryFile(getApplicationContext());
-                File tempFile = new File(update.getString("path-app", null)+"temp");
-                FileUtil.deleteDirectory(tempFile);
-                Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+                deleteTempData();
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
