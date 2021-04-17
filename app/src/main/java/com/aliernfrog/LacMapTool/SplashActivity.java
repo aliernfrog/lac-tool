@@ -6,11 +6,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
+
+import java.util.Locale;
 
 public class SplashActivity extends AppCompatActivity {
     SharedPreferences update;
@@ -20,6 +25,8 @@ public class SplashActivity extends AppCompatActivity {
 
     String external = Environment.getExternalStorageDirectory().toString(); //external storage path
     String docs; //documents folder path
+
+    Boolean forceEnglish;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -34,16 +41,34 @@ public class SplashActivity extends AppCompatActivity {
         updateEdit = update.edit();
         configEdit = config.edit();
 
+        forceEnglish = config.getBoolean("forceEnglish", false);
+
         if (Build.VERSION.SDK_INT >= 19) {
             docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
         } else {
             docs = external+"/Documents/";
         }
 
+        setLocale();
         setConfig();
     }
 
-    private void setConfig() {
+    void setLocale() {
+        String lang = Locale.getDefault().getLanguage();
+        if (forceEnglish) lang = "en";
+        setLocale(lang);
+    }
+
+    void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        Configuration configuration = res.getConfiguration();
+        configuration.locale = locale;
+        res.updateConfiguration(configuration, metrics);
+    }
+
+    void setConfig() {
         try {
             String pathLacd = external+"/Android/data/com.MA.LACD/files/editor/";
             String pathLacm = external+"/Android/data/com.MA.LACM/files/editor/";
@@ -60,7 +85,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void switchActivity(Class i) {
+    void switchActivity(Class i) {
         Intent intent = new Intent(this.getApplicationContext(), i);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
