@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -33,6 +32,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox lacd;
     CheckBox lacm;
     CheckBox legacyPath;
+    CheckBox forceEnglish;
     CheckBox dev;
     Button deleteTemp;
     TextView version;
@@ -69,6 +69,7 @@ public class OptionsActivity extends AppCompatActivity {
         lacm = findViewById(R.id.options_toggleLACM);
         legacyPath = findViewById(R.id.options_legacypath);
         optionsEx = findViewById(R.id.options_ex);
+        forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
@@ -102,11 +103,12 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
+        if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
     }
 
     void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableDebug")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -153,6 +155,7 @@ public class OptionsActivity extends AppCompatActivity {
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));
+        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
 
         deleteTemp.setOnTouchListener((v, event) -> {
