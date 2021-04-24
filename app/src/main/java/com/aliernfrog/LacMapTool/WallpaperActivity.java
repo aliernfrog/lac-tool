@@ -253,10 +253,12 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             File file = new File(tempPath);
             File[] files = file.listFiles();
             try {
-                for (int i = 0; i < files.length; i++) {
-                    DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
-                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
-                    copyFile(files[i].getPath(), fileInLac);
+                if (files != null) {
+                    for (int i = 0; i < files.length; i++) {
+                        DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
+                        if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
+                        copyFile(files[i].getPath(), fileInLac);
+                    }
                 }
             } finally {
                 FileUtil.deleteDirectory(file);
