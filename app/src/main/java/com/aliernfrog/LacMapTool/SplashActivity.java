@@ -70,10 +70,10 @@ public class SplashActivity extends AppCompatActivity {
 
     void setConfig() {
         try {
-            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor/";
-            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor/";
-            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor/";
-            updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor/");
+            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor";
+            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor";
+            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor";
+            updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor");
             updateEdit.putString("path-app", docs+"/LacMapTool/");
             if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
             if (config.getBoolean("enableLacm", false)) updateEdit.putString("path-lac", pathLacm);
