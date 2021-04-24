@@ -94,6 +94,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         devLog("==== DEBUG LOGS ====");
         setListeners();
 
+        wpPath = wpTreePath+"/";
+
         if (Build.VERSION.SDK_INT >= 30) {
             String lacTreeId = wpTreePath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
@@ -113,7 +115,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             }
         }
 
-        wpPath = wpTreePath+"/";
         devLog("wpPath = "+wpPath);
         devLog("");
 
@@ -144,7 +145,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                 }
             }
         } else {
-            devLog("wallpaper file doesnt exist");
+            devLog("wallpaper file doesnt exist"+wpFile.getPath());
         }
     }
 
@@ -209,7 +210,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                 copyFile(files[i], tempPath+files[i].getName());
             }
         }
-        wpPath = tempPath+"wallpaper.jpg";
+        wpPath = tempPath;
     }
 
     public void copyFile(String src, String dst) {
