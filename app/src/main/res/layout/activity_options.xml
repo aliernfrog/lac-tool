@@ -295,6 +295,8 @@
                         android:layout_margin="8dp"
                         android:background="@drawable/linear_blue"
                         android:text="@string/action_done"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
                         app:backgroundTint="#005DFF" />
 
                 </LinearLayout>
