@@ -78,6 +78,8 @@
     <string name="optionDiscordRcs">LAC Discord server</string>
     <string name="optionsDiscordBbots">My Discord server</string>
     <string name="optionsGithub">Source code on GitHub</string>
+    <string name="optionsFeedback">LAC Tool feedback</string>
+    <string name="optionsFeedbackHint">Your feedback..</string>
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>

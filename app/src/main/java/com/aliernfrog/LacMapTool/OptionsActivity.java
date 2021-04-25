@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,8 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +22,10 @@ import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.aliernfrog.LacMapTool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;
+
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -35,12 +41,15 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox forceEnglish;
     CheckBox dev;
     Button deleteTemp;
-    TextView version;
     LinearLayout discord_linear;
     Button discord_bbots;
     Button discord_rcs;
     Button github;
-    Button app_feedback;
+    LinearLayout feedbackLinear;
+    LinearLayout feedback;
+    EditText feedbackInput;
+    Button feedbackSubmit;
+    TextView version;
 
     SharedPreferences update;
     SharedPreferences config;
@@ -49,6 +58,7 @@ public class OptionsActivity extends AppCompatActivity {
     PickiT pickiT;
 
     String tempPath;
+    String feedbackUrl = "https://ensibot-discord.aliernfrog.repl.co";
 
     Integer activityResult = 0; //this will be the result when exiting the activity, if 1 the app will restart
 
@@ -76,7 +86,10 @@ public class OptionsActivity extends AppCompatActivity {
         discord_bbots = findViewById(R.id.options_discord_bbots);
         discord_rcs = findViewById(R.id.options_discord_rcs);
         github = findViewById(R.id.options_github);
-        app_feedback = findViewById(R.id.options_app_feedback);
+        feedbackLinear = findViewById(R.id.options_feedback_linear);
+        feedback = findViewById(R.id.options_feedback);
+        feedbackInput = findViewById(R.id.options_feedback_input);
+        feedbackSubmit = findViewById(R.id.options_feedback_submit);
         version = findViewById(R.id.options_version);
 
         tempPath = update.getString("path-app", null)+"temp";
@@ -113,16 +126,31 @@ public class OptionsActivity extends AppCompatActivity {
         configEdit.commit();
     }
 
+    void submitFeedback() {
+        String feedback = feedbackInput.getText().toString();
+        if (feedback == null || feedback == "") return;
+        try {
+        JSONObject object = new JSONObject();
+        object.put("type", "feedback");
+        object.put("body", feedback);
+        String response = WebUtil.doPostRequest(feedbackUrl, object);
+        Boolean success = response != null;
+        if (success) {
+            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Service is offline", Toast.LENGTH_SHORT).show();
+        }
+        feedbackLinear.setVisibility(View.GONE);
+        } catch (Exception e) {
+            feedbackInput.setText(e.toString());
+        }
+    }
+
     void deleteTempData() {
         File tempFile = new File(tempPath);
         FileUtil.deleteDirectory(tempFile); //delete app temp data
         pickiT.deleteTemporaryFile(getApplicationContext()); //delete PickiT temp data
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-    }
-
-    void switchActivity(Class i) {
-        Intent intent = new Intent(this.getApplicationContext(), i);
-        startActivity(intent);
     }
 
     void redirectURL(String url) {
@@ -191,13 +219,25 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        app_feedback.setOnTouchListener((v, event) -> {
+
+        feedbackLinear.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(FeedbackActivity.class);
+                if (feedback.getVisibility() != View.VISIBLE) {
+                    feedback.setVisibility(View.VISIBLE);
+                    feedbackLinear.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear));
+                }
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
+        feedbackSubmit.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                submitFeedback();
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
         version.setOnTouchListener((v, event) -> {
             event.getAction();
             AppUtil.handleOnPressEvent(v, event);
