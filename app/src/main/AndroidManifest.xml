@@ -26,7 +26,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".FeedbackActivity" android:configChanges="locale|orientation"/>
         <activity android:name=".GalleryActivity" android:configChanges="locale|orientation"/>
         <activity android:name=".MapsActivity" android:configChanges="locale|orientation"/>
         <activity android:name=".WallpaperActivity" android:configChanges="locale|orientation"/>
