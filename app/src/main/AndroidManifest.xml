@@ -30,7 +30,7 @@
         <activity android:name=".MapsActivity" android:configChanges="locale|orientation"/>
         <activity android:name=".WallpaperActivity" android:configChanges="locale|orientation"/>
         <activity android:name=".MapsOptionsActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".OptionsActivity" android:configChanges="locale|orientation"/>
+        <activity android:name=".OptionsActivity" android:configChanges="locale|orientation" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".RestoreActivity" android:configChanges="locale|orientation"/>
     </application>
 
