@@ -130,17 +130,17 @@ public class OptionsActivity extends AppCompatActivity {
         String feedback = feedbackInput.getText().toString();
         if (feedback == null || feedback.length() < 5) return;
         try {
-        JSONObject object = new JSONObject();
-        object.put("type", "feedback");
-        object.put("body", feedback);
-        String response = WebUtil.doPostRequest(feedbackUrl, object);
-        Boolean success = response != null;
-        if (success) {
-            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Service is offline", Toast.LENGTH_SHORT).show();
-        }
-        feedbackLinear.setVisibility(View.GONE);
+            JSONObject object = new JSONObject();
+            object.put("type", "feedback");
+            object.put("body", feedback);
+            String response = WebUtil.doPostRequest(feedbackUrl, object);
+            Boolean success = response != null;
+            if (success) {
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Service is offline", Toast.LENGTH_SHORT).show();
+            }
+            feedbackLinear.setVisibility(View.GONE);
         } catch (Exception e) {
             feedbackInput.setText(e.toString());
         }
