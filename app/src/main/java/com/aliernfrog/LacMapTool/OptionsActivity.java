@@ -128,7 +128,7 @@ public class OptionsActivity extends AppCompatActivity {
 
     void submitFeedback() {
         String feedback = feedbackInput.getText().toString();
-        if (feedback == null || feedback == "") return;
+        if (feedback == null || feedback.length() < 5) return;
         try {
         JSONObject object = new JSONObject();
         object.put("type", "feedback");
