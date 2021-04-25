@@ -103,8 +103,18 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:gravity="center_horizontal|center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/mapImportedMaps"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -113,19 +123,11 @@
                     android:gravity="center_horizontal|center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mapImportedMaps"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
                     <Spinner
                         android:id="@+id/maps_mapsSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="11"
+                        android:layout_weight="1"
                         android:dropDownWidth="wrap_content"
                         android:dropDownSelector="@android:drawable/btn_dropdown"
                         android:spinnerMode="dialog" />
@@ -135,10 +137,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:background="@drawable/linear_button"
+                        android:background="@drawable/linear_blue"
                         android:text="@string/select"
                         android:textColor="#FFFFFF"
-                        app:backgroundTint="#FF0E0E0E" />
+                        android:textStyle="bold"
+                        app:backgroundTint="#005DFF" />
                 </LinearLayout>
 
                 <Button
@@ -162,7 +165,7 @@
                 android:background="@drawable/linear"
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="vertical"
-                android:padding="1dp">
+                android:padding="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
