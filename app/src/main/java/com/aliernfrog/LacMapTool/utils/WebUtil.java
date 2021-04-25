@@ -23,15 +23,6 @@ public class WebUtil {
         return _full;
     }
 
-    public static String doGetRequest(String Url) throws Exception {
-        URL url = new URL(Url);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("Accept", "application/json");
-        String res = getResFromConnection(connection);
-        connection.disconnect();
-        return res;
-    }
-
     public static String doPostRequest(String Url, JSONObject obj) throws Exception {
         URL url = new URL(Url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
