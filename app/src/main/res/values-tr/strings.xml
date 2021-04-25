@@ -87,6 +87,4 @@
     <string name="wallpaperCopyUrl">İçe aktarma URLsini kopyala</string>
     <string name="wallpaperDesc">LAC 1.5.6\'da duvar kağıdı aktarmak için, duvar kağıdının içe aktarma URLsini kopyalayıp oyun içi telefon ayarlarına yapıştırın</string>
     <string name="galleryNoScreenshots">Gösterilecek ekran alıntısı yok</string>
-    <string name="giveFeedback">Özellik öner &amp; Hata bildir</string>
-    <string name="feedbackTitle">Geri bildirim</string>
 </resources>
