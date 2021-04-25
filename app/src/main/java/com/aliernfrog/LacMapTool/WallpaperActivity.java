@@ -54,7 +54,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     String rawPath;
     String wpTreePath;
     String wpPath;
-    String backupPath;
     String tempPath;
     String logs = "";
 
@@ -75,7 +74,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         devMode = config.getBoolean("enableDebug", false);
         wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
         lacPath = wpTreePath+"/";
-        backupPath = update.getString("path-app", null)+"wp-backup.jpg";
         tempPath = update.getString("path-app", null)+"temp/wp/";
 
         goback = findViewById(R.id.wallpaper_goback);
