@@ -2,15 +2,18 @@
 # LAC Tool
 An open source app, lets you do most of <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff such as importing maps and wallpapers.
 
+# <a href="https://github.com/aliernfrog/lac-tool/releases">Download</a>
+
 # Features
 - Managing LAC maps
 - Managing roles of LAC maps
 - Managing LAC wallpapers
+- Importing LAC wallpapers without internet connection
 - Viewing LAC screenshots
 - <a href="#android-11-support">Android 11 support</a>
 
 # Requirements
-- At least Android 4.2 to run
+- At least Android 4.2.1 to run
 - Android 5.0 or above recommended
 
 # Android 11 support

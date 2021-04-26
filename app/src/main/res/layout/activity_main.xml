@@ -49,225 +49,166 @@
             android:paddingRight="24dp">
 
             <LinearLayout
-                android:id="@+id/main_warnings"
+                android:id="@+id/main_missingPerms"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:layout_weight="1"
                 android:background="@drawable/linear_red"
                 android:orientation="vertical"
-                android:padding="8dp"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:padding="8dp">
 
-                <Button
-                    android:id="@+id/main_missingPerms"
+                <TextView
+                    android:id="@+id/main_missingPerms_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_red"
+                    android:padding="8dp"
                     android:text="@string/warning_missingPerms"
                     android:textColor="#FFFFFF"
-                    android:visibility="visible"
-                    app:backgroundTint="#C50000" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/main_missingPerms_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/info_storagePerm"
+                    android:textColor="#BFBFBF"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/main_options"
+                android:id="@+id/main_optionsLac"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:layout_weight="1"
                 android:background="@drawable/linear"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <LinearLayout
-                    android:id="@+id/main_maps_linear"
+                <Button
+                    android:id="@+id/main_maps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:orientation="horizontal"
+                    android:drawableLeft="@drawable/maps"
                     android:padding="8dp"
-                    android:scaleX="1"
-                    android:scaleY="1">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/location" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:gravity="start|center_vertical"
-                        android:text="@string/manageMaps"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/main_wallpaper_linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="10dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/wallpaper" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="@string/manageWallpapers"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/main_gallery_linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/linear_button"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="10dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/gallery" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="@string/manageScreenshots"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/main_appOptions"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/linear"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <LinearLayout
-                    android:id="@+id/main_posts_linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/news" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="@string/news"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/main_settings_linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/options" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="@string/options"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/main_updates"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/linear"
-                android:gravity="end"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/main_updateText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/updateAvailable"
+                    android:text="@string/manageMaps"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
                     android:textColor="#FFFFFF"
-                    android:textSize="25sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/main_notes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF" />
+                    app:backgroundTint="#FF0E0E0E" />
 
                 <Button
-                    android:id="@+id/main_updateApp"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/main_wallpapers"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/update"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:drawableLeft="@drawable/wallpaper"
+                    android:padding="8dp"
+                    android:text="@string/manageWallpapers"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
                     android:textColor="#FFFFFF"
-                    android:visibility="gone"
-                    app:backgroundTint="#0048C6"
-                    tools:visibility="visible" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
 
+                <Button
+                    android:id="@+id/main_screenshots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:drawableLeft="@drawable/gallery"
+                    android:padding="8dp"
+                    android:text="@string/manageScreenshots"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_optionsApp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <Button
+                    android:id="@+id/main_checkUpdates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:drawableLeft="@drawable/update"
+                    android:padding="8dp"
+                    android:text="@string/checkUpdates"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+                <Button
+                    android:id="@+id/main_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:drawableLeft="@drawable/options"
+                    android:padding="8dp"
+                    android:text="@string/options"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_update"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear_blue"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/main_update_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/updateAvailable"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/main_update_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:textColor="#BFBFBF"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView

@@ -54,7 +54,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     String rawPath;
     String wpTreePath;
     String wpPath;
-    String backupPath;
     String tempPath;
     String logs = "";
 
@@ -75,7 +74,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         devMode = config.getBoolean("enableDebug", false);
         wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
         lacPath = wpTreePath+"/";
-        backupPath = update.getString("path-app", null)+"wp-backup.jpg";
         tempPath = update.getString("path-app", null)+"temp/wp/";
 
         goback = findViewById(R.id.wallpaper_goback);
@@ -93,6 +91,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         if (!devMode) logView.setVisibility(View.GONE);
         devLog("==== DEBUG LOGS ====");
         setListeners();
+
+        wpPath = wpTreePath+"/";
 
         if (Build.VERSION.SDK_INT >= 30) {
             String lacTreeId = wpTreePath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
@@ -113,7 +113,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             }
         }
 
-        wpPath = wpTreePath+"/";
         devLog("wpPath = "+wpPath);
         devLog("");
 
@@ -144,7 +143,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                 }
             }
         } else {
-            devLog("wallpaper file doesnt exist");
+            devLog("wallpaper file doesnt exist"+wpFile.getPath());
         }
     }
 
@@ -159,9 +158,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         image.setImageBitmap(bitmap);
         rootLayout.addView(layout);
         bg.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -211,7 +208,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                 copyFile(files[i], tempPath+files[i].getName());
             }
         }
-        wpPath = tempPath+"wallpaper.jpg";
+        wpPath = tempPath;
     }
 
     public void copyFile(String src, String dst) {
@@ -254,10 +251,12 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             File file = new File(tempPath);
             File[] files = file.listFiles();
             try {
-                for (int i = 0; i < files.length; i++) {
-                    DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
-                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
-                    copyFile(files[i].getPath(), fileInLac);
+                if (files != null) {
+                    for (int i = 0; i < files.length; i++) {
+                        DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
+                        if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
+                        copyFile(files[i].getPath(), fileInLac);
+                    }
                 }
             } finally {
                 FileUtil.deleteDirectory(file);
@@ -298,7 +297,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
                     devLog(requestCode+": granted permissions for: "+data.getData());
-                    useTempPath();
+                    finish();
                 }
             }
         }
@@ -322,9 +321,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         });
 
         actionsLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -346,9 +343,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         });
 
         pickedWpLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

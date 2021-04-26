@@ -124,9 +124,7 @@ public class GalleryActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
         background.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -232,7 +230,7 @@ public class GalleryActivity extends AppCompatActivity {
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
                     devLog(requestCode+": granted permissions for: "+data.getData());
-                    useTempPath();
+                    finish();
                 }
             }
         }
@@ -248,9 +246,7 @@ public class GalleryActivity extends AppCompatActivity {
         });
 
         noScreenshots.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
