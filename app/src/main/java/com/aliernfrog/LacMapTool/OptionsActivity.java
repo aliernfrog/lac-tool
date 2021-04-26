@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,30 +22,34 @@ import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.aliernfrog.LacMapTool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;
+
+import org.json.JSONObject;
 
 import java.io.File;
 
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
-    LinearLayout optionsApp;
+    LinearLayout optionsEx;
     CheckBox autoBackups;
     CheckBox backupOnEdit;
     CheckBox lacd;
     CheckBox lacm;
     CheckBox legacyPath;
-    LinearLayout optionsEx;
-    CheckBox disableUpdates;
+    CheckBox forceEnglish;
     CheckBox dev;
-    CheckBox test;
     Button deleteTemp;
-    TextView changelog;
     LinearLayout discord_linear;
     Button discord_bbots;
     Button discord_rcs;
     Button github;
-    Button app_feedback;
+    LinearLayout feedbackLinear;
+    LinearLayout feedback;
+    EditText feedbackInput;
+    Button feedbackSubmit;
+    TextView version;
 
     SharedPreferences update;
     SharedPreferences config;
@@ -51,7 +57,10 @@ public class OptionsActivity extends AppCompatActivity {
 
     PickiT pickiT;
 
-    Integer activityResult = 0;
+    String tempPath;
+    String feedbackUrl = "https://ensibot-discord.aliernfrog.repl.co";
+
+    Integer activityResult = 0; //this will be the result when exiting the activity, if 1 the app will restart
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -64,32 +73,35 @@ public class OptionsActivity extends AppCompatActivity {
         configEdit = config.edit();
 
         home = findViewById(R.id.options_goback);
-        optionsApp = findViewById(R.id.options_app);
         autoBackups = findViewById(R.id.options_autobkup);
         backupOnEdit = findViewById(R.id.options_bkupOnEdit);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
         legacyPath = findViewById(R.id.options_legacypath);
         optionsEx = findViewById(R.id.options_ex);
-        disableUpdates = findViewById(R.id.options_disableupdates);
+        forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
-        test = findViewById(R.id.options_testtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
         discord_bbots = findViewById(R.id.options_discord_bbots);
         discord_rcs = findViewById(R.id.options_discord_rcs);
         github = findViewById(R.id.options_github);
-        app_feedback = findViewById(R.id.options_app_feedback);
-        changelog = findViewById(R.id.options_changelog);
+        feedbackLinear = findViewById(R.id.options_feedback_linear);
+        feedback = findViewById(R.id.options_feedback);
+        feedbackInput = findViewById(R.id.options_feedback_input);
+        feedbackSubmit = findViewById(R.id.options_feedback_submit);
+        version = findViewById(R.id.options_version);
+
+        tempPath = update.getString("path-app", null)+"temp";
 
         try {
-            String _log = update.getString("changelog", null).replaceAll("\n", "<br />");
+            String _log = "LAC Tool app was made by aliernfrog#9747 and is NOT an official app";
             String _versName = AppUtil.getVersName(getApplicationContext());
             Integer _versCode = AppUtil.getVersCode(getApplicationContext());
-            changelog.setText(Html.fromHtml("<b>Changelog</b><br />"+_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
+            version.setText(Html.fromHtml(_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
         } catch (Exception e) {
             e.printStackTrace();
-            changelog.setText(e.toString());
+            version.setText(e.toString());
         }
 
         pickiT = new PickiT(getApplicationContext(), null, this);
@@ -104,24 +116,41 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
-        if (config.getBoolean("disableUpdates", false)) disableUpdates.setChecked(true);
+        if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
-        if (config.getBoolean("enableTest", false)) test.setChecked(true);
-        if (!update.getBoolean("showLegacyMode", false) && !config.getBoolean("hidden-enable", false)) legacyPath.setVisibility(View.GONE);
-        if (!config.getBoolean("hidden-enable", false)) {
-            test.setVisibility(View.GONE);
-        }
     }
 
     void changeOption(String name, Boolean set) {
-        if (name == "enableLacd" || name == "enableLacm" || name == "enableDebug" || name == "enableTest") activityResult = 1;
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
 
-    void switchActivity(Class i) {
-        Intent intent = new Intent(this.getApplicationContext(), i);
-        startActivity(intent);
+    void submitFeedback() {
+        String feedback = feedbackInput.getText().toString();
+        if (feedback == null || feedback.length() < 5) return;
+        try {
+            JSONObject object = new JSONObject();
+            object.put("type", "feedback");
+            object.put("body", feedback);
+            String response = WebUtil.doPostRequest(feedbackUrl, object);
+            Boolean success = response != null;
+            if (success) {
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Service is offline", Toast.LENGTH_SHORT).show();
+            }
+            feedbackLinear.setVisibility(View.GONE);
+        } catch (Exception e) {
+            feedbackInput.setText(e.toString());
+        }
+    }
+
+    void deleteTempData() {
+        File tempFile = new File(tempPath);
+        FileUtil.deleteDirectory(tempFile); //delete app temp data
+        pickiT.deleteTemporaryFile(getApplicationContext()); //delete PickiT temp data
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     void redirectURL(String url) {
@@ -130,6 +159,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void finishActivity() {
+        //sets the result and finishes the activity
         setResult(activityResult);
         finish();
     }
@@ -142,42 +172,29 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        optionsApp.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
 
-            }
+        optionsEx.setOnTouchListener((v, event) -> {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
+
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));
-        optionsEx.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        disableUpdates.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("disableUpdates", isChecked));
+        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
-        test.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableTest", isChecked));
+
         deleteTemp.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                pickiT.deleteTemporaryFile(getApplicationContext());
-                File tempFile = new File(update.getString("path-app", null)+"temp");
-                FileUtil.deleteDirectory(tempFile);
-                Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+                deleteTempData();
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
         discord_linear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-            }
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
@@ -202,17 +219,27 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        app_feedback.setOnTouchListener((v, event) -> {
+
+        feedbackLinear.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(FeedbackActivity.class);
+                if (feedback.getVisibility() != View.VISIBLE) {
+                    feedback.setVisibility(View.VISIBLE);
+                    feedbackLinear.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear));
+                }
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        changelog.setOnTouchListener((v, event) -> {
+        feedbackSubmit.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-
+                submitFeedback();
             }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+
+        version.setOnTouchListener((v, event) -> {
+            event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

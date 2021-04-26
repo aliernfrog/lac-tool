@@ -6,51 +6,27 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.text.Html;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.util.DisplayMetrics;
 
-import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.BackgroundTask;
-import com.aliernfrog.LacMapTool.utils.WebUtil;
-
-import org.json.JSONObject;
+import java.util.Locale;
 
 public class SplashActivity extends AppCompatActivity {
-    ImageView icon;
-    TextView log;
-    ScrollView scrollView;
-
     SharedPreferences update;
     SharedPreferences.Editor updateEdit;
     SharedPreferences config;
     SharedPreferences.Editor configEdit;
 
-    private final String external = Environment.getExternalStorageDirectory().toString();
-    private String docs;
-    private Boolean skipUpdate;
-    private String websiteURL = "https://blursedbots.glitch.me/lacmaptool/";
-    private String versionsURL;
-    private String updateURL;
+    String external = Environment.getExternalStorageDirectory().toString(); //external storage path
+    String docs; //documents folder path
 
-    Boolean devMode;
-    String logs = "";
-    Integer vers;
-    Integer updatedVers = 0;
-    Integer icon_clickCount = 0;
-
-    String current = null;
-
-    int VERSIONS_FILE_CODE = 1;
-    int CURRENT_FILE_CODE = 2;
-    int UPDATED_FILE_CODE = 3;
+    Boolean forceEnglish;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -60,100 +36,45 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        icon = findViewById(R.id.splash_app_icon);
-        log = findViewById(R.id.splash_log);
-        scrollView = findViewById(R.id.splash_scroll);
-
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         updateEdit = update.edit();
         configEdit = config.edit();
-        skipUpdate = config.getBoolean("disableUpdates", false);
-        devMode = config.getBoolean("enableDebug", false);
 
-        if (config.getBoolean("enableTest", false)) websiteURL = websiteURL+"test/";
-        versionsURL = websiteURL+"update.json";
-        updateURL = websiteURL+"versions/";
-
-        try {
-            vers = AppUtil.getVersCode(getApplicationContext());
-        } catch (Exception e) {
-            vers = 10;
-            e.printStackTrace();
-            devLog(e.toString());
-        }
-
-        if (!devMode) scrollView.setVisibility(View.GONE);
+        forceEnglish = config.getBoolean("forceEnglish", false);
 
         if (Build.VERSION.SDK_INT >= 19) {
             docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
         } else {
             docs = external+"/Documents/";
-            devLog("SDK version is not greater than 19, using default path");
         }
 
-        setListeners();
-        Handler handler = new Handler();
-        handler.postDelayed(this::checkUpdates, 100);
+        setLocale();
+        setConfig();
     }
 
-    public void checkUpdates() {
-        if (!skipUpdate) {
-            getContentFromURL(versionsURL, VERSIONS_FILE_CODE);
-        } else {
-            devLog("skipping updates");
-            switchActivity(MainActivity.class);
-        }
+    void setLocale() {
+        String lang = Locale.getDefault().getLanguage();
+        if (forceEnglish) lang = "en";
+        setLocale(lang);
     }
 
-    public void writeUpdate() {
-        updateEdit.putBoolean("update-available", false);
-        updateEdit.putString("update-changelog", "");
-        updateEdit.putString("update-download", "");
-        updateEdit.commit();
+    void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        Configuration configuration = res.getConfiguration();
+        configuration.locale = locale;
+        res.updateConfiguration(configuration, metrics);
+    }
+
+    void setConfig() {
         try {
-            JSONObject obj = new JSONObject(replaceString(current));
-            String pathLacd = obj.getString("path-lacd").replaceAll(">", "/");
-            String pathLacm = obj.getString("path-lacm").replaceAll(">", "/");
-            String pathLegacy = obj.getString("path-legacy").replaceAll(">", "/");
-            updateEdit.putBoolean("blockAccess", obj.getBoolean("blockAccess"));
-            updateEdit.putString("changelog", obj.getString("changelog"));
-            updateEdit.putString("notes", obj.getString("notes").replace("%CHANGELOG%", obj.getString("changelog")));
-            updateEdit.putString("path-lac", obj.getString("path-lac").replaceAll(">", "/"));
-            updateEdit.putString("path-app", obj.getString("path-app").replaceAll(">", "/"));
-            updateEdit.putBoolean("showLegacyMode", obj.getBoolean("showLegacyMode"));
-            if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
-            if (config.getBoolean("enableLacm", false)) updateEdit.putString("path-lac", pathLacm);
-            if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
-            updateEdit.commit();
-            if (updatedVers > vers) {
-                devLog("an updated version file found");
-                getContentFromURL(updateURL+updatedVers+".json", UPDATED_FILE_CODE);
-            } else {
-                switchActivity(MainActivity.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
-            offlineUpdate();
-        }
-    }
-
-    public void offlineUpdate() {
-        try {
-            devLog("attempting to do offline update");
-            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor/";
-            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor/";
-            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor/";
-            updateEdit.putBoolean("update-available", false);
-            updateEdit.putString("update-changelog", "");
-            updateEdit.putString("update-download", "");
-            updateEdit.putBoolean("blockAccess", false);
-            if (update.getString("changelog", null) == null) updateEdit.putString("changelog", "No changelog");
-            if (update.getString("notes", null) == null) updateEdit.putString("notes", null);
-            if (update.getString("path-lac", null) == null) updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor/");
-            if (update.getString("path-app", null) == null) updateEdit.putString("path-app", docs+"/LacMapTool/");
-            if (!update.getBoolean("showLegacyMode", false)) updateEdit.putBoolean("showLegacyMode", false);
+            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor";
+            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor";
+            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor";
+            updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor");
+            updateEdit.putString("path-app", docs+"/LacMapTool/");
             if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
             if (config.getBoolean("enableLacm", false)) updateEdit.putString("path-lac", pathLacm);
             if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
@@ -161,105 +82,15 @@ public class SplashActivity extends AppCompatActivity {
             switchActivity(MainActivity.class);
         } catch (Exception e) {
             e.printStackTrace();
-            devLog(e.toString());
         }
     }
 
-    void setUpdateConfig(String string) {
-        try {
-            JSONObject updatedObj = new JSONObject(string);
-            updateEdit.putBoolean("update-available", true);
-            updateEdit.putString("update-changelog", updatedObj.getString("changelog"));
-            updateEdit.putString("update-download", updatedObj.getString("download"));
-            updateEdit.commit();
-            switchActivity(MainActivity.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
-            switchActivity(MainActivity.class);
-        }
-    }
-
-    public void switchActivity(Class i) {
-        devLog("attempting to switch to class: "+i.toString());
+    void switchActivity(Class i) {
         Intent intent = new Intent(this.getApplicationContext(), i);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             startActivity(intent);
-            finishActivity(0);
+            finish();
         }, 1500);
-    }
-
-    public void handleBackgroundTasks(String string, int request) {
-        devLog("received: "+request);
-        if (string != null) {
-            try {
-                if (request == VERSIONS_FILE_CODE) {
-                    JSONObject object = new JSONObject(string);
-                    updatedVers = object.getInt("latest");
-                    getContentFromURL(updateURL+vers+".json", CURRENT_FILE_CODE);
-                }
-                if (request == CURRENT_FILE_CODE) {
-                    current = string;
-                    writeUpdate();
-                }
-                if (request == UPDATED_FILE_CODE) {
-                    setUpdateConfig(string);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                devLog(e.toString());
-                offlineUpdate();
-            }
-        } else {
-            devLog(request+" is null!");
-            offlineUpdate();
-        }
-    }
-
-    public void getContentFromURL(String urlString, int request) {
-        devLog("attempting to get content from URL: "+urlString);
-        final String[] str = {null};
-        new BackgroundTask(this) {
-            @Override
-            public void doInBackground() {
-                try {
-                    str[0] = WebUtil.getContentFromURL(urlString);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(() -> devLog(e.toString()));
-                }
-            }
-            @Override
-            public void onPostExecute() {
-                handleBackgroundTasks(str[0], request);
-            }
-        }.execute();
-    }
-
-    String replaceString(String string) {
-        return string.replaceAll("_EXTERNAL_", external).replaceAll("_DOCS_", docs);
-    }
-
-    void devLog(String toLog) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            log.setText(Html.fromHtml(logs));
-        }
-    }
-
-    void setListeners() {
-        icon.setOnClickListener(v -> {
-            if (!devMode) {
-                icon_clickCount = icon_clickCount+1;
-                if (icon_clickCount >= 5) {
-                    configEdit.putBoolean("enableDebug", true);
-                    configEdit.commit();
-                    finish();
-                }
-            }
-        });
     }
 }
