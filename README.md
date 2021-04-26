@@ -8,6 +8,7 @@ An open source app, lets you do most of <a href="https://play.google.com/store/a
 - Managing LAC maps
 - Managing roles of LAC maps
 - Managing LAC wallpapers
+- Importing LAC wallpapers without internet connection
 - Viewing LAC screenshots
 - <a href="#android-11-support">Android 11 support</a>
 
