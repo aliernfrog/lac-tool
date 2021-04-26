@@ -297,7 +297,7 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
                     devLog(requestCode+": granted permissions for: "+data.getData());
-                    useTempPath();
+                    finish();
                 }
             }
         }

@@ -230,7 +230,7 @@ public class GalleryActivity extends AppCompatActivity {
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
                     devLog(requestCode+": granted permissions for: "+data.getData());
-                    useTempPath();
+                    finish();
                 }
             }
         }
