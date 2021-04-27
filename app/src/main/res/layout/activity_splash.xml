@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@mipmap/ic_launcher_background"
+                android:scaleType="center"
                 app:srcCompat="@mipmap/ic_launcher_foreground" />
         </LinearLayout>
 
