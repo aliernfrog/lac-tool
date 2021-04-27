@@ -193,56 +193,15 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/options_dc"
+            <TextView
+                android:id="@+id/options_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <Button
-                    android:id="@+id/options_discord_rcs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionDiscordRcs"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
-
-                <Button
-                    android:id="@+id/options_discord_bbots"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionsDiscordBbots"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
-
-                <Button
-                    android:id="@+id/options_github"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionsGithub"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
-
-            </LinearLayout>
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:textColor="#FFFFFF" />
 
             <LinearLayout
                 android:id="@+id/options_feedback_linear"
@@ -303,15 +262,73 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/options_version"
+            <LinearLayout
+                android:id="@+id/options_dc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:gravity="center_horizontal"
-                android:padding="8dp"
-                android:textColor="#FFFFFF" />
+                android:gravity="bottom"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/options_discord_rcs"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/linear_button"
+                        android:padding="8dp"
+                        android:text="@string/optionDiscordRcs"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:drawableTop="@drawable/discord"
+                        app:backgroundTint="#FF0E0E0E" />
+
+                    <Button
+                        android:id="@+id/options_discord_bbots"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/linear_button"
+                        android:padding="8dp"
+                        android:text="@string/optionsDiscordBbots"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:drawableTop="@drawable/discord"
+                        app:backgroundTint="#FF0E0E0E" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/options_github"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/linear_button"
+                        android:padding="8dp"
+                        android:text="@string/optionsGithub"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:drawableTop="@drawable/github"
+                        app:backgroundTint="#FF0E0E0E" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
