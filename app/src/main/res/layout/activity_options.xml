@@ -275,7 +275,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <Button
@@ -285,11 +284,11 @@
                         android:layout_margin="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/linear_button"
+                        android:drawableTop="@drawable/discord"
                         android:padding="8dp"
                         android:text="@string/optionDiscordRcs"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
-                        android:drawableTop="@drawable/discord"
                         app:backgroundTint="#FF0E0E0E" />
 
                     <Button
@@ -299,18 +298,17 @@
                         android:layout_margin="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/linear_button"
+                        android:drawableTop="@drawable/discord"
                         android:padding="8dp"
                         android:text="@string/optionsDiscordBbots"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
-                        android:drawableTop="@drawable/discord"
                         app:backgroundTint="#FF0E0E0E" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <Button
@@ -320,11 +318,11 @@
                         android:layout_margin="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/linear_button"
+                        android:drawableTop="@drawable/github"
                         android:padding="8dp"
                         android:text="@string/optionsGithub"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
-                        android:drawableTop="@drawable/github"
                         app:backgroundTint="#FF0E0E0E" />
                 </LinearLayout>
 
