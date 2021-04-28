@@ -12,8 +12,6 @@
         android:background="#000000"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,9 +26,11 @@
 
             <ImageView
                 android:id="@+id/splash_app_icon"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                app:srcCompat="@drawable/lactool" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/ic_launcher_background"
+                android:scaleType="center"
+                app:srcCompat="@mipmap/ic_launcher_foreground" />
         </LinearLayout>
 
     </LinearLayout>

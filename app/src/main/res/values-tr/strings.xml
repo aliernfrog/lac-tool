@@ -75,9 +75,6 @@
     <string name="optionForceEnglish">İngilizce dilini zorla</string>
     <string name="optionDebug">Hata ayıklama modu</string>
     <string name="optionDeleteTemp">Geçici verileri sil</string>
-    <string name="optionDiscordRcs">LAC Discord sunucusu</string>
-    <string name="optionsDiscordBbots">Benim Discord sunucum</string>
-    <string name="optionsGithub">Kaynak kodu GitHub</string>
     <string name="optionsFeedback">LAC Tool geri bildirimi</string>
     <string name="optionsFeedbackHint">Geri bildiriminiz..</string>
     <string name="backupManage">Yedekleri yönet</string>
