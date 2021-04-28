@@ -95,7 +95,7 @@ public class OptionsActivity extends AppCompatActivity {
         tempPath = update.getString("path-app", null)+"temp";
 
         try {
-            String _log = "LAC Tool app was made by aliernfrog#9747 and is NOT an official app";
+            String _log = "LAC Tool app is made by aliernfrog#9747 and is NOT an official app";
             String _versName = AppUtil.getVersName(getApplicationContext());
             Integer _versCode = AppUtil.getVersCode(getApplicationContext());
             version.setText(Html.fromHtml(_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
