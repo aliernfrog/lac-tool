@@ -238,9 +238,9 @@ public class MapsOptionsActivity extends AppCompatActivity {
                 if (!roles.get(i).equals("")) {
                     String name = roles.get(i);
                     ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.role, rolesLinear, false);
-                    LinearLayout roleLinear = (LinearLayout) layout.findViewById(R.id.role_bg);
-                    TextView roleName = (TextView) layout.findViewById(R.id.role_name);
-                    Button roleDel = (Button) layout.findViewById(R.id.role_delete);
+                    LinearLayout roleLinear = layout.findViewById(R.id.role_bg);
+                    TextView roleName = layout.findViewById(R.id.role_name);
+                    Button roleDel = layout.findViewById(R.id.role_delete);
                     roleName.setText(name);
                     int finalI = i;
                     roleLinear.setOnTouchListener((v, event) -> {
