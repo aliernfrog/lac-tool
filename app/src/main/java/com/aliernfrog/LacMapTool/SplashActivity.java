@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+@SuppressLint("CommitPrefEdits")
 public class SplashActivity extends AppCompatActivity {
     SharedPreferences update;
     SharedPreferences.Editor updateEdit;
@@ -28,7 +29,6 @@ public class SplashActivity extends AppCompatActivity {
 
     Boolean forceEnglish;
 
-    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
