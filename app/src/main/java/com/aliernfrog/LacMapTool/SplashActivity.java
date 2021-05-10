@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -40,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
         forceEnglish = config.getBoolean("forceEnglish", false);
 
-        docs = external+"/Documents/";
+        docs = external+"/Documents";
         if (Build.VERSION.SDK_INT >= 19) docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
 
         setLocale();
