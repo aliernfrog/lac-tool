@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.util.DisplayMetrics;
 
 import java.util.Locale;
@@ -31,8 +30,6 @@ public class SplashActivity extends AppCompatActivity {
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
@@ -43,29 +40,11 @@ public class SplashActivity extends AppCompatActivity {
 
         forceEnglish = config.getBoolean("forceEnglish", false);
 
-        if (Build.VERSION.SDK_INT >= 19) {
-            docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
-        } else {
-            docs = external+"/Documents/";
-        }
+        docs = external+"/Documents/";
+        if (Build.VERSION.SDK_INT >= 19) docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
 
         setLocale();
         setConfig();
-    }
-
-    void setLocale() {
-        String lang = Locale.getDefault().getLanguage();
-        if (forceEnglish) lang = "en";
-        setLocale(lang);
-    }
-
-    void setLocale(String lang) {
-        Locale locale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        Configuration configuration = res.getConfiguration();
-        configuration.locale = locale;
-        res.updateConfiguration(configuration, metrics);
     }
 
     void setConfig() {
@@ -83,6 +62,21 @@ public class SplashActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void setLocale() {
+        String lang = Locale.getDefault().getLanguage();
+        if (forceEnglish) lang = "en";
+        setLocale(lang);
+    }
+
+    void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        Configuration configuration = res.getConfiguration();
+        configuration.locale = locale;
+        res.updateConfiguration(configuration, metrics);
     }
 
     void switchActivity(Class i) {
