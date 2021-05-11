@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             version = 11;
         }
 
-        if (!devMode) log.setVisibility(View.GONE);
+        if (devMode) log.setVisibility(View.VISIBLE);
         checkPerms();
         createFiles();
         setListeners();
