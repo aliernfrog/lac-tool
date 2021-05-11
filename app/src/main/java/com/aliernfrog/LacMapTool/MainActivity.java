@@ -43,16 +43,16 @@ public class MainActivity extends AppCompatActivity {
     TextView updateLog;
     TextView log;
 
-    String logs = "";
-    Boolean devMode;
-    Boolean hasPerms;
-    Integer version;
-
     String updateUrl = "https://blursedbots.glitch.me/lacmaptool/update.json";
     String dataPath;
     String lacPath;
     String backupPath;
     String aBackupPath;
+    Boolean hasPerms;
+    Integer version;
+
+    String logs = "";
+    Boolean devMode;
 
     SharedPreferences update;
     SharedPreferences config;
