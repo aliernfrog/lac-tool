@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     TextView updateLog;
     TextView log;
 
-    String updateUrl = "https://blursedbots.glitch.me/lacmaptool/update.json";
+    String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
     String dataPath;
     String lacPath;
     String backupPath;
