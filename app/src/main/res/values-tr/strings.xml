@@ -21,6 +21,7 @@
     <string name="action_share">Paylaş</string>
     <string name="action_add">Ekle</string>
     <string name="action_done">Bitti</string>
+    <string name="action_back">Geri git</string>
     <string name="action_ok" tools:keep="@string/action_ok">Tamam</string>
     <string name="select">Seç</string>
     <string name="rename">Yeniden adlandır</string>
