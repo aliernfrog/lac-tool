@@ -37,6 +37,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox backupOnEdit;
     CheckBox lacd;
     CheckBox lacm;
+    CheckBox lacmb;
     CheckBox legacyPath;
     CheckBox forceEnglish;
     CheckBox dev;
@@ -77,7 +78,8 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit = findViewById(R.id.options_bkupOnEdit);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
-        legacyPath = findViewById(R.id.options_legacypath);
+        lacmb = findViewById(R.id.options_toggleLACMB);
+        legacyPath = findViewById(R.id.options_legacyPath);
         optionsEx = findViewById(R.id.options_ex);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
@@ -106,13 +108,14 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
+        if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
         if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
     }
 
     void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -175,6 +178,7 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
+        lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
         legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
