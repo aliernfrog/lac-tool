@@ -21,6 +21,7 @@
     <string name="action_share">Paylaş</string>
     <string name="action_add">Ekle</string>
     <string name="action_done">Bitti</string>
+    <string name="action_back">Geri git</string>
     <string name="action_ok" tools:keep="@string/action_ok">Tamam</string>
     <string name="select">Seç</string>
     <string name="rename">Yeniden adlandır</string>
@@ -71,6 +72,8 @@
     <string name="optionLacdDesc">LACD yolu: LAC BETA uygulamasının dosyalarını yönetir</string>
     <string name="optionLacm">LACM yolu</string>
     <string name="optionLacmDesc">LACM yolu: LAC MOD uygulamasının dosyalarını yönetir</string>
+    <string name="optionLacmb">LACMB yolu</string>
+    <string name="optionLacmbDesc">LACMB yolu: LAC MB uygulamasının dosyalarını yönetir</string>
     <string name="optionLegacyPath">Eski yol</string>
     <string name="optionForceEnglish">İngilizce dilini zorla</string>
     <string name="optionDebug">Hata ayıklama modu</string>
