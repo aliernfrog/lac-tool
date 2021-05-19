@@ -21,6 +21,7 @@
     <string name="action_share">Share</string>
     <string name="action_add">Add</string>
     <string name="action_done">Done</string>
+    <string name="action_back">Go back</string>
     <string name="action_ok" tools:keep="@string/action_ok">Okay</string>
     <string name="select">Select</string>
     <string name="rename">Rename</string>
