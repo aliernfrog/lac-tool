@@ -13,7 +13,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.widget.Toast;
+
+import com.aliernfrog.LacMapTool.utils.AppUtil;
 
 import java.util.Locale;
 
@@ -24,6 +25,8 @@ public class SplashActivity extends AppCompatActivity {
     SharedPreferences config;
     SharedPreferences.Editor configEdit;
 
+    String versionName = "-";
+    Integer versionCode = 0;
     String external = Environment.getExternalStorageDirectory().toString(); //external storage path
     String docs; //documents folder path
 
@@ -44,6 +47,7 @@ public class SplashActivity extends AppCompatActivity {
         docs = external+"/Documents";
         if (Build.VERSION.SDK_INT >= 19) docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
 
+        getVersion();
         setLocale();
         setConfig();
     }
@@ -53,6 +57,8 @@ public class SplashActivity extends AppCompatActivity {
             String pathLacd = external+"/Android/data/com.MA.LACD/files/editor";
             String pathLacm = external+"/Android/data/com.MA.LACM/files/editor";
             String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor";
+            updateEdit.putString("versionName", versionName);
+            updateEdit.putInt("versionCode", versionCode);
             updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor");
             updateEdit.putString("path-app", docs+"/LacMapTool/");
             if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
@@ -60,6 +66,15 @@ public class SplashActivity extends AppCompatActivity {
             if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
             updateEdit.commit();
             switchActivity(MainActivity.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getVersion() {
+        try {
+            versionName = AppUtil.getVersName(getApplicationContext());
+            versionCode = AppUtil.getVersCode(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -94,18 +94,9 @@ public class OptionsActivity extends AppCompatActivity {
 
         tempPath = update.getString("path-app", null)+"temp";
 
-        try {
-            String _log = "LAC Tool app is made by aliernfrog#9747 and is NOT an official app";
-            String _versName = AppUtil.getVersName(getApplicationContext());
-            Integer _versCode = AppUtil.getVersCode(getApplicationContext());
-            version.setText(Html.fromHtml(_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            version.setText(e.toString());
-        }
-
         pickiT = new PickiT(getApplicationContext(), null, this);
 
+        setVersionView();
         checkConfig();
         setListener();
     }
@@ -139,6 +130,13 @@ public class OptionsActivity extends AppCompatActivity {
         } catch (Exception e) {
             feedbackInput.setText(e.toString());
         }
+    }
+
+    void setVersionView() {
+        String log = "LAC Tool app is made by aliernfrog#9747 and is NOT an official app";
+        String versName = update.getString("versionName", "-");
+        int versCode = update.getInt("versionCode", 0);
+        version.setText(Html.fromHtml(log+"<br /><br /><b>Version:</b> "+versName+" ("+versCode+")"));
     }
 
     void deleteTempData() {
