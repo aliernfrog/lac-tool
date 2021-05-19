@@ -37,6 +37,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox backupOnEdit;
     CheckBox lacd;
     CheckBox lacm;
+    CheckBox lacmb;
     CheckBox legacyPath;
     CheckBox forceEnglish;
     CheckBox dev;
@@ -77,7 +78,8 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit = findViewById(R.id.options_bkupOnEdit);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
-        legacyPath = findViewById(R.id.options_legacypath);
+        lacmb = findViewById(R.id.options_toggleLACMB);
+        legacyPath = findViewById(R.id.options_legacyPath);
         optionsEx = findViewById(R.id.options_ex);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
@@ -94,18 +96,9 @@ public class OptionsActivity extends AppCompatActivity {
 
         tempPath = update.getString("path-app", null)+"temp";
 
-        try {
-            String _log = "LAC Tool app is made by aliernfrog#9747 and is NOT an official app";
-            String _versName = AppUtil.getVersName(getApplicationContext());
-            Integer _versCode = AppUtil.getVersCode(getApplicationContext());
-            version.setText(Html.fromHtml(_log+"<br /><br /><b>Version:</b> "+_versName+" ("+_versCode+")"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            version.setText(e.toString());
-        }
-
         pickiT = new PickiT(getApplicationContext(), null, this);
 
+        setVersionView();
         checkConfig();
         setListener();
     }
@@ -115,35 +108,38 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
+        if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
         if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
         if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
     }
 
     void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
 
     void submitFeedback() {
         String feedback = feedbackInput.getText().toString();
-        if (feedback == null || feedback.length() < 5) return;
+        if (feedback.length() < 5) return;
         try {
             JSONObject object = new JSONObject();
             object.put("type", "feedback");
             object.put("body", feedback);
             String response = WebUtil.doPostRequest(feedbackUrl, object);
-            Boolean success = response != null;
-            if (success) {
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "Service is offline", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
             feedbackLinear.setVisibility(View.GONE);
         } catch (Exception e) {
             feedbackInput.setText(e.toString());
         }
+    }
+
+    void setVersionView() {
+        String log = "LAC Tool app is made by aliernfrog#9747 and is NOT an official app";
+        String versName = update.getString("versionName", "-");
+        int versCode = update.getInt("versionCode", 0);
+        version.setText(Html.fromHtml(log+"<br /><br /><b>Version:</b> "+versName+" ("+versCode+")"));
     }
 
     void deleteTempData() {
@@ -182,6 +178,7 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
+        lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
         legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));

@@ -12,27 +12,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.util.DisplayMetrics;
+
+import com.aliernfrog.LacMapTool.utils.AppUtil;
 
 import java.util.Locale;
 
+@SuppressLint("CommitPrefEdits")
 public class SplashActivity extends AppCompatActivity {
     SharedPreferences update;
     SharedPreferences.Editor updateEdit;
     SharedPreferences config;
     SharedPreferences.Editor configEdit;
 
+    String versionName = "-";
+    Integer versionCode = 0;
     String external = Environment.getExternalStorageDirectory().toString(); //external storage path
     String docs; //documents folder path
 
     Boolean forceEnglish;
 
-    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
@@ -43,14 +44,42 @@ public class SplashActivity extends AppCompatActivity {
 
         forceEnglish = config.getBoolean("forceEnglish", false);
 
-        if (Build.VERSION.SDK_INT >= 19) {
-            docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
-        } else {
-            docs = external+"/Documents/";
-        }
+        docs = external+"/Documents";
+        if (Build.VERSION.SDK_INT >= 19) docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
 
+        getVersion();
         setLocale();
         setConfig();
+    }
+
+    void setConfig() {
+        try {
+            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor";
+            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor";
+            String pathLacmb = external+"/Android/data/com.MA.LACMB/files/editor";
+            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor";
+            updateEdit.putString("versionName", versionName);
+            updateEdit.putInt("versionCode", versionCode);
+            updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor");
+            updateEdit.putString("path-app", docs+"/LacMapTool/");
+            if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
+            if (config.getBoolean("enableLacm", false)) updateEdit.putString("path-lac", pathLacm);
+            if (config.getBoolean("enableLacmb", false)) updateEdit.putString("path-lac", pathLacmb);
+            if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
+            updateEdit.commit();
+            switchActivity(MainActivity.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getVersion() {
+        try {
+            versionName = AppUtil.getVersName(getApplicationContext());
+            versionCode = AppUtil.getVersCode(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void setLocale() {
@@ -68,29 +97,12 @@ public class SplashActivity extends AppCompatActivity {
         res.updateConfiguration(configuration, metrics);
     }
 
-    void setConfig() {
-        try {
-            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor";
-            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor";
-            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor";
-            updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor");
-            updateEdit.putString("path-app", docs+"/LacMapTool/");
-            if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
-            if (config.getBoolean("enableLacm", false)) updateEdit.putString("path-lac", pathLacm);
-            if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
-            updateEdit.commit();
-            switchActivity(MainActivity.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     void switchActivity(Class i) {
         Intent intent = new Intent(this.getApplicationContext(), i);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             startActivity(intent);
             finish();
-        }, 1500);
+        }, 1000);
     }
 }

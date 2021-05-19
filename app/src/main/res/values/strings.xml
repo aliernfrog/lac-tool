@@ -21,6 +21,7 @@
     <string name="action_share">Share</string>
     <string name="action_add">Add</string>
     <string name="action_done">Done</string>
+    <string name="action_back">Go back</string>
     <string name="action_ok" tools:keep="@string/action_ok">Okay</string>
     <string name="select">Select</string>
     <string name="rename">Rename</string>
@@ -71,6 +72,8 @@
     <string name="optionLacdDesc">LACD path: manages files of LAC BETA app</string>
     <string name="optionLacm">LACM path</string>
     <string name="optionLacmDesc">LACM path: manages files of LAC MOD app</string>
+    <string name="optionLacmb">LACMB path</string>
+    <string name="optionLacmbDesc">LACMB path: manages files of LAC MB app</string>
     <string name="optionLegacyPath">Legacy path</string>
     <string name="optionForceEnglish">Force English language</string>
     <string name="optionDebug">Debug mode</string>
