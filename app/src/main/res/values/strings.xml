@@ -72,6 +72,8 @@
     <string name="optionLacdDesc">LACD path: manages files of LAC BETA app</string>
     <string name="optionLacm">LACM path</string>
     <string name="optionLacmDesc">LACM path: manages files of LAC MOD app</string>
+    <string name="optionLacmb">LACMB path</string>
+    <string name="optionLacmbDesc">LACMB path: manages files of LAC MB app</string>
     <string name="optionLegacyPath">Legacy path</string>
     <string name="optionForceEnglish">Force English language</string>
     <string name="optionDebug">Debug mode</string>
