@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         dataPath = update.getString("path-app", null);
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
+        version = update.getInt("versionCode", 0);
 
         missingPerms = findViewById(R.id.main_missingPerms);
         lacLinear = findViewById(R.id.main_optionsLac);
@@ -86,14 +87,6 @@ public class MainActivity extends AppCompatActivity {
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
-        try {
-            version = AppUtil.getVersCode(getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
-            version = 11;
-        }
-
         if (devMode) log.setVisibility(View.VISIBLE);
         checkPerms();
         createFiles();
@@ -105,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             String jsonString = WebUtil.getContentFromURL(updateUrl);
             JSONObject object = new JSONObject(jsonString);
-            boolean updateFound = object.getInt("latest") > version;
+            int updatedVersion = object.getInt("latest");
+            devLog("Current version: "+version+", updated version: "+updatedVersion);
+            boolean updateFound = updatedVersion > version;
             if (updateFound) {
                 updateLinear.setVisibility(View.VISIBLE);
                 updateLog.setText(object.getString("changelog"));
