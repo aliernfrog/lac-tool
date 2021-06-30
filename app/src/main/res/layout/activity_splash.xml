@@ -20,7 +20,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,6 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="center"
+                    android:contentDescription="@string/app_name"
                     app:srcCompat="@mipmap/ic_launcher_foreground" />
 
                 <TextView
