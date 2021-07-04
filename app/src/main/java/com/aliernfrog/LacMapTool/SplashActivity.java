@@ -92,17 +92,16 @@ public class SplashActivity extends AppCompatActivity {
 
     public void setLocale() {
         devLog("attempting to set locale");
+        String lang = Locale.getDefault().getLanguage();
         boolean forceEnglish = prefsConfig.getBoolean("forceEnglish", false);
-        devLog("force english: "+forceEnglish);
-        if (forceEnglish) {
-            Locale locale = new Locale("en");
-            Resources res = getResources();
-            DisplayMetrics metrics = res.getDisplayMetrics();
-            Configuration configuration = res.getConfiguration();
-            configuration.locale = locale;
-            res.updateConfiguration(configuration, metrics);
-            devLog("set locale to en");
-        }
+        if (forceEnglish) lang = "en";
+        Locale locale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        Configuration configuration = res.getConfiguration();
+        configuration.locale = locale;
+        res.updateConfiguration(configuration, metrics);
+        devLog("set locale to: "+lang);
     }
 
     public void checkUpdates() {
