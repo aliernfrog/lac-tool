@@ -32,6 +32,15 @@
         <activity android:name=".MapsOptionsActivity" android:configChanges="locale|orientation"/>
         <activity android:name=".OptionsActivity" android:configChanges="locale|orientation" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".RestoreActivity" android:configChanges="locale|orientation"/>
+        
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>
