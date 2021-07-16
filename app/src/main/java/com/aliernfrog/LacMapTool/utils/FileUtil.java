@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.aliernfrog.LacMapTool.R;
@@ -106,13 +107,15 @@ public class FileUtil {
         return _full;
     }
 
-    public static Intent shareFile(String source, String type) {
+    public static Intent shareFile(String source, String type, Context context) {
         File file = new File(source);
         Intent intent = null;
         if (file.exists()) {
+            String packageName = context.getApplicationContext().getPackageName();
+            Uri uri = FileProvider.getUriForFile(context, packageName+".provider", file);
             intent = new Intent(Intent.ACTION_SEND)
                     .setType(type)
-                    .putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+source))
+                    .putExtra(Intent.EXTRA_STREAM, uri)
                     .putExtra(Intent.EXTRA_SUBJECT, R.string.info_sharing)
                     .putExtra(Intent.EXTRA_TEXT, R.string.info_sharing);
         }
