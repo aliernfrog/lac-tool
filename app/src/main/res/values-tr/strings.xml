@@ -79,6 +79,8 @@
     <string name="optionDebug">Hata ayıklama modu</string>
     <string name="optionDeleteTemp">Geçici verileri sil</string>
     <string name="optionsChangelogNoChangelog">Değişim kaydı bulunamadı, değişim kaydını almak için ana menüye dönün ve güncellemeleri denetleyin</string>
+    <string name="optionsChangelogCurrent">Kullanılan sürüm</string>
+    <string name="optionsChangelogChangelog">Değişim kaydı sürümü</string>
     <string name="optionsFeedback">LAC Tool geri bildirimi</string>
     <string name="optionsFeedbackHint">Geri bildiriminiz..</string>
     <string name="backupManage">Yedekleri yönet</string>
