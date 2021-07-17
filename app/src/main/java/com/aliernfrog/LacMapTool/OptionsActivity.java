@@ -43,14 +43,14 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox dev;
     Button deleteTemp;
     LinearLayout discord_linear;
-    Button discord_bbots;
+    Button discord_aliern;
     Button discord_rcs;
     Button github;
     LinearLayout feedbackLinear;
     LinearLayout feedback;
     EditText feedbackInput;
     Button feedbackSubmit;
-    TextView version;
+    TextView changelog;
 
     SharedPreferences update;
     SharedPreferences config;
@@ -60,6 +60,9 @@ public class OptionsActivity extends AppCompatActivity {
 
     String tempPath;
     String feedbackUrl = "https://ensibot-discord.aliernfrog.repl.co";
+
+    String appVers;
+    Integer appVersCode;
 
     Integer activityResult = 0; //this will be the result when exiting the activity, if 1 the app will restart
 
@@ -85,22 +88,47 @@ public class OptionsActivity extends AppCompatActivity {
         dev = findViewById(R.id.options_devtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
-        discord_bbots = findViewById(R.id.options_discord_bbots);
+        discord_aliern = findViewById(R.id.options_discord_aliern);
         discord_rcs = findViewById(R.id.options_discord_rcs);
         github = findViewById(R.id.options_github);
         feedbackLinear = findViewById(R.id.options_feedback_linear);
         feedback = findViewById(R.id.options_feedback);
         feedbackInput = findViewById(R.id.options_feedback_input);
         feedbackSubmit = findViewById(R.id.options_feedback_submit);
-        version = findViewById(R.id.options_version);
+        changelog = findViewById(R.id.options_changelog);
 
         tempPath = update.getString("path-app", null)+"temp";
 
         pickiT = new PickiT(getApplicationContext(), null, this);
 
-        setVersionView();
+        getVersion();
+        getChangelog();
         checkConfig();
         setListener();
+    }
+
+    void getVersion() {
+        try {
+            appVers = AppUtil.getVersName(getApplicationContext());
+            appVersCode = AppUtil.getVersCode(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getChangelog() {
+        boolean hasChangelog = update.getString("updateChangelog", null) != null;
+        String versInfo = "<b>"+getString(R.string.optionsChangelogCurrent)+":</b> "+appVers+" ("+appVersCode+")";
+        String _full = "";
+        if (hasChangelog) {
+            String _changelog = update.getString("updateChangelog", null).replaceAll("%VERS%", appVers);
+            String _changelogVers = update.getString("updateChangelogVersion", null);
+            _full = _changelog+"<br /><br />"+"<b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+_changelogVers+"<br />"+versInfo;
+        } else {
+            String _appInfo = "LAC Tool is made by aliernfrog#9747 and is NOT an official app";
+            _full = _appInfo+"<br /><br />"+versInfo;
+        }
+        changelog.setText(Html.fromHtml(_full));
     }
 
     void checkConfig() {
@@ -133,13 +161,6 @@ public class OptionsActivity extends AppCompatActivity {
         } catch (Exception e) {
             feedbackInput.setText(e.toString());
         }
-    }
-
-    void setVersionView() {
-        String log = "LAC Tool app is made by aliernfrog#9747 and is NOT an official app";
-        String versName = update.getString("versionName", "-");
-        int versCode = update.getInt("versionCode", 0);
-        version.setText(Html.fromHtml(log+"<br /><br /><b>Version:</b> "+versName+" ("+versCode+")"));
     }
 
     void deleteTempData() {
@@ -195,7 +216,7 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
-        discord_bbots.setOnTouchListener((v, event) -> {
+        discord_aliern.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 redirectURL("https://blursedbots.glitch.me/discord.html");
             }
@@ -235,7 +256,7 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
 
-        version.setOnTouchListener((v, event) -> {
+        changelog.setOnTouchListener((v, event) -> {
             event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
