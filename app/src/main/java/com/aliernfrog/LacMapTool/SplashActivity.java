@@ -115,6 +115,7 @@ public class SplashActivity extends AppCompatActivity {
                 prefsEditUpdate.putInt("updateLatest", updateObj.getInt("latest"));
                 prefsEditUpdate.putString("updateDownload", updateObj.getString("download"));
                 prefsEditUpdate.putString("updateChangelog", updateObj.getString("changelog"));
+                prefsEditUpdate.putString("updateChangelogVersion", updateObj.getString("changelogVersion"));
                 prefsEditUpdate.commit();
                 devLog("saved update config");
                 setConfig();
