@@ -63,7 +63,7 @@ public class OptionsActivity extends AppCompatActivity {
     String appVers;
     Integer appVersCode;
 
-    Integer activityResult = 0; //this will be the result when exiting the activity, if 1 the app will restart
+    Integer activityResult = 0;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -173,7 +173,6 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void finishActivity() {
-        //sets the result and finishes the activity
         setResult(activityResult);
         finish();
     }
