@@ -214,7 +214,7 @@ public class OptionsActivity extends AppCompatActivity {
         });
         discord_aliern.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                redirectURL("https://blursedbots.glitch.me/discord.html");
+                redirectURL("https://aliernfrog.glitch.me/discord.html");
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
