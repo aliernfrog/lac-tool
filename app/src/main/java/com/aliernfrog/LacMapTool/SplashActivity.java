@@ -105,7 +105,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void checkUpdates() {
-        boolean shouldCheck = prefsConfig.getBoolean("checkUpdates", false);
+        boolean shouldCheck = prefsConfig.getBoolean("checkUpdates", true);
         devLog("should check for updates: "+shouldCheck);
         if (shouldCheck) {
             try {
