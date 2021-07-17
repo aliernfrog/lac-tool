@@ -79,6 +79,8 @@
     <string name="optionDebug">Debug mode</string>
     <string name="optionDeleteTemp">Delete temporary data</string>
     <string name="optionsChangelogNoChangelog">No changelog has been found, go to main menu, then check for updates to get changelog</string>
+    <string name="optionsChangelogCurrent">Current version</string>
+    <string name="optionsChangelogChangelog">Changelog version</string>
     <string name="optionsDiscordRcs" translatable="false">LAC Discord</string>
     <string name="optionsDiscordAliern" translatable="false">LAC Tool Discord</string>
     <string name="optionsGithub" translatable="false">LAC Tool GitHub</string>
