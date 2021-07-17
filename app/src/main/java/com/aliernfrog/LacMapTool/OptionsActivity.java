@@ -119,7 +119,7 @@ public class OptionsActivity extends AppCompatActivity {
     void getChangelog() {
         boolean hasChangelog = update.getString("updateChangelog", null) != null;
         String versInfo = "<b>"+getString(R.string.optionsChangelogCurrent)+":</b> "+appVers+" ("+appVersCode+")";
-        String _full = "";
+        String _full;
         if (hasChangelog) {
             String _changelog = update.getString("updateChangelog", null).replaceAll("%VERS%", appVers);
             String _changelogVers = update.getString("updateChangelogVersion", null);
