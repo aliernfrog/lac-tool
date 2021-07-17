@@ -38,7 +38,6 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox lacd;
     CheckBox lacm;
     CheckBox lacmb;
-    CheckBox legacyPath;
     CheckBox forceEnglish;
     CheckBox dev;
     Button deleteTemp;
@@ -82,7 +81,6 @@ public class OptionsActivity extends AppCompatActivity {
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
         lacmb = findViewById(R.id.options_toggleLACMB);
-        legacyPath = findViewById(R.id.options_legacyPath);
         optionsEx = findViewById(R.id.options_ex);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
@@ -137,7 +135,6 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
-        if (config.getBoolean("enableLegacyPath", false)) legacyPath.setChecked(true);
         if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
     }
@@ -200,7 +197,6 @@ public class OptionsActivity extends AppCompatActivity {
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
-        legacyPath.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLegacyPath", isChecked));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
 
