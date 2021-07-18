@@ -205,6 +205,17 @@
                     tools:visibility="visible">
 
                     <CheckBox
+                        android:id="@+id/options_autoCheckUpdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionAutoCheckUpdate"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <CheckBox
                         android:id="@+id/options_forceEnglish"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

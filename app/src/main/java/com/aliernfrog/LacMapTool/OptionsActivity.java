@@ -43,6 +43,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox backupOnEdit;
     LinearLayout appOptions;
     LinearLayout appOptionsContent;
+    CheckBox autoCheckUpdate;
     CheckBox forceEnglish;
     CheckBox dev;
     Button deleteTemp;
@@ -92,6 +93,7 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit = findViewById(R.id.options_backupOnEdit);
         appOptions = findViewById(R.id.options_app);
         appOptionsContent = findViewById(R.id.options_app_content);
+        autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
@@ -140,17 +142,18 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void checkConfig() {
-        if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
-        if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
+        if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
+        if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
+        if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
         if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
     }
 
     void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1; //set activityResult to 1 so the app will restart on exit
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1;
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -224,6 +227,7 @@ public class OptionsActivity extends AppCompatActivity {
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });
+        autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
 

@@ -71,6 +71,7 @@
     <string name="optionAutoBackup">Haritaları otomatik yedekle</string>
     <string name="optionBackupOnEdit">Haritaları düzenlemeden önce yedekle</string>
     <string name="optionsApp">Uygulama ayarları</string>
+    <string name="optionAutoCheckUpdate">LAC Tool güncellemelerini otomatik denetle</string>
     <string name="optionForceEnglish">İngilizce dilini zorla</string>
     <string name="optionDebug">Hata ayıklama modu</string>
     <string name="optionDeleteTemp">Geçici verileri sil</string>
