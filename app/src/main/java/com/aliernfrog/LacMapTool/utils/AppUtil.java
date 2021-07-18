@@ -50,6 +50,14 @@ public class AppUtil {
         return true;
     }
 
+    public static void toggleView(View view) {
+        if (view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
     public static void handleOnPressEvent(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
