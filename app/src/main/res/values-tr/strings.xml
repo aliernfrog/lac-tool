@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">LAC Tool</string>
     <string name="warning_missingPerms">Eksik izinler, düzeltmek için dokunun</string>
     <string name="info_storagePerm">Haritaları ve duvar kağıtlarını yönetmek için depolama izni gerekir</string>
     <string name="info_treePerm">LAC Tool, oyun dosyalarınızı yönetmek için yetki alması gerekiyor, "Bu klasörü kullan" seçeneğine dokunun ve gerekli yetkiler alınacaktır</string>
@@ -11,8 +10,6 @@
     <string name="info_wait">Lütfen bekleyin..</string>
     <string name="info_android11notAvailable">Bu özellik henüz Android 11\'de kullanılamıyor</string>
     <string name="info_name">İsim</string>
-    <string name="info_updateFound">Güncelleme bulundu</string>
-    <string name="info_updateNotFound">Güncelleme yok</string>
     <string name="denied_alreadyExists">Bu isimde bir dosya zaten var</string>
     <string name="denied_doesntExist">Bu dosya yok</string>
     <string name="action_save">Kaydet</string>
@@ -74,7 +71,6 @@
     <string name="optionLacmDesc">LACM yolu: LAC MOD uygulamasının dosyalarını yönetir</string>
     <string name="optionLacmb">LACMB yolu</string>
     <string name="optionLacmbDesc">LACMB yolu: LAC MB uygulamasının dosyalarını yönetir</string>
-    <string name="optionLegacyPath">Eski yol</string>
     <string name="optionForceEnglish">İngilizce dilini zorla</string>
     <string name="optionDebug">Hata ayıklama modu</string>
     <string name="optionDeleteTemp">Geçici verileri sil</string>
