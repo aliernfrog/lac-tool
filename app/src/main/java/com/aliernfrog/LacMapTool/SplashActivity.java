@@ -3,7 +3,6 @@ package com.aliernfrog.LacMapTool;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -12,7 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
+import android.text.Html;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.widget.TextView;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
@@ -20,89 +23,135 @@ import java.util.Locale;
 
 @SuppressLint("CommitPrefEdits")
 public class SplashActivity extends AppCompatActivity {
-    SharedPreferences update;
-    SharedPreferences.Editor updateEdit;
-    SharedPreferences config;
-    SharedPreferences.Editor configEdit;
+    TextView debugText;
 
-    String versionName = "-";
-    Integer versionCode = 0;
-    String external = Environment.getExternalStorageDirectory().toString(); //external storage path
-    String docs; //documents folder path
+    SharedPreferences prefsUpdate;
+    SharedPreferences prefsConfig;
+    SharedPreferences.Editor prefsEditUpdate;
+    SharedPreferences.Editor prefsEditConfig;
 
-    Boolean forceEnglish;
+    String rawLogs = "";
+
+    Integer switchDelay = 1000;
+
+    String pathExternal = Environment.getExternalStorageDirectory().toString();
+    String pathDocs = pathExternal +"/Documents";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
-        config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        updateEdit = update.edit();
-        configEdit = config.edit();
+        debugText = findViewById(R.id.splash_debug);
 
-        forceEnglish = config.getBoolean("forceEnglish", false);
+        prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
+        prefsConfig = getSharedPreferences("APP_CONFIG", MODE_PRIVATE);
+        prefsEditUpdate = prefsUpdate.edit();
+        prefsEditConfig = prefsConfig.edit();
 
-        docs = external+"/Documents";
-        if (Build.VERSION.SDK_INT >= 19) docs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
+        if (Build.VERSION.SDK_INT >= 19) pathDocs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
 
-        getVersion();
-        setLocale();
-        setConfig();
+        boolean enableDebugUI = prefsConfig.getBoolean("enableDebug", false);
+        if (enableDebugUI) debugText.setVisibility(View.VISIBLE);
+
+        devLog("LAC TOOL STARTED");
+        devLog("Android SDK version: "+Build.VERSION.SDK_INT);
+        devLog("External path: "+ pathExternal);
+        devLog("Documents path: "+pathDocs);
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            getVersion();
+            setLocale();
+            checkUpdates();
+        }, 500);
     }
 
-    void setConfig() {
+    public void getVersion() {
+        devLog("attempting to get version");
         try {
-            String pathLacd = external+"/Android/data/com.MA.LACD/files/editor";
-            String pathLacm = external+"/Android/data/com.MA.LACM/files/editor";
-            String pathLacmb = external+"/Android/data/com.MA.LACMB/files/editor";
-            String pathLegacy = external+"/Android/data/com.MA.LAC/files/editor";
-            updateEdit.putString("versionName", versionName);
-            updateEdit.putInt("versionCode", versionCode);
-            updateEdit.putString("path-lac", external+"/Android/data/com.MA.LAC/files/editor");
-            updateEdit.putString("path-app", docs+"/LacMapTool/");
-            if (config.getBoolean("enableLacd", false)) updateEdit.putString("path-lac", pathLacd);
-            if (config.getBoolean("enableLacm", false)) updateEdit.putString("path-lac", pathLacm);
-            if (config.getBoolean("enableLacmb", false)) updateEdit.putString("path-lac", pathLacmb);
-            if (config.getBoolean("enableLegacyPath", false)) updateEdit.putString("path-lac", pathLegacy);
-            updateEdit.commit();
-            switchActivity(MainActivity.class);
+            String versName = AppUtil.getVersName(getApplicationContext());
+            Integer versCode = AppUtil.getVersCode(getApplicationContext());
+            devLog("version name: "+versName);
+            devLog("version code: "+versCode);
+            prefsEditUpdate.putString("versionName", versName);
+            prefsEditUpdate.putInt("versionCode", versCode);
+            prefsEditUpdate.commit();
+            devLog("saved version name & code");
         } catch (Exception e) {
             e.printStackTrace();
+            devLog(e.toString());
         }
     }
 
-    void getVersion() {
-        try {
-            versionName = AppUtil.getVersName(getApplicationContext());
-            versionCode = AppUtil.getVersCode(getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    void setLocale() {
+    public void setLocale() {
+        devLog("attempting to set locale");
         String lang = Locale.getDefault().getLanguage();
+        boolean forceEnglish = prefsConfig.getBoolean("forceEnglish", false);
         if (forceEnglish) lang = "en";
-        setLocale(lang);
-    }
-
-    void setLocale(String lang) {
         Locale locale = new Locale(lang);
         Resources res = getResources();
         DisplayMetrics metrics = res.getDisplayMetrics();
         Configuration configuration = res.getConfiguration();
         configuration.locale = locale;
         res.updateConfiguration(configuration, metrics);
+        devLog("set locale to: "+lang);
     }
 
-    void switchActivity(Class i) {
-        Intent intent = new Intent(this.getApplicationContext(), i);
+    public void checkUpdates() {
+        boolean shouldCheck = prefsConfig.getBoolean("autoCheckUpdates", true);
+        devLog("should check for updates: "+shouldCheck);
+        if (shouldCheck) {
+            try {
+                if (AppUtil.getUpdates(getApplicationContext())) devLog("saved update config");
+                setConfig();
+            } catch (Exception e) {
+                e.printStackTrace();
+                devLog(e.toString());
+                devLog("something went wrong, skipping updates");
+                setConfig();
+            }
+        } else {
+            devLog("skipping updates");
+            setConfig();
+        }
+    }
+
+    public void setConfig() {
+        devLog("attempting to set config");
+        String pathLacd = pathExternal +"/Android/data/com.MA.LACD/files/editor";
+        String pathLacm = pathExternal +"/Android/data/com.MA.LACM/files/editor";
+        String pathLacmb = pathExternal +"/Android/data/com.MA.LACMB/files/editor";
+        String pathLegacy = pathExternal +"/Android/data/com.MA.LAC/files/editor";
+        prefsEditUpdate.putString("path-lac", pathExternal +"/Android/data/com.MA.LAC/files/editor");
+        prefsEditUpdate.putString("path-app", pathDocs+"/LacMapTool/");
+        if (prefsConfig.getBoolean("enableLacd", false)) prefsEditUpdate.putString("path-lac", pathLacd);
+        if (prefsConfig.getBoolean("enableLacm", false)) prefsEditUpdate.putString("path-lac", pathLacm);
+        if (prefsConfig.getBoolean("enableLacmb", false)) prefsEditUpdate.putString("path-lac", pathLacmb);
+        if (prefsConfig.getBoolean("enableLegacyPath", false)) prefsEditUpdate.putString("path-lac", pathLegacy);
+        prefsEditUpdate.commit();
+        devLog("set config");
+        switchActivity();
+    }
+
+    public void switchActivity() {
+        devLog("attempting to switch in "+switchDelay);
+        Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             startActivity(intent);
             finish();
-        }, 1000);
+        }, switchDelay);
+    }
+
+    void devLog(String toLog) {
+        if (debugText.getVisibility() == View.VISIBLE) {
+            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
+            rawLogs = rawLogs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
+            debugText.setText(Html.fromHtml(rawLogs));
+        }
     }
 }

@@ -177,7 +177,7 @@ public class GalleryActivity extends AppCompatActivity {
         File file = new File(path);
         if (file.exists()) {
             devLog("attempting to share: "+path);
-            Intent share = FileUtil.shareFile(path, "image/*");
+            Intent share = FileUtil.shareFile(path, "image/*", getApplicationContext());
             startActivity(Intent.createChooser(share, "Share Screenshot"));
         } else {
             Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
