@@ -32,11 +32,17 @@ import java.io.File;
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
-    CheckBox autoBackups;
-    CheckBox backupOnEdit;
+    LinearLayout lacOptions;
+    LinearLayout lacOptionsContent;
     CheckBox lacd;
     CheckBox lacm;
     CheckBox lacmb;
+    LinearLayout backupOptions;
+    LinearLayout backupOptionsContent;
+    CheckBox autoBackups;
+    CheckBox backupOnEdit;
+    LinearLayout appOptions;
+    LinearLayout appOptionsContent;
     CheckBox forceEnglish;
     CheckBox dev;
     Button deleteTemp;
@@ -75,11 +81,17 @@ public class OptionsActivity extends AppCompatActivity {
         configEdit = config.edit();
 
         home = findViewById(R.id.options_goback);
-        autoBackups = findViewById(R.id.options_autoBackup);
-        backupOnEdit = findViewById(R.id.options_backupOnEdit);
+        lacOptions = findViewById(R.id.options_lac);
+        lacOptionsContent = findViewById(R.id.options_lac_content);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
         lacmb = findViewById(R.id.options_toggleLACMB);
+        backupOptions = findViewById(R.id.options_backup);
+        backupOptionsContent = findViewById(R.id.options_backup_content);
+        autoBackups = findViewById(R.id.options_autoBackup);
+        backupOnEdit = findViewById(R.id.options_backupOnEdit);
+        appOptions = findViewById(R.id.options_app);
+        appOptionsContent = findViewById(R.id.options_app_content);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
@@ -184,11 +196,34 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
 
-        autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
-        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
+        lacOptions.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                AppUtil.toggleView(lacOptionsContent);
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
+
+        backupOptions.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                AppUtil.toggleView(backupOptionsContent);
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
+        autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
+        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
+
+        appOptions.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                AppUtil.toggleView(appOptionsContent);
+            }
+            AppUtil.handleOnPressEvent(v, event);
+            return true;
+        });
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
 
