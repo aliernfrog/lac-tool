@@ -135,8 +135,9 @@ public class OptionsActivity extends AppCompatActivity {
             String _changelogVers = update.getString("updateChangelogVersion", null);
             _full = _changelog+"<br /><br />"+"<b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+_changelogVers+"<br />"+versInfo;
         } else {
+            String _noChangelogInfo = getString(R.string.optionsChangelogNoChangelog);
             String _appInfo = "LAC Tool is made by aliernfrog#9747 and is NOT an official app";
-            _full = _appInfo+"<br /><br />"+versInfo;
+            _full = _noChangelogInfo+"<br /><br />"+_appInfo+"<br /><br />"+versInfo;
         }
         changelog.setText(Html.fromHtml(_full));
     }
