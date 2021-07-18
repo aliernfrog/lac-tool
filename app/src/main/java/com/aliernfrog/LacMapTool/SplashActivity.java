@@ -18,9 +18,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.WebUtil;
-
-import org.json.JSONObject;
 
 import java.util.Locale;
 
@@ -35,7 +32,6 @@ public class SplashActivity extends AppCompatActivity {
 
     String rawLogs = "";
 
-    String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
     Integer switchDelay = 1000;
 
     String pathExternal = Environment.getExternalStorageDirectory().toString();
@@ -109,15 +105,7 @@ public class SplashActivity extends AppCompatActivity {
         devLog("should check for updates: "+shouldCheck);
         if (shouldCheck) {
             try {
-                String rawContent = WebUtil.getContentFromURL(updateUrl);
-                JSONObject updateObj = new JSONObject(rawContent);
-                devLog(updateObj.toString());
-                prefsEditUpdate.putInt("updateLatest", updateObj.getInt("latest"));
-                prefsEditUpdate.putString("updateDownload", updateObj.getString("download"));
-                prefsEditUpdate.putString("updateChangelog", updateObj.getString("changelog"));
-                prefsEditUpdate.putString("updateChangelogVersion", updateObj.getString("changelogVersion"));
-                prefsEditUpdate.commit();
-                devLog("saved update config");
+                if (AppUtil.getUpdates(getApplicationContext())) devLog("saved update config");
                 setConfig();
             } catch (Exception e) {
                 e.printStackTrace();

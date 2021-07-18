@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -18,18 +19,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.WebUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 
-@SuppressLint("ClickableViewAccessibility")
+@SuppressLint({"CommitPrefEdits", "ClickableViewAccessibility"})
 public class MainActivity extends AppCompatActivity {
     LinearLayout missingPerms;
     LinearLayout lacLinear;
@@ -40,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
     Button checkUpdates;
     Button redirectOptions;
     LinearLayout updateLinear;
+    TextView updateLinearTitle;
     TextView updateLog;
     TextView log;
 
-    String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
     String dataPath;
     String lacPath;
     String backupPath;
@@ -84,45 +80,63 @@ public class MainActivity extends AppCompatActivity {
         checkUpdates = findViewById(R.id.main_checkUpdates);
         redirectOptions = findViewById(R.id.main_options);
         updateLinear = findViewById(R.id.main_update);
+        updateLinearTitle = findViewById(R.id.main_update_title);
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
         if (devMode) log.setVisibility(View.VISIBLE);
+        checkUpdates();
         checkPerms();
         createFiles();
         setListeners();
     }
 
-    public void checkUpdates() {
-        devLog("attempting to check updates");
+    public void getUpdates() {
+        devLog("attempting to get updates from website");
         try {
-            String jsonString = WebUtil.getContentFromURL(updateUrl);
-            JSONObject object = new JSONObject(jsonString);
-            int updatedVersion = object.getInt("latest");
-            devLog("Current version: "+version+", updated version: "+updatedVersion);
-            boolean updateFound = updatedVersion > version;
-            if (updateFound) {
-                updateLinear.setVisibility(View.VISIBLE);
-                updateLog.setText(object.getString("changelog"));
-                updateLinear.setOnTouchListener((v, event) -> {
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        try {
-                            redirectURL(object.getString("download"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            devLog(e.toString());
-                        }
-                    }
-                    AppUtil.handleOnPressEvent(v, event);
-                    return true;
-                });
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.info_updateNotFound, Toast.LENGTH_SHORT).show();
+            if (AppUtil.getUpdates(getApplicationContext())) {
+                checkUpdates();
             }
         } catch (Exception e) {
             e.printStackTrace();
             devLog(e.toString());
         }
+    }
+
+    public void checkUpdates() {
+        devLog("checking for updates");
+        int latest = update.getInt("updateLatest", 0);
+        String download = update.getString("updateDownload", null);
+        String changelog = update.getString("updateChangelog", null);
+        String changelogVersion = update.getString("updateChangelogVersion", null);
+        String notes = update.getString("notes", null);
+        boolean hasUpdate = latest > version;
+        boolean linearVisible = false;
+        String full = "";
+        if (hasUpdate) {
+            linearVisible = true;
+            full = changelog+"<br /><br /><b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+changelogVersion;
+            updateLinearTitle.setVisibility(View.VISIBLE);
+            updateLinear.setBackground(ContextCompat.getDrawable(getApplicationContext() ,R.drawable.linear_blue));
+            updateLinear.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    redirectURL(download);
+                }
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            });
+        } else {
+            if (notes != null && !notes.equals("")) {
+                linearVisible = true;
+                full = notes;
+            }
+            updateLinear.setOnTouchListener((v, event) -> {
+                AppUtil.handleOnPressEvent(v, event);
+                return true;
+            });
+        }
+        updateLog.setText(Html.fromHtml(full));
+        if (linearVisible) updateLinear.setVisibility(View.VISIBLE);
     }
 
     public void checkPerms() {
@@ -257,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkUpdates.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                checkUpdates();
+                getUpdates();
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
