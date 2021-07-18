@@ -72,6 +72,7 @@
     <string name="optionAutoBackup">Auto map backups</string>
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
     <string name="optionsApp">App options</string>
+    <string name="optionAutoCheckUpdate">Automatically check for LAC Tool updates</string>
     <string name="optionForceEnglish">Force English language</string>
     <string name="optionDebug">Debug mode</string>
     <string name="optionDeleteTemp">Delete temporary data</string>
