@@ -260,7 +260,9 @@
                 android:gravity="center_horizontal"
                 android:padding="8dp"
                 android:text="@string/optionsChangelogNoChangelog"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:linksClickable="true"
+                android:autoLink="web" />
 
             <LinearLayout
                 android:id="@+id/options_feedback_linear"
