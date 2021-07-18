@@ -32,7 +32,6 @@ import java.io.File;
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
-    LinearLayout optionsEx;
     CheckBox autoBackups;
     CheckBox backupOnEdit;
     CheckBox lacd;
@@ -76,12 +75,11 @@ public class OptionsActivity extends AppCompatActivity {
         configEdit = config.edit();
 
         home = findViewById(R.id.options_goback);
-        autoBackups = findViewById(R.id.options_autobkup);
-        backupOnEdit = findViewById(R.id.options_bkupOnEdit);
+        autoBackups = findViewById(R.id.options_autoBackup);
+        backupOnEdit = findViewById(R.id.options_backupOnEdit);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
         lacmb = findViewById(R.id.options_toggleLACMB);
-        optionsEx = findViewById(R.id.options_ex);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
         deleteTemp = findViewById(R.id.options_deleteTemp);
@@ -186,11 +184,6 @@ public class OptionsActivity extends AppCompatActivity {
             return true;
         });
 
-        optionsEx.setOnTouchListener((v, event) -> {
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
@@ -220,7 +213,7 @@ public class OptionsActivity extends AppCompatActivity {
         });
         discord_rcs.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                redirectURL("https://discord.gg/ExY9V4T");
+                redirectURL("https://discord.gg/aQhGqHSc3W");
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
