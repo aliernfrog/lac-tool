@@ -110,7 +110,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/options_toggleLACDdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -134,7 +133,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/options_toggleLACMdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -158,7 +156,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/options_toggleLACMbdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -227,7 +224,6 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"

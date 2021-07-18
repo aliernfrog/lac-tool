@@ -11,8 +11,6 @@
     <string name="info_wait">Please wait..</string>
     <string name="info_android11notAvailable">This feature currently isn\'t available for Android 11</string>
     <string name="info_name">Name</string>
-    <string name="info_updateFound">Update found</string>
-    <string name="info_updateNotFound">No updates found</string>
     <string name="denied_alreadyExists">A file with this name already exists</string>
     <string name="denied_doesntExist">File does not exist</string>
     <string name="action_save">Save</string>
@@ -74,7 +72,6 @@
     <string name="optionLacmDesc">LACM path: manages files of LAC MOD app</string>
     <string name="optionLacmb">LACMB path</string>
     <string name="optionLacmbDesc">LACMB path: manages files of LAC MB app</string>
-    <string name="optionLegacyPath">Legacy path</string>
     <string name="optionForceEnglish">Force English language</string>
     <string name="optionDebug">Debug mode</string>
     <string name="optionDeleteTemp">Delete temporary data</string>
