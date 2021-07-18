@@ -205,7 +205,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:textColor="#E8E8E8" />
+                    android:textColor="#E8E8E8"
+                    android:linksClickable="true"
+                    android:autoLink="web" />
             </LinearLayout>
 
             <TextView
