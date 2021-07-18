@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ButtonStyle"
 
 
     android:layout_width="match_parent"
@@ -67,166 +68,201 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/options_ex"
+                android:id="@+id/options_lac"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="8dp">
-
-                <CheckBox
-                    android:id="@+id/options_autobkup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionAutoBackup"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <CheckBox
-                    android:id="@+id/options_bkupOnEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionBackupOnEdit"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <CheckBox
-                    android:id="@+id/options_toggleLACD"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionLacd"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/options_toggleLACDdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/optionLacdDesc"
+                    android:text="@string/optionsLac"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <CheckBox
-                    android:id="@+id/options_toggleLACM"
+                <LinearLayout
+                    android:id="@+id/options_lac_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionLacm"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/options_toggleLACMdesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/optionLacmDesc"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <CheckBox
-                    android:id="@+id/options_toggleLACMB"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionLacmb"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/options_toggleLACMbdesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/optionLacmbDesc"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <CheckBox
-                    android:id="@+id/options_legacyPath"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionLegacyPath"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
                     android:visibility="gone"
-                    tools:visibility="visible" />
+                    tools:visibility="visible">
 
-                <CheckBox
-                    android:id="@+id/options_forceEnglish"
+                    <CheckBox
+                        android:id="@+id/options_toggleLACD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionLacd"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/options_toggleLACM"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionLacm"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/options_toggleLACMB"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionLacmb"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/options_backup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionForceEnglish"
+                    android:text="@string/optionsBackup"
                     android:textColor="#FFFFFF"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <CheckBox
-                    android:id="@+id/options_devtoggle"
+                <LinearLayout
+                    android:id="@+id/options_backup_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionDebug"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <CheckBox
+                        android:id="@+id/options_autoBackup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionAutoBackup"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/options_backupOnEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionBackupOnEdit"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/options_app"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optionsApp"
                     android:textColor="#FFFFFF"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/options_deleteTemp"
+                <LinearLayout
+                    android:id="@+id/options_app_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="8dp"
-                    android:text="@string/optionDeleteTemp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
+                    <CheckBox
+                        android:id="@+id/options_autoCheckUpdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionAutoCheckUpdate"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/options_forceEnglish"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionForceEnglish"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/options_devtoggle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionDebug"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/options_deleteTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/linear_button"
+                        android:text="@string/optionDeleteTemp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        app:backgroundTint="#FF0E0E0E" />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/options_version"
+                android:id="@+id/options_changelog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:gravity="center_horizontal"
                 android:padding="8dp"
-                android:textColor="#FFFFFF" />
+                android:text="@string/optionsChangelogNoChangelog"
+                android:textColor="#FFFFFF"
+                android:linksClickable="true"
+                android:autoLink="web" />
 
             <LinearLayout
                 android:id="@+id/options_feedback_linear"
@@ -238,7 +274,6 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -312,13 +347,13 @@
                         android:background="@drawable/linear_button"
                         android:drawableTop="@drawable/discord"
                         android:padding="8dp"
-                        android:text="@string/optionDiscordRcs"
+                        android:text="@string/optionsDiscordRcs"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                        app:backgroundTint="#FF0E0E0E"/>
 
                     <Button
-                        android:id="@+id/options_discord_bbots"
+                        android:id="@+id/options_discord_aliern"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_margin="8dp"
@@ -326,7 +361,7 @@
                         android:background="@drawable/linear_button"
                         android:drawableTop="@drawable/discord"
                         android:padding="8dp"
-                        android:text="@string/optionsDiscordBbots"
+                        android:text="@string/optionsDiscordAliern"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
                         app:backgroundTint="#FF0E0E0E" />

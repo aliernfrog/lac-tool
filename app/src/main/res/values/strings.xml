@@ -11,8 +11,6 @@
     <string name="info_wait">Please wait..</string>
     <string name="info_android11notAvailable">This feature currently isn\'t available for Android 11</string>
     <string name="info_name">Name</string>
-    <string name="info_updateFound">Update found</string>
-    <string name="info_updateNotFound">No updates found</string>
     <string name="denied_alreadyExists">A file with this name already exists</string>
     <string name="denied_doesntExist">File does not exist</string>
     <string name="action_save">Save</string>
@@ -66,20 +64,23 @@
     <string name="mapEdit_removeAll_race">Remove all race checkpoints</string>
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
     <string name="mapEdit_roles">Roles</string>
+    <string name="optionsLac">LAC options</string>
+    <string name="optionLacd">LACD path (LAC BETA)</string>
+    <string name="optionLacm">LACM path (LAC MOD)</string>
+    <string name="optionLacmb">LACMB path (LAC MB)</string>
+    <string name="optionsBackup">Backup options</string>
     <string name="optionAutoBackup">Auto map backups</string>
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
-    <string name="optionLacd">LACD path</string>
-    <string name="optionLacdDesc">LACD path: manages files of LAC BETA app</string>
-    <string name="optionLacm">LACM path</string>
-    <string name="optionLacmDesc">LACM path: manages files of LAC MOD app</string>
-    <string name="optionLacmb">LACMB path</string>
-    <string name="optionLacmbDesc">LACMB path: manages files of LAC MB app</string>
-    <string name="optionLegacyPath">Legacy path</string>
+    <string name="optionsApp">App options</string>
+    <string name="optionAutoCheckUpdate">Automatically check for LAC Tool updates</string>
     <string name="optionForceEnglish">Force English language</string>
     <string name="optionDebug">Debug mode</string>
     <string name="optionDeleteTemp">Delete temporary data</string>
-    <string name="optionDiscordRcs" translatable="false">LAC Discord</string>
-    <string name="optionsDiscordBbots" translatable="false">LAC Tool Discord</string>
+    <string name="optionsChangelogNoChangelog">No changelog has been found, go to main menu, then check for updates to get changelog</string>
+    <string name="optionsChangelogCurrent">Current version</string>
+    <string name="optionsChangelogChangelog">Changelog version</string>
+    <string name="optionsDiscordRcs" translatable="false">LAC Discord</string>
+    <string name="optionsDiscordAliern" translatable="false">LAC Tool Discord</string>
     <string name="optionsGithub" translatable="false">LAC Tool GitHub</string>
     <string name="optionsFeedback">LAC Tool feedback</string>
     <string name="optionsFeedbackHint">Your feedback..</string>
