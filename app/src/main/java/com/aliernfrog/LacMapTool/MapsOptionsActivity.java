@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -60,7 +61,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     Button removeAllTdm;
     Button removeAllRace;
     Button fixMapButton;
-    Button saveChanges;
+    FloatingActionButton saveChanges;
     TextView devLog;
 
     SharedPreferences config;
@@ -72,7 +73,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     String[] updatedContent;
     String logs = "";
 
-    ArrayList<String> roles = new ArrayList<String>();
+    ArrayList<String> roles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +152,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void getMapType() {
         String str = updatedContent[1].replace("Map Type:", "");
         if (mapVers < 3) str = updatedContent[0].replace("Map Type:", "");
-        Integer typeInt = Integer.parseInt(str);
+        int typeInt = Integer.parseInt(str);
         mapType.setSelection(typeInt);
     }
 
@@ -175,7 +176,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void putMapTypes() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner);
         adapter.add(getResources().getString(R.string.mapEdit_type_0));
         adapter.add(getResources().getString(R.string.mapEdit_type_1));
         adapter.add(getResources().getString(R.string.mapEdit_type_2));

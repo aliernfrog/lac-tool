@@ -33,10 +33,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/mapsOptions_nestedScroll"
         android:layout_width="match_parent"
+
+
         android:layout_height="match_parent"
-
-
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
@@ -427,18 +428,6 @@
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
 
-                <Button
-                    android:id="@+id/mapsOptions_save_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_blue"
-                    android:padding="8dp"
-                    android:text="@string/action_save"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    app:backgroundTint="#005DFF" />
-
             </LinearLayout>
 
             <TextView
@@ -449,6 +438,19 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mapsOptions_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/action_save"
+        app:backgroundTint="#005DFF"
+        app:layout_anchor="@+id/mapsOptions_nestedScroll"
+        app:layout_anchorGravity="end|bottom"
+        app:srcCompat="@drawable/save" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
