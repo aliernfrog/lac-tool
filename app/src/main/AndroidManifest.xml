@@ -5,7 +5,9 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -17,29 +19,48 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LACMapTool">
+        <activity android:name=".FilePickerActivity" />
+        <activity android:name=".NewMapsActivity" />
         <activity
             android:name=".SplashActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".GalleryActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".MapsActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".WallpaperActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".MapsOptionsActivity" android:configChanges="locale|orientation"/>
-        <activity android:name=".OptionsActivity" android:configChanges="locale|orientation" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".RestoreActivity" android:configChanges="locale|orientation"/>
-        
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="locale|orientation" />
+        <activity
+            android:name=".GalleryActivity"
+            android:configChanges="locale|orientation" />
+        <activity
+            android:name=".MapsActivity"
+            android:configChanges="locale|orientation" />
+        <activity
+            android:name=".WallpaperActivity"
+            android:configChanges="locale|orientation" />
+        <activity
+            android:name=".MapsOptionsActivity"
+            android:configChanges="locale|orientation" />
+        <activity
+            android:name=".OptionsActivity"
+            android:configChanges="locale|orientation"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".RestoreActivity"
+            android:configChanges="locale|orientation" />
+
         <provider
-            android:authorities="${applicationId}.provider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
         </provider>
     </application>
 
