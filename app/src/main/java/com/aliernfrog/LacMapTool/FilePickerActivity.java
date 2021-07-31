@@ -44,6 +44,8 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             pickiT.getPath(data.getData(), Build.VERSION.SDK_INT);
+        } else {
+            finish();
         }
     }
 
