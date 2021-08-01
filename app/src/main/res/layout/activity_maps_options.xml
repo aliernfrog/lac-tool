@@ -84,7 +84,9 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -118,6 +120,7 @@
                 android:background="@drawable/linear"
                 android:orientation="vertical"
                 android:padding="8dp"
+                android:visibility="gone"
                 tools:visibility="visible">
 
                 <TextView
@@ -145,162 +148,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
-                        android:padding="8dp"
-                        android:text="@string/mapEdit_maxVeh"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/mapsOptions_maxveh_input"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:ems="10"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:inputType="number"
-                        android:textColor="#FFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
-                        android:padding="8dp"
-                        android:text="@string/mapEdit_fuelConsumeRate"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/mapsOptions_fuelconsume_input"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:ems="10"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:inputType="number"
-                        android:textColor="#FFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
-                        android:padding="8dp"
-                        android:text="@string/mapEdit_delIdleVeh"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/mapsOptions_idleveh_input"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:ems="10"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:inputType="number"
-                        android:textColor="#FFFFFF" />
-                </LinearLayout>
-
-                <Switch
-                    android:id="@+id/mapsOptions_healthRegeneration_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="16dp"
-                    android:text="@string/mapEdit_healthReg"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/mapsOptions_hideNames_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="16dp"
-                    android:text="@string/mapEdit_hideNick"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/mapsOptions_allowRespawn_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="16dp"
-                    android:text="@string/mapEdit_allowRespawn"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/mapsOptions_voiceChat_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="16dp"
-                    android:text="@string/mapEdit_voice"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/mapsOptions_voteRole_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="16dp"
-                    android:text="@string/mapEdit_voteRole"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/mapsOptions_rolePlay_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:padding="16dp"
-                    android:text="@string/mapEdit_roleplay"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:orientation="vertical"/>
 
             <LinearLayout
                 android:id="@+id/mapsOptions_roles_linear"
@@ -434,7 +282,9 @@
                 android:id="@+id/mapsOptions_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

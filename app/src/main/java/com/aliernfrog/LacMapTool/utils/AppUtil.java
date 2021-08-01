@@ -60,6 +60,15 @@ public class AppUtil {
         }
     }
 
+    public static Boolean stringIsNumber(String string) {
+        try {
+            Integer integer = Integer.parseInt(string.trim());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     public static void handleOnPressEvent(View view, MotionEvent event, @Nullable Runnable onClick) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
