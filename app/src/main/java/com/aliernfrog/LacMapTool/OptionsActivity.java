@@ -10,8 +10,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -46,6 +48,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox autoCheckUpdate;
     CheckBox forceEnglish;
     CheckBox dev;
+    EditText forceActivity;
     Button deleteTemp;
     LinearLayout discord_linear;
     Button discord_aliern;
@@ -69,6 +72,7 @@ public class OptionsActivity extends AppCompatActivity {
     String appVers;
     Integer appVersCode;
 
+    Integer appOptionsClicks = 0;
     Integer activityResult = 0;
 
     @SuppressLint("CommitPrefEdits")
@@ -96,6 +100,7 @@ public class OptionsActivity extends AppCompatActivity {
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
+        forceActivity = findViewById(R.id.options_startActivity);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
         discord_aliern = findViewById(R.id.options_discord_aliern);
@@ -186,6 +191,16 @@ public class OptionsActivity extends AppCompatActivity {
         startActivity(viewIntent);
     }
 
+    void startActivityWithName(String name) {
+        try {
+            Class c = Class.forName(getPackageName()+"."+name);
+            Intent intent = new Intent(this, c);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     void finishActivity() {
         setResult(activityResult);
         finish();
@@ -224,6 +239,8 @@ public class OptionsActivity extends AppCompatActivity {
         appOptions.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 AppUtil.toggleView(appOptionsContent);
+                appOptionsClicks += 1;
+                if (appOptionsClicks >= 10) forceActivity.setVisibility(View.VISIBLE);
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
@@ -231,6 +248,13 @@ public class OptionsActivity extends AppCompatActivity {
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
+        forceActivity.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                startActivityWithName(forceActivity.getText().toString());
+                return true;
+            }
+            return false;
+        });
 
         deleteTemp.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
