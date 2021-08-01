@@ -32,7 +32,7 @@ public class NewMapsActivity extends AppCompatActivity {
         pickMap = findViewById(R.id.maps_pick_pick);
         debugText = findViewById(R.id.maps_debug);
 
-        devLog("MAPS ACTIVITY STARTED");
+        devLog("NewMapsActivity started");
 
         setListeners();
     }
