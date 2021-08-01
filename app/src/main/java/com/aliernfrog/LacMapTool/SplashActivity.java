@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
         boolean enableDebugUI = prefsConfig.getBoolean("enableDebug", false);
         if (enableDebugUI) debugText.setVisibility(View.VISIBLE);
 
-        devLog("LAC TOOL STARTED");
+        devLog("SplashActivity started");
         devLog("Android SDK version: "+Build.VERSION.SDK_INT);
         devLog("External path: "+ pathExternal);
         devLog("Documents path: "+pathDocs);
