@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         File backupFolder = new File(backupPath);
         File aBackupFolder = new File(aBackupPath);
         File lacFolder = new File(lacPath);
-        File wallpaperFolder = new File(lacPath.replace("editor/", "wallpaper/"));
+        File wallpaperFolder = new File(lacPath.replace("editor", "wallpaper"));
         File nomedia = new File(dataPath+".nomedia");
         if (!dataFolder.exists()) mkdirs(dataFolder);
         if (!backupFolder.exists()) mkdirs(backupFolder);

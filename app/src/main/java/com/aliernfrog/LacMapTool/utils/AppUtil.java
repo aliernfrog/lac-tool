@@ -12,9 +12,11 @@ import android.content.pm.PackageManager;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONObject;
 
-@SuppressLint({"CommitPrefEdits", "ApplySharedPref"})
+@SuppressLint({"CommitPrefEdits", "ApplySharedPref", "ClickableViewAccessibility"})
 public class AppUtil {
     static String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
 
@@ -58,7 +60,16 @@ public class AppUtil {
         }
     }
 
-    public static void handleOnPressEvent(View view, MotionEvent event) {
+    public static Boolean stringIsNumber(String string) {
+        try {
+            Integer integer = Integer.parseInt(string.trim());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void handleOnPressEvent(View view, MotionEvent event, @Nullable Runnable onClick) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(view, "scaleX", 0.9f);
@@ -71,6 +82,7 @@ public class AppUtil {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (onClick != null && event.getAction() == MotionEvent.ACTION_UP) onClick.run();
                 ObjectAnimator scaleUpX = ObjectAnimator.ofFloat(view, "scaleX", 1f);
                 ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(view, "scaleY", 1f);
                 scaleUpX.setDuration(100);
@@ -80,5 +92,20 @@ public class AppUtil {
                 scaleUp.start();
                 break;
         }
+    }
+
+    public static void handleOnPressEvent(View view, MotionEvent event) {
+        handleOnPressEvent(view, event, null);
+    }
+
+    public static void handleOnPressEvent(View view, @Nullable Runnable onClick) {
+        view.setOnTouchListener((v, event) -> {
+            handleOnPressEvent(v, event, onClick);
+            return true;
+        });
+    }
+
+    public static void handleOnPressEvent(View view) {
+        handleOnPressEvent(view, (Runnable) null);
     }
 }
