@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +29,8 @@ import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.aliernfrog.LacMapTool.utils.LacMapUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -40,15 +44,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     LinearLayout serverNameLinear;
     LinearLayout mapTypeLinear;
     Spinner mapType;
-    EditText maxVeh;
-    EditText fuelConsume;
-    EditText idleVeh;
-    Switch healthRegeneration;
-    Switch hideNames;
-    Switch allowRespawn;
-    Switch voiceChat;
-    Switch voteRole;
-    Switch rolePlay;
+    LinearLayout optionsLinear;
     LinearLayout rolesLinear;
     TextView roles_title;
     LinearLayout rolesAdd_linear;
@@ -56,23 +52,22 @@ public class MapsOptionsActivity extends AppCompatActivity {
     EditText rolesAdd_input;
     Button rolesAdd_button;
     TextView rolesAdd_desc;
-    LinearLayout optionsLinear;
     Button removeAllTdm;
     Button removeAllRace;
     Button fixMapButton;
-    Button saveChanges;
-    TextView devLog;
+    FloatingActionButton saveChanges;
+    TextView debugText;
 
     SharedPreferences config;
 
-    Boolean devMode;
     String rawPath;
-    Integer mapVers;
 
     String[] updatedContent;
-    String logs = "";
 
-    ArrayList<String> roles = new ArrayList<String>();
+    Integer LINE_SERVER_NAME;
+    Integer LINE_MAP_TYPE;
+    Integer LINE_ROLES;
+    ArrayList<String> roles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +78,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         rawPath = config.getString("lastPath", null);
-        devMode = config.getBoolean("enableDebug", false);
 
         goback = findViewById(R.id.mapsOptions_goback);
         mapName = findViewById(R.id.mapsOptions_mapName);
@@ -91,15 +85,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         serverNameLinear = findViewById(R.id.mapsOptions_serverName_linear);
         mapTypeLinear = findViewById(R.id.mapsOptions_mapType_linear);
         mapType = findViewById(R.id.mapsOptions_mapType_spinner);
-        maxVeh = findViewById(R.id.mapsOptions_maxveh_input);
-        fuelConsume = findViewById(R.id.mapsOptions_fuelconsume_input);
-        idleVeh = findViewById(R.id.mapsOptions_idleveh_input);
-        healthRegeneration = findViewById(R.id.mapsOptions_healthRegeneration_switch);
-        hideNames = findViewById(R.id.mapsOptions_hideNames_switch);
-        allowRespawn = findViewById(R.id.mapsOptions_allowRespawn_switch);
-        voiceChat = findViewById(R.id.mapsOptions_voiceChat_switch);
-        voteRole = findViewById(R.id.mapsOptions_voteRole_switch);
-        rolePlay = findViewById(R.id.mapsOptions_rolePlay_switch);
+        optionsLinear = findViewById(R.id.mapsOptions_options_linear);
         rolesLinear = findViewById(R.id.mapsOptions_roles_linear);
         roles_title = findViewById(R.id.mapsOptions_roles_title);
         rolesAdd_linear = findViewById(R.id.mapsOptions_roleAdd_linear);
@@ -107,18 +93,23 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rolesAdd_input = findViewById(R.id.mapsOptions_roleAdd_name);
         rolesAdd_button = findViewById(R.id.mapsOptions_roleAdd_button);
         rolesAdd_desc = findViewById(R.id.mapsOptions_roleAdd_desc);
-        optionsLinear = findViewById(R.id.mapsOptions_options_linear);
         removeAllTdm = findViewById(R.id.mapsOptions_removeAll_tdm);
         removeAllRace = findViewById(R.id.mapsOptions_removeAll_race);
         fixMapButton = findViewById(R.id.mapsOptions_fix_button);
         saveChanges = findViewById(R.id.mapsOptions_save_button);
-        devLog = findViewById(R.id.mapsOptions_log);
+        debugText = findViewById(R.id.mapsOptions_log);
+
+        boolean enableDebugUI = config.getBoolean("enableDebug", false);
+        if (enableDebugUI) debugText.setVisibility(View.VISIBLE);
 
         rolesAdd_desc.setText(Html.fromHtml("Roles without <font color=yellow>[ ]</font> will get removed by LAC automatically. So always add roles like <font color=yellow>[YOUR ROLE]</font>. To add a role with color do it like <font color=yellow>&#60;color=red&#62;[CRIMINAL]&#60;/color&#62;</font>"));
 
-        putMapTypes();
-        getMap(rawPath);
-        setListeners();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            putMapTypes();
+            getMap(rawPath);
+            setListeners();
+        }, 100);
     }
 
     public void getMap(String path) {
@@ -130,29 +121,94 @@ public class MapsOptionsActivity extends AppCompatActivity {
         readMap(path);
     }
 
-    public void readMapProperties() {
-        getMapType();
-        if (mapVers >= 3) {
-            serverName.setText(updatedContent[0].replace("Map Name:",""));
-            maxVeh.setText(updatedContent[4].replace("Max Vehicle Count: ", ""));
-            fuelConsume.setText(updatedContent[5].replace("Fuel Consume Rate: ", ""));
-            idleVeh.setText(updatedContent[6].replace("Delete Idle Vehicle: ", ""));
-            healthRegeneration.setChecked(getBoolean(updatedContent[7].replace("Health Regeneration: ", "")));
-            hideNames.setChecked(getBoolean(updatedContent[8].replace("Hide Names: ", "")));
-            allowRespawn.setChecked(getBoolean(updatedContent[9].replace("Allow Respawn: ", "")));
-            voiceChat.setChecked(getBoolean(updatedContent[10].replace("Voice-Chat: ", "")));
-            voteRole.setChecked(getBoolean(updatedContent[11].replace("Vote For Role: ", "")));
-            rolePlay.setChecked(getBoolean(updatedContent[12].replace("Role-play: ", "")));
+    public void readMapLines() {
+        devLog("attempting to read map lines");
+        for (int i = 0; i < updatedContent.length; i++) {
+            String cur = updatedContent[i];
+            String type = "option";
+            if (cur.split(":").length > 1 && cur.split(":")[0].endsWith("_Editor")) type = "object";
+            if (cur.startsWith("Map Name:")) type = "serverName";
+            if (cur.startsWith("Map Type:")) type = "mapType";
+            if (cur.startsWith("Holo Sign:")) type = "holoSign";
+            if (cur.startsWith("Camera Pos:")) type = "cameraPos";
+            if (cur.startsWith("Roles List:")) type = "rolesList";
+            if (cur.startsWith("Vehicle_")) type = "vehicle";
+            switch(type) {
+                case "serverName":
+                    getServerName(i);
+                    break;
+                case "mapType":
+                    getMapType(i);
+                    break;
+                case "rolesList":
+                    readRoles(i, true);
+                case "option":
+                    if (!cur.startsWith("Roles List:")) readOption(i);
+            }
         }
-        readRoles(true);
-        refreshVisibility();
     }
 
-    public void getMapType() {
-        String str = updatedContent[1].replace("Map Type:", "");
-        if (mapVers < 3) str = updatedContent[0].replace("Map Type:", "");
-        Integer typeInt = Integer.parseInt(str);
+    public void readOption(Integer line) {
+        String str = updatedContent[line];
+        String[] split = str.split(":");
+        String title = split[0];
+        String value = split[1];
+        Boolean isNumber = AppUtil.stringIsNumber(value);
+        if (isNumber) {
+            addNumberOption(line, title, value);
+        } else {
+            Boolean bool = value.contains("true") || value.contains("enabled");
+            addBoolOption(line, title, bool);
+        }
+    }
+
+    public void addNumberOption(Integer line, String title, String value) {
+        ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.option_number, optionsLinear, false);
+        TextView titleView = view.findViewById(R.id.option_number_title);
+        EditText valueView = view.findViewById(R.id.option_number_value);
+        titleView.setText(title);
+        valueView.setText(value);
+        valueView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setString(line, valueView.getText().toString());
+            }
+        });
+        optionsLinear.addView(view);
+    }
+
+    public void addBoolOption(Integer line, String title, Boolean value) {
+        View view = getLayoutInflater().inflate(R.layout.option_bool, optionsLinear, false);
+        Switch switchView = view.findViewById(R.id.option_bool_switch);
+        switchView.setText(title);
+        switchView.setChecked(value);
+        switchView.setOnCheckedChangeListener((buttonView, isChecked) -> setBoolean(line, isChecked));
+        optionsLinear.addView(view);
+    }
+
+    public void getServerName(Integer line) {
+        LINE_SERVER_NAME = line;
+        String str = updatedContent[line].replace("Map Name:","");
+        serverName.setText(str);
+        serverNameLinear.setVisibility(View.VISIBLE);
+    }
+
+    public void getMapType(Integer line) {
+        LINE_MAP_TYPE = line;
+        String str = updatedContent[line].replace("Map Type:", "");
+        int typeInt = Integer.parseInt(str);
         mapType.setSelection(typeInt);
+        mapTypeLinear.setVisibility(View.VISIBLE);
     }
 
     public void setMapName(String name) {
@@ -162,27 +218,32 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     public void setMapType(Integer mapTypeNumber) {
         devLog("attempting to change map type to: "+mapTypeNumber);
-        if (mapVers >= 3) {
-            updatedContent[1] = "Map Type:"+mapTypeNumber.toString();
-        } else {
-            updatedContent[0] = "Map Type:"+mapTypeNumber.toString();
-        }
+        updatedContent[LINE_MAP_TYPE] = "Map Type:"+mapTypeNumber.toString();
     }
 
-    public void setString(Integer posAtContent, String string) {
-        devLog("attempting to change line at pos "+posAtContent.toString()+" to: "+string);
-        updatedContent[posAtContent] = string;
+    public void setBoolean(Integer line, Boolean bool) {
+        String str = updatedContent[line];
+        String[] split = str.split(":");
+        String title = split[0];
+        String value = split[1];
+        boolean useEnabledDisabled = value.contains("enabled") || value.contains("disabled");
+        String valueStr = "false";
+        if (bool) valueStr = "true";
+        if (useEnabledDisabled) valueStr = valueStr.replace("true","enabled").replace("false","disabled");
+        setLine(line, title+": "+valueStr);
     }
 
-    public void putMapTypes() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
-        adapter.add(getResources().getString(R.string.mapEdit_type_0));
-        adapter.add(getResources().getString(R.string.mapEdit_type_1));
-        adapter.add(getResources().getString(R.string.mapEdit_type_2));
-        adapter.add(getResources().getString(R.string.mapEdit_type_3));
-        adapter.add(getResources().getString(R.string.mapEdit_type_4));
-        adapter.add(getResources().getString(R.string.mapEdit_type_5));
-        mapType.setAdapter(adapter);
+    public void setString(Integer line, Object value) {
+        value = value.toString();
+        String str = updatedContent[line];
+        String[] split = str.split(":");
+        String title = split[0];
+        setLine(line, title+": "+value);
+    }
+
+    public void setLine(Integer line, String string) {
+        devLog("attempting to change line "+line+" to: "+string);
+        updatedContent[line] = string;
     }
 
     public void readMap(String path) {
@@ -192,7 +253,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             try {
                 String _full = FileUtil.readFile(path);
                 updatedContent = _full.split("\n");
-                readMapVers();
+                readMapLines();
             } catch (Exception e) {
                 devLog(e.toString());
             }
@@ -202,64 +263,45 @@ public class MapsOptionsActivity extends AppCompatActivity {
         }
     }
 
-    public void readMapVers() {
-        if (updatedContent[0].contains("Map Name:")) {
-            mapVers = 3;
-        } else if (updatedContent[3].toLowerCase().contains("camera pos:")) {
-            mapVers = 2;
-        } else {
-            mapVers = 1;
-        }
-        devLog("mapVers = "+mapVers);
-        readMapProperties();
-    }
-
-    public void refreshVisibility() {
-        if (mapVers < 3) {
-            serverNameLinear.setVisibility(View.GONE);
-            optionsLinear.setVisibility(View.GONE);
-        }
-    }
-
-    public void readRoles(Boolean putRoles) {
-        if (mapVers >= 3) {
-            rolesLinear.removeAllViews();
-            rolesLinear.addView(roles_title);
-            rolesLinear.addView(rolesAdd_linear);
-            devLog("attempting to read roles");
-            rolesLinear.setVisibility(View.VISIBLE);
-            String[] rolesString = updatedContent[13].replace("Roles List:", "").split(",");
-            if (putRoles) {
-                for (int i = 0; i < rolesString.length; i++) {
-                    if (!rolesString[i].equals("")) roles.add(rolesString[i]);
-                }
+    public void readRoles(Integer line, Boolean putRoles) {
+        LINE_ROLES = line;
+        rolesLinear.setVisibility(View.VISIBLE);
+        rolesLinear.removeAllViews();
+        rolesLinear.addView(roles_title);
+        rolesLinear.addView(rolesAdd_linear);
+        devLog("attempting to read roles");
+        rolesLinear.setVisibility(View.VISIBLE);
+        String[] rolesString = updatedContent[line].replace("Roles List:", "").split(",");
+        if (putRoles) {
+            for (String s : rolesString) {
+                if (!s.equals("")) roles.add(s);
             }
-            for (int i = 0; i < roles.size(); i++) {
-                if (!roles.get(i).equals("")) {
-                    String name = roles.get(i);
-                    ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.role, rolesLinear, false);
-                    LinearLayout roleLinear = layout.findViewById(R.id.role_bg);
-                    TextView roleName = layout.findViewById(R.id.role_name);
-                    Button roleDel = layout.findViewById(R.id.role_delete);
-                    roleName.setText(name);
-                    int finalI = i;
-                    roleLinear.setOnTouchListener((v, event) -> {
-                        event.getAction();
-                        AppUtil.handleOnPressEvent(v, event);
-                        return true;
-                    });
-                    roleDel.setOnTouchListener((v, event) -> {
-                        if (event.getAction() == MotionEvent.ACTION_UP) {
-                            roles.remove(finalI);
-                            readRoles(false);
-                        }
-                        AppUtil.handleOnPressEvent(v, event);
-                        return true;
-                    });
-                    rolesLinear.addView(layout);
-                    rolesLinear.removeView(rolesAdd_linear);
-                    rolesLinear.addView(rolesAdd_linear);
-                }
+        }
+        for (int i = 0; i < roles.size(); i++) {
+            if (!roles.get(i).equals("")) {
+                String name = roles.get(i);
+                ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.role, rolesLinear, false);
+                LinearLayout roleLinear = layout.findViewById(R.id.role_bg);
+                TextView roleName = layout.findViewById(R.id.role_name);
+                Button roleDel = layout.findViewById(R.id.role_delete);
+                roleName.setText(name);
+                int finalI = i;
+                roleLinear.setOnTouchListener((v, event) -> {
+                    event.getAction();
+                    AppUtil.handleOnPressEvent(v, event);
+                    return true;
+                });
+                roleDel.setOnTouchListener((v, event) -> {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        roles.remove(finalI);
+                        readRoles(line, false);
+                    }
+                    AppUtil.handleOnPressEvent(v, event);
+                    return true;
+                });
+                rolesLinear.addView(layout);
+                rolesLinear.removeView(rolesAdd_linear);
+                rolesLinear.addView(rolesAdd_linear);
             }
         }
     }
@@ -268,18 +310,17 @@ public class MapsOptionsActivity extends AppCompatActivity {
         String roleName = rolesAdd_input.getText().toString();
         roles.add(roleName);
         devLog("added role: " + roleName);
-        readRoles(false);
+        readRoles(LINE_ROLES, false);
     }
 
     public void saveRoles() {
-        if (mapVers >= 3) {
-            devLog("attempting to save roles");
-            String finalRoles = "";
-            for (int i = 0; i < roles.size(); i++) {
-                finalRoles += ","+roles.get(i);
-            }
-            updatedContent[13] = "Roles List:"+finalRoles;
+        if (LINE_ROLES == null) return;
+        devLog("attempting to save roles");
+        StringBuilder finalRoles = new StringBuilder();
+        for (int i = 0; i < roles.size(); i++) {
+            finalRoles.append(",").append(roles.get(i));
         }
+        updatedContent[LINE_ROLES] = "Roles List:"+finalRoles;
     }
 
     public void removeAllObjects(String object) {
@@ -300,86 +341,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void fixMap() {
         Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
         devLog("attempting to fix the map");
-        Boolean is155 = mapVers == 2;
-
-        for (int i = 0; i < updatedContent.length; i++) {
-            String line = updatedContent[i];
-            String[] strArr = line.split(":");
-            ArrayList<String> arr = new ArrayList<String>();
-            for (int a = 0; a < strArr.length; a++) {
-                arr.add(strArr[a]);
-            }
-            if (!is155 && line.contains("Editor")) {
-                switch (arr.get(0)) {
-                    case "Trigger_Box_Editor":
-                        arr.add("3.0,3.0,3.0");
-                        break;
-                    case "Panorama_Object_Editor":
-                        arr.add("50.0,50.0,50.0");
-                        break;
-                    case "Container_Open_Editor":
-                        arr.add("1.1,1.1,1.0");
-                        break;
-                    case "Metal_Railing_Editor":
-                        arr.add("0.4,0.4,0.4");
-                        break;
-                    case "Platform_Green_Editor":
-                        arr.add("50.0,1.0,50.0");
-                        break;
-                    case "Road_Guard_Editor":
-                        arr.add("1.2,1.2,1.2");
-                        break;
-                    case "Soccer_Ball_Editor":
-                        arr.add("100.0,100.0,100.0");
-                        break;
-                    case "Soccer_Map_Editor":
-                        arr.add("1.3,1.3,1.3");
-                        break;
-                    case "Square_Plank_Editor":
-                        arr.add("0.7,0.7,0.7");
-                        break;
-                    case "Stair_Editor":
-                        arr.add("1.2,1.2,1.2");
-                        break;
-                    case "StreetLight_Editor":
-                        arr.add("100.1,100.1,100.1");
-                        break;
-                    case "Tree_Desert_Editor":
-                        arr.add("0.5,0.5,0.5");
-                        break;
-                    case "Tree_Spruce_Editor":
-                        arr.add("0.5,0.5,0.5");
-                        break;
-                    case "Tube_Racing_Curved_Editor":
-                        arr.add("2.0,2.0,2.0");
-                        break;
-                    case "Tube_Racing_Editor":
-                        arr.add("2.0,2.0,2.0");
-                        break;
-                    default:
-                        arr.add("1.0,1.0,1.0");
-                }
-            }
-            if (line.contains("Editor")) {
-                if (line.contains("Block_1by1_Editor")) {
-                    arr.set(0, "Block_Scalable_Editor");
-                }
-                if (line.contains("Block_3by6_Editor")) {
-                    arr.set(0, "Block_Scalable_Editor");
-                    arr.set(3, "3.0,6.0,1.0");
-                }
-                if (line.contains("Sofa_Chunk_Red_Editor")) {
-                    arr.set(0, "Sofa_Chunk_Editor");
-                    if (!is155) arr.add("color{1.00,0.00,0.00}");
-                }
-                String full = "";
-                for (int a = 0; a < arr.size(); a++) {
-                    String str = arr.get(a);
-                    full = full+str+":";
-                }
-                updatedContent[i] = full;
-            }
-        }
+        updatedContent = LacMapUtil.fixMap(updatedContent);
         devLog("done");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
@@ -387,19 +349,19 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void saveMap() {
         saveRoles();
         devLog("attempting to save the map");
-        String newContent = "";
-        for (int i = 0; i < updatedContent.length; i++) {
+        StringBuilder newContent = new StringBuilder();
+        for (String s : updatedContent) {
             if (newContent.length() > 0) {
-                newContent += "\n"+updatedContent[i];
+                newContent.append("\n").append(s);
             } else {
-                newContent += updatedContent[i];
+                newContent.append(s);
             }
         }
         try {
             File fileDir = new File(rawPath.replace(mapName.getText().toString()+".txt", ""));
             File mapFile = new File(fileDir, mapName.getText().toString()+".txt");
             FileWriter writer = new FileWriter(mapFile);
-            writer.append(newContent);
+            writer.append(newContent.toString());
             writer.flush();
             writer.close();
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
@@ -410,16 +372,24 @@ public class MapsOptionsActivity extends AppCompatActivity {
         }
     }
 
-    Boolean getBoolean(String boolString) {
-        return boolString.contains("true") || boolString.contains("enabled");
+    public void putMapTypes() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner);
+        adapter.add(getResources().getString(R.string.mapEdit_type_0));
+        adapter.add(getResources().getString(R.string.mapEdit_type_1));
+        adapter.add(getResources().getString(R.string.mapEdit_type_2));
+        adapter.add(getResources().getString(R.string.mapEdit_type_3));
+        adapter.add(getResources().getString(R.string.mapEdit_type_4));
+        adapter.add(getResources().getString(R.string.mapEdit_type_5));
+        mapType.setAdapter(adapter);
     }
 
     void devLog(String toLog) {
-        if (devMode) {
+        if (debugText.getVisibility() == View.VISIBLE) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
             if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            devLog.setText(Html.fromHtml(logs));
+            String log = Html.toHtml(new SpannableString(debugText.getText()));
+            String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
+            debugText.setText(Html.fromHtml(full));
         }
     }
 
@@ -484,87 +454,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
             event.getAction();
             AppUtil.handleOnPressEvent(v, event);
             return true;
-        });
-
-        maxVeh.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setString(4, "Max Vehicle Count: "+maxVeh.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        fuelConsume.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setString(5, "Fuel Consume Rate: "+fuelConsume.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        idleVeh.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setString(6, "Delete Idle Vehicle: "+idleVeh.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        healthRegeneration.setOnCheckedChangeListener((buttonView, isChecked) -> setString(7, "Health Regeneration: "+isChecked));
-
-        hideNames.setOnCheckedChangeListener((buttonView, isChecked) -> setString(8, "Hide Names: "+isChecked));
-
-        allowRespawn.setOnCheckedChangeListener((buttonView, isChecked) -> setString(9, "Allow Respawn: "+isChecked));
-
-        voiceChat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                setString(10, "Voice-Chat: enabled");
-            } else {
-                setString(10, "Voice-Chat: disabled");
-            }
-        });
-
-        voteRole.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                setString(11, "Vote For Role: enabled");
-            } else {
-                setString(11, "Vote For Role: disabled");
-            }
-        });
-
-        rolePlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                setString(12, "Role-play: enabled");
-            } else {
-                setString(12, "Role-play: disabled");
-            }
         });
 
         rolesLinear.setOnTouchListener((v, event) -> {

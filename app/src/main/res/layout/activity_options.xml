@@ -237,6 +237,20 @@
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
+                    <EditText
+                        android:id="@+id/options_startActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="false"
+                        android:ems="10"
+                        android:hint="Start activity [EXPERIMENTAL]"
+                        android:imeOptions="actionDone"
+                        android:inputType="text|textNoSuggestions"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:visibility="gone"
+                        tools:ignore="HardcodedText" />
+
                     <Button
                         android:id="@+id/options_deleteTemp"
                         android:layout_width="match_parent"
