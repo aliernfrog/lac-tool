@@ -314,6 +314,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void saveRoles() {
+        if (LINE_ROLES == null) return;
         devLog("attempting to save roles");
         StringBuilder finalRoles = new StringBuilder();
         for (int i = 0; i < roles.size(); i++) {
