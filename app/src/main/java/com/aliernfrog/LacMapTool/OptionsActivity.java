@@ -171,6 +171,7 @@ public class OptionsActivity extends AppCompatActivity {
             JSONObject object = new JSONObject();
             object.put("type", "feedback");
             object.put("body", feedback);
+            object.put("from", "LAC Tool "+appVersCode);
             String response = WebUtil.doPostRequest(feedbackUrl, object);
             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
             feedbackLinear.setVisibility(View.GONE);
