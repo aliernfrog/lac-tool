@@ -129,6 +129,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             if (cur.split(":").length > 1 && cur.split(":")[0].endsWith("_Editor")) type = "object";
             if (cur.startsWith("Map Name:")) type = "serverName";
             if (cur.startsWith("Map Type:")) type = "mapType";
+            if (cur.startsWith("Spawn Point:")) type = "spawnPoint";
             if (cur.startsWith("Holo Sign:")) type = "holoSign";
             if (cur.startsWith("Camera Pos:")) type = "cameraPos";
             if (cur.startsWith("Roles List:")) type = "rolesList";
