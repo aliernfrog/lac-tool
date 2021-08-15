@@ -44,15 +44,6 @@
     <string name="mapInfo_size">Boyut</string>
     <string name="mapEdit_serverName">Sunucu adı</string>
     <string name="mapEdit_mapType">Harita tipi</string>
-    <string name="mapEdit_maxVeh">Max araç sayısı</string>
-    <string name="mapEdit_fuelConsumeRate">Yakıt tüketim oranı</string>
-    <string name="mapEdit_delIdleVeh">Kullanılmayan araçları sil (-1 = devre dışı)</string>
-    <string name="mapEdit_healthReg">Sağlık yenilenmesi</string>
-    <string name="mapEdit_hideNick">İsimleri gizle</string>
-    <string name="mapEdit_allowRespawn">Yeniden canlanma butonuna izin ver</string>
-    <string name="mapEdit_voice">Sesli sohbet</string>
-    <string name="mapEdit_voteRole">Roller için oylama</string>
-    <string name="mapEdit_roleplay">Roleplay</string>
     <string name="mapEdit_type_0">beyaz zemin</string>
     <string name="mapEdit_type_1">çimen</string>
     <string name="mapEdit_type_2">kar</string>
