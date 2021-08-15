@@ -45,15 +45,6 @@
     <string name="mapInfo_size">Size</string>
     <string name="mapEdit_serverName">Server name</string>
     <string name="mapEdit_mapType">Map type</string>
-    <string name="mapEdit_maxVeh">Max vehicle count</string>
-    <string name="mapEdit_fuelConsumeRate">Fuel consume rate</string>
-    <string name="mapEdit_delIdleVeh">Delete idle vehicles (-1 to disable)</string>
-    <string name="mapEdit_healthReg">Health regeneration</string>
-    <string name="mapEdit_hideNick">Hide names</string>
-    <string name="mapEdit_allowRespawn">Allow respawn button</string>
-    <string name="mapEdit_voice">Voice chat</string>
-    <string name="mapEdit_voteRole">Vote for roles</string>
-    <string name="mapEdit_roleplay">Roleplay</string>
     <string name="mapEdit_type_0">white-grid</string>
     <string name="mapEdit_type_1">grass</string>
     <string name="mapEdit_type_2">snow</string>
