@@ -80,6 +80,6 @@
     <string name="wallpaperImport">Import the wallpaper</string>
     <string name="wallpaperPickedWallpaper">Picked wallpaper</string>
     <string name="wallpaperCopyUrl">Copy import URL</string>
-    <string name="wallpaperDesc">To import a wallpaper in LAC 1.5.6, copy import URL of a wallpaper and paste it in the in game cellphone settings</string>
+    <string name="wallpaperDesc">To import a wallpaper in LAC 1.5.6 or above, copy import URL of a wallpaper and paste it in the in game cellphone settings.\nOn older versions just click custom wallpaper option in cellphone.</string>
     <string name="galleryNoScreenshots">No screenshots to show</string>
 </resources>
