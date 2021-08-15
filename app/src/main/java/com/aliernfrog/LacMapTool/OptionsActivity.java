@@ -292,12 +292,7 @@ public class OptionsActivity extends AppCompatActivity {
         });
 
         feedbackLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (feedback.getVisibility() != View.VISIBLE) {
-                    feedback.setVisibility(View.VISIBLE);
-                    feedbackLinear.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear));
-                }
-            }
+            if (event.getAction() == MotionEvent.ACTION_UP) AppUtil.toggleView(feedback);
             AppUtil.handleOnPressEvent(v, event);
             return true;
         });

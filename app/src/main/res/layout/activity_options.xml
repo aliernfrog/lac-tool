@@ -62,8 +62,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:clickable="true"
-                    android:focusable="true"
                     android:contentDescription="@string/action_back"
+                    android:focusable="true"
                     app:srcCompat="@drawable/goback" />
             </LinearLayout>
 
@@ -283,7 +283,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear_blue"
+                android:background="@drawable/linear"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -311,6 +311,7 @@
                         android:id="@+id/options_feedback_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="false"
                         android:background="@drawable/linear_button"
                         android:ems="10"
                         android:hint="@string/optionsFeedbackHint"
@@ -319,8 +320,7 @@
                         android:padding="8dp"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#6A6A6A"
-                        android:textStyle="bold"
-                        android:autofillHints="false" />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/options_feedback_submit"
