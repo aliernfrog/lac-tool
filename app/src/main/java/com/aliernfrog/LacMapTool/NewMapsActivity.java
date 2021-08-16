@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.DocumentsContract;
-import android.text.Html;
-import android.text.SpannableString;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
