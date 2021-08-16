@@ -9,8 +9,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.Html;
+import android.text.SpannableString;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -67,6 +70,16 @@ public class AppUtil {
             return false;
         }
         return true;
+    }
+
+    public static void devLog(String toLog, TextView logView) {
+        if (logView.getVisibility() == View.VISIBLE) {
+            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
+            String log = Html.toHtml(new SpannableString(logView.getText()));
+            String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
+            logView.setText(Html.fromHtml(full));
+        }
     }
 
     public static void handleOnPressEvent(View view, MotionEvent event, @Nullable Runnable onClick) {
