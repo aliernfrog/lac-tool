@@ -122,17 +122,29 @@ public class FileUtil {
         return intent;
     }
 
-    public static boolean deleteDirectory(File path) {
-        if (path.exists()) {
-            File[] files = path.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    deleteDirectory(files[i]);
-                } else {
-                    files[i].delete();
-                }
+    public static boolean deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            for (File file : files) {
+                delete(file);
             }
         }
-        return (path.delete());
+        return (directory.delete());
+    }
+
+    public static boolean deleteDirectoryContent(File directory) {
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            delete(file);
+        }
+        return true;
+    }
+
+    public static boolean delete(File file) {
+        if (file.isDirectory()) {
+            return deleteDirectory(file);
+        } else {
+            return file.delete();
+        }
     }
 }
