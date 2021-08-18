@@ -19,6 +19,10 @@ import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @SuppressLint({"CommitPrefEdits", "ApplySharedPref", "ClickableViewAccessibility"})
 public class AppUtil {
     static String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
@@ -61,6 +65,13 @@ public class AppUtil {
         } else {
             view.setVisibility(View.VISIBLE);
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String timeString(String format) {
+        SimpleDateFormat frm = new SimpleDateFormat(format);
+        Date now = Calendar.getInstance().getTime();
+        return frm.format(now);
     }
 
     public static Boolean stringIsNumber(String string) {
