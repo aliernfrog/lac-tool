@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import com.aliernfrog.LacMapTool.NewMapsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
@@ -62,8 +63,8 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     void addMapView(File map, ViewGroup view) {
         TextView name = view.findViewById(R.id.map_name);
         ImageView thumbnail = view.findViewById(R.id.map_thumbnail);
-        String mapName = map.getName().replace(".txt", "");
-        String thumbnailPath = map.getPath().replace(".txt", ".jpg");
+        String mapName = FileUtil.removeExtension(map.getName());
+        String thumbnailPath = FileUtil.removeExtension(map.getPath())+".jpg";
         File thumbailFile = new File(thumbnailPath);
         name.setText(mapName);
         if (thumbailFile.exists()) {
