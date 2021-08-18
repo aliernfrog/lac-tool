@@ -21,6 +21,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FileUtil {
+    public static String removeExtension(String path) {
+        int extensionIndex = path.lastIndexOf(".");
+        if (extensionIndex == -1) return path;
+
+        return path.substring(0, extensionIndex);
+    }
+
     public static void copyFile(String source, String destination) throws Exception {
         File src = new File(source);
         InputStream in;
