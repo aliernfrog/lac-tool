@@ -77,7 +77,8 @@ public class MapsOptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_maps_options);
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        rawPath = config.getString("lastPath", null);
+        rawPath = getIntent().getStringExtra("path");
+        if (rawPath == null) finish();
 
         goback = findViewById(R.id.mapsOptions_goback);
         mapName = findViewById(R.id.mapsOptions_mapName);
