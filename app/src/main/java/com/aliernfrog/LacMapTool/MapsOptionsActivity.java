@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.Html;
@@ -105,12 +104,9 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
         rolesAdd_desc.setText(Html.fromHtml("Roles without <font color=yellow>[ ]</font> will get removed by LAC automatically. So always add roles like <font color=yellow>[YOUR ROLE]</font>. To add a role with color do it like <font color=yellow>&#60;color=red&#62;[CRIMINAL]&#60;/color&#62;</font>"));
 
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            putMapTypes();
-            getMap(rawPath);
-            setListeners();
-        }, 100);
+        putMapTypes();
+        getMap(rawPath);
+        setListeners();
     }
 
     public void getMap(String path) {
