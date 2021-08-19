@@ -19,6 +19,7 @@
     <string name="action_add">Ekle</string>
     <string name="action_done">Bitti</string>
     <string name="action_back">Geri git</string>
+    <string name="action_cancel">İptal</string>
     <string name="action_ok" tools:keep="@string/action_ok">Tamam</string>
     <string name="select">Seç</string>
     <string name="rename">Yeniden adlandır</string>
@@ -30,8 +31,10 @@
     <string name="updateAvailable">Güncelleme mevcut, güncellemek için dokunun</string>
     <string name="mapImportedMaps">Haritalarınız</string>
     <string name="mapPick">Harita seç</string>
+    <string name="mapPickExternal">Başka bir harita seç</string>
+    <string name="mapNoImported">İçe aktarılmış bir harita bulunamadı</string>
     <string name="mapName">Harita ismi</string>
-    <string name="mapDownload">Haritayı indir</string>
+    <string name="mapDownload">Bir harita indir</string>
     <string name="mapImport">Haritayı içe aktar</string>
     <string name="mapEdit">Harita ayarlarını &amp; rolleri düzenle</string>
     <string name="mapSetThumbnail">Küçük resim seç</string>
@@ -40,6 +43,7 @@
     <string name="mapDelete">Haritayı sil</string>
     <string name="mapDelete_confirm">Silmeyi onayla</string>
     <string name="mapDelete_clickAgain">Haritayı silmek için tekrar dokunun</string>
+    <string name="mapDelete_question">Bu haritayı silmek istediğinden emin misin?\n Geri dönüşü olmayacak!</string>
     <string name="mapInfo_date" tools:keep="@string/mapInfo_date">Son düzenlenme zamanı:</string>
     <string name="mapInfo_size">Boyut</string>
     <string name="mapEdit_serverName">Sunucu adı</string>
