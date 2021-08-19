@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     TextView log;
 
     String dataPath;
+    String tempMapsPath;
     String lacPath;
     String backupPath;
     String aBackupPath;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         devMode = config.getBoolean("enableDebug", false);
         lacPath = update.getString("path-lac", null);
         dataPath = update.getString("path-app", null);
+        tempMapsPath = update.getString("path-temp-maps", null);
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
         version = update.getInt("versionCode", 0);
@@ -160,12 +162,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void createFiles() {
         File dataFolder = new File(dataPath);
+        File tempMapsFolder = new File(tempMapsPath);
         File backupFolder = new File(backupPath);
         File aBackupFolder = new File(aBackupPath);
         File lacFolder = new File(lacPath);
         File wallpaperFolder = new File(lacPath.replace("editor", "wallpaper"));
         File nomedia = new File(dataPath+".nomedia");
         if (!dataFolder.exists()) mkdirs(dataFolder);
+        if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder);
         if (!backupFolder.exists()) mkdirs(backupFolder);
         if (!aBackupFolder.exists()) mkdirs(aBackupFolder);
         if (!lacFolder.exists()) mkdirs(lacFolder);
@@ -242,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
         redirectMaps.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(MapsActivity.class, false);
+                switchActivity(NewMapsActivity.class, false);
             }
             AppUtil.handleOnPressEvent(v, event);
             return true;
