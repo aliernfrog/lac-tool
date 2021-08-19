@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ButtonStyle"
 
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-
+        android:id="@+id/options_appbar"
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="#00000000">
@@ -18,19 +17,15 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="#00FFFFFF"
+            app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/options"
-            app:expandedTitleGravity="center"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/options_toolbar">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/options_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                tools:targetApi="lollipop" />
-
-
+                android:layout_height="?attr/actionBarSize" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
