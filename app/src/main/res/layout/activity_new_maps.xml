@@ -2,7 +2,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,27 +9,27 @@
 
   <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/maps_appbar"
-
       android:layout_width="match_parent"
       android:layout_height="192dp"
       android:background="#00000000">
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
+        android:id="@+id/maps_collapsingToolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:contentScrim="#000000"
+        app:expandedTitleGravity="center"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
-        app:toolbarId="@+id/maps_toolbar"
         app:title="@string/manageMaps"
-        app:expandedTitleGravity="center">
+        app:toolbarId="@+id/maps_toolbar">
 
       <ImageView
           android:id="@+id/maps_appbar_image"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:scaleType="centerCrop"
-          android:contentDescription="@string/app_name"/>
+          android:contentDescription="@string/app_name"
+          android:scaleType="centerCrop" />
 
       <androidx.appcompat.widget.Toolbar
           android:id="@+id/maps_toolbar"
@@ -54,6 +53,34 @@
         android:orientation="vertical">
 
       <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="8dp"
+          android:background="@drawable/linear"
+          android:padding="1dp">
+
+        <ImageView
+            android:id="@+id/maps_goback"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/goback"
+            android:contentDescription="@string/action_back" />
+
+        <ImageView
+            android:id="@+id/maps_backups"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/backupManage"
+            app:srcCompat="@drawable/backup" />
+      </LinearLayout>
+
+      <LinearLayout
           android:id="@+id/maps_pick_linear"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -72,6 +99,124 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:backgroundTint="#FF005DFF" />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/maps_name_linear"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="8dp"
+          android:background="@drawable/linear"
+          android:orientation="vertical"
+          android:padding="8dp"
+          android:visibility="gone"
+          tools:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/mapName"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/maps_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:autofillHints="false"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:inputType="text|textNoSuggestions"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/maps_other"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="8dp"
+          android:background="@drawable/linear"
+          android:orientation="vertical"
+          android:padding="8dp"
+          android:visibility="gone"
+          tools:visibility="visible">
+
+        <Button
+            android:id="@+id/maps_other_import"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_blue"
+            android:text="@string/mapImport"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:backgroundTint="#FF005DFF"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/maps_other_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_button"
+            android:text="@string/mapEdit"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#FF0E0E0E" />
+
+        <Button
+            android:id="@+id/maps_other_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_button"
+            android:text="@string/mapSetThumbnail"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#FF0E0E0E" />
+
+        <Button
+            android:id="@+id/maps_other_backup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_button"
+            android:text="@string/mapBackup"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#FF0E0E0E" />
+
+        <Button
+            android:id="@+id/maps_other_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_button"
+            android:text="@string/mapShare"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#FF0E0E0E" />
+
+        <Button
+            android:id="@+id/maps_other_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_red"
+            android:text="@string/mapDelete"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:backgroundTint="#FF960000"
+            tools:visibility="visible" />
       </LinearLayout>
 
       <TextView
@@ -79,7 +224,6 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
-          android:background="@drawable/linear"
           android:padding="8dp"
           android:textColor="#FFFFFF"
           android:visibility="gone"
