@@ -45,7 +45,7 @@ import java.util.Date;
 import java.util.Calendar;
 
 @SuppressLint("ClickableViewAccessibility")
-public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
+public class OldMapsActivity extends AppCompatActivity implements PickiTCallbacks {
     ImageView goback;
     ImageView backupManage;
     TextView android11warning;
@@ -101,7 +101,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_old_maps);
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
@@ -295,7 +295,7 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
                     Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
                 if (thumbnailFile.exists()) thumbnailFile.delete();
                 if (dataFile.exists()) dataFile.delete();
-                switchActivity(MapsActivity.class);
+                switchActivity(OldMapsActivity.class);
                 finish();
             }
         } else {
