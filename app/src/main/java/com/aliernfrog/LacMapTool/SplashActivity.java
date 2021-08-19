@@ -129,6 +129,7 @@ public class SplashActivity extends AppCompatActivity {
         prefsEditUpdate.putString("path-maps", pathLac+"/editor");
         prefsEditUpdate.putString("path-lac", pathExternal +"/Android/data/com.MA.LAC/files/editor");
         prefsEditUpdate.putString("path-app", pathDocs+"/LacMapTool/");
+        prefsEditUpdate.putString("path-temp-maps", pathDocs+"/LacMapTool/temp/editor");
         if (prefsConfig.getBoolean("enableLacd", false)) prefsEditUpdate.putString("path-lac", pathLacd);
         if (prefsConfig.getBoolean("enableLacm", false)) prefsEditUpdate.putString("path-lac", pathLacm);
         if (prefsConfig.getBoolean("enableLacmb", false)) prefsEditUpdate.putString("path-lac", pathLacmb);
