@@ -29,13 +29,11 @@ import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
-import com.hbisoft.pickit.PickiT;
-import com.hbisoft.pickit.PickiTCallbacks;
 
 import java.io.File;
 
 @SuppressLint("ClickableViewAccessibility")
-public class WallpaperActivity extends AppCompatActivity implements PickiTCallbacks {
+public class WallpaperActivity extends AppCompatActivity {
     ImageView goback;
     LinearLayout rootLayout;
     TextView desc;
@@ -62,8 +60,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
 
-    PickiT pickiT;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +81,6 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
         wallpaperView = findViewById(R.id.wallpaper_picked_image);
         importFile = findViewById(R.id.wallpaper_importFile);
         logView = findViewById(R.id.wallpaper_log);
-
-        pickiT = new PickiT(this, this, this);
 
         if (!devMode) logView.setVisibility(View.GONE);
         devLog("==== DEBUG LOGS ====");
@@ -195,8 +189,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     }
 
     public void pickFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
+        Intent intent = new Intent(this, FilePickerActivity.class);
+        intent.putExtra("FILE_TYPE", "image/*");
         startActivityForResult(intent, 2);
         devLog("attempting to pick a file with request code 2");
     }
@@ -287,10 +281,9 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
             if (data == null) {
                 devLog("2: no data");
             } else {
-                Uri URI = data.getData();
-                File file = new File(URI.getPath());
-                devLog("2: "+file.getPath());
-                pickiT.getPath(data.getData(), Build.VERSION.SDK_INT);
+                String path = data.getStringExtra("path");
+                devLog("2: "+path);
+                getWp(path);
             }
         } else if (requestCode == 1) {
             if (data == null) {
@@ -354,43 +347,8 @@ public class WallpaperActivity extends AppCompatActivity implements PickiTCallba
     }
 
     @Override
-    public void PickiTonUriReturned() {
-
-    }
-
-    @Override
-    public void PickiTonStartListener() {
-
-    }
-
-    @Override
-    public void PickiTonProgressUpdate(int progress) {
-
-    }
-
-    @Override
-    public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
-        if (wasSuccessful) {
-            devLog("got path: "+path);
-            getWp(path);
-        } else {
-            devLog(Reason);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
-        pickiT.deleteTemporaryFile(this);
         saveChangesAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (!isChangingConfigurations()) {
-            pickiT.deleteTemporaryFile(this);
-            saveChangesAndFinish();
-        }
     }
 }
