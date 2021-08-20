@@ -131,6 +131,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             if (cur.startsWith("Camera Pos:")) type = "cameraPos";
             if (cur.startsWith("Roles List:")) type = "rolesList";
             if (cur.startsWith("Vehicle_")) type = "vehicle";
+            if (cur.startsWith("Downloadable_Content_Material")) type = "material";
             switch(type) {
                 case "serverName":
                     getServerName(i);
