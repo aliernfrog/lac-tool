@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 public class LacMapUtil {
     public static String[] fixMap(String[] content) {
-        String[] updatedContent = new String[0];
         for (int i = 0; i < content.length; i++) {
             String line = content[i];
             String[] strArr = line.split(":");
@@ -72,9 +71,9 @@ public class LacMapUtil {
                     String str = arr.get(a);
                     full = full+str+":";
                 }
-                updatedContent[i] = full;
+                content[i] = full;
             }
         }
-        return updatedContent;
+        return content;
     }
 }
