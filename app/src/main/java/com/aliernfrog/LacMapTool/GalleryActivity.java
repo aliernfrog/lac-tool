@@ -19,7 +19,6 @@ import android.os.Process;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,6 +42,8 @@ public class GalleryActivity extends AppCompatActivity {
     Boolean devMode;
     String logs = "";
 
+    Integer uriSdkVersion;
+
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
     String lacPath;
@@ -53,7 +54,7 @@ public class GalleryActivity extends AppCompatActivity {
     SharedPreferences config;
     SharedPreferences update;
 
-    @SuppressLint("CommitPrefEdits")
+    @SuppressLint({"CommitPrefEdits", "InlinedApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -63,7 +64,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
+
         devMode = config.getBoolean("enableDebug", false);
+        uriSdkVersion = config.getInt("uriSdkVersion", 30);
 
         lacPath = update.getString("path-lac", null).replace("/editor", "/screenshots");
         tempPath = update.getString("path-app", null)+"temp/screenshots/";
@@ -73,7 +76,10 @@ public class GalleryActivity extends AppCompatActivity {
         rootLinear = findViewById(R.id.gallery_linear_screenshots);
         log = findViewById(R.id.gallery_log);
 
-        if (Build.VERSION.SDK_INT >= 30) {
+        devLog("GalleryActivity started");
+        devLog("uriSdkVersion: "+uriSdkVersion);
+
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
             String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
@@ -210,6 +216,7 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,7 +225,7 @@ public class GalleryActivity extends AppCompatActivity {
             if (data == null) {
                 devLog(requestCode+": no data");
             } else {
-                if (Build.VERSION.SDK_INT >= 30) {
+                if (Build.VERSION.SDK_INT >= uriSdkVersion) {
                     int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);

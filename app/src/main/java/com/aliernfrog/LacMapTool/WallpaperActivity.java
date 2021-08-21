@@ -1,6 +1,5 @@
 package com.aliernfrog.LacMapTool;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 
@@ -46,6 +45,8 @@ public class WallpaperActivity extends AppCompatActivity {
     SharedPreferences config;
     SharedPreferences update;
 
+    Integer uriSdkVersion;
+
     Boolean devMode;
     String lacPath;
     String rawPath;
@@ -59,6 +60,7 @@ public class WallpaperActivity extends AppCompatActivity {
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
 
+    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,8 @@ public class WallpaperActivity extends AppCompatActivity {
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
+
+        uriSdkVersion = config.getInt("uriSdkVersion", 30);
         devMode = config.getBoolean("enableDebug", false);
         wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
         lacPath = wpTreePath+"/";
@@ -82,12 +86,13 @@ public class WallpaperActivity extends AppCompatActivity {
         logView = findViewById(R.id.wallpaper_log);
 
         if (!devMode) logView.setVisibility(View.GONE);
-        devLog("==== DEBUG LOGS ====");
+        devLog("WallpaperActivity started");
+        devLog("uriSdkVersion: "+uriSdkVersion);
         setListeners();
 
         wpPath = wpTreePath+"/";
 
-        if (Build.VERSION.SDK_INT >= 30) {
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
             String lacTreeId = wpTreePath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
@@ -206,7 +211,7 @@ public class WallpaperActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("NewApi")
     public void copyFile(String src, DocumentFile dst) {
         devLog("attempting to copy "+src+" to "+dst);
         try {
@@ -230,7 +235,7 @@ public class WallpaperActivity extends AppCompatActivity {
     }
 
     public void saveChangesAndFinish() {
-        if (Build.VERSION.SDK_INT >= 30) {
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
             devLog("attempting to save changes");
             File file = new File(tempPath);
             File[] files = file.listFiles();
@@ -261,6 +266,7 @@ public class WallpaperActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -276,7 +282,7 @@ public class WallpaperActivity extends AppCompatActivity {
             if (data == null) {
                 devLog(requestCode+": no data");
             } else {
-                if (Build.VERSION.SDK_INT >= 30) {
+                if (Build.VERSION.SDK_INT >= uriSdkVersion) {
                     int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
