@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         log = findViewById(R.id.main_log);
 
         if (devMode) log.setVisibility(View.VISIBLE);
-        checkUpdates();
+        checkUpdates(false);
         checkPerms();
         createFiles();
         setListeners();
@@ -96,16 +97,14 @@ public class MainActivity extends AppCompatActivity {
     public void getUpdates() {
         devLog("attempting to get updates from website");
         try {
-            if (AppUtil.getUpdates(getApplicationContext())) {
-                checkUpdates();
-            }
+            if (AppUtil.getUpdates(getApplicationContext())) checkUpdates(true);
         } catch (Exception e) {
             e.printStackTrace();
             devLog(e.toString());
         }
     }
 
-    public void checkUpdates() {
+    public void checkUpdates(Boolean toastResult) {
         devLog("checking for updates");
         int latest = update.getInt("updateLatest", 0);
         String download = update.getString("updateDownload", null);
@@ -120,22 +119,15 @@ public class MainActivity extends AppCompatActivity {
             full = changelog+"<br /><br /><b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+changelogVersion;
             updateLinearTitle.setVisibility(View.VISIBLE);
             updateLinear.setBackground(ContextCompat.getDrawable(getApplicationContext() ,R.drawable.linear_blue));
-            updateLinear.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    redirectURL(download);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            });
+            AppUtil.handleOnPressEvent(updateLinear, () -> redirectURL(download));
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastAvailable, Toast.LENGTH_SHORT).show();
         } else {
             if (notes != null && !notes.equals("")) {
                 linearVisible = true;
                 full = notes;
             }
-            updateLinear.setOnTouchListener((v, event) -> {
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            });
+            AppUtil.handleOnPressEvent(updateLinear);
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastNoUpdates, Toast.LENGTH_SHORT).show();
         }
         updateLog.setText(Html.fromHtml(full));
         if (linearVisible) updateLinear.setVisibility(View.VISIBLE);
