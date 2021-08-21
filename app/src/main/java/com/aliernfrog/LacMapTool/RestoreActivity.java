@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -64,10 +63,12 @@ public class RestoreActivity extends AppCompatActivity {
         String _mapname;
         File directory = new File(backupPath);
         File[] files = directory.listFiles();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
-        for (int i = 0; i < files.length; i++) {
-            _mapname = files[i].getName().replace(".txt", "");
-            adapter.add(_mapname);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner);
+        if (files != null) {
+            for (File file : files) {
+                _mapname = file.getName().replace(".txt", "");
+                adapter.add(_mapname);
+            }
         }
         mapsList.setAdapter(adapter);
     }
@@ -95,36 +96,15 @@ public class RestoreActivity extends AppCompatActivity {
     }
 
     void setOnClick() {
-        goHome.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                finish();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
+        AppUtil.handleOnPressEvent(goHome, this::finish);
+        AppUtil.handleOnPressEvent(mapsselect);
+        AppUtil.handleOnPressEvent(select, () -> {
+            if (mapsList.getSelectedItem() == null) return;
+            String mapname = mapsList.getSelectedItem().toString();
+            if (mapname.equals("")) return;
+            _getMap(backupPath+mapname+".txt");
         });
-
-        mapsselect.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        select.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (mapsList.getSelectedItem() == null) return true;
-                String mapname = mapsList.getSelectedItem().toString();
-                if (mapname == null || mapname.equals("")) return true;
-                _getMap(backupPath+mapname+".txt");
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        restoreLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(restoreLinear);
 
         mapsList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -138,12 +118,6 @@ public class RestoreActivity extends AppCompatActivity {
             }
         });
 
-        restore.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                restore();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(restore, this::restore);
     }
 }

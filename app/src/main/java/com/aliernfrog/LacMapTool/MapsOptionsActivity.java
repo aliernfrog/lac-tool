@@ -285,18 +285,10 @@ public class MapsOptionsActivity extends AppCompatActivity {
                 Button roleDel = layout.findViewById(R.id.role_delete);
                 roleName.setText(name);
                 int finalI = i;
-                roleLinear.setOnTouchListener((v, event) -> {
-                    event.getAction();
-                    AppUtil.handleOnPressEvent(v, event);
-                    return true;
-                });
-                roleDel.setOnTouchListener((v, event) -> {
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        roles.remove(finalI);
-                        readRoles(line, false);
-                    }
-                    AppUtil.handleOnPressEvent(v, event);
-                    return true;
+                AppUtil.handleOnPressEvent(roleLinear);
+                AppUtil.handleOnPressEvent(roleDel, () -> {
+                    roles.remove(finalI);
+                    readRoles(line, false);
                 });
                 rolesLinear.addView(layout);
                 rolesLinear.removeView(rolesAdd_linear);
@@ -340,7 +332,11 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void fixMap() {
         Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
         devLog("attempting to fix the map");
-        updatedContent = LacMapUtil.fixMap(updatedContent);
+        try {
+            updatedContent = LacMapUtil.fixMap(updatedContent);
+        } catch (Exception e) {
+            devLog(e.toString());
+        }
         devLog("done");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
@@ -393,25 +389,9 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                finish();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        mapName.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        serverNameLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(goback, this::finish);
+        AppUtil.handleOnPressEvent(mapName);
+        AppUtil.handleOnPressEvent(serverNameLinear);
 
         serverName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -430,11 +410,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        mapTypeLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(mapTypeLinear);
 
         mapType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -449,72 +425,14 @@ public class MapsOptionsActivity extends AppCompatActivity {
             }
         });
 
-        optionsLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        rolesLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        rolesAdd_linear2.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        rolesAdd_button.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                addRole();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        rolesAdd_desc.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                rolesAdd_desc.setVisibility(View.GONE);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        removeAllTdm.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                removeAllObjects("Team_");
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        removeAllRace.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                removeAllObjects("Checkpoint_Editor");
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        fixMapButton.setOnClickListener(v -> fixMap());
-
-        fixMapButton.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                fixMap();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        saveChanges.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                saveMap();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(optionsLinear);
+        AppUtil.handleOnPressEvent(rolesLinear);
+        AppUtil.handleOnPressEvent(rolesAdd_linear2);
+        AppUtil.handleOnPressEvent(rolesAdd_button, this::addRole);
+        AppUtil.handleOnPressEvent(rolesAdd_desc, () -> rolesAdd_desc.setVisibility(View.GONE));
+        AppUtil.handleOnPressEvent(removeAllTdm, () -> removeAllObjects("Team_"));
+        AppUtil.handleOnPressEvent(removeAllRace, () -> removeAllObjects("Checkpoint_Editor"));
+        AppUtil.handleOnPressEvent(fixMapButton, this::fixMap);
+        AppUtil.handleOnPressEvent(saveChanges, this::saveMap);
     }
 }

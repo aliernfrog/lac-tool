@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchActivity(Class i, Boolean allowWithoutPerms) {
         if (!allowWithoutPerms && !hasPerms) {
-            //if no enough permissions, check them again
             devLog("no required permissions, checking again");
             checkPerms();
         } else {
@@ -231,62 +230,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListeners() {
-        missingPerms.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                checkPerms();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        lacLinear.setOnTouchListener((v, event) -> {
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectMaps.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(NewMapsActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectWallpaper.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(WallpaperActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectGallery.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(GalleryActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        appLinear.setOnTouchListener((v, event) -> {
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        checkUpdates.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                getUpdates();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectOptions.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(OptionsActivity.class, true);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
+        AppUtil.handleOnPressEvent(lacLinear);
+        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(NewMapsActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
+        AppUtil.handleOnPressEvent(appLinear);
+        AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
+        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, false));
     }
 }

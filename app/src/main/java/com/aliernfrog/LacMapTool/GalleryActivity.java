@@ -103,12 +103,14 @@ public class GalleryActivity extends AppCompatActivity {
         File file = new File(lacPath);
         if (file.exists()) {
             File[] files = file.listFiles();
-            if (files.length < 1) noScreenshots.setVisibility(View.VISIBLE);
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].getName().endsWith(".jpg")) {
-                    devLog("found: "+files[i].getName());
-                    ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.screenshot, rootLinear, false);
-                    setScreenshotView(layout, files[i]);
+            if (files != null) {
+                if (files.length < 1) noScreenshots.setVisibility(View.VISIBLE);
+                for (File value : files) {
+                    if (value.getName().endsWith(".jpg")) {
+                        devLog("found: " + value.getName());
+                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.screenshot, rootLinear, false);
+                        setScreenshotView(layout, value);
+                    }
                 }
             }
         } else {
@@ -123,18 +125,8 @@ public class GalleryActivity extends AppCompatActivity {
         Button share = layout.findViewById(R.id.ss_share);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
-        background.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        share.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                shareFile(file.getPath());
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(background);
+        AppUtil.handleOnPressEvent(share, () -> shareFile(file.getPath()));
         rootLinear.addView(layout);
     }
 
@@ -145,10 +137,11 @@ public class GalleryActivity extends AppCompatActivity {
             File[] files = file.listFiles();
             try {
                 if (files != null) {
-                    for (int i = 0; i < files.length; i++) {
-                        DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
-                        if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
-                        copyFile(files[i].getPath(), fileInLac);
+                    for (File value : files) {
+                        DocumentFile fileInLac = lacTreeFile.findFile(value.getName());
+                        if (fileInLac == null)
+                            fileInLac = lacTreeFile.createFile("", value.getName());
+                        copyFile(value.getPath(), fileInLac);
                     }
                 }
             } finally {
@@ -166,8 +159,8 @@ public class GalleryActivity extends AppCompatActivity {
         if (!tempFile.exists()) tempFile.mkdirs();
         if (lacTreeFile != null) {
             DocumentFile[] files = lacTreeFile.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copyFile(files[i], tempPath+files[i].getName());
+            for (DocumentFile file : files) {
+                copyFile(file, tempPath + file.getName());
             }
         }
         lacPath = tempPath;
@@ -237,32 +230,13 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                saveChangesAndFinish();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        noScreenshots.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(goback, this::saveChangesAndFinish);
+        AppUtil.handleOnPressEvent(noScreenshots);
     }
 
     @Override
     public void onBackPressed() {
         saveChangesAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (!isChangingConfigurations()) {
-            saveChangesAndFinish();
-        }
     }
 }
