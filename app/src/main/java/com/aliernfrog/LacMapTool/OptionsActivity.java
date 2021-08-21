@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -45,8 +46,10 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox autoCheckUpdate;
     CheckBox forceEnglish;
     CheckBox dev;
-    EditText forceActivity;
     Button deleteTemp;
+    LinearLayout experimentalOptions;
+    EditText startActivityName;
+    EditText uriSdkVersionInput;
     LinearLayout discord_linear;
     Button discord_aliern;
     Button discord_rcs;
@@ -69,7 +72,7 @@ public class OptionsActivity extends AppCompatActivity {
     String appVers;
     Integer appVersCode;
 
-    Integer appOptionsClicks = 0;
+    Integer changelogClicks = 0;
     Integer activityResult = 0;
 
     @SuppressLint("CommitPrefEdits")
@@ -97,7 +100,9 @@ public class OptionsActivity extends AppCompatActivity {
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
-        forceActivity = findViewById(R.id.options_startActivity);
+        experimentalOptions = findViewById(R.id.options_ex);
+        startActivityName = findViewById(R.id.options_startActivity);
+        uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
         discord_aliern = findViewById(R.id.options_discord_aliern);
@@ -213,29 +218,37 @@ public class OptionsActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(backupOptions, () -> AppUtil.toggleView(backupOptionsContent));
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
-        AppUtil.handleOnPressEvent(appOptions, () -> {
-            AppUtil.toggleView(appOptionsContent);
-            appOptionsClicks += 1;
-            if (appOptionsClicks >= 10) forceActivity.setVisibility(View.VISIBLE);
-        });
+        AppUtil.handleOnPressEvent(appOptions, () -> AppUtil.toggleView(appOptionsContent));
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
-        forceActivity.setOnEditorActionListener((v, actionId, event) -> {
+        AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
+
+        startActivityName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                startActivityWithName(forceActivity.getText().toString());
+                startActivityWithName(startActivityName.getText().toString());
                 return true;
             }
             return false;
         });
-        AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
+        uriSdkVersionInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                configEdit.putInt("uriSdkVersion", Integer.parseInt(uriSdkVersionInput.getText().toString()));
+                return true;
+            }
+            return false;
+        });
+
         AppUtil.handleOnPressEvent(discord_linear);
         AppUtil.handleOnPressEvent(discord_aliern, () -> redirectURL("https://discord.gg/SQXqBMs"));
         AppUtil.handleOnPressEvent(discord_rcs, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));
         AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
         AppUtil.handleOnPressEvent(feedbackLinear, () -> AppUtil.toggleView(feedback));
         AppUtil.handleOnPressEvent(feedbackSubmit, this::submitFeedback);
-        AppUtil.handleOnPressEvent(changelog);
+        AppUtil.handleOnPressEvent(changelog, () -> {
+            changelogClicks += 1;
+            if (changelogClicks >= 10) experimentalOptions.setVisibility(View.VISIBLE);
+        });
     }
 
     @Override

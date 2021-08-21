@@ -232,20 +232,6 @@
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/options_startActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints="false"
-                        android:ems="10"
-                        android:hint="Start activity [EXPERIMENTAL]"
-                        android:imeOptions="actionDone"
-                        android:inputType="text|textNoSuggestions"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:visibility="gone"
-                        tools:ignore="HardcodedText" />
-
                     <Button
                         android:id="@+id/options_deleteTemp"
                         android:layout_width="match_parent"
@@ -258,6 +244,65 @@
                         android:textStyle="bold"
                         app:backgroundTint="#FF0E0E0E" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/options_ex"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Experimental options"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/linear_red"
+                    android:padding="8dp"
+                    android:text="These are experimental options, do not change them if you do not know what they do!"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/options_startActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="Start activity with name"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textNoSuggestions"
+                    android:textColor="@color/white"
+                    android:textColorHint="#777777"
+                    tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/options_uriSdkVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="URI SDK version (30 by default)"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:textColor="@color/white"
+                    android:textColorHint="#777777"
+                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
             <TextView
