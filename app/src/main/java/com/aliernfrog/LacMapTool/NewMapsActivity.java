@@ -113,6 +113,7 @@ public class NewMapsActivity extends AppCompatActivity implements MapPickerSheet
 
         checkUriPerms();
         setListeners();
+        autoBackup();
     }
 
     public void getMap(String path) {
@@ -287,6 +288,23 @@ public class NewMapsActivity extends AppCompatActivity implements MapPickerSheet
         if (files == null) return null;
         Arrays.sort(files);
         return files;
+    }
+
+    public void autoBackup() {
+        if (prefsConfig.getBoolean("enableAutoBackups", false)) {
+            devLog("attempting to backup all");
+            String parent = autoBackupPath+"/"+AppUtil.timeString("yyMMddhhmmss");
+            File parentFile = new File(parent);
+            if (!parentFile.exists()) parentFile.mkdirs();
+            File[] files = new File(lacPath).listFiles();
+            if (files == null) {
+                devLog("file is null");
+            } else {
+                for (File file : files) {
+                    if (!file.isDirectory()) copyFile(file.getPath(), parent+"/"+file.getName(), false, false);
+                }
+            }
+        }
     }
 
     public void copyFile(String source, String destination, Boolean getMapWhenDone, Boolean toastResult) {
