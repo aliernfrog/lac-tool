@@ -59,7 +59,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     Integer REQUEST_PICK_THUMBNAIL = 2;
     Integer REQUEST_URI = 3;
 
-    Integer uriSdkVersion = 29;
+    Integer uriSdkVersion;
 
     Boolean backupOnEdit;
 
@@ -105,11 +105,13 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         backupPath = appPath+"backups";
         autoBackupPath = appPath+"auto-backups";
 
+        uriSdkVersion = prefsConfig.getInt("uriSdkVersion", 30);
         backupOnEdit = prefsConfig.getBoolean("enableBackupOnEdit", true);
 
         if (prefsConfig.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
 
-        devLog("NewMapsActivity started");
+        devLog("MapsActivity started");
+        devLog("uriSdkVersion: "+uriSdkVersion);
 
         checkUriPerms();
         setListeners();
