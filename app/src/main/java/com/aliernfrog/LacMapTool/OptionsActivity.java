@@ -233,6 +233,7 @@ public class OptionsActivity extends AppCompatActivity {
         uriSdkVersionInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 configEdit.putInt("uriSdkVersion", Integer.parseInt(uriSdkVersionInput.getText().toString()));
+                configEdit.commit();
                 return true;
             }
             return false;
