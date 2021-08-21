@@ -33,7 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.util.Arrays;
 
-public class NewMapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDeleteSheet.MapDeleteListener {
+public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView goBack;
     ImageView manageBackups;
@@ -76,7 +76,7 @@ public class NewMapsActivity extends AppCompatActivity implements MapPickerSheet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_maps);
+        setContentView(R.layout.activity_maps);
 
         collapsingToolbarLayout = findViewById(R.id.maps_collapsingToolbar);
         goBack = findViewById(R.id.maps_goback);
@@ -263,7 +263,7 @@ public class NewMapsActivity extends AppCompatActivity implements MapPickerSheet
         devLog("deleted the map");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         saveChangesAndFinish();
-        switchActivity(NewMapsActivity.class);
+        switchActivity(MapsActivity.class);
     }
 
     public void pickFile(String fileType, Integer requestCode) {

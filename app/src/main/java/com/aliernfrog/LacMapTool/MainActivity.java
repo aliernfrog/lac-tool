@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -224,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
     public void setListeners() {
         AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
         AppUtil.handleOnPressEvent(lacLinear);
-        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(NewMapsActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false));
         AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
         AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
         AppUtil.handleOnPressEvent(appLinear);
