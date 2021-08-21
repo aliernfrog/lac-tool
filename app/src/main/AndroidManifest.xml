@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FilePickerActivity" />
-        <activity android:name=".NewMapsActivity" />
+        <activity android:name=".MapsActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".GalleryActivity" />
         <activity android:name=".WallpaperActivity" />

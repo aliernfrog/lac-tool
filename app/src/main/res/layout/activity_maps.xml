@@ -223,8 +223,6 @@
           android:id="@+id/maps_debug"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_margin="8dp"
-          android:padding="8dp"
           android:textColor="#FFFFFF"
           android:visibility="gone"
           tools:visibility="visible" />

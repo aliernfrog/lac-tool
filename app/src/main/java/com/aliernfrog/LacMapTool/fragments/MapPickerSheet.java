@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.aliernfrog.LacMapTool.NewMapsActivity;
+import com.aliernfrog.LacMapTool.MapsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
@@ -30,7 +30,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     TextView noImportedMaps;
     LinearLayout root;
 
-    NewMapsActivity context;
+    MapsActivity context;
 
     @Nullable
     @Override
@@ -41,7 +41,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
         noImportedMaps = view.findViewById(R.id.mapPicker_noMapsWarning);
         root = view.findViewById(R.id.mapPicker_root);
 
-        context = (NewMapsActivity) getActivity();
+        context = (MapsActivity) getActivity();
 
         getImportedMaps();
         setListeners();
