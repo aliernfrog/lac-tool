@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -117,7 +116,7 @@ public class OptionsActivity extends AppCompatActivity {
         getVersion();
         getChangelog();
         checkConfig();
-        setListener();
+        setListeners();
     }
 
     void getVersion() {
@@ -174,14 +173,14 @@ public class OptionsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
             feedbackLinear.setVisibility(View.GONE);
         } catch (Exception e) {
-            feedbackInput.setText(e.toString());
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
     void deleteTempData() {
         File tempFile = new File(tempPath);
-        FileUtil.deleteDirectory(tempFile); //delete app temp data
-        pickiT.deleteTemporaryFile(getApplicationContext()); //delete PickiT temp data
+        FileUtil.deleteDirectory(tempFile);
+        pickiT.deleteTemporaryFile(getApplicationContext());
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
@@ -205,7 +204,7 @@ public class OptionsActivity extends AppCompatActivity {
         finish();
     }
 
-    void setListener() {
+    void setListeners() {
         AppUtil.handleOnPressEvent(home, this::finishActivity);
         AppUtil.handleOnPressEvent(lacOptions, () -> AppUtil.toggleView(lacOptionsContent));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
