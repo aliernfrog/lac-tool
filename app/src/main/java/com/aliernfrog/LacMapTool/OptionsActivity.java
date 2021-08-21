@@ -206,43 +206,18 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void setListener() {
-        home.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                finishActivity();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        lacOptions.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                AppUtil.toggleView(lacOptionsContent);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(home, this::finishActivity);
+        AppUtil.handleOnPressEvent(lacOptions, () -> AppUtil.toggleView(lacOptionsContent));
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
-
-        backupOptions.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                AppUtil.toggleView(backupOptionsContent);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(backupOptions, () -> AppUtil.toggleView(backupOptionsContent));
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
-
-        appOptions.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                AppUtil.toggleView(appOptionsContent);
-                appOptionsClicks += 1;
-                if (appOptionsClicks >= 10) forceActivity.setVisibility(View.VISIBLE);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
+        AppUtil.handleOnPressEvent(appOptions, () -> {
+            AppUtil.toggleView(appOptionsContent);
+            appOptionsClicks += 1;
+            if (appOptionsClicks >= 10) forceActivity.setVisibility(View.VISIBLE);
         });
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
@@ -254,59 +229,14 @@ public class OptionsActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        deleteTemp.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                deleteTempData();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        discord_linear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        discord_aliern.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                redirectURL("https://aliernfrog.glitch.me/discord.html");
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        discord_rcs.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                redirectURL("https://discord.gg/aQhGqHSc3W");
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        github.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                redirectURL("https://github.com/aliernfrog/lac-tool");
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        feedbackLinear.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) AppUtil.toggleView(feedback);
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        feedbackSubmit.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                submitFeedback();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        changelog.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
+        AppUtil.handleOnPressEvent(discord_linear);
+        AppUtil.handleOnPressEvent(discord_aliern, () -> redirectURL("https://discord.gg/SQXqBMs"));
+        AppUtil.handleOnPressEvent(discord_rcs, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));
+        AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
+        AppUtil.handleOnPressEvent(feedbackLinear, () -> AppUtil.toggleView(feedback));
+        AppUtil.handleOnPressEvent(feedbackSubmit, this::submitFeedback);
+        AppUtil.handleOnPressEvent(changelog);
     }
 
     @Override

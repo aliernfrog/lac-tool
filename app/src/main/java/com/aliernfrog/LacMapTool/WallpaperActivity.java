@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.os.Process;
 import android.provider.DocumentsContract;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -153,31 +152,19 @@ public class WallpaperActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
         rootLayout.addView(layout);
-        bg.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
+        AppUtil.handleOnPressEvent(bg);
+        AppUtil.handleOnPressEvent(copyUrl, () -> {
+            AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
+            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         });
-        copyUrl.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
+        AppUtil.handleOnPressEvent(delete, () -> {
+            if (Build.VERSION.SDK_INT < 30) {
+                file.delete();
+                rootLayout.removeView(layout);
                 Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
             }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        delete.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (Build.VERSION.SDK_INT < 30) {
-                    file.delete();
-                    rootLayout.removeView(layout);
-                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
-                }
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
         });
     }
 
@@ -301,49 +288,12 @@ public class WallpaperActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                saveChangesAndFinish();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        desc.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                desc.setVisibility(View.GONE);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        actionsLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        pickFile.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                pickFile();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        importFile.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                importWp();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        pickedWpLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(goback, this::saveChangesAndFinish);
+        AppUtil.handleOnPressEvent(desc, () -> desc.setVisibility(View.GONE));
+        AppUtil.handleOnPressEvent(actionsLinear);
+        AppUtil.handleOnPressEvent(pickFile, this::pickFile);
+        AppUtil.handleOnPressEvent(importFile, this::importWp);
+        AppUtil.handleOnPressEvent(pickedWpLinear);
     }
 
     @Override
