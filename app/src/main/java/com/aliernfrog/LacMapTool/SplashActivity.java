@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.FileUtil;
 
 import java.util.Locale;
 

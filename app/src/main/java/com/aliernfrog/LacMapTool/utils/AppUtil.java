@@ -77,7 +77,7 @@ public class AppUtil {
 
     public static Boolean stringIsNumber(String string) {
         try {
-            Integer integer = Integer.parseInt(string.trim());
+            Integer.parseInt(string.trim());
         } catch (Exception e) {
             return false;
         }
@@ -128,10 +128,6 @@ public class AppUtil {
                 scaleUp.start();
                 break;
         }
-    }
-
-    public static void handleOnPressEvent(View view, MotionEvent event) {
-        handleOnPressEvent(view, event, null);
     }
 
     public static void handleOnPressEvent(View view, @Nullable Runnable onClick) {
