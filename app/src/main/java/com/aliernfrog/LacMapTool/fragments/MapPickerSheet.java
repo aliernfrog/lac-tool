@@ -51,11 +51,11 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
 
     void getImportedMaps() {
         File[] files = context.getImportedMaps();
-        if (files.length > 0) noImportedMaps.setVisibility(View.GONE);
         for (File map : files) {
             if (map.getName().endsWith(".txt")) {
                 ViewGroup view = (ViewGroup) context.getLayoutInflater().inflate(R.layout.map, root, false);
                 addMapView(map, view);
+                noImportedMaps.setVisibility(View.GONE);
             }
         }
     }
