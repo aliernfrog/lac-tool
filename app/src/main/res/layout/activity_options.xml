@@ -303,6 +303,19 @@
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/options_updateUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="Update URL"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textNoSuggestions"
+                    android:textColor="@color/white"
+                    android:textColorHint="#777777"
+                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
             <TextView

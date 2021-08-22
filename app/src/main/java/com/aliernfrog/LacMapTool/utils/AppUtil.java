@@ -26,7 +26,6 @@ import java.util.Date;
 
 @SuppressLint({"CommitPrefEdits", "ApplySharedPref", "ClickableViewAccessibility"})
 public class AppUtil {
-    static String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
 
     public static String getVersName(Context context) throws Exception {
         PackageManager pm = context.getPackageManager();
@@ -48,7 +47,9 @@ public class AppUtil {
 
     public static Boolean getUpdates(Context context) throws Exception {
         SharedPreferences update = context.getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
+        SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         SharedPreferences.Editor updateEdit = update.edit();
+        String updateUrl = config.getString("updateUrl", "https://aliernfrog.glitch.me/lacmaptool/update.json");
         String rawUpdate = WebUtil.getContentFromURL(updateUrl);
         JSONObject object = new JSONObject(rawUpdate);
         updateEdit.putInt("updateLatest", object.getInt("latest"));
