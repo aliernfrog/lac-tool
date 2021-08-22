@@ -21,6 +21,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FileUtil {
+    public static String removeExtension(String path) {
+        int extensionIndex = path.lastIndexOf(".");
+        if (extensionIndex == -1) return path;
+
+        return path.substring(0, extensionIndex);
+    }
+
     public static void copyFile(String source, String destination) throws Exception {
         File src = new File(source);
         InputStream in;
@@ -122,17 +129,29 @@ public class FileUtil {
         return intent;
     }
 
-    public static boolean deleteDirectory(File path) {
-        if (path.exists()) {
-            File[] files = path.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    deleteDirectory(files[i]);
-                } else {
-                    files[i].delete();
-                }
+    public static boolean deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            for (File file : files) {
+                delete(file);
             }
         }
-        return (path.delete());
+        return (directory.delete());
+    }
+
+    public static boolean deleteDirectoryContent(File directory) {
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            delete(file);
+        }
+        return true;
+    }
+
+    public static boolean delete(File file) {
+        if (file.isDirectory()) {
+            return deleteDirectory(file);
+        } else {
+            return file.delete();
+        }
     }
 }

@@ -1,374 +1,349 @@
 package com.aliernfrog.LacMapTool;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.documentfile.provider.DocumentFile;
-
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.DocumentsContract;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.URLUtil;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
+
+import com.aliernfrog.LacMapTool.fragments.MapDeleteSheet;
+import com.aliernfrog.LacMapTool.fragments.MapPickerSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
-import com.hbisoft.pickit.PickiT;
-import com.hbisoft.pickit.PickiTCallbacks;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Calendar;
+import java.util.Arrays;
 
-@SuppressLint("ClickableViewAccessibility")
-public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
-    ImageView goback;
-    ImageView backupManage;
-    TextView android11warning;
-    LinearLayout pickLinear;
-    Spinner mapsSpinner;
-    Button selectImported;
-    Button filePick;
-    LinearLayout nameLinear;
-    EditText mapname;
-    Button fileRename;
-    TextView mapInfo;
-    LinearLayout map_linear;
-    Button fileImport;
-    Button editMapSettings;
-    Button setThumbnail;
-    Button fileBackup;
-    Button fileShare;
-    Button fileDownload;
-    Button fileDelete;
-    TextView devlog;
+public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDeleteSheet.MapDeleteListener {
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    ImageView goBack;
+    ImageView manageBackupsButton;
+    FloatingActionButton saveButton;
+    ImageView mapThumbnail;
+    LinearLayout mapsPickLinear;
+    Button pickMap;
+    LinearLayout mapNameLinear;
+    EditText mapNameInput;
+    LinearLayout otherOptionsLinear;
+    Button importMapButton;
+    Button editMapButton;
+    Button thumbnailMapButton;
+    Button backupMapButton;
+    Button shareMapButton;
+    Button deleteMapButton;
+    TextView debugText;
 
-    SharedPreferences update;
-    SharedPreferences.Editor updateEdit;
-    SharedPreferences config;
-    SharedPreferences.Editor configEdit;
+    SharedPreferences prefsUpdate;
+    SharedPreferences prefsConfig;
 
-    Boolean devMode;
+    Integer REQUEST_PICK_MAP = 1;
+    Integer REQUEST_PICK_THUMBNAIL = 2;
+    Integer REQUEST_URI = 3;
+
+    Integer uriSdkVersion;
+
     Boolean backupOnEdit;
-    String lacPath;
-    String dataPath;
-    String backupPath;
-    String aBackupPath;
-    String rawPath;
-    String savePath;
-    String tempPath;
-    String logs = "";
 
-    String mapName;
+    String currentPath;
+    String lacPath;
+    String tempPath;
+    String backupPath;
+    String autoBackupPath;
     Boolean isImported;
-    Boolean isDeleting = false;
 
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
 
-    int CURRENT_REQUEST_CODE;
-    int PICK_MAP_REQUEST_CODE = 2;
-    int PICK_THUMBNAIL_REQUEST_CODE = 3;
-    int TREE_REQUEST_CODE = 4;
-
-    PickiT pickiT;
-
-    @SuppressLint({"CommitPrefEdits", "ApplySharedPref"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
-        config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        updateEdit = update.edit();
-        configEdit = config.edit();
+        collapsingToolbarLayout = findViewById(R.id.maps_collapsingToolbar);
+        goBack = findViewById(R.id.maps_goback);
+        manageBackupsButton = findViewById(R.id.maps_backups);
+        saveButton = findViewById(R.id.maps_save);
+        mapThumbnail = findViewById(R.id.maps_appbar_image);
+        mapsPickLinear = findViewById(R.id.maps_pick_linear);
+        pickMap = findViewById(R.id.maps_pick_pick);
+        mapNameLinear = findViewById(R.id.maps_name_linear);
+        mapNameInput = findViewById(R.id.maps_name_input);
+        otherOptionsLinear = findViewById(R.id.maps_other);
+        importMapButton = findViewById(R.id.maps_other_import);
+        editMapButton = findViewById(R.id.maps_other_edit);
+        thumbnailMapButton = findViewById(R.id.maps_other_thumbnail);
+        backupMapButton = findViewById(R.id.maps_other_backup);
+        shareMapButton = findViewById(R.id.maps_other_share);
+        deleteMapButton = findViewById(R.id.maps_other_delete);
+        debugText = findViewById(R.id.maps_debug);
 
-        devMode = config.getBoolean("enableDebug", false);
-        backupOnEdit = config.getBoolean("enableBackupOnEdit", true);
-        lacPath = update.getString("path-lac", null);
-        dataPath = update.getString("path-app", null);
-        backupPath = dataPath+"backups/";
-        aBackupPath = dataPath+"auto-backups/";
-        tempPath = dataPath+"temp/maps/";
-        pickiT = new PickiT(this, this, this);
+        prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
+        prefsConfig = getSharedPreferences("APP_CONFIG", MODE_PRIVATE);
 
-        goback = findViewById(R.id.maps_goback);
-        backupManage = findViewById(R.id.maps_backupmanage);
-        android11warning = findViewById(R.id.maps_dialog_android11);
-        pickLinear = findViewById(R.id.maps_pick_linear);
-        mapsSpinner = findViewById(R.id.maps_mapsSpinner);
-        selectImported = findViewById(R.id.maps_select);
-        filePick = findViewById(R.id.maps_filePick);
-        nameLinear = findViewById(R.id.maps_name_linear);
-        fileRename = findViewById(R.id.maps_rename);
-        mapInfo = findViewById(R.id.maps_mapInfo);
-        map_linear = findViewById(R.id.maps_map_linear);
-        fileImport = findViewById(R.id.maps_fileImport);
-        editMapSettings = findViewById(R.id.maps_editmapsettings);
-        setThumbnail = findViewById(R.id.maps_setThumbnail);
-        fileBackup = findViewById(R.id.maps_backuprestore);
-        fileShare = findViewById(R.id.maps_shareMap);
-        mapname = findViewById(R.id.maps_editname);
-        fileDownload = findViewById(R.id.maps_downloadmap);
-        fileDelete = findViewById(R.id.maps_deleteMap);
-        devlog = findViewById(R.id.maps_log);
-        if (!devMode) devlog.setVisibility(View.GONE);
-        devLog("==== DEBUG LOGS ====");
+        String appPath = prefsUpdate.getString("path-app", null);
+        lacPath = prefsUpdate.getString("path-maps", null);
+        tempPath = prefsUpdate.getString("path-temp-maps", null);
+        backupPath = appPath+"backups";
+        autoBackupPath = appPath+"auto-backups";
+
+        uriSdkVersion = prefsConfig.getInt("uriSdkVersion", 30);
+        backupOnEdit = prefsConfig.getBoolean("enableBackupOnEdit", true);
+
+        if (prefsConfig.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
+
+        devLog("MapsActivity started");
+        devLog("uriSdkVersion: "+uriSdkVersion);
+        checkUriPerms();
+        setListeners();
         devLog("lacPath: "+lacPath);
-        devLog("dataPath: "+dataPath);
-        devLog("");
-
-        if (Build.VERSION.SDK_INT >= 30) {
-            android11warning.setVisibility(View.VISIBLE);
-            String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
-            Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
-            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request");
-                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-                        .addFlags(takeFlags);
-                startActivityForResult(intent, TREE_REQUEST_CODE);
-            } else {
-                useTempPath();
-            }
-        } else {
-            lacPath += "/";
-        }
-
-        updateEdit.putString("path-lac-restore", lacPath);
-        updateEdit.commit();
-
-        setListener();
         autoBackup();
-        getImportedMaps();
     }
 
     public void getMap(String path) {
-        File mapFile = new File(path);
-        map_linear.setVisibility(View.VISIBLE);
-        rawPath = path;
-        mapName = mapFile.getName().replace(".txt", "");
-        isImported = rawPath.startsWith(lacPath);
-        mapname.setText(mapName);
-        getImportedMaps();
-        if (isImported) getMapThumb();
-        refreshVisibility();
-        mapInfo.setText(Html.fromHtml("<b>"+getString(R.string.mapInfo_size)+":</b> "+mapFile.length()/1024+" kB"));
-        configEdit.putString("lastPath", rawPath);
-        configEdit.commit();
-        devLog("rawPath: "+ rawPath);
-        devLog("mapName: "+ mapName);
-        devLog("isImported: "+ isImported.toString());
+        devLog("attempting to read map: "+path);
+        File map = new File(path);
+        currentPath = path;
+        isImported = map.getPath().startsWith(lacPath);
+        String mapName = FileUtil.removeExtension(map.getName());
+        collapsingToolbarLayout.setTitle(mapName);
+        mapNameInput.setText(mapName);
+        devLog("isImported: "+isImported);
+        devLog("got map");
+        getMapThumbnail(map.getPath());
+        resetVisibilities();
     }
 
-    public void getMapThumb() {
-        String thumbnailDir = lacPath+mapName+".jpg";
-        File thumb = new File(thumbnailDir);
-        ImageView thumbView = findViewById(R.id.maps_thumbnail);
-        if (thumb.exists()) {
-            Bitmap thumbBitmap = BitmapFactory.decodeFile(thumb.getAbsolutePath());
-            thumbView.setImageBitmap(thumbBitmap);
-            devLog("attempting to set thumbnail");
+    public void getMapThumbnail(String path) {
+        String thumbnailPath = FileUtil.removeExtension(path)+".jpg";
+        File thumbnailFile = new File(thumbnailPath);
+        if (thumbnailFile.exists() && isImported) {
+            Drawable drawable = Drawable.createFromPath(thumbnailFile.getPath());
+            mapThumbnail.setBackground(drawable);
+            collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#00000000"));
+            devLog("set thumbnail bitmap");
         } else {
-            thumbView.setImageBitmap(null);
-            devLog("thumbnail doesn't exist");
+            mapThumbnail.setBackground(null);
+            collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
+            devLog("no thumbnail");
         }
     }
 
-    public void setMapThumb(String path) {
-        devLog("attempting to set thumbnail file to "+path);
-        copyFile(path, lacPath+mapName+".jpg", false);
-    }
-
-    public void getImportedMaps() {
-        String _mapname;
-        File directory = new File(lacPath);
-        File[] files = directory.listFiles();
-        if (files == null) {
-            devLog("directory "+directory+" is null");
+    public void resetVisibilities() {
+        mapNameLinear.setVisibility(View.VISIBLE);
+        otherOptionsLinear.setVisibility(View.VISIBLE);
+        if (isImported) {
+            importMapButton.setVisibility(View.GONE);
+            thumbnailMapButton.setVisibility(View.VISIBLE);
+            deleteMapButton.setVisibility(View.VISIBLE);
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner);
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isFile() && files[i].getName().endsWith(".txt")) {
-                    _mapname = files[i].getName().replace(".txt", "");
-                    adapter.add(_mapname);
-                    devLog("found map: "+files[i].getName());
-                }
-            }
-            mapsSpinner.setAdapter(adapter);
-            devLog("done getting files from "+directory);
+            importMapButton.setVisibility(View.VISIBLE);
+            thumbnailMapButton.setVisibility(View.GONE);
+            deleteMapButton.setVisibility(View.GONE);
         }
     }
 
-    public void renameMap() {
-        savePath = lacPath + mapName;
-        String[] arr = rawPath.replace(".txt", "").split("/");
-        String oldName = arr[arr.length - 1];
-        File check = new File(savePath);
-        File thisFile = new File(rawPath);
-        File _thumbnail = new File(lacPath+oldName+".jpg");
-        File _data = new File(lacPath+oldName);
-        if (check.exists()) {
+    public void renameMap(String newName) {
+        devLog("attempting to rename the map to: "+newName);
+        File currentFile = new File(currentPath);
+        String oldName = FileUtil.removeExtension(currentFile.getName());
+        String parentPath = currentFile.getParent();
+        String newPath = parentPath+"/"+newName+".txt";
+        devLog("newPath: "+newPath);
+        File checkFile = new File(parentPath+"/"+newName+".txt");
+        File thumbnail = new File(parentPath+"/"+oldName+".jpg");
+        File data = new File(parentPath+"/"+oldName);
+        if (checkFile.exists()) {
             Toast.makeText(getApplicationContext(), R.string.denied_alreadyExists, Toast.LENGTH_SHORT).show();
-            devLog(check.getPath()+" already exists");
+            devLog(checkFile.getPath()+" already exists");
         } else {
-            devLog("oldName = "+oldName);
-            if (_thumbnail.exists() && _thumbnail.isFile()) _thumbnail.renameTo(new File(savePath+".jpg"));
-            if (_data.exists() && _data.isDirectory()) _data.renameTo(new File(savePath));
-            thisFile.renameTo(new File(savePath+".txt"));
-            devLog("Renamed: "+rawPath+" to: "+savePath);
-            getMap(savePath);
+            if (isImported && thumbnail.exists()) thumbnail.renameTo(new File(lacPath+"/"+newName+".jpg"));
+            if (isImported && data.exists()) data.renameTo(new File(lacPath+"/"+newName));
+            currentFile.renameTo(new File(parentPath+"/"+newName+".txt"));
+            if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+                DocumentFile thumbnailFile = lacTreeFile.findFile(oldName+".jpg");
+                DocumentFile dataFile = lacTreeFile.findFile(oldName);
+                DocumentFile mapFile = lacTreeFile.findFile(oldName+".txt");
+                if (isImported && thumbnailFile != null) thumbnailFile.renameTo(newName+".jpg");
+                if (isImported && dataFile != null) dataFile.renameTo(newName);
+                if (mapFile != null) mapFile.renameTo(newName+".txt");
+            }
+            devLog("renamed the map to: "+newName);
+            getMap(newPath);
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         }
     }
 
     public void importMap() {
-        savePath = lacPath + mapName + ".txt";
-        if (new File(savePath).exists()) {
+        devLog("attempting to import the map");
+        File file = new File(currentPath);
+        String name = FileUtil.removeExtension(file.getName());
+        String dest = lacPath+"/"+name+".txt";
+        File check = new File(dest);
+        if (check.exists()) {
             Toast.makeText(getApplicationContext(), R.string.denied_alreadyExists, Toast.LENGTH_SHORT).show();
-            devLog("map already exists");
+            devLog(check.getPath()+" already exists");
         } else {
-            copyFile(rawPath, savePath, true);
-            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            devLog("savePath: "+savePath);
+            copyFile(currentPath, dest, true, true);
+            devLog("imported the map");
         }
     }
 
-    public void backupMap(Boolean toast) {
-        devLog("attempting to backup with toast "+toast.toString());
-        try {
-            savePath = backupPath + mapName + "-" + timeString("yyMMddhhmmss") + ".txt";
-            copyFile(rawPath, savePath, false);
-            if (toast) Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
-            devLog(e.toString());
-            refreshVisibility();
-        }
+    public void editMap() {
+        devLog("attemting to edit the map");
+        if (backupOnEdit) backupMap(false);
+        Intent intent = new Intent(this, MapsOptionsActivity.class);
+        intent.putExtra("path", currentPath);
+        startActivity(intent);
+    }
+
+    public void setThumbnail(String path) {
+        devLog("attempting to set thumbnail to :"+path);
+        File mapFile = new File(currentPath);
+        String mapName = FileUtil.removeExtension(mapFile.getName());
+        String thumbnailPath = lacPath+"/"+mapName+".jpg";
+        copyFile(path, thumbnailPath, false, true);
+        getMapThumbnail(currentPath);
+    }
+
+    public void backupMap(Boolean createToastOnEnd) {
+        devLog("attempting to backup the map");
+        File currentFile = new File(currentPath);
+        String mapName = FileUtil.removeExtension(currentFile.getName());
+        String backupFileName = mapName+"-"+AppUtil.timeString("yyMMddhhmmss")+".txt";
+        String fullPath = backupPath+"/"+backupFileName;
+        copyFile(currentPath, fullPath, false, createToastOnEnd);
+    }
+
+    public void shareMap() {
+        devLog("attempting to share the map");
+        File file = new File(currentPath);
+        Intent share = FileUtil.shareFile(file.getPath(), "text/*", getApplicationContext());
+        startActivity(Intent.createChooser(share, "Share Map"));
+    }
+
+    public void openDeleteMapView() {
+        MapDeleteSheet mapDeleteSheet = new MapDeleteSheet();
+        mapDeleteSheet.show(getSupportFragmentManager(), "map_delete_confirm");
     }
 
     public void deleteMap() {
-        if (Build.VERSION.SDK_INT < 30) {
-            if (!isDeleting) {
-                fileDelete.setText(R.string.mapDelete_confirm);
-                isDeleting = true;
-                Toast.makeText(getApplicationContext(), R.string.mapDelete_clickAgain, Toast.LENGTH_SHORT).show();
+        devLog("attempting to delete the map");
+        File map = new File(currentPath);
+        String name = FileUtil.removeExtension(map.getName());
+        File thumbnail = new File(lacPath+"/"+name+".jpg");
+        File data = new File(lacPath+"/"+name);
+        if (thumbnail.exists()) thumbnail.delete();
+        if (data.exists()) FileUtil.deleteDirectory(data);
+        map.delete();
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            DocumentFile thumbnailFile = lacTreeFile.findFile(name+".jpg");
+            DocumentFile dataFile = lacTreeFile.findFile(name);
+            DocumentFile mapFile = lacTreeFile.findFile(name+".txt");
+            if (thumbnailFile != null) thumbnailFile.delete();
+            if (dataFile != null) dataFile.delete();
+            if (mapFile != null) mapFile.delete();
+        }
+        devLog("deleted the map");
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+        saveChangesAndFinish();
+        switchActivity(MapsActivity.class);
+    }
+
+    public void manageBackups() {
+        devLog("attempting to open manage backups screen");
+        Intent intent = new Intent(this, RestoreActivity.class);
+        intent.putExtra("backupPath", backupPath);
+        intent.putExtra("mapsPath", lacPath);
+        startActivity(intent);
+    }
+
+    public void pickFile(String fileType, Integer requestCode) {
+        devLog("attempting to pick a file with request code: "+requestCode);
+        Intent intent = new Intent(this, FilePickerActivity.class);
+        intent.putExtra("FILE_TYPE", fileType);
+        startActivityForResult(intent, requestCode);
+    }
+
+    public void pickMapFile() {
+        pickFile("text/*", REQUEST_PICK_MAP);
+    }
+
+    public void pickMap() {
+        MapPickerSheet mapPickerSheet = new MapPickerSheet();
+        mapPickerSheet.show(getSupportFragmentManager(), "map_picker");
+    }
+
+    public File[] getImportedMaps() {
+        File directory = new File(lacPath);
+        File[] files = directory.listFiles();
+        if (files == null) return null;
+        Arrays.sort(files);
+        return files;
+    }
+
+    public void autoBackup() {
+        if (prefsConfig.getBoolean("enableAutoBackups", false)) {
+            devLog("attempting to backup all");
+            String parent = autoBackupPath+"/"+AppUtil.timeString("yyMMddhhmmss");
+            File parentFile = new File(parent);
+            if (!parentFile.exists()) parentFile.mkdirs();
+            File[] files = new File(lacPath).listFiles();
+            if (files == null) {
+                devLog("file is null");
             } else {
-                devLog("attempting to delete");
-                File mapFile = new File(rawPath);
-                File thumbnailFile = new File(rawPath.replace(".txt", ".jpg"));
-                File dataFile = new File(rawPath.replace(".txt", ""));
-                fileDelete.setText(R.string.mapDelete);
-                isDeleting = false;
-                if (mapFile.delete())
-                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-                if (thumbnailFile.exists()) thumbnailFile.delete();
-                if (dataFile.exists()) dataFile.delete();
-                switchActivity(MapsActivity.class);
-                finish();
+                for (File file : files) {
+                    if (!file.isDirectory()) copyFile(file.getPath(), parent+"/"+file.getName(), false, false);
+                }
             }
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void shareFile(String path) {
-        File file = new File(path);
-        if (file.exists()) {
-            devLog("attempting to share: "+path);
-            Intent share = FileUtil.shareFile(path, "text/*", getApplicationContext());
-            startActivity(Intent.createChooser(share, "Share Map"));
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.denied_doesntExist, Toast.LENGTH_SHORT).show();
-            devLog("file does not exist");
-        }
-    }
-
-    public void downloadMap(String link) {
+    public void copyFile(String source, String destination, Boolean getMapWhenDone, Boolean toastResult) {
+        devLog("attempting to copy "+source+" to "+destination);
         try {
-            String _downloaded = URLUtil.guessFileName(link, null, null);
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            Uri uri = Uri.parse(link);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, _downloaded)
-                    .setTitle(_downloaded) .setDescription("Downloaded via LAC Map Tool")
-                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            downloadManager.enqueue(request);
-            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            getMap(Environment.getExternalStorageDirectory().toString()+"/Download/"+_downloaded);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
-            devLog(e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    public void refreshVisibility() {
-        if (isImported) {
-            fileRename.setVisibility(View.VISIBLE);
-            fileImport.setVisibility(View.GONE);
-            setThumbnail.setVisibility(View.VISIBLE);
-            fileBackup.setVisibility(View.VISIBLE);
-            fileShare.setVisibility(View.VISIBLE);
-            fileDelete.setVisibility(View.VISIBLE);
-        } else {
-            fileRename.setVisibility(View.GONE);
-            fileImport.setVisibility(View.VISIBLE);
-            setThumbnail.setVisibility(View.GONE);
-            fileBackup.setVisibility(View.GONE);
-            fileShare.setVisibility(View.GONE);
-            fileDelete.setVisibility(View.GONE);
-        }
-        mapInfo.setVisibility(View.VISIBLE);
-        fileDelete.setText(R.string.mapDelete);
-        isDeleting = false;
-    }
-
-    public void copyFile(String src, String dst, Boolean GetMap) {
-        devLog("attempting to copy "+src+" to "+dst);
-        try {
-            FileUtil.copyFile(src, dst);
+            FileUtil.copyFile(source, destination);
             devLog("copied successfully");
-            if (GetMap) getMap(dst);
+            if (getMapWhenDone) getMap(destination);
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-           e.printStackTrace();
-           devLog(e.toString());
+            e.printStackTrace();
+            devLog(e.toString());
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void copyFile(DocumentFile source, String destination, Boolean getMapWhenDone) {
+        devLog("attempting to copy "+source.getUri()+" to "+destination);
+        try {
+            FileUtil.copyFile(source, destination, getApplicationContext());
+            devLog("copied successfully");
+            if (getMapWhenDone) getMap(destination);
+        } catch (Exception e) {
+            e.printStackTrace();
+            devLog(e.toString());
+        }
+    }
+
+    @SuppressLint("NewApi")
     public void copyFile(String src, DocumentFile dst) {
         devLog("attempting to copy "+src+" to "+dst);
         try {
@@ -380,85 +355,55 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         }
     }
 
-    public void copyFile(DocumentFile src, String dst, Boolean GetMap) {
-        devLog("attempting to copy "+src.getUri()+" to "+dst);
-        try {
-            FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully");
-            if (GetMap) getMap(dst);
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
-        }
-    }
-
-    public void autoBackup() {
-        if (config.getBoolean("enableAutoBackups", false)) {
-            devLog("attempting to backup");
-            String _dest = aBackupPath+timeString("yyMMddhhmmss");
-            if (!new File(_dest).exists()) new File(_dest).mkdirs();
-            File[] _maps = new File(lacPath).listFiles();
-            if (_maps == null) {
-                devLog("file list is null");
+    @SuppressLint("NewApi")
+    public void checkUriPerms() {
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            saveButton.setVisibility(View.VISIBLE);
+            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            Uri uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId);
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+                devLog("no permissions to lac data, attempting to request");
+                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
+                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                        .addFlags(takeFlags);
+                startActivityForResult(intent, REQUEST_URI);
             } else {
-                for (int i = 0; i < _maps.length; i++) {
-                    String _path = _maps[i].getPath();
-                    String[] _arr = _path.split("/");
-                    String _name = _arr[_arr.length - 1];
-                    if (!_maps[i].isDirectory()) copyFile(_path, _dest+"/"+_name, false);
-                }
+                useTempPath();
             }
-        }
-    }
-
-    public void pickMapFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/*");
-        startActivityForResult(intent, PICK_MAP_REQUEST_CODE);
-        devLog("attempting to pick a file with request code "+PICK_MAP_REQUEST_CODE);
-    }
-
-    public void pickThumbnailFile() {
-        Toast.makeText(getApplicationContext(), R.string.info_setThumbnail, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_THUMBNAIL_REQUEST_CODE);
-        devLog("attempting to pick a file with request code "+PICK_THUMBNAIL_REQUEST_CODE);
-    }
-
-    public void saveChangesAndFinish() {
-        if (Build.VERSION.SDK_INT >= 30) {
-            devLog("attempting to save changes");
-            File file = new File(tempPath);
-            File[] files = file.listFiles();
-            try {
-                if (files != null) {
-                    for (int i = 0; i < files.length; i++) {
-                        DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
-                        if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
-                        copyFile(files[i].getPath(), fileInLac);
-                    }
-                }
-            } finally {
-                FileUtil.deleteDirectory(file);
-                finish();
-            }
-        } else {
-            finish();
         }
     }
 
     public void useTempPath() {
         lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
-        File tempFile = new File(tempPath);
-        if (!tempFile.exists()) tempFile.mkdirs();
         if (lacTreeFile != null) {
             DocumentFile[] files = lacTreeFile.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copyFile(files[i], tempPath+files[i].getName(), false);
+            for (DocumentFile file : files) {
+                copyFile(file, tempPath + "/" + file.getName(), false);
             }
         }
         lacPath = tempPath;
+    }
+
+    public void saveChangesAndFinish() {
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            devLog("attempting to save changes and finish");
+            File tempFile = new File(tempPath);
+            File[] files = tempFile.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    DocumentFile fileInLac = lacTreeFile.findFile(file.getName());
+                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", file.getName());
+                    copyFile(file.getPath(), fileInLac);
+                }
+            }
+            FileUtil.deleteDirectoryContent(tempFile);
+        }
+        finish();
     }
 
     public void switchActivity(Class i) {
@@ -467,248 +412,71 @@ public class MapsActivity extends AppCompatActivity implements PickiTCallbacks {
         startActivity(intent);
     }
 
-    public String timeString(String frmString) {
-        SimpleDateFormat frm = new SimpleDateFormat(frmString);
-        Date now = Calendar.getInstance().getTime();
-        return frm.format(now);
-    }
-
     void devLog(String toLog) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            devlog.setText(Html.fromHtml(logs));
-        }
+        AppUtil.devLog(toLog, debugText);
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        devLog("received result for: "+requestCode);
-        CURRENT_REQUEST_CODE = requestCode;
-        if (requestCode == PICK_MAP_REQUEST_CODE || requestCode == PICK_THUMBNAIL_REQUEST_CODE) {
-            if (data == null) {
-                devLog(requestCode+": no data");
-            } else {
-                pickiT.getPath(data.getData(), Build.VERSION.SDK_INT);
-            }
-        } else if (requestCode == TREE_REQUEST_CODE) {
-            if (data == null) {
-                devLog(requestCode+": no data");
-            } else {
-                if (Build.VERSION.SDK_INT >= 30) {
-                    int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-                    grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
-                    getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-                    devLog(requestCode+": granted permissions for: "+data.getData());
-                    finish();
-                }
-            }
-        }
-    }
-
-    void setListener() {
-        goback.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                saveChangesAndFinish();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        backupManage.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(RestoreActivity.class);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        android11warning.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                android11warning.setVisibility(View.GONE);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        pickLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        selectImported.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (mapsSpinner.getSelectedItem() != null) {
-                    String mapname = mapsSpinner.getSelectedItem().toString();
-                    if (mapname != null && !mapname.equals("")) {
-                        getMap(lacPath+mapname+".txt");
-                    }
-                }
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        fileRename.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                renameMap();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        filePick.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                pickMapFile();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        nameLinear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        map_linear.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        fileImport.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                importMap();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        setThumbnail.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                pickThumbnailFile();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        fileBackup.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                backupMap(true);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        fileShare.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                shareFile(rawPath);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        fileDelete.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                deleteMap();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        mapname.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mapName = mapname.getText().toString();
-                String text = mapname.getText().toString();
-                boolean isMapLink = (text.startsWith("http://") || text.startsWith("https://")) && text.endsWith(".txt");
-                if (isMapLink) {
-                    fileDownload.setVisibility(View.VISIBLE);
-                } else {
-                    fileDownload.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        fileDownload.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                downloadMap(mapname.getText().toString());
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        editMapSettings.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (backupOnEdit) backupMap(false);
-                switchActivity(MapsOptionsActivity.class);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-    }
-
-    ProgressDialog pickitProgress;
-
-    @Override
-    public void PickiTonUriReturned() {
-        pickitProgress = new ProgressDialog(this);
-        pickitProgress.setMessage(getString(R.string.info_wait));
-        pickitProgress.setCancelable(false);
-        pickitProgress.show();
-    }
-
-    @Override
-    public void PickiTonStartListener() {
-    }
-
-    @Override
-    public void PickiTonProgressUpdate(int progress) {
-    }
-
-    @Override
-    public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
-        if (pickitProgress != null && pickitProgress.isShowing()) pickitProgress.cancel();
-        if (wasSuccessful) {
-            devLog("got path: "+path);
-            devLog("current request code: "+CURRENT_REQUEST_CODE);
-            if (CURRENT_REQUEST_CODE == PICK_MAP_REQUEST_CODE) {
-                getMap(path);
-            } else if (CURRENT_REQUEST_CODE == PICK_THUMBNAIL_REQUEST_CODE) {
-                setMapThumb(path);
-            }
+        boolean hasData = data != null;
+        devLog(requestCode+": received result");
+        devLog(requestCode+": hasData = "+hasData);
+        if (!hasData) return;
+        if (requestCode == REQUEST_URI) {
+            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+            grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
+            getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+            devLog(requestCode+": granted permissions for: "+data.getData());
+            finish();
+        } else if (requestCode == REQUEST_PICK_MAP) {
+            String path = data.getStringExtra("path");
+            devLog("received path: "+path);
+            getMap(path);
+        } else if (requestCode == REQUEST_PICK_THUMBNAIL) {
+            String path = data.getStringExtra("path");
+            devLog("received path: "+path);
+            setThumbnail(path);
         } else {
-            devLog(Reason);
+            devLog("result is not handled");
         }
+    }
+
+    void setListeners() {
+        AppUtil.handleOnPressEvent(goBack, this::saveChangesAndFinish);
+        AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
+        AppUtil.handleOnPressEvent(saveButton, this::saveChangesAndFinish);
+        AppUtil.handleOnPressEvent(mapsPickLinear);
+        AppUtil.handleOnPressEvent(pickMap, this::pickMap);
+        AppUtil.handleOnPressEvent(mapNameLinear);
+        mapNameInput.setOnEditorActionListener((textView, i, keyEvent) -> {
+            renameMap(mapNameInput.getText().toString());
+            return true;
+        });
+        AppUtil.handleOnPressEvent(otherOptionsLinear);
+        AppUtil.handleOnPressEvent(importMapButton, this::importMap);
+        AppUtil.handleOnPressEvent(editMapButton, this::editMap);
+        AppUtil.handleOnPressEvent(thumbnailMapButton, () -> pickFile("image/*", REQUEST_PICK_THUMBNAIL));
+        AppUtil.handleOnPressEvent(backupMapButton, () -> backupMap(true));
+        AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
+        AppUtil.handleOnPressEvent(deleteMapButton, this::openDeleteMapView);
+    }
+
+    @Override
+    public void onMapPicked(String path) {
+        devLog("received path: "+path);
+        getMap(path);
+    }
+
+    @Override
+    public void onDeleteConfirm() {
+        deleteMap();
     }
 
     @Override
     public void onBackPressed() {
-        pickiT.deleteTemporaryFile(this);
-        saveChangesAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (!isChangingConfigurations()) {
-            pickiT.deleteTemporaryFile(this);
-            saveChangesAndFinish();
-        }
+        saveChangesAndFinish();
     }
 }

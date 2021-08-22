@@ -2,34 +2,29 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="ButtonStyle,RtlHardcoded"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-
+        android:id="@+id/main_appbar"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:background="#00FFFFFF">
+        android:background="#00000000">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="#00FFFFFF"
+            app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/app_name"
-            app:expandedTitleGravity="center"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/main_toolbar">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                tools:targetApi="lollipop" />
-
-
+                android:layout_height="?attr/actionBarSize" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -159,6 +154,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
+
                 <Button
                     android:id="@+id/main_checkUpdates"
                     android:layout_width="0dp"
@@ -204,10 +200,10 @@
                     android:id="@+id/main_update_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:textColor="#E8E8E8"
+                    android:autoLink="web"
                     android:linksClickable="true"
-                    android:autoLink="web" />
+                    android:padding="8dp"
+                    android:textColor="#E8E8E8" />
             </LinearLayout>
 
             <TextView

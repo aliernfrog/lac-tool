@@ -9,16 +9,23 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.Html;
+import android.text.SpannableString;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @SuppressLint({"CommitPrefEdits", "ApplySharedPref", "ClickableViewAccessibility"})
 public class AppUtil {
-    static String updateUrl = "https://aliernfrog.glitch.me/lacmaptool/update.json";
 
     public static String getVersName(Context context) throws Exception {
         PackageManager pm = context.getPackageManager();
@@ -40,7 +47,9 @@ public class AppUtil {
 
     public static Boolean getUpdates(Context context) throws Exception {
         SharedPreferences update = context.getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
+        SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         SharedPreferences.Editor updateEdit = update.edit();
+        String updateUrl = config.getString("updateUrl", "https://aliernfrog.glitch.me/lacmaptool/update.json");
         String rawUpdate = WebUtil.getContentFromURL(updateUrl);
         JSONObject object = new JSONObject(rawUpdate);
         updateEdit.putInt("updateLatest", object.getInt("latest"));
@@ -60,13 +69,41 @@ public class AppUtil {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static String timeString(String format) {
+        SimpleDateFormat frm = new SimpleDateFormat(format);
+        Date now = Calendar.getInstance().getTime();
+        return frm.format(now);
+    }
+
     public static Boolean stringIsNumber(String string) {
         try {
-            Integer integer = Integer.parseInt(string.trim());
+            Integer.parseInt(string.trim());
         } catch (Exception e) {
             return false;
         }
         return true;
+    }
+
+    public static void clearTempData(String path) {
+        File tempDir = new File(path);
+        File[] files = tempDir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) FileUtil.deleteDirectoryContent(file);
+                if (file.isFile()) file.delete();
+            }
+        }
+    }
+
+    public static void devLog(String toLog, TextView logView) {
+        if (logView.getVisibility() == View.VISIBLE) {
+            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
+            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
+            String log = Html.toHtml(new SpannableString(logView.getText()));
+            String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
+            logView.setText(Html.fromHtml(full));
+        }
     }
 
     public static void handleOnPressEvent(View view, MotionEvent event, @Nullable Runnable onClick) {
@@ -92,10 +129,6 @@ public class AppUtil {
                 scaleUp.start();
                 break;
         }
-    }
-
-    public static void handleOnPressEvent(View view, MotionEvent event) {
-        handleOnPressEvent(view, event, null);
     }
 
     public static void handleOnPressEvent(View view, @Nullable Runnable onClick) {

@@ -12,46 +12,31 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LACMapTool">
-        <activity android:name=".FilePickerActivity" />
-        <activity android:name=".NewMapsActivity" />
         <activity
             android:name=".SplashActivity"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:configChanges="locale|orientation" />
-        <activity
-            android:name=".GalleryActivity"
-            android:configChanges="locale|orientation" />
-        <activity
-            android:name=".MapsActivity"
-            android:configChanges="locale|orientation" />
-        <activity
-            android:name=".WallpaperActivity"
-            android:configChanges="locale|orientation" />
-        <activity
-            android:name=".MapsOptionsActivity"
-            android:configChanges="locale|orientation" />
-        <activity
-            android:name=".OptionsActivity"
-            android:configChanges="locale|orientation"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".RestoreActivity"
-            android:configChanges="locale|orientation" />
+        <activity android:name=".FilePickerActivity" />
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".GalleryActivity" />
+        <activity android:name=".WallpaperActivity" />
+        <activity android:name=".MapsOptionsActivity" />
+        <activity android:name=".RestoreActivity" />
+        <activity android:name=".OptionsActivity" android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

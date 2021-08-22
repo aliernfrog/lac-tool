@@ -106,35 +106,41 @@ public class SplashActivity extends AppCompatActivity {
         if (shouldCheck) {
             try {
                 if (AppUtil.getUpdates(getApplicationContext())) devLog("saved update config");
-                setConfig();
             } catch (Exception e) {
                 e.printStackTrace();
                 devLog(e.toString());
                 devLog("something went wrong, skipping updates");
-                setConfig();
             }
         } else {
             devLog("skipping updates");
-            setConfig();
         }
+        setConfig();
     }
 
     public void setConfig() {
         devLog("attempting to set config");
         String pathLac = pathExternal+"/Android/data/com.MA.LAC/files";
-        String pathLacd = pathExternal +"/Android/data/com.MA.LACD/files/editor";
-        String pathLacm = pathExternal +"/Android/data/com.MA.LACM/files/editor";
-        String pathLacmb = pathExternal +"/Android/data/com.MA.LACMB/files/editor";
-        String pathLegacy = pathExternal +"/Android/data/com.MA.LAC/files/editor";
+        String pathLacd = pathExternal+"/Android/data/com.MA.LACD/files";
+        String pathLacm = pathExternal+"/Android/data/com.MA.LACM/files";
+        String pathLacmb = pathExternal+"/Android/data/com.MA.LACMB/files";
+        String pathApp = pathDocs+"/LacMapTool/";
+        String pathTemp = pathApp+"temp";
+        if (prefsConfig.getBoolean("enableLacd", false)) pathLac = pathLacd;
+        if (prefsConfig.getBoolean("enableLacm", false)) pathLac = pathLacm;
+        if (prefsConfig.getBoolean("enableLacmb", false)) pathLac = pathLacmb;
         prefsEditUpdate.putString("path-maps", pathLac+"/editor");
-        prefsEditUpdate.putString("path-lac", pathExternal +"/Android/data/com.MA.LAC/files/editor");
-        prefsEditUpdate.putString("path-app", pathDocs+"/LacMapTool/");
-        if (prefsConfig.getBoolean("enableLacd", false)) prefsEditUpdate.putString("path-lac", pathLacd);
-        if (prefsConfig.getBoolean("enableLacm", false)) prefsEditUpdate.putString("path-lac", pathLacm);
-        if (prefsConfig.getBoolean("enableLacmb", false)) prefsEditUpdate.putString("path-lac", pathLacmb);
-        if (prefsConfig.getBoolean("enableLegacyPath", false)) prefsEditUpdate.putString("path-lac", pathLegacy);
+        prefsEditUpdate.putString("path-lac", pathLac+"/editor");
+        prefsEditUpdate.putString("path-app", pathApp);
+        prefsEditUpdate.putString("path-temp", pathTemp);
+        prefsEditUpdate.putString("path-temp-maps", pathTemp+"/editor");
         prefsEditUpdate.commit();
         devLog("set config");
+        clearTempData(pathTemp);
+    }
+
+    public void clearTempData(String tempPath) {
+        devLog("attempting to clear temp data");
+        AppUtil.clearTempData(tempPath);
         switchActivity();
     }
 

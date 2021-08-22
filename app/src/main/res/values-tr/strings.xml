@@ -19,19 +19,24 @@
     <string name="action_add">Ekle</string>
     <string name="action_done">Bitti</string>
     <string name="action_back">Geri git</string>
+    <string name="action_cancel">İptal</string>
     <string name="action_ok" tools:keep="@string/action_ok">Tamam</string>
     <string name="select">Seç</string>
     <string name="rename">Yeniden adlandır</string>
     <string name="manageMaps">Haritaları yönet</string>
     <string name="manageWallpapers">Duvar kağıtlarını yönet</string>
     <string name="manageScreenshots">Ekran alıntılarını görüntüle</string>
-    <string name="checkUpdates">LAC Tool güncellemelerini denetle</string>
     <string name="options">Ayarlar &amp; Bilgi</string>
+    <string name="checkUpdates">LAC Tool güncellemelerini denetle</string>
+    <string name="update_toastAvailable">Güncelleme mevcut!</string>
+    <string name="update_toastNoUpdates">Güncelleme yok</string>
     <string name="updateAvailable">Güncelleme mevcut, güncellemek için dokunun</string>
     <string name="mapImportedMaps">Haritalarınız</string>
     <string name="mapPick">Harita seç</string>
+    <string name="mapPickExternal">Başka bir harita seç</string>
+    <string name="mapNoImported">İçe aktarılmış bir harita bulunamadı</string>
     <string name="mapName">Harita ismi</string>
-    <string name="mapDownload">Haritayı indir</string>
+    <string name="mapDownload">Bir harita indir</string>
     <string name="mapImport">Haritayı içe aktar</string>
     <string name="mapEdit">Harita ayarlarını &amp; rolleri düzenle</string>
     <string name="mapSetThumbnail">Küçük resim seç</string>
@@ -40,19 +45,11 @@
     <string name="mapDelete">Haritayı sil</string>
     <string name="mapDelete_confirm">Silmeyi onayla</string>
     <string name="mapDelete_clickAgain">Haritayı silmek için tekrar dokunun</string>
+    <string name="mapDelete_question">Bu haritayı silmek istediğinden emin misin?\n Geri dönüşü olmayacak!</string>
     <string name="mapInfo_date" tools:keep="@string/mapInfo_date">Son düzenlenme zamanı:</string>
     <string name="mapInfo_size">Boyut</string>
     <string name="mapEdit_serverName">Sunucu adı</string>
     <string name="mapEdit_mapType">Harita tipi</string>
-    <string name="mapEdit_maxVeh">Max araç sayısı</string>
-    <string name="mapEdit_fuelConsumeRate">Yakıt tüketim oranı</string>
-    <string name="mapEdit_delIdleVeh">Kullanılmayan araçları sil (-1 = devre dışı)</string>
-    <string name="mapEdit_healthReg">Sağlık yenilenmesi</string>
-    <string name="mapEdit_hideNick">İsimleri gizle</string>
-    <string name="mapEdit_allowRespawn">Yeniden canlanma butonuna izin ver</string>
-    <string name="mapEdit_voice">Sesli sohbet</string>
-    <string name="mapEdit_voteRole">Roller için oylama</string>
-    <string name="mapEdit_roleplay">Roleplay</string>
     <string name="mapEdit_type_0">beyaz zemin</string>
     <string name="mapEdit_type_1">çimen</string>
     <string name="mapEdit_type_2">kar</string>
@@ -85,6 +82,6 @@
     <string name="wallpaperImport">Duvar kağıdını içe aktar</string>
     <string name="wallpaperPickedWallpaper">Seçilen duvar kağıdı</string>
     <string name="wallpaperCopyUrl">İçe aktarma URLsini kopyala</string>
-    <string name="wallpaperDesc">LAC 1.5.6\'da duvar kağıdı aktarmak için, duvar kağıdının içe aktarma URLsini kopyalayıp oyun içi telefon ayarlarına yapıştırın</string>
+    <string name="wallpaperDesc">LAC 1.5.6 ve sonraki sürümlerde duvar kağıdı aktarmak için duvar kağıdının içe aktarma URLsini kopyalayıp oyun içi cep telefonuna yapıştırın.\nEski sürümlerde ise oyun içi cep telefonundan custom wallpaper seçeneğine dokunun.</string>
     <string name="galleryNoScreenshots">Gösterilecek ekran alıntısı yok</string>
 </resources>
