@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -81,6 +82,17 @@ public class AppUtil {
             return false;
         }
         return true;
+    }
+
+    public static void clearTempData(String path) {
+        File tempDir = new File(path);
+        File[] files = tempDir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) FileUtil.deleteDirectoryContent(file);
+                if (file.isFile()) file.delete();
+            }
+        }
     }
 
     public static void devLog(String toLog, TextView logView) {

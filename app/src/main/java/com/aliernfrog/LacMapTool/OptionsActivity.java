@@ -20,13 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.aliernfrog.LacMapTool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;
 
 import org.json.JSONObject;
-
-import java.io.File;
 
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
@@ -113,7 +110,7 @@ public class OptionsActivity extends AppCompatActivity {
         feedbackSubmit = findViewById(R.id.options_feedback_submit);
         changelog = findViewById(R.id.options_changelog);
 
-        tempPath = update.getString("path-app", null)+"temp";
+        tempPath = update.getString("path-temp", null);
 
         pickiT = new PickiT(getApplicationContext(), null, this);
 
@@ -182,8 +179,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void deleteTempData() {
-        File tempFile = new File(tempPath);
-        FileUtil.deleteDirectory(tempFile);
+        AppUtil.clearTempData(tempPath);
         pickiT.deleteTemporaryFile(getApplicationContext());
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
