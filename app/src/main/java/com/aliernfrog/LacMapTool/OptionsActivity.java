@@ -46,6 +46,7 @@ public class OptionsActivity extends AppCompatActivity {
     LinearLayout experimentalOptions;
     EditText startActivityName;
     EditText uriSdkVersionInput;
+    EditText updateUrlInput;
     LinearLayout discord_linear;
     Button discord_aliern;
     Button discord_rcs;
@@ -99,6 +100,7 @@ public class OptionsActivity extends AppCompatActivity {
         experimentalOptions = findViewById(R.id.options_ex);
         startActivityName = findViewById(R.id.options_startActivity);
         uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
+        updateUrlInput = findViewById(R.id.options_updateUrl);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
         discord_aliern = findViewById(R.id.options_discord_aliern);
@@ -229,6 +231,14 @@ public class OptionsActivity extends AppCompatActivity {
         uriSdkVersionInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 configEdit.putInt("uriSdkVersion", Integer.parseInt(uriSdkVersionInput.getText().toString()));
+                configEdit.commit();
+                return true;
+            }
+            return false;
+        });
+        updateUrlInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                configEdit.putString("updateUrl", updateUrlInput.getText().toString());
                 configEdit.commit();
                 return true;
             }
