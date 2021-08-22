@@ -36,7 +36,7 @@ import java.util.Arrays;
 public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView goBack;
-    ImageView manageBackups;
+    ImageView manageBackupsButton;
     FloatingActionButton saveButton;
     ImageView mapThumbnail;
     LinearLayout mapsPickLinear;
@@ -80,7 +80,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
         collapsingToolbarLayout = findViewById(R.id.maps_collapsingToolbar);
         goBack = findViewById(R.id.maps_goback);
-        manageBackups = findViewById(R.id.maps_backups);
+        manageBackupsButton = findViewById(R.id.maps_backups);
         saveButton = findViewById(R.id.maps_save);
         mapThumbnail = findViewById(R.id.maps_appbar_image);
         mapsPickLinear = findViewById(R.id.maps_pick_linear);
@@ -112,9 +112,9 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
         devLog("MapsActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
-
         checkUriPerms();
         setListeners();
+        devLog("lacPath: "+lacPath);
         autoBackup();
     }
 
@@ -266,6 +266,14 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         saveChangesAndFinish();
         switchActivity(MapsActivity.class);
+    }
+
+    public void manageBackups() {
+        devLog("attempting to open manage backups screen");
+        Intent intent = new Intent(this, RestoreActivity.class);
+        intent.putExtra("backupPath", backupPath);
+        intent.putExtra("mapsPath", lacPath);
+        startActivity(intent);
     }
 
     public void pickFile(String fileType, Integer requestCode) {
@@ -437,7 +445,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
     void setListeners() {
         AppUtil.handleOnPressEvent(goBack, this::saveChangesAndFinish);
-        AppUtil.handleOnPressEvent(manageBackups, () -> switchActivity(RestoreActivity.class));
+        AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
         AppUtil.handleOnPressEvent(saveButton, this::saveChangesAndFinish);
         AppUtil.handleOnPressEvent(mapsPickLinear);
         AppUtil.handleOnPressEvent(pickMap, this::pickMap);

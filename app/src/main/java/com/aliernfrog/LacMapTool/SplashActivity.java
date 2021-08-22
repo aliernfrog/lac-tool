@@ -120,9 +120,9 @@ public class SplashActivity extends AppCompatActivity {
     public void setConfig() {
         devLog("attempting to set config");
         String pathLac = pathExternal+"/Android/data/com.MA.LAC/files";
-        String pathLacd = pathExternal+"/Android/data/com.MA.LACD/files/editor";
-        String pathLacm = pathExternal+"/Android/data/com.MA.LACM/files/editor";
-        String pathLacmb = pathExternal+"/Android/data/com.MA.LACMB/files/editor";
+        String pathLacd = pathExternal+"/Android/data/com.MA.LACD/files";
+        String pathLacm = pathExternal+"/Android/data/com.MA.LACM/files";
+        String pathLacmb = pathExternal+"/Android/data/com.MA.LACMB/files";
         String pathApp = pathDocs+"/LacMapTool/";
         String pathTemp = pathApp+"temp";
         if (prefsConfig.getBoolean("enableLacd", false)) pathLac = pathLacd;

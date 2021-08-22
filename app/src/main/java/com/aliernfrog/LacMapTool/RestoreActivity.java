@@ -33,11 +33,11 @@ public class RestoreActivity extends AppCompatActivity {
 
     SharedPreferences update;
 
-    public String backupPath;
-    public String lacPath;
-    public String rawPath;
-    public String savePath;
-    public String mapName;
+    String backupPath;
+    String mapsPath;
+    String rawPath;
+    String savePath;
+    String mapName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +52,8 @@ public class RestoreActivity extends AppCompatActivity {
         restore = findViewById(R.id.restore_backuprestore);
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
-        backupPath = update.getString("path-app", null)+"/backups/";
-        lacPath = update.getString("path-lac-restore", null);
+        backupPath = getIntent().getStringExtra("backupPath");
+        mapsPath = getIntent().getStringExtra("mapsPath");
 
         setOnClick();
         refreshMaps();
@@ -75,7 +75,7 @@ public class RestoreActivity extends AppCompatActivity {
 
     void restore() {
         if (rawPath == null || rawPath.equals("")) return;
-        savePath = lacPath+mapName+".txt";
+        savePath = mapsPath+"/"+mapName+".txt";
         try {
             copyFile(rawPath, savePath);
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
@@ -102,7 +102,7 @@ public class RestoreActivity extends AppCompatActivity {
             if (mapsList.getSelectedItem() == null) return;
             String mapname = mapsList.getSelectedItem().toString();
             if (mapname.equals("")) return;
-            _getMap(backupPath+mapname+".txt");
+            _getMap(backupPath+"/"+mapname+".txt");
         });
         AppUtil.handleOnPressEvent(restoreLinear);
 
