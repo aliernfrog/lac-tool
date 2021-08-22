@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ButtonStyle"
 
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
-
+        android:id="@+id/options_appbar"
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="#00000000">
@@ -18,19 +17,15 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="#00FFFFFF"
+            app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/options"
-            app:expandedTitleGravity="center"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/options_toolbar">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/options_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                tools:targetApi="lollipop" />
-
-
+                android:layout_height="?attr/actionBarSize" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -62,8 +57,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:clickable="true"
-                    android:focusable="true"
                     android:contentDescription="@string/action_back"
+                    android:focusable="true"
                     app:srcCompat="@drawable/goback" />
             </LinearLayout>
 
@@ -237,20 +232,6 @@
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/options_startActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints="false"
-                        android:ems="10"
-                        android:hint="Start activity [EXPERIMENTAL]"
-                        android:imeOptions="actionDone"
-                        android:inputType="text|textNoSuggestions"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:visibility="gone"
-                        tools:ignore="HardcodedText" />
-
                     <Button
                         android:id="@+id/options_deleteTemp"
                         android:layout_width="match_parent"
@@ -263,6 +244,78 @@
                         android:textStyle="bold"
                         app:backgroundTint="#FF0E0E0E" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/options_ex"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Experimental options"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/linear_red"
+                    android:padding="8dp"
+                    android:text="These are experimental options, do not change them if you do not know what they do!"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/options_startActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="Start activity with name"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textNoSuggestions"
+                    android:textColor="@color/white"
+                    android:textColorHint="#777777"
+                    tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/options_uriSdkVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="URI SDK version (30 by default)"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:textColor="@color/white"
+                    android:textColorHint="#777777"
+                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/options_updateUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="Update URL"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textNoSuggestions"
+                    android:textColor="@color/white"
+                    android:textColorHint="#777777"
+                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
             <TextView
@@ -283,7 +336,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear_blue"
+                android:background="@drawable/linear"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -311,6 +364,7 @@
                         android:id="@+id/options_feedback_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="false"
                         android:background="@drawable/linear_button"
                         android:ems="10"
                         android:hint="@string/optionsFeedbackHint"
@@ -319,8 +373,7 @@
                         android:padding="8dp"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#6A6A6A"
-                        android:textStyle="bold"
-                        android:autofillHints="false" />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/options_feedback_submit"

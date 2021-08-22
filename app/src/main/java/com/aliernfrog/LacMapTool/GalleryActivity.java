@@ -19,7 +19,6 @@ import android.os.Process;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,6 +42,8 @@ public class GalleryActivity extends AppCompatActivity {
     Boolean devMode;
     String logs = "";
 
+    Integer uriSdkVersion;
+
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
     String lacPath;
@@ -53,7 +54,7 @@ public class GalleryActivity extends AppCompatActivity {
     SharedPreferences config;
     SharedPreferences update;
 
-    @SuppressLint("CommitPrefEdits")
+    @SuppressLint({"CommitPrefEdits", "InlinedApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -63,7 +64,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
+
         devMode = config.getBoolean("enableDebug", false);
+        uriSdkVersion = config.getInt("uriSdkVersion", 30);
 
         lacPath = update.getString("path-lac", null).replace("/editor", "/screenshots");
         tempPath = update.getString("path-app", null)+"temp/screenshots/";
@@ -73,7 +76,10 @@ public class GalleryActivity extends AppCompatActivity {
         rootLinear = findViewById(R.id.gallery_linear_screenshots);
         log = findViewById(R.id.gallery_log);
 
-        if (Build.VERSION.SDK_INT >= 30) {
+        devLog("GalleryActivity started");
+        devLog("uriSdkVersion: "+uriSdkVersion);
+
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
             String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
             Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
             lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
@@ -93,6 +99,7 @@ public class GalleryActivity extends AppCompatActivity {
         } else {
             lacPath += "/";
         }
+        devLog(lacPath);
 
         getScreenshots();
         setListeners();
@@ -103,12 +110,14 @@ public class GalleryActivity extends AppCompatActivity {
         File file = new File(lacPath);
         if (file.exists()) {
             File[] files = file.listFiles();
-            if (files.length < 1) noScreenshots.setVisibility(View.VISIBLE);
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].getName().endsWith(".jpg")) {
-                    devLog("found: "+files[i].getName());
-                    ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.screenshot, rootLinear, false);
-                    setScreenshotView(layout, files[i]);
+            if (files != null) {
+                if (files.length < 1) noScreenshots.setVisibility(View.VISIBLE);
+                for (File value : files) {
+                    if (value.getName().endsWith(".jpg")) {
+                        devLog("found: " + value.getName());
+                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.screenshot, rootLinear, false);
+                        setScreenshotView(layout, value);
+                    }
                 }
             }
         } else {
@@ -123,18 +132,8 @@ public class GalleryActivity extends AppCompatActivity {
         Button share = layout.findViewById(R.id.ss_share);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
-        background.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-        share.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                shareFile(file.getPath());
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(background);
+        AppUtil.handleOnPressEvent(share, () -> shareFile(file.getPath()));
         rootLinear.addView(layout);
     }
 
@@ -145,10 +144,11 @@ public class GalleryActivity extends AppCompatActivity {
             File[] files = file.listFiles();
             try {
                 if (files != null) {
-                    for (int i = 0; i < files.length; i++) {
-                        DocumentFile fileInLac = lacTreeFile.findFile(files[i].getName());
-                        if (fileInLac == null) fileInLac = lacTreeFile.createFile("", files[i].getName());
-                        copyFile(files[i].getPath(), fileInLac);
+                    for (File value : files) {
+                        DocumentFile fileInLac = lacTreeFile.findFile(value.getName());
+                        if (fileInLac == null)
+                            fileInLac = lacTreeFile.createFile("", value.getName());
+                        copyFile(value.getPath(), fileInLac);
                     }
                 }
             } finally {
@@ -166,8 +166,8 @@ public class GalleryActivity extends AppCompatActivity {
         if (!tempFile.exists()) tempFile.mkdirs();
         if (lacTreeFile != null) {
             DocumentFile[] files = lacTreeFile.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copyFile(files[i], tempPath+files[i].getName());
+            for (DocumentFile file : files) {
+                copyFile(file, tempPath + file.getName());
             }
         }
         lacPath = tempPath;
@@ -217,6 +217,7 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -225,7 +226,7 @@ public class GalleryActivity extends AppCompatActivity {
             if (data == null) {
                 devLog(requestCode+": no data");
             } else {
-                if (Build.VERSION.SDK_INT >= 30) {
+                if (Build.VERSION.SDK_INT >= uriSdkVersion) {
                     int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
                     grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
                     getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
@@ -237,32 +238,13 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        goback.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                saveChangesAndFinish();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        noScreenshots.setOnTouchListener((v, event) -> {
-            event.getAction();
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(goback, this::saveChangesAndFinish);
+        AppUtil.handleOnPressEvent(noScreenshots);
     }
 
     @Override
     public void onBackPressed() {
         saveChangesAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (!isChangingConfigurations()) {
-            saveChangesAndFinish();
-        }
     }
 }

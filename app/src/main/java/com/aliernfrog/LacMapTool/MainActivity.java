@@ -14,11 +14,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     TextView log;
 
     String dataPath;
+    String tempMapsPath;
     String lacPath;
     String backupPath;
     String aBackupPath;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         devMode = config.getBoolean("enableDebug", false);
         lacPath = update.getString("path-lac", null);
         dataPath = update.getString("path-app", null);
+        tempMapsPath = update.getString("path-temp-maps", null);
         backupPath = dataPath+"backups/";
         aBackupPath = dataPath+"auto-backups/";
         version = update.getInt("versionCode", 0);
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         log = findViewById(R.id.main_log);
 
         if (devMode) log.setVisibility(View.VISIBLE);
-        checkUpdates();
+        checkUpdates(false);
         checkPerms();
         createFiles();
         setListeners();
@@ -94,16 +96,14 @@ public class MainActivity extends AppCompatActivity {
     public void getUpdates() {
         devLog("attempting to get updates from website");
         try {
-            if (AppUtil.getUpdates(getApplicationContext())) {
-                checkUpdates();
-            }
+            if (AppUtil.getUpdates(getApplicationContext())) checkUpdates(true);
         } catch (Exception e) {
             e.printStackTrace();
             devLog(e.toString());
         }
     }
 
-    public void checkUpdates() {
+    public void checkUpdates(Boolean toastResult) {
         devLog("checking for updates");
         int latest = update.getInt("updateLatest", 0);
         String download = update.getString("updateDownload", null);
@@ -118,22 +118,15 @@ public class MainActivity extends AppCompatActivity {
             full = changelog+"<br /><br /><b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+changelogVersion;
             updateLinearTitle.setVisibility(View.VISIBLE);
             updateLinear.setBackground(ContextCompat.getDrawable(getApplicationContext() ,R.drawable.linear_blue));
-            updateLinear.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    redirectURL(download);
-                }
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            });
+            AppUtil.handleOnPressEvent(updateLinear, () -> redirectURL(download));
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastAvailable, Toast.LENGTH_SHORT).show();
         } else {
             if (notes != null && !notes.equals("")) {
                 linearVisible = true;
                 full = notes;
             }
-            updateLinear.setOnTouchListener((v, event) -> {
-                AppUtil.handleOnPressEvent(v, event);
-                return true;
-            });
+            AppUtil.handleOnPressEvent(updateLinear);
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastNoUpdates, Toast.LENGTH_SHORT).show();
         }
         updateLog.setText(Html.fromHtml(full));
         if (linearVisible) updateLinear.setVisibility(View.VISIBLE);
@@ -160,12 +153,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void createFiles() {
         File dataFolder = new File(dataPath);
+        File tempMapsFolder = new File(tempMapsPath);
         File backupFolder = new File(backupPath);
         File aBackupFolder = new File(aBackupPath);
         File lacFolder = new File(lacPath);
         File wallpaperFolder = new File(lacPath.replace("editor", "wallpaper"));
         File nomedia = new File(dataPath+".nomedia");
         if (!dataFolder.exists()) mkdirs(dataFolder);
+        if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder);
         if (!backupFolder.exists()) mkdirs(backupFolder);
         if (!aBackupFolder.exists()) mkdirs(aBackupFolder);
         if (!lacFolder.exists()) mkdirs(lacFolder);
@@ -181,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchActivity(Class i, Boolean allowWithoutPerms) {
         if (!allowWithoutPerms && !hasPerms) {
-            //if no enough permissions, check them again
             devLog("no required permissions, checking again");
             checkPerms();
         } else {
@@ -227,62 +221,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListeners() {
-        missingPerms.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                checkPerms();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        lacLinear.setOnTouchListener((v, event) -> {
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectMaps.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(MapsActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectWallpaper.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(WallpaperActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectGallery.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(GalleryActivity.class, false);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        appLinear.setOnTouchListener((v, event) -> {
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        checkUpdates.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                getUpdates();
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
-
-        redirectOptions.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                switchActivity(OptionsActivity.class, true);
-            }
-            AppUtil.handleOnPressEvent(v, event);
-            return true;
-        });
+        AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
+        AppUtil.handleOnPressEvent(lacLinear);
+        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
+        AppUtil.handleOnPressEvent(appLinear);
+        AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
+        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, false));
     }
 }
