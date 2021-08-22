@@ -99,6 +99,7 @@ public class GalleryActivity extends AppCompatActivity {
         } else {
             lacPath += "/";
         }
+        devLog(lacPath);
 
         getScreenshots();
         setListeners();
