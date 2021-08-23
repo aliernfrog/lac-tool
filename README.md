@@ -1,6 +1,6 @@
 [![Download count](https://img.shields.io/github/downloads/aliernfrog/lac-tool/total.svg)]()
 # LAC Tool
-An open source app, lets you do most of <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff such as importing maps and wallpapers.
+First <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related open source app, lets you do most of <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff.
 
 # <a href="https://github.com/aliernfrog/lac-tool/releases">Download</a>
 
