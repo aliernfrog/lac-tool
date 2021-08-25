@@ -17,7 +17,7 @@ First <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a>
 
 # Installation
 - Start LAC before installing so the directories app needs will be created.
-- Download .apk <a href="https://github.com/aliernfrog/lac-tool/releases"from here</a>
+- Download .apk <a href="https://github.com/aliernfrog/lac-tool/releases">from here</a>
 - Open .apk file & install the app
 
 # Required directories
