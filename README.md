@@ -5,26 +5,28 @@ First <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a>
 # <a href="https://github.com/aliernfrog/lac-tool/releases">Download</a>
 
 # Features
-- Managing LAC maps
-- Managing roles of LAC maps
-- Managing LAC wallpapers
-- Importing LAC wallpapers without internet connection
-- Viewing LAC screenshots
-- <a href="#android-11-support">Android 11 support</a>
+- LAC map management (importing and more)
+- LAC map role & option management
+- LAC in game cellphone wallpaper management
+- Import LAC in game cellphone wallpapers without internet connection
+- LAC in game screenshot management
+- These features work in any Android version above 4.3, including Android 11
 
 # Requirements
-- At least Android 4.2.1 to run
-- Android 5.0 or above recommended
+- Any Android version above 4.3
 
-# Android 11 support
-The app can manage LAC data even in Android 11.
+# Installation
+- Start LAC before installing so the directories app needs will be created.
+- Download .apk <a href="https://github.com/aliernfrog/lac-tool/releases">from here</a>
+- Open .apk file & install the app
 
-# Required folders
-- `/Android/data/com.MA.LAC/files/editor`
-- `/Android/data/com.MA.LAC/files/wallpaper`<br />
-- You need to have these folders created if you're using Android 11.<br />
-- If these folders aren't created and you're using Android 11, the app will request access to wrong directories and probably crash.
+# Required directories
+- `Android/data/com.MA.LAC/files/editor`
+- `Android/data/com.MA.LAC/files/wallpaper`
+- LAC Tool will create these folders automatically since it needs them
+- On Android 11 and above, LAC Tool will fail to create these folders
+- So make sure these folders are created
 
 # Notes
 - The app needs `READ_EXTERNAL_STORAGE` and `WRITE_EXTERNAL_STORAGE` to access LAC & LAC tool data.
-- On Android 11, the app will request specific access to <a href="#required-folders">required folders</a> so it can access LAC data.
+- On Android 11, the app will request specific access to <a href="#required-directories">required directories</a> so it can access LAC data.
