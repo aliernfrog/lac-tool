@@ -13,8 +13,7 @@ First <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a>
 - <a href="#android-11-support">Android 11 support</a>
 
 # Requirements
-- At least Android 4.2.1 to run
-- Android 5.0 or above recommended
+- At least Android 4.3 to run
 
 # Android 11 support
 The app can manage LAC data even in Android 11.
