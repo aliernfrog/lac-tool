@@ -15,7 +15,6 @@
         tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
-            android:id="@+id/mapPicker_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -63,17 +62,24 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/mapPicker_noMapsWarning"
+            <LinearLayout
+                android:id="@+id/mapPicker_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear_red"
-                android:padding="8dp"
-                android:text="@string/mapNoImported"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/mapPicker_noMapsWarning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_red"
+                    android:padding="8dp"
+                    android:text="@string/mapNoImported"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
