@@ -228,6 +228,6 @@ public class MainActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
         AppUtil.handleOnPressEvent(appLinear);
         AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
-        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true));
     }
 }
