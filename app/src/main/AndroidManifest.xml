@@ -18,7 +18,9 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LACMapTool">
+        android:theme="@style/Theme.LACMapTool"
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute">
         <activity
             android:name=".SplashActivity"
             android:noHistory="true"
