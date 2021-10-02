@@ -37,6 +37,10 @@
     <string name="mapNoImported">İçe aktarılmış bir harita bulunamadı</string>
     <string name="mapName">Harita ismi</string>
     <string name="mapDownload">Bir harita indir</string>
+    <string name="mapDownload_linkInput">Harita linki..</string>
+    <string name="mapDownload_download">İndir</string>
+    <string name="mapDownload_notAMap">Bu bir harita dosyası değil</string>
+    <string name="mapDownload_downloading">Harita indiriliyor..</string>
     <string name="mapImport">Haritayı içe aktar</string>
     <string name="mapEdit">Harita ayarlarını &amp; rolleri düzenle</string>
     <string name="mapSetThumbnail">Küçük resim seç</string>
