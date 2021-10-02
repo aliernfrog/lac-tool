@@ -9,48 +9,6 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/mapPick"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp" />
-
-    <Button
-        android:id="@+id/mapPicker_pick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/linear"
-        android:padding="8dp"
-        android:text="@string/mapPickExternal"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        app:backgroundTint="#FF005DFF" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/mapImportedMaps"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/mapPicker_noMapsWarning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/linear_red"
-        android:padding="8dp"
-        android:text="@string/mapNoImported"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,8 +18,63 @@
             android:id="@+id/mapPicker_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/mapPick"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/mapPicker_pick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:padding="8dp"
+                android:text="@string/mapPickExternal"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:backgroundTint="#FF005DFF" />
+
+            <Button
+                android:id="@+id/mapPicker_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:padding="8dp"
+                android:text="@string/mapDownload"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:backgroundTint="#FF202020" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/mapImportedMaps"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/mapPicker_noMapsWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear_red"
+                android:padding="8dp"
+                android:text="@string/mapNoImported"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
