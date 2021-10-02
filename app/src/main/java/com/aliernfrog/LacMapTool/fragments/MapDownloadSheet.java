@@ -72,13 +72,18 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
 
     void startDownloading(String url) {
         String fileName = URLUtil.guessFileName(url, null, null);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                .setTitle(fileName)
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        long downloadReference = downloadManager.enqueue(request);
-        watchProgress(downloadReference);
+        boolean isMap = fileName.endsWith(".txt");
+        if (isMap) {
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+                    .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setTitle(fileName)
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+            long downloadReference = downloadManager.enqueue(request);
+            watchProgress(downloadReference);
+        } else {
+            Toast.makeText(context, R.string.mapDownload_notAMap, Toast.LENGTH_SHORT).show();
+        }
     }
 
     void watchProgress(long reference) {
@@ -107,14 +112,9 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
     }
 
     void finishDownloading(String name) {
-        boolean isMap = name.endsWith(".txt");
-        if (isMap) {
-            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()+"/"+name;
-            listener.onMapDownloaded(path);
-            Toast.makeText(context.getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context.getApplicationContext(), R.string.mapDownload_notAMap, Toast.LENGTH_SHORT).show();
-        }
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()+"/"+name;
+        listener.onMapDownloaded(path);
+        Toast.makeText(context.getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         dismiss();
     }
 
