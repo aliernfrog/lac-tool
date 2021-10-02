@@ -208,7 +208,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     public void editMap() {
-        devLog("attemting to edit the map");
+        devLog("attempting to edit the map");
         if (backupOnEdit) backupMap(false);
         Intent intent = new Intent(this, MapsOptionsActivity.class);
         intent.putExtra("path", currentPath);
