@@ -30,6 +30,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MapDownloadSheet extends BottomSheetDialogFragment {
+    private MapDownloadListener listener;
+
     TextView title;
     ProgressBar progressBar;
     LinearLayout optionsLinear;
@@ -108,7 +110,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
         boolean isMap = name.endsWith(".txt");
         if (isMap) {
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()+"/"+name;
-            context.getMap(path);
+            listener.onMapDownloaded(path);
             Toast.makeText(context.getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context.getApplicationContext(), R.string.mapDownload_notAMap, Toast.LENGTH_SHORT).show();
@@ -120,5 +122,16 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
         AppUtil.handleOnPressEvent(downloadConfirm, () -> {
             if (linkInput.getText().length() > 3) download(linkInput.getText().toString());
         });
+    }
+
+    public interface MapDownloadListener {
+        void onMapDownloaded(String path);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context cnx) {
+        super.onAttach(cnx);
+
+        listener = (MapDownloadListener) cnx;
     }
 }
