@@ -83,6 +83,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
             watchProgress(downloadReference);
         } else {
             Toast.makeText(context, R.string.mapDownload_notAMap, Toast.LENGTH_SHORT).show();
+            dismiss();
         }
     }
 
