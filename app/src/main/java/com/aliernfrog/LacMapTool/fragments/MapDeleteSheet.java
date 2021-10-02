@@ -46,9 +46,9 @@ public class MapDeleteSheet extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void onAttach(@NonNull Context cnx) {
+        super.onAttach(cnx);
 
-        listener = (MapDeleteListener) context;
+        listener = (MapDeleteListener) cnx;
     }
 }

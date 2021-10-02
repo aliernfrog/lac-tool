@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.aliernfrog.LacMapTool.fragments.MapDeleteSheet;
+import com.aliernfrog.LacMapTool.fragments.MapDownloadSheet;
 import com.aliernfrog.LacMapTool.fragments.MapPickerSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
@@ -33,7 +34,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.util.Arrays;
 
-public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDeleteSheet.MapDeleteListener {
+public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDownloadSheet.MapDownloadListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView goBack;
     ImageView manageBackupsButton;
@@ -465,6 +466,12 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
     @Override
     public void onMapPicked(String path) {
+        devLog("received path: "+path);
+        getMap(path);
+    }
+
+    @Override
+    public void onMapDownloaded(String path) {
         devLog("received path: "+path);
         getMap(path);
     }

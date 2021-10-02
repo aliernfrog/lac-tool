@@ -100,9 +100,9 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void onAttach(@NonNull Context cnx) {
+        super.onAttach(cnx);
 
-        listener = (MapPickerListener) context;
+        listener = (MapPickerListener) cnx;
     }
 }
