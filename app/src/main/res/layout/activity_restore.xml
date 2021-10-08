@@ -21,9 +21,9 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/backupManage"
             app:expandedTitleGravity="center"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/filePicker_toolbar">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
