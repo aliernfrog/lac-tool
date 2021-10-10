@@ -64,11 +64,14 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
 
     void addMapView(File map, ViewGroup view) {
         TextView name = view.findViewById(R.id.map_name);
+        TextView size = view.findViewById(R.id.map_size);
         ImageView thumbnail = view.findViewById(R.id.map_thumbnail);
         String mapName = FileUtil.removeExtension(map.getName());
+        String mapSize = (map.length()/1024)+" KB";
         String thumbnailPath = FileUtil.removeExtension(map.getPath())+".jpg";
         File thumbailFile = new File(thumbnailPath);
         name.setText(mapName);
+        size.setText(mapSize);
         if (thumbailFile.exists()) {
             Bitmap thumbBitmap = BitmapFactory.decodeFile(thumbailFile.getAbsolutePath());
             thumbnail.setImageBitmap(thumbBitmap);
