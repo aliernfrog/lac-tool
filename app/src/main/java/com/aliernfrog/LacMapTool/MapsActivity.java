@@ -277,15 +277,16 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         startActivity(intent);
     }
 
-    public void pickFile(String fileType, Integer requestCode) {
+    public void pickFile(String fileType, String[] allowedTypes, Integer requestCode) {
         devLog("attempting to pick a file with request code: "+requestCode);
         Intent intent = new Intent(this, FilePickerActivity.class);
-        intent.putExtra("FILE_TYPE", fileType);
+        intent.putExtra("FILE_TYPE_SAF", fileType);
+        intent.putExtra("FILE_TYPE_INAPP", allowedTypes);
         startActivityForResult(intent, requestCode);
     }
 
     public void pickMapFile() {
-        pickFile("text/*", REQUEST_PICK_MAP);
+        pickFile("text/*", new String[]{"txt"}, REQUEST_PICK_MAP);
     }
 
     public void pickMap() {
@@ -458,7 +459,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         AppUtil.handleOnPressEvent(otherOptionsLinear);
         AppUtil.handleOnPressEvent(importMapButton, this::importMap);
         AppUtil.handleOnPressEvent(editMapButton, this::editMap);
-        AppUtil.handleOnPressEvent(thumbnailMapButton, () -> pickFile("image/*", REQUEST_PICK_THUMBNAIL));
+        AppUtil.handleOnPressEvent(thumbnailMapButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
         AppUtil.handleOnPressEvent(backupMapButton, () -> backupMap(true));
         AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
         AppUtil.handleOnPressEvent(deleteMapButton, this::openDeleteMapView);
