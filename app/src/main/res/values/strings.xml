@@ -46,6 +46,9 @@
     <string name="mapEdit">Edit map options &amp; roles</string>
     <string name="mapSetThumbnail">Set thumbnail</string>
     <string name="mapShare">Share the map</string>
+    <string name="mapDuplicate">Duplicate the map</string>
+    <string name="mapDuplicate_name">Map name..</string>
+    <string name="mapDuplicate_duplicate">Duplicate</string>
     <string name="mapBackup">Backup the map</string>
     <string name="mapDelete">Delete the map</string>
     <string name="mapDelete_confirm">Confirm delete</string>

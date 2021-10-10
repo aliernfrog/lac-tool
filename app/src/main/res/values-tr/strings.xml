@@ -45,6 +45,9 @@
     <string name="mapEdit">Harita ayarlarını &amp; rolleri düzenle</string>
     <string name="mapSetThumbnail">Küçük resim seç</string>
     <string name="mapShare">Haritayı paylaş</string>
+    <string name="mapDuplicate">Haritayı kopyala</string>
+    <string name="mapDuplicate_name">Harita adı..</string>
+    <string name="mapDuplicate_duplicate">Kopyala</string>
     <string name="mapBackup">Haritayı yedekle</string>
     <string name="mapDelete">Haritayı sil</string>
     <string name="mapDelete_confirm">Silmeyi onayla</string>
