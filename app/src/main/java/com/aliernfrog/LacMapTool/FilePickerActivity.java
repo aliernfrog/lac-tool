@@ -105,7 +105,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         TextView detailsView = view.findViewById(R.id.file_details);
         Drawable icon = icon_file;
         String name = file.getName();
-        String details = "-";
+        String details = getString(R.string.filePicker_folder);
         if (file.isDirectory()) icon = icon_folder;
         if (file.isFile() && (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
         if (file.isFile()) details = (file.length()/1024)+" KB";
