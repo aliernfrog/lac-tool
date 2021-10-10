@@ -107,7 +107,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         String name = file.getName();
         String details = getString(R.string.filePicker_folder);
         if (file.isDirectory()) icon = icon_folder;
-        if (file.isFile() && (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
+        if (file.isFile() && (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
         if (file.isFile()) details = (file.length()/1024)+" KB";
         iconView.setImageDrawable(icon);
         nameView.setText(name);
@@ -130,7 +130,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         if (hasSpecifiedType) {
             for (String cur : fileTypeInApp) {
                 if (!cur.startsWith(".")) cur = "."+cur;
-                if (path.endsWith(cur)) {
+                if (path.toLowerCase().endsWith(cur)) {
                     ret = true;
                     break;
                 }
