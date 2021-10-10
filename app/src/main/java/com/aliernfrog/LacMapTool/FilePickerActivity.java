@@ -1,16 +1,48 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
+import java.io.File;
+import java.util.Arrays;
+
 public class FilePickerActivity extends AppCompatActivity implements PickiTCallbacks {
-    String fileType;
+    TextView pathView;
+    LinearLayout goParent;
+    ProgressBar progressBar;
+    LinearLayout root;
+
+    String fileTypeSaf;
+    String[] fileTypeInApp;
+    Boolean useInAppFilePicker;
+
+    SharedPreferences config;
+    Handler handler = new Handler();
+
+    String homeDir;
+
+    Drawable icon_file;
+    Drawable icon_folder;
 
     PickiT pickiT;
 
@@ -19,17 +51,111 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_picker);
 
-        fileType = getIntent().getStringExtra("FILE_TYPE");
-
         pickiT = new PickiT(this, this, this);
 
-        pickFile();
+        config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
+
+        fileTypeSaf = getIntent().getStringExtra("FILE_TYPE_SAF");
+        fileTypeInApp = getIntent().getStringArrayExtra("FILE_TYPE_INAPP");
+        useInAppFilePicker = config.getBoolean("useInAppFilePicker", false);
+
+        homeDir = Environment.getExternalStorageDirectory().getPath();
+
+        icon_file = ContextCompat.getDrawable(getApplicationContext(), R.drawable.file);
+        icon_folder = ContextCompat.getDrawable(getApplicationContext(), R.drawable.folder);
+
+        pathView = findViewById(R.id.filePicker_path);
+        goParent = findViewById(R.id.filePicker_goParent);
+        progressBar = findViewById(R.id.filePicker_progressBar);
+        root = findViewById(R.id.filePicker_root);
+
+        if (!useInAppFilePicker) pickFileSaf();
+        if (useInAppFilePicker) loadDir(homeDir);
+
+        setListeners();
     }
 
-    public void pickFile() {
+    public void pickFileSaf() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        if (fileType != null) intent.setType(fileType);
+        if (fileTypeSaf != null) intent.setType(fileTypeSaf);
         startActivityForResult(intent, 1);
+    }
+
+    public void loadDir(String path) {
+        File file = new File(path);
+        File[] content = file.listFiles();
+        if (content != null) {
+            Arrays.sort(content);
+            progressBar.setVisibility(View.VISIBLE);
+            root.removeAllViews();
+            pathView.setText(file.getPath());
+            handler.postDelayed(() -> {
+                for (File cur : content) {
+                    ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.file, root, false);
+                    addFileView(view, cur);
+                }
+                progressBar.setVisibility(View.GONE);
+            }, 50);
+        }
+    }
+
+    public void addFileView(ViewGroup view, File file) {
+        ImageView iconView = view.findViewById(R.id.file_icon);
+        TextView nameView = view.findViewById(R.id.file_name);
+        TextView detailsView = view.findViewById(R.id.file_details);
+        Drawable icon = icon_file;
+        String name = file.getName();
+        String details = "-";
+        if (file.isDirectory()) icon = icon_folder;
+        if (file.isFile()) details = ((file.length()/1024)/1024)+" KB";
+        iconView.setImageDrawable(icon);
+        nameView.setText(name);
+        detailsView.setText(details);
+        AppUtil.handleOnPressEvent(view, () -> {
+            if (file.isDirectory()) {
+                loadDir(file.getPath());
+            } else {
+                checkFile(file);
+            }
+        });
+        if (file.isFile() && checkFileExtension(file)) view.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear_blue));
+        root.addView(view);
+    }
+
+    public Boolean checkFileExtension(File file) {
+        boolean ret = false;
+        boolean hasSpecifiedType = fileTypeInApp != null && fileTypeInApp.length > 0;
+        String path = file.getPath();
+        if (hasSpecifiedType) {
+            for (String cur : fileTypeInApp) {
+                if (!cur.startsWith(".")) cur = "."+cur;
+                if (path.endsWith(cur)) {
+                    ret = true;
+                    break;
+                }
+            }
+        } else {
+            ret = true;
+        }
+        return ret;
+    }
+
+    public void checkFile(File file) {
+        boolean allow = checkFileExtension(file);
+        String path = file.getPath();
+        if (!allow) Toast.makeText(getApplicationContext(), R.string.filePicker_notValid, Toast.LENGTH_SHORT).show();
+        if (allow) finishGettingFile(path);
+    }
+
+    public void goParentDir() {
+        String currentPath = pathView.getText().toString();
+        if (currentPath.equals(homeDir)) {
+            finish();
+        } else {
+            File currentFile = new File(currentPath);
+            String parentPath = currentFile.getParent();
+            loadDir(parentPath);
+        }
     }
 
     public void finishGettingFile(String path) {
@@ -47,6 +173,10 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         } else {
             finish();
         }
+    }
+
+    void setListeners() {
+        AppUtil.handleOnPressEvent(goParent, this::goParentDir);
     }
 
     @Override
@@ -67,5 +197,10 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         finishGettingFile(path);
+    }
+
+    @Override
+    public void onBackPressed() {
+        goParentDir();
     }
 }
