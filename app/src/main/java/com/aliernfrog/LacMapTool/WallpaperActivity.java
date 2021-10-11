@@ -182,7 +182,8 @@ public class WallpaperActivity extends AppCompatActivity {
 
     public void pickFile() {
         Intent intent = new Intent(this, FilePickerActivity.class);
-        intent.putExtra("FILE_TYPE", "image/*");
+        intent.putExtra("FILE_TYPE_SAF", "image/*");
+        intent.putExtra("FILE_TYPE_INAPP", new String[]{"jpg","jpeg","png"});
         startActivityForResult(intent, 2);
         devLog("attempting to pick a file with request code 2");
     }

@@ -38,10 +38,17 @@
     <string name="mapNoImported">No imported maps were found</string>
     <string name="mapName">Map name</string>
     <string name="mapDownload">Download a map</string>
+    <string name="mapDownload_linkInput">Map link..</string>
+    <string name="mapDownload_download">Download</string>
+    <string name="mapDownload_notAMap">Not a map file</string>
+    <string name="mapDownload_downloading">Downloading map..</string>
     <string name="mapImport">Import the map</string>
     <string name="mapEdit">Edit map options &amp; roles</string>
     <string name="mapSetThumbnail">Set thumbnail</string>
     <string name="mapShare">Share the map</string>
+    <string name="mapDuplicate">Duplicate the map</string>
+    <string name="mapDuplicate_name">Map name..</string>
+    <string name="mapDuplicate_duplicate">Duplicate</string>
     <string name="mapBackup">Backup the map</string>
     <string name="mapDelete">Delete the map</string>
     <string name="mapDelete_confirm">Confirm delete</string>
@@ -69,6 +76,7 @@
     <string name="optionAutoBackup">Auto map backups</string>
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
     <string name="optionsApp">App options</string>
+    <string name="optionsUseInAppFilePicker">Use in app file picker</string>
     <string name="optionAutoCheckUpdate">Automatically check for LAC Tool updates</string>
     <string name="optionForceEnglish">Force English language</string>
     <string name="optionDebug">Debug mode</string>
@@ -88,4 +96,8 @@
     <string name="wallpaperCopyUrl">Copy import URL</string>
     <string name="wallpaperDesc">To import a wallpaper in LAC 1.5.6 or above, copy import URL of a wallpaper and paste it in the in game cellphone settings.\nOn older versions just click custom wallpaper option in cellphone.</string>
     <string name="galleryNoScreenshots">No screenshots to show</string>
+    <string name="filePicker_title">Pick a file</string>
+    <string name="filePicker_folder">Folder</string>
+    <string name="filePicker_goParent">Parent directory..</string>
+    <string name="filePicker_notValid">This file type is not valid</string>
 </resources>

@@ -5,19 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
     android:background="@drawable/linear"
-    android:gravity="center_vertical"
+    android:gravity="center"
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/map_thumbnail"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:adjustViewBounds="true"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/lactool120"
+        android:id="@+id/file_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="4dp"
+        app:srcCompat="@drawable/file"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
@@ -26,18 +23,21 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/map_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/file_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/app_name"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/map_size"
+            android:id="@+id/file_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:text="@string/app_name"
             android:textColor="#B8B8B8"
             android:textSize="11sp" />
     </LinearLayout>

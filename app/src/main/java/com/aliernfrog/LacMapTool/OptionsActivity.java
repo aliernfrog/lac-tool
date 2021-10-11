@@ -39,6 +39,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox backupOnEdit;
     LinearLayout appOptions;
     LinearLayout appOptionsContent;
+    CheckBox useInAppFilePicker;
     CheckBox autoCheckUpdate;
     CheckBox forceEnglish;
     CheckBox dev;
@@ -94,6 +95,7 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit = findViewById(R.id.options_backupOnEdit);
         appOptions = findViewById(R.id.options_app);
         appOptionsContent = findViewById(R.id.options_app_content);
+        useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
@@ -151,6 +153,7 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
         if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
         if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
+        if (config.getBoolean("useInAppFilePicker", false)) useInAppFilePicker.setChecked(true);
         if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
@@ -216,6 +219,7 @@ public class OptionsActivity extends AppCompatActivity {
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
         AppUtil.handleOnPressEvent(appOptions, () -> AppUtil.toggleView(appOptionsContent));
+        useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("useInAppFilePicker", isChecked)));
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));

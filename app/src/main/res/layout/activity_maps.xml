@@ -64,8 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
             app:srcCompat="@drawable/goback"
             android:contentDescription="@string/action_back" />
 
@@ -74,8 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
             android:contentDescription="@string/backupManage"
             app:srcCompat="@drawable/backup" />
       </LinearLayout>
@@ -179,6 +175,17 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_button"
             android:text="@string/mapSetThumbnail"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#FF0E0E0E" />
+
+        <Button
+            android:id="@+id/maps_other_duplicate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_button"
+            android:text="@string/mapDuplicate"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:backgroundTint="#FF0E0E0E" />

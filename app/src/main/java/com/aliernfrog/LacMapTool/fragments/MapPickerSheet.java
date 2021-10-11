@@ -27,6 +27,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     private MapPickerListener listener;
 
     Button pickMap;
+    Button downloadMap;
     TextView noImportedMaps;
     LinearLayout root;
 
@@ -38,6 +39,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.sheet_map_picker, container, false);
 
         pickMap = view.findViewById(R.id.mapPicker_pick);
+        downloadMap = view.findViewById(R.id.mapPicker_download);
         noImportedMaps = view.findViewById(R.id.mapPicker_noMapsWarning);
         root = view.findViewById(R.id.mapPicker_root);
 
@@ -62,11 +64,14 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
 
     void addMapView(File map, ViewGroup view) {
         TextView name = view.findViewById(R.id.map_name);
+        TextView size = view.findViewById(R.id.map_size);
         ImageView thumbnail = view.findViewById(R.id.map_thumbnail);
         String mapName = FileUtil.removeExtension(map.getName());
+        String mapSize = (map.length()/1024)+" KB";
         String thumbnailPath = FileUtil.removeExtension(map.getPath())+".jpg";
         File thumbailFile = new File(thumbnailPath);
         name.setText(mapName);
+        size.setText(mapSize);
         if (thumbailFile.exists()) {
             Bitmap thumbBitmap = BitmapFactory.decodeFile(thumbailFile.getAbsolutePath());
             thumbnail.setImageBitmap(thumbBitmap);
@@ -85,6 +90,11 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
 
     void setListeners() {
         AppUtil.handleOnPressEvent(pickMap, this::pickMapFile);
+        AppUtil.handleOnPressEvent(downloadMap, () -> {
+            dismiss();
+            MapDownloadSheet mapDownloadSheet = new MapDownloadSheet();
+            mapDownloadSheet.show(context.getSupportFragmentManager(), "map_download");
+        });
         AppUtil.handleOnPressEvent(noImportedMaps);
     }
 
@@ -93,9 +103,9 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void onAttach(@NonNull Context cnx) {
+        super.onAttach(cnx);
 
-        listener = (MapPickerListener) context;
+        listener = (MapPickerListener) cnx;
     }
 }
