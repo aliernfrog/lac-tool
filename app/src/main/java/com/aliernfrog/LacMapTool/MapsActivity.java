@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.aliernfrog.LacMapTool.fragments.MapDeleteSheet;
+import com.aliernfrog.LacMapTool.fragments.MapDownloadSheet;
+import com.aliernfrog.LacMapTool.fragments.MapDuplicateSheet;
 import com.aliernfrog.LacMapTool.fragments.MapPickerSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
@@ -33,7 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.util.Arrays;
 
-public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDeleteSheet.MapDeleteListener {
+public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDownloadSheet.MapDownloadListener, MapDuplicateSheet.MapDuplicateListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView goBack;
     ImageView manageBackupsButton;
@@ -47,6 +49,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     Button importMapButton;
     Button editMapButton;
     Button thumbnailMapButton;
+    Button duplicateMapButton;
     Button backupMapButton;
     Button shareMapButton;
     Button deleteMapButton;
@@ -91,6 +94,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         importMapButton = findViewById(R.id.maps_other_import);
         editMapButton = findViewById(R.id.maps_other_edit);
         thumbnailMapButton = findViewById(R.id.maps_other_thumbnail);
+        duplicateMapButton = findViewById(R.id.maps_other_duplicate);
         backupMapButton = findViewById(R.id.maps_other_backup);
         shareMapButton = findViewById(R.id.maps_other_share);
         deleteMapButton = findViewById(R.id.maps_other_delete);
@@ -153,10 +157,12 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         if (isImported) {
             importMapButton.setVisibility(View.GONE);
             thumbnailMapButton.setVisibility(View.VISIBLE);
+            duplicateMapButton.setVisibility(View.VISIBLE);
             deleteMapButton.setVisibility(View.VISIBLE);
         } else {
             importMapButton.setVisibility(View.VISIBLE);
             thumbnailMapButton.setVisibility(View.GONE);
+            duplicateMapButton.setVisibility(View.GONE);
             deleteMapButton.setVisibility(View.GONE);
         }
     }
@@ -208,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     public void editMap() {
-        devLog("attemting to edit the map");
+        devLog("attempting to edit the map");
         if (backupOnEdit) backupMap(false);
         Intent intent = new Intent(this, MapsOptionsActivity.class);
         intent.putExtra("path", currentPath);
@@ -222,6 +228,19 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         String thumbnailPath = lacPath+"/"+mapName+".jpg";
         copyFile(path, thumbnailPath, false, true);
         getMapThumbnail(currentPath);
+    }
+
+    public void openDuplicateMapView() {
+        MapDuplicateSheet mapDuplicateSheet = new MapDuplicateSheet();
+        mapDuplicateSheet.show(getSupportFragmentManager(), "map_duplicate");
+    }
+
+    public void duplicateMap(String name) {
+        devLog("attempting to duplicate the map with name: "+name);
+        String fullPath = lacPath+"/"+name+".txt";
+        File checkFile = new File(fullPath);
+        if (checkFile.exists()) Toast.makeText(getApplicationContext(), R.string.denied_alreadyExists, Toast.LENGTH_SHORT).show();
+        if (!checkFile.exists()) copyFile(currentPath, fullPath, true, true);
     }
 
     public void backupMap(Boolean createToastOnEnd) {
@@ -276,15 +295,16 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         startActivity(intent);
     }
 
-    public void pickFile(String fileType, Integer requestCode) {
+    public void pickFile(String fileType, String[] allowedTypes, Integer requestCode) {
         devLog("attempting to pick a file with request code: "+requestCode);
         Intent intent = new Intent(this, FilePickerActivity.class);
-        intent.putExtra("FILE_TYPE", fileType);
+        intent.putExtra("FILE_TYPE_SAF", fileType);
+        intent.putExtra("FILE_TYPE_INAPP", allowedTypes);
         startActivityForResult(intent, requestCode);
     }
 
     public void pickMapFile() {
-        pickFile("text/*", REQUEST_PICK_MAP);
+        pickFile("text/*", new String[]{"txt"}, REQUEST_PICK_MAP);
     }
 
     public void pickMap() {
@@ -378,6 +398,10 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         }
     }
 
+    public String getMapPath() {
+        return currentPath;
+    }
+
     public void useTempPath() {
         lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
         if (lacTreeFile != null) {
@@ -457,7 +481,8 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         AppUtil.handleOnPressEvent(otherOptionsLinear);
         AppUtil.handleOnPressEvent(importMapButton, this::importMap);
         AppUtil.handleOnPressEvent(editMapButton, this::editMap);
-        AppUtil.handleOnPressEvent(thumbnailMapButton, () -> pickFile("image/*", REQUEST_PICK_THUMBNAIL));
+        AppUtil.handleOnPressEvent(thumbnailMapButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
+        AppUtil.handleOnPressEvent(duplicateMapButton, this::openDuplicateMapView);
         AppUtil.handleOnPressEvent(backupMapButton, () -> backupMap(true));
         AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
         AppUtil.handleOnPressEvent(deleteMapButton, this::openDeleteMapView);
@@ -467,6 +492,17 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     public void onMapPicked(String path) {
         devLog("received path: "+path);
         getMap(path);
+    }
+
+    @Override
+    public void onMapDownloaded(String path) {
+        devLog("received path: "+path);
+        getMap(path);
+    }
+
+    @Override
+    public void onMapDuplicateConfirm(String name) {
+        duplicateMap(name);
     }
 
     @Override
