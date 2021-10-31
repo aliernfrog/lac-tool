@@ -34,6 +34,25 @@ android {
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
+            versionNameSuffix '-fdroid'
+        }
+        github {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            versionNameSuffix '-github'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+            minifyEnabled true
         }
     }
     compileOptions {
@@ -50,4 +69,5 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.documentfile:documentfile:1.0.1'
     implementation 'com.github.HBiSoft:PickiT:0.1.14'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
 }
