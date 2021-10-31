@@ -21,8 +21,8 @@ android {
         minSdkVersion 18
         //noinspection OldTargetApi
         targetSdkVersion 29
-        versionCode 17
-        versionName '1.9'
+        versionCode 18
+        versionName '1.9.1'
     }
 
     buildTypes {
