@@ -134,6 +134,59 @@
       </LinearLayout>
 
       <LinearLayout
+          android:id="@+id/maps_thumbnail_linear"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="8dp"
+          android:background="@drawable/linear"
+          android:orientation="vertical"
+          android:padding="8dp"
+          android:visibility="gone"
+          tools:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/mapThumbnail"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/maps_thumbnail_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/mapThumbnail"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/maps_thumbnail_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_blue"
+            android:text="@string/mapThumbnailSet"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#005DFF" />
+
+        <Button
+            android:id="@+id/maps_thumbnail_remove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_red"
+            android:text="@string/mapThumbnailRemove"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#960000" />
+
+      </LinearLayout>
+
+      <LinearLayout
           android:id="@+id/maps_other"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -164,17 +217,6 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_button"
             android:text="@string/mapEdit"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            app:backgroundTint="#FF0E0E0E" />
-
-        <Button
-            android:id="@+id/maps_other_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/linear_button"
-            android:text="@string/mapSetThumbnail"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:backgroundTint="#FF0E0E0E" />
