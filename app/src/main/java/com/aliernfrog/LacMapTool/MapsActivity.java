@@ -145,30 +145,22 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     public void getMapThumbnail(String path) {
         String thumbnailPath = FileUtil.removeExtension(path)+".jpg";
         File thumbnailFile = new File(thumbnailPath);
-        if (isImported && thumbnailFile.exists()) {
+        boolean hasThumbnail = isImported && thumbnailFile.exists();
+        if (hasThumbnail) {
             Drawable drawable = Drawable.createFromPath(thumbnailFile.getPath());
             appBarImage.setBackground(drawable);
             collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#00000000"));
-            thumbnailLinear.setVisibility(View.VISIBLE);
             thumbnailImage.setVisibility(View.VISIBLE);
             thumbnailImage.setBackground(drawable);
             thumbnailRemoveButton.setVisibility(View.VISIBLE);
             devLog("set thumbnail bitmap");
-        } else if (isImported && !thumbnailFile.exists()) {
+        } else {
             appBarImage.setBackground(null);
             collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
-            thumbnailLinear.setVisibility(View.VISIBLE);
             thumbnailImage.setVisibility(View.GONE);
             thumbnailImage.setBackground(null);
             thumbnailRemoveButton.setVisibility(View.GONE);
             devLog("no thumbnail");
-        } else {
-            appBarImage.setBackground(null);
-            collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
-            thumbnailLinear.setVisibility(View.GONE);
-            thumbnailImage.setVisibility(View.GONE);
-            thumbnailImage.setBackground(null);
-            devLog("not imported");
         }
     }
 
