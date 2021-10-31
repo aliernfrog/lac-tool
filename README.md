@@ -1,6 +1,6 @@
 [![Download count](https://img.shields.io/github/downloads/aliernfrog/lac-tool/total.svg)]()
 # LAC Tool
-First <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related open source app, lets you do most of <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff.
+Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff without having to mess with files 
 
 # <a href="https://github.com/aliernfrog/lac-tool/releases">Download</a>
 

@@ -40,15 +40,18 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     ImageView goBack;
     ImageView manageBackupsButton;
     FloatingActionButton saveButton;
-    ImageView mapThumbnail;
+    ImageView appBarImage;
     LinearLayout mapsPickLinear;
     Button pickMap;
     LinearLayout mapNameLinear;
     EditText mapNameInput;
+    LinearLayout thumbnailLinear;
+    ImageView thumbnailImage;
+    Button thumbnailSetButton;
+    Button thumbnailRemoveButton;
     LinearLayout otherOptionsLinear;
     Button importMapButton;
     Button editMapButton;
-    Button thumbnailMapButton;
     Button duplicateMapButton;
     Button backupMapButton;
     Button shareMapButton;
@@ -85,15 +88,18 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         goBack = findViewById(R.id.maps_goback);
         manageBackupsButton = findViewById(R.id.maps_backups);
         saveButton = findViewById(R.id.maps_save);
-        mapThumbnail = findViewById(R.id.maps_appbar_image);
+        appBarImage = findViewById(R.id.maps_appbar_image);
         mapsPickLinear = findViewById(R.id.maps_pick_linear);
         pickMap = findViewById(R.id.maps_pick_pick);
         mapNameLinear = findViewById(R.id.maps_name_linear);
         mapNameInput = findViewById(R.id.maps_name_input);
+        thumbnailLinear = findViewById(R.id.maps_thumbnail_linear);
+        thumbnailImage = findViewById(R.id.maps_thumbnail_thumbnail);
+        thumbnailSetButton = findViewById(R.id.maps_thumbnail_set);
+        thumbnailRemoveButton = findViewById(R.id.maps_thumbnail_remove);
         otherOptionsLinear = findViewById(R.id.maps_other);
         importMapButton = findViewById(R.id.maps_other_import);
         editMapButton = findViewById(R.id.maps_other_edit);
-        thumbnailMapButton = findViewById(R.id.maps_other_thumbnail);
         duplicateMapButton = findViewById(R.id.maps_other_duplicate);
         backupMapButton = findViewById(R.id.maps_other_backup);
         shareMapButton = findViewById(R.id.maps_other_share);
@@ -139,14 +145,21 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     public void getMapThumbnail(String path) {
         String thumbnailPath = FileUtil.removeExtension(path)+".jpg";
         File thumbnailFile = new File(thumbnailPath);
-        if (thumbnailFile.exists() && isImported) {
+        boolean hasThumbnail = isImported && thumbnailFile.exists();
+        if (hasThumbnail) {
             Drawable drawable = Drawable.createFromPath(thumbnailFile.getPath());
-            mapThumbnail.setBackground(drawable);
+            appBarImage.setBackground(drawable);
             collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#00000000"));
+            thumbnailImage.setVisibility(View.VISIBLE);
+            thumbnailImage.setBackground(drawable);
+            thumbnailRemoveButton.setVisibility(View.VISIBLE);
             devLog("set thumbnail bitmap");
         } else {
-            mapThumbnail.setBackground(null);
+            appBarImage.setBackground(null);
             collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
+            thumbnailImage.setVisibility(View.GONE);
+            thumbnailImage.setBackground(null);
+            thumbnailRemoveButton.setVisibility(View.GONE);
             devLog("no thumbnail");
         }
     }
@@ -156,12 +169,12 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         otherOptionsLinear.setVisibility(View.VISIBLE);
         if (isImported) {
             importMapButton.setVisibility(View.GONE);
-            thumbnailMapButton.setVisibility(View.VISIBLE);
+            thumbnailLinear.setVisibility(View.VISIBLE);
             duplicateMapButton.setVisibility(View.VISIBLE);
             deleteMapButton.setVisibility(View.VISIBLE);
         } else {
             importMapButton.setVisibility(View.VISIBLE);
-            thumbnailMapButton.setVisibility(View.GONE);
+            thumbnailLinear.setVisibility(View.GONE);
             duplicateMapButton.setVisibility(View.GONE);
             deleteMapButton.setVisibility(View.GONE);
         }
@@ -198,6 +211,31 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         }
     }
 
+    public void setThumbnail(String path) {
+        devLog("attempting to set thumbnail to :"+path);
+        File mapFile = new File(currentPath);
+        String mapName = FileUtil.removeExtension(mapFile.getName());
+        String thumbnailPath = lacPath+"/"+mapName+".jpg";
+        copyFile(path, thumbnailPath, false, true);
+        getMapThumbnail(currentPath);
+    }
+
+    public void removeThumbnail() {
+        devLog("attempting to delete thumbnail file");
+        File mapFile = new File(currentPath);
+        String mapName = FileUtil.removeExtension(mapFile.getName());
+        String thumbnailPath = lacPath+"/"+mapName+".jpg";
+        File thumbnail = new File(thumbnailPath);
+        thumbnail.delete();
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            DocumentFile thumbnailFile = lacTreeFile.findFile(mapName+".jpg");
+            if (thumbnailFile != null) thumbnailFile.delete();
+        }
+        devLog("deleted thumbnail file");
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+        getMapThumbnail(currentPath);
+    }
+
     public void importMap() {
         devLog("attempting to import the map");
         File file = new File(currentPath);
@@ -219,15 +257,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         Intent intent = new Intent(this, MapsOptionsActivity.class);
         intent.putExtra("path", currentPath);
         startActivity(intent);
-    }
-
-    public void setThumbnail(String path) {
-        devLog("attempting to set thumbnail to :"+path);
-        File mapFile = new File(currentPath);
-        String mapName = FileUtil.removeExtension(mapFile.getName());
-        String thumbnailPath = lacPath+"/"+mapName+".jpg";
-        copyFile(path, thumbnailPath, false, true);
-        getMapThumbnail(currentPath);
     }
 
     public void openDuplicateMapView() {
@@ -478,10 +507,12 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             renameMap(mapNameInput.getText().toString());
             return true;
         });
+        AppUtil.handleOnPressEvent(thumbnailLinear);
+        AppUtil.handleOnPressEvent(thumbnailSetButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
+        AppUtil.handleOnPressEvent(thumbnailRemoveButton, this::removeThumbnail);
         AppUtil.handleOnPressEvent(otherOptionsLinear);
         AppUtil.handleOnPressEvent(importMapButton, this::importMap);
         AppUtil.handleOnPressEvent(editMapButton, this::editMap);
-        AppUtil.handleOnPressEvent(thumbnailMapButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
         AppUtil.handleOnPressEvent(duplicateMapButton, this::openDuplicateMapView);
         AppUtil.handleOnPressEvent(backupMapButton, () -> backupMap(true));
         AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
