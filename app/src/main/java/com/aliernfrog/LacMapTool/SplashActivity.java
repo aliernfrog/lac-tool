@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -61,12 +60,9 @@ public class SplashActivity extends AppCompatActivity {
         devLog("External path: "+ pathExternal);
         devLog("Documents path: "+pathDocs);
 
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            getVersion();
-            setLocale();
-            checkUpdates();
-        }, 500);
+        getVersion();
+        setLocale();
+        checkUpdates();
     }
 
     public void getVersion() {
@@ -147,11 +143,8 @@ public class SplashActivity extends AppCompatActivity {
     public void switchActivity() {
         devLog("attempting to switch in "+switchDelay);
         Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            startActivity(intent);
-            finish();
-        }, switchDelay);
+        startActivity(intent);
+        finish();
     }
 
     void devLog(String toLog) {
