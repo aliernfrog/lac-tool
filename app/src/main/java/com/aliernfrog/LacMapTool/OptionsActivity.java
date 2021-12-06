@@ -65,7 +65,7 @@ public class OptionsActivity extends AppCompatActivity {
     PickiT pickiT;
 
     String tempPath;
-    String feedbackUrl = "https://ensibot-discord.aliernfrog.repl.co";
+    String feedbackUrl = "https://aliernfrog.repl.co";
 
     String appVers;
     Integer appVersCode;
@@ -173,7 +173,7 @@ public class OptionsActivity extends AppCompatActivity {
         try {
             JSONObject object = new JSONObject();
             object.put("type", "feedback");
-            object.put("body", feedback);
+            object.put("feedback", feedback);
             object.put("from", "LAC Tool "+appVersCode);
             String response = WebUtil.doPostRequest(feedbackUrl, object);
             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
