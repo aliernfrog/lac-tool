@@ -1,0 +1,6 @@
+LAC Tool is made for <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> players to make things easier!
+Here are some features the app has:
+* LAC map management (importing and more)
+* LAC map role & option management
+* LAC in game cellphone wallpaper management (does not require internet connection)
+* LAC in game screenshot management
