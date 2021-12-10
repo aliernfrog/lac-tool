@@ -46,6 +46,7 @@ public class AppUtil {
     }
 
     public static Boolean getUpdates(Context context) throws Exception {
+        String versName = getVersName(context);
         SharedPreferences update = context.getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         SharedPreferences.Editor updateEdit = update.edit();
@@ -54,6 +55,7 @@ public class AppUtil {
         JSONObject object = new JSONObject(rawUpdate);
         updateEdit.putInt("updateLatest", object.getInt("latest"));
         updateEdit.putString("updateDownload", object.getString("download"));
+        if (versName.endsWith("-fdroid")) updateEdit.putString("updateDownload", object.getString("downloadFdroid"));
         updateEdit.putString("updateChangelog", object.getString("changelog"));
         updateEdit.putString("updateChangelogVersion", object.getString("changelogVersion"));
         updateEdit.putString("notes", object.getString("notes"));
