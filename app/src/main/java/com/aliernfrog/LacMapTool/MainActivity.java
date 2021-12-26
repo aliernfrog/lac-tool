@@ -181,11 +181,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(this.getApplicationContext(), i);
             devLog("attempting to redirect to "+i.toString());
-            if (i == OptionsActivity.class) {
-                startActivityForResult(intent, 5);
-            } else {
-                startActivity(intent);
-            }
+            startActivity(intent);
         }
     }
 
@@ -206,17 +202,6 @@ public class MainActivity extends AppCompatActivity {
             if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
             log.setText(Html.fromHtml(logs));
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 5) {
-            if (resultCode == 1) {
-                switchActivity(SplashActivity.class, true);
-                finish();
-            }
         }
     }
 

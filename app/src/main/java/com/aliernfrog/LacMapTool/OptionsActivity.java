@@ -71,7 +71,7 @@ public class OptionsActivity extends AppCompatActivity {
     Integer appVersCode;
 
     Integer changelogClicks = 0;
-    Integer activityResult = 0;
+    Boolean requiresRestart = false;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -162,7 +162,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1;
+        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) requiresRestart = true;
         configEdit.putBoolean(name, set);
         configEdit.commit();
     }
@@ -205,8 +205,12 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void finishActivity() {
-        setResult(activityResult);
         finish();
+        if (requiresRestart) {
+            Intent intent = new Intent(this, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 
     void setListeners() {
@@ -257,7 +261,7 @@ public class OptionsActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(feedbackSubmit, this::submitFeedback);
         AppUtil.handleOnPressEvent(changelog, () -> {
             changelogClicks += 1;
-            if (changelogClicks >= 10) experimentalOptions.setVisibility(View.VISIBLE);
+            if (changelogClicks > 15) experimentalOptions.setVisibility(View.VISIBLE);
         });
     }
 
