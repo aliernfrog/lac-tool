@@ -84,7 +84,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionLacd"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -95,7 +94,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionLacm"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -106,7 +104,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionLacmb"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -137,7 +134,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionAutoBackup"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -148,7 +144,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionBackupOnEdit"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -179,7 +174,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionsUseInAppFilePicker"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -190,7 +184,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionAutoCheckUpdate"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -201,7 +194,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionForceEnglish"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -212,7 +204,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionDebug"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
@@ -223,7 +214,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:padding="8dp"
                     android:text="@string/optionDeleteTemp"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
@@ -271,7 +261,6 @@
                     android:hint="@string/optionsStartActivity"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
-                    android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     android:textStyle="bold"
@@ -287,7 +276,6 @@
                     android:hint="@string/optionsUriSdkVersion"
                     android:imeOptions="actionDone"
                     android:inputType="number"
-                    android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     android:textStyle="bold"
@@ -303,7 +291,6 @@
                     android:hint="@string/optionsUpdateUrl"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
-                    android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     android:textStyle="bold"
@@ -361,7 +348,6 @@
                         android:hint="@string/optionsFeedbackHint"
                         android:inputType="textMultiLine|textNoSuggestions|text|textImeMultiLine"
                         android:maxLength="1000"
-                        android:padding="8dp"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#6A6A6A"
                         android:textStyle="bold"
@@ -373,7 +359,6 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:background="@drawable/linear_blue"
-                        android:padding="8dp"
                         android:text="@string/action_done"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
