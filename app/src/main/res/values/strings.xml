@@ -91,6 +91,11 @@
     <string name="optionsGithub" translatable="false">LAC Tool GitHub</string>
     <string name="optionsFeedback">LAC Tool feedback</string>
     <string name="optionsFeedbackHint">Your feedback..</string>
+    <string name="optionsExperimental">Experimental options</string>
+    <string name="optionsExperimentalHint">Do not change experimental options if you do not know what they do!</string>
+    <string name="optionsStartActivity">Start activity with name</string>
+    <string name="optionsUriSdkVersion">URI SDK version (30 by default)</string>
+    <string name="optionsUpdateUrl">Update URL</string>
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>
