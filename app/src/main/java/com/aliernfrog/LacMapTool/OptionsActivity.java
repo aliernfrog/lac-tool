@@ -29,16 +29,13 @@ import org.json.JSONObject;
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
     LinearLayout lacOptions;
-    LinearLayout lacOptionsContent;
     CheckBox lacd;
     CheckBox lacm;
     CheckBox lacmb;
     LinearLayout backupOptions;
-    LinearLayout backupOptionsContent;
     CheckBox autoBackups;
     CheckBox backupOnEdit;
     LinearLayout appOptions;
-    LinearLayout appOptionsContent;
     CheckBox useInAppFilePicker;
     CheckBox autoCheckUpdate;
     CheckBox forceEnglish;
@@ -85,16 +82,13 @@ public class OptionsActivity extends AppCompatActivity {
 
         home = findViewById(R.id.options_goback);
         lacOptions = findViewById(R.id.options_lac);
-        lacOptionsContent = findViewById(R.id.options_lac_content);
         lacd = findViewById(R.id.options_toggleLACD);
         lacm = findViewById(R.id.options_toggleLACM);
         lacmb = findViewById(R.id.options_toggleLACMB);
         backupOptions = findViewById(R.id.options_backup);
-        backupOptionsContent = findViewById(R.id.options_backup_content);
         autoBackups = findViewById(R.id.options_autoBackup);
         backupOnEdit = findViewById(R.id.options_backupOnEdit);
         appOptions = findViewById(R.id.options_app);
-        appOptionsContent = findViewById(R.id.options_app_content);
         useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         forceEnglish = findViewById(R.id.options_forceEnglish);
@@ -215,14 +209,14 @@ public class OptionsActivity extends AppCompatActivity {
 
     void setListeners() {
         AppUtil.handleOnPressEvent(home, this::finishActivity);
-        AppUtil.handleOnPressEvent(lacOptions, () -> AppUtil.toggleView(lacOptionsContent));
+        AppUtil.handleOnPressEvent(lacOptions);
         lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
         lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
         lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
-        AppUtil.handleOnPressEvent(backupOptions, () -> AppUtil.toggleView(backupOptionsContent));
+        AppUtil.handleOnPressEvent(backupOptions);
         autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
-        AppUtil.handleOnPressEvent(appOptions, () -> AppUtil.toggleView(appOptionsContent));
+        AppUtil.handleOnPressEvent(appOptions);
         useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("useInAppFilePicker", isChecked)));
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
