@@ -91,7 +91,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
             pathView.setText(file.getPath());
             handler.postDelayed(() -> {
                 for (File cur : content) {
-                    ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.file, root, false);
+                    ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_file, root, false);
                     addFileView(view, cur);
                 }
                 progressBar.setVisibility(View.GONE);

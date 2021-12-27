@@ -137,7 +137,7 @@ public class WallpaperActivity extends AppCompatActivity {
                 for (File file : files) {
                     if (file.getName().endsWith(".jpg")) {
                         devLog("found: " + file.getName());
-                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.wallpaper, rootLayout, false);
+                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_wallpaper, rootLayout, false);
                         setWallpaperView(layout, file);
                     }
                 }
