@@ -67,58 +67,50 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/optionsLac"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/options_lac_content"
+                <CheckBox
+                    android:id="@+id/options_toggleLACD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLacd"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_toggleLACD"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionLacd"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_toggleLACM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLacm"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_toggleLACM"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionLacm"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_toggleLACMB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionLacmb"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_toggleLACMB"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionLacmb"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -128,47 +120,39 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/optionsBackup"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/options_backup_content"
+                <CheckBox
+                    android:id="@+id/options_autoBackup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionAutoBackup"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_autoBackup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionAutoBackup"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_backupOnEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionBackupOnEdit"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_backupOnEdit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionBackupOnEdit"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -178,81 +162,73 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/optionsApp"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/options_app_content"
+                <CheckBox
+                    android:id="@+id/options_useInAppFilePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionsUseInAppFilePicker"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_useInAppFilePicker"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionsUseInAppFilePicker"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_autoCheckUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionAutoCheckUpdate"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_autoCheckUpdate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionAutoCheckUpdate"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_forceEnglish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionForceEnglish"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_forceEnglish"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionForceEnglish"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_devtoggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionDebug"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_devtoggle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionDebug"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <Button
+                    android:id="@+id/options_deleteTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/optionDeleteTemp"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
 
-                    <Button
-                        android:id="@+id/options_deleteTemp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionDeleteTemp"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -262,24 +238,24 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp"
+                android:padding="8dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="Experimental options"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:background="@drawable/linear_red"
                     android:padding="8dp"
                     android:text="These are experimental options, do not change them if you do not know what they do!"
@@ -291,39 +267,48 @@
                     android:id="@+id/options_startActivity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
                     android:hint="Start activity with name"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
+                    android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
+                    android:textStyle="bold"
                     tools:ignore="HardcodedText,TouchTargetSizeCheck" />
 
                 <EditText
                     android:id="@+id/options_uriSdkVersion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
                     android:hint="URI SDK version (30 by default)"
                     android:imeOptions="actionDone"
                     android:inputType="number"
+                    android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
+                    android:textStyle="bold"
                     tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
 
                 <EditText
                     android:id="@+id/options_updateUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
                     android:hint="Update URL"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
+                    android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
+                    android:textStyle="bold"
                     tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
@@ -364,7 +349,6 @@
                     android:id="@+id/options_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
                     android:orientation="vertical"
                     android:visibility="gone"
                     tools:visibility="visible">
@@ -373,8 +357,8 @@
                         android:id="@+id/options_feedback_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
                         android:autofillHints="false"
-                        android:background="@drawable/linear_button"
                         android:ems="10"
                         android:hint="@string/optionsFeedbackHint"
                         android:inputType="textMultiLine|textNoSuggestions|text|textImeMultiLine"
@@ -382,7 +366,8 @@
                         android:padding="8dp"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#6A6A6A"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="TouchTargetSizeCheck" />
 
                     <Button
                         android:id="@+id/options_feedback_submit"
@@ -390,6 +375,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:background="@drawable/linear_blue"
+                        android:padding="8dp"
                         android:text="@string/action_done"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
