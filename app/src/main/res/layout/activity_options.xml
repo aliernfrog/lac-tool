@@ -247,10 +247,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:text="Experimental options"
+                    android:text="@string/optionsExperimental"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -258,10 +257,9 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_red"
                     android:padding="8dp"
-                    android:text="These are experimental options, do not change them if you do not know what they do!"
+                    android:text="@string/optionsExperimentalHint"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/options_startActivity"
@@ -270,14 +268,14 @@
                     android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
-                    android:hint="Start activity with name"
+                    android:hint="@string/optionsStartActivity"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     android:textStyle="bold"
-                    tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <EditText
                     android:id="@+id/options_uriSdkVersion"
@@ -286,14 +284,14 @@
                     android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
-                    android:hint="URI SDK version (30 by default)"
+                    android:hint="@string/optionsUriSdkVersion"
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     android:textStyle="bold"
-                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
+                    tools:ignore="TextFields,TouchTargetSizeCheck" />
 
                 <EditText
                     android:id="@+id/options_updateUrl"
@@ -302,14 +300,14 @@
                     android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
-                    android:hint="Update URL"
+                    android:hint="@string/optionsUpdateUrl"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
                     android:textStyle="bold"
-                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
+                    tools:ignore="TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
             <TextView

@@ -87,6 +87,11 @@
     <string name="optionsChangelogChangelog">Değişim kaydı sürümü</string>
     <string name="optionsFeedback">LAC Tool geri bildirimi</string>
     <string name="optionsFeedbackHint">Geri bildiriminiz..</string>
+    <string name="optionsExperimental">Deneysel ayarlar</string>
+    <string name="optionsExperimentalHint">Eğer deneysel ayarların ne yaptıklarını bilmiyorsanız değiştirmeyin!</string>
+    <string name="optionsStartActivity">İsimle aktivite başlat</string>
+    <string name="optionsUriSdkVersion">URI SDK sürümü (varsayılan 30)</string>
+    <string name="optionsUpdateUrl">Güncelleme URL</string>
     <string name="backupManage">Yedekleri yönet</string>
     <string name="wallpaperPick">Duvar kağıdı seç</string>
     <string name="wallpaperImport">Duvar kağıdını içe aktar</string>
