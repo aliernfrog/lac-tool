@@ -115,7 +115,7 @@ public class GalleryActivity extends AppCompatActivity {
                 for (File value : files) {
                     if (value.getName().endsWith(".jpg")) {
                         devLog("found: " + value.getName());
-                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.screenshot, rootLinear, false);
+                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_screenshot, rootLinear, false);
                         setScreenshotView(layout, value);
                     }
                 }

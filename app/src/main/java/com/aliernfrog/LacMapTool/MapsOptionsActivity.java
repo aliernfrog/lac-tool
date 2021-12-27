@@ -162,7 +162,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void addNumberOption(Integer line, String title, String value) {
-        ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.option_number, optionsLinear, false);
+        ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_option_number, optionsLinear, false);
         TextView titleView = view.findViewById(R.id.option_number_title);
         EditText valueView = view.findViewById(R.id.option_number_value);
         titleView.setText(title);
@@ -187,7 +187,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     public void addBoolOption(Integer line, String title, Boolean value) {
-        View view = getLayoutInflater().inflate(R.layout.option_bool, optionsLinear, false);
+        View view = getLayoutInflater().inflate(R.layout.inflate_option_bool, optionsLinear, false);
         Switch switchView = view.findViewById(R.id.option_bool_switch);
         switchView.setText(title);
         switchView.setChecked(value);
@@ -279,7 +279,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         for (int i = 0; i < roles.size(); i++) {
             if (!roles.get(i).equals("")) {
                 String name = roles.get(i);
-                ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.role, rolesLinear, false);
+                ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_role, rolesLinear, false);
                 LinearLayout roleLinear = layout.findViewById(R.id.role_bg);
                 TextView roleName = layout.findViewById(R.id.role_name);
                 Button roleDel = layout.findViewById(R.id.role_delete);
