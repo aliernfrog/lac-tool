@@ -222,6 +222,7 @@ public class OptionsActivity extends AppCompatActivity {
         forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
+        AppUtil.handleOnPressEvent(experimentalOptions);
 
         startActivityName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
