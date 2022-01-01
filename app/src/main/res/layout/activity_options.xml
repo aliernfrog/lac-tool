@@ -297,18 +297,25 @@
                     tools:ignore="TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/options_changelog"
+            <LinearLayout
+                android:id="@+id/options_changelog_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:gravity="center_horizontal"
-                android:padding="8dp"
-                android:text="@string/optionsChangelogNoChangelog"
-                android:textColor="#FFFFFF"
-                android:linksClickable="true"
-                android:autoLink="web" />
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/options_changelog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:gravity="center_horizontal"
+                    android:linksClickable="true"
+                    android:text="@string/optionsChangelogNoChangelog"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/options_feedback_linear"

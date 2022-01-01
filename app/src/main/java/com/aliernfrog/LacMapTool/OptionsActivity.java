@@ -53,6 +53,7 @@ public class OptionsActivity extends AppCompatActivity {
     LinearLayout feedback;
     EditText feedbackInput;
     Button feedbackSubmit;
+    LinearLayout changelogLinear;
     TextView changelog;
 
     SharedPreferences update;
@@ -106,6 +107,7 @@ public class OptionsActivity extends AppCompatActivity {
         feedback = findViewById(R.id.options_feedback);
         feedbackInput = findViewById(R.id.options_feedback_input);
         feedbackSubmit = findViewById(R.id.options_feedback_submit);
+        changelogLinear = findViewById(R.id.options_changelog_linear);
         changelog = findViewById(R.id.options_changelog);
 
         tempPath = update.getString("path-temp", null);
@@ -254,7 +256,7 @@ public class OptionsActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
         AppUtil.handleOnPressEvent(feedbackLinear, () -> AppUtil.toggleView(feedback));
         AppUtil.handleOnPressEvent(feedbackSubmit, this::submitFeedback);
-        AppUtil.handleOnPressEvent(changelog, () -> {
+        AppUtil.handleOnPressEvent(changelogLinear, () -> {
             changelogClicks += 1;
             if (changelogClicks > 15) experimentalOptions.setVisibility(View.VISIBLE);
         });
