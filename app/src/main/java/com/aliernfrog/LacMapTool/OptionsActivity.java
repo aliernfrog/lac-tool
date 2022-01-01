@@ -48,16 +48,16 @@ public class OptionsActivity extends AppCompatActivity {
     EditText uriSdkVersionInput;
     EditText updateUrlInput;
     CheckBox forceFdroid;
-    LinearLayout discord_linear;
-    Button discord_aliern;
-    Button discord_rcs;
-    Button github;
     LinearLayout feedbackLinear;
     LinearLayout feedback;
     EditText feedbackInput;
     Button feedbackSubmit;
     LinearLayout changelogLinear;
     TextView changelog;
+    LinearLayout social_linear;
+    LinearLayout discord_lac;
+    LinearLayout discord_lacTool;
+    LinearLayout github;
 
     SharedPreferences update;
     SharedPreferences config;
@@ -104,16 +104,16 @@ public class OptionsActivity extends AppCompatActivity {
         updateUrlInput = findViewById(R.id.options_updateUrl);
         forceFdroid = findViewById(R.id.options_forceFdroid);
         deleteTemp = findViewById(R.id.options_deleteTemp);
-        discord_linear = findViewById(R.id.options_dc);
-        discord_aliern = findViewById(R.id.options_discord_aliern);
-        discord_rcs = findViewById(R.id.options_discord_rcs);
-        github = findViewById(R.id.options_github);
         feedbackLinear = findViewById(R.id.options_feedback_linear);
         feedback = findViewById(R.id.options_feedback);
         feedbackInput = findViewById(R.id.options_feedback_input);
         feedbackSubmit = findViewById(R.id.options_feedback_submit);
         changelogLinear = findViewById(R.id.options_changelog_linear);
         changelog = findViewById(R.id.options_changelog);
+        social_linear = findViewById(R.id.options_social);
+        discord_lac = findViewById(R.id.options_social_discordLac);
+        discord_lacTool = findViewById(R.id.options_social_discordLacTool);
+        github = findViewById(R.id.options_social_githubLacTool);
 
         tempPath = update.getString("path-temp", null);
 
@@ -266,16 +266,16 @@ public class OptionsActivity extends AppCompatActivity {
         });
 
         forceFdroid.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("forceFdroid", isChecked));
-        AppUtil.handleOnPressEvent(discord_linear);
-        AppUtil.handleOnPressEvent(discord_aliern, () -> redirectURL("https://discord.gg/SQXqBMs"));
-        AppUtil.handleOnPressEvent(discord_rcs, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));
-        AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
         AppUtil.handleOnPressEvent(feedbackLinear, () -> AppUtil.toggleView(feedback));
         AppUtil.handleOnPressEvent(feedbackSubmit, this::submitFeedback);
         AppUtil.handleOnPressEvent(changelogLinear, () -> {
             changelogClicks += 1;
             if (changelogClicks > 15) experimentalOptions.setVisibility(View.VISIBLE);
         });
+        AppUtil.handleOnPressEvent(social_linear);
+        AppUtil.handleOnPressEvent(discord_lac, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));
+        AppUtil.handleOnPressEvent(discord_lacTool, () -> redirectURL("https://discord.gg/SQXqBMs"));
+        AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
     }
 
     @Override

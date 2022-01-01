@@ -399,7 +399,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/options_dc"
+                android:id="@+id/options_social"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -409,57 +409,81 @@
                 android:padding="8dp">
 
                 <LinearLayout
+                    android:id="@+id/options_social_discordLac"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <Button
-                        android:id="@+id/options_discord_rcs"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/discord"
-                        android:padding="8dp"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/optionsDiscordRcs"
+                        app:srcCompat="@drawable/social_discord_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="@string/optionsDiscordRcs"
                         android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E"/>
-
-                    <Button
-                        android:id="@+id/options_discord_aliern"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/discord"
-                        android:padding="8dp"
-                        android:text="@string/optionsDiscordAliern"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/options_social_discordLacTool"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <Button
-                        android:id="@+id/options_github"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/github"
-                        android:padding="8dp"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/optionsDiscordAliern"
+                        app:srcCompat="@drawable/social_discord_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/optionsDiscordAliern"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/options_social_githubLacTool"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/optionsGithub"
+                        app:srcCompat="@drawable/social_github_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="@string/optionsGithub"
                         android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
