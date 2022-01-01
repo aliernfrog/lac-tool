@@ -29,6 +29,7 @@
     <string name="manageMaps">Manage maps</string>
     <string name="manageWallpapers">Manage wallpapers</string>
     <string name="manageScreenshots">View screenshots</string>
+    <string name="startLac">Start LAC</string>
     <string name="options">Options &amp; Info</string>
     <string name="checkUpdates">Check for LAC Tool updates</string>
     <string name="update_toastAvailable">Update available!</string>
