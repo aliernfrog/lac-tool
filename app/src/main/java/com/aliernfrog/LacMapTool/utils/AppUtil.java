@@ -127,7 +127,7 @@ public class AppUtil {
 
     public static void devLog(String toLog, TextView logView) {
         if (logView.getVisibility() == View.VISIBLE) {
-            String tag = Thread.currentThread().getStackTrace()[4].getMethodName();
+            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
             if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
             String log = Html.toHtml(new SpannableString(logView.getText()));
             String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
