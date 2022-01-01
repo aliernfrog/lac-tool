@@ -27,32 +27,34 @@ android {
 
     buildTypes {
         release {
+            versionNameSuffix '-fdroid'
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            versionNameSuffix '-fdroid'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         github {
+            versionNameSuffix '-github'
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            versionNameSuffix '-github'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
+            applicationIdSuffix '.debug'
+            minifyEnabled true
+            shrinkResources true
             debuggable true
             jniDebuggable true
             renderscriptDebuggable true
-            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
