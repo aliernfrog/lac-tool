@@ -19,7 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_weight="1"
-        android:padding="8dp" />
+        android:adjustViewBounds="true"
+        android:padding="8dp"
+        android:contentDescription="@string/manageScreenshots"/>
 
     <Button
         android:id="@+id/ss_share"
