@@ -156,7 +156,8 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    app:backgroundTint="#FF0E0E0E"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/main_checkUpdates"
@@ -172,7 +173,8 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    app:backgroundTint="#FF0E0E0E"
+                    style="?android:attr/buttonBarButtonStyle" />
 
             </LinearLayout>
 
