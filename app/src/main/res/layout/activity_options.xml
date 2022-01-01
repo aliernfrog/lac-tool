@@ -305,6 +305,16 @@
                     android:textColorHint="#777777"
                     android:textStyle="bold"
                     tools:ignore="TextFields,TouchTargetSizeCheck" />
+
+                <CheckBox
+                    android:id="@+id/options_forceFdroid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionsForceFdroid"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout

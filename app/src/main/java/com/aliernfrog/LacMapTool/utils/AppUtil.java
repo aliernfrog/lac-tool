@@ -30,7 +30,10 @@ public class AppUtil {
     public static String getVersName(Context context) throws Exception {
         PackageManager pm = context.getPackageManager();
         PackageInfo pInfo = pm.getPackageInfo(context.getPackageName(), 0);
-        return pInfo.versionName;
+        String versionName = pInfo.versionName;
+        SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
+        if (config.getBoolean("forceFdroid", false)) versionName = versionName.split("-")[0]+"-fdroid";
+        return versionName;
     }
 
     public static Integer getVersCode(Context context) throws Exception {
