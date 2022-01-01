@@ -27,6 +27,7 @@ import java.io.IOException;
 
 @SuppressLint({"CommitPrefEdits", "ClickableViewAccessibility"})
 public class MainActivity extends AppCompatActivity {
+    LinearLayout missingLac;
     LinearLayout missingPerms;
     LinearLayout lacLinear;
     Button redirectMaps;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         aBackupPath = dataPath+"auto-backups/";
         version = update.getInt("versionCode", 0);
 
+        missingLac = findViewById(R.id.main_missingLac);
         missingPerms = findViewById(R.id.main_missingPerms);
         lacLinear = findViewById(R.id.main_optionsLac);
         redirectMaps = findViewById(R.id.main_maps);
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         log = findViewById(R.id.main_log);
 
         if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
+        if (!AppUtil.isLacInstalled(getApplicationContext())) missingLac.setVisibility(View.VISIBLE);
         checkUpdates(false);
         checkPerms();
         createFiles();
@@ -196,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListeners() {
+        AppUtil.handleOnPressEvent(missingLac, () -> redirectURL("https://play.google.com/store/apps/details?id=com.MA.LAC"));
         AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
         AppUtil.handleOnPressEvent(lacLinear);
         AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false));

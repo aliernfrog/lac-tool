@@ -42,6 +42,22 @@ public class AppUtil {
         return pInfo.versionCode;
     }
 
+    public static Boolean isLacInstalled(Context context) {
+        PackageManager pm = context.getPackageManager();
+        SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
+        String lacId = config.getString("lacId", "lac");
+        String idToCheck = "com.MA.LAC";
+        if (lacId.equals("lacd")) idToCheck = "com.MA.LACD";
+        if (lacId.equals("lacm")) idToCheck = "com.MA.LACM";
+        if (lacId.equals("lacmb")) idToCheck = "com.MA.LACMB";
+        try {
+            pm.getPackageInfo(idToCheck, 0);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static void copyToClipboard(String string, Context context) {
         ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("LAC Tool", string);
