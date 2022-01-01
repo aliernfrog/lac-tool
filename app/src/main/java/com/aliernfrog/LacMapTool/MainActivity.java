@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     Boolean hasPerms;
     Integer version;
 
-    String logs = "";
-    Boolean devMode;
-
     SharedPreferences update;
     SharedPreferences config;
 
@@ -63,9 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        devMode = config.getBoolean("enableDebug", false);
 
-        devMode = config.getBoolean("enableDebug", false);
         lacPath = update.getString("path-lac", null);
         dataPath = update.getString("path-app", null);
         tempMapsPath = update.getString("path-temp-maps", null);
@@ -86,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
-        if (devMode) log.setVisibility(View.VISIBLE);
+        if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
         checkUpdates(false);
         checkPerms();
         createFiles();
@@ -197,12 +192,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void devLog(String toLog) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            log.setText(Html.fromHtml(logs));
-        }
+        AppUtil.devLog(toLog, log);
     }
 
     public void setListeners() {

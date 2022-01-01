@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.os.Process;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -38,9 +37,6 @@ public class GalleryActivity extends AppCompatActivity {
     TextView noScreenshots;
     LinearLayout rootLinear;
     TextView log;
-
-    Boolean devMode;
-    String logs = "";
 
     Integer uriSdkVersion;
 
@@ -65,7 +61,6 @@ public class GalleryActivity extends AppCompatActivity {
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
 
-        devMode = config.getBoolean("enableDebug", false);
         uriSdkVersion = config.getInt("uriSdkVersion", 30);
 
         lacPath = update.getString("path-lac", null).replace("/editor", "/screenshots");
@@ -75,6 +70,8 @@ public class GalleryActivity extends AppCompatActivity {
         noScreenshots = findViewById(R.id.gallery_noScreenshots);
         rootLinear = findViewById(R.id.gallery_linear_screenshots);
         log = findViewById(R.id.gallery_log);
+
+        if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
 
         devLog("GalleryActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
@@ -209,12 +206,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     void devLog(String toLog) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            log.setText(Html.fromHtml(logs));
-        }
+        AppUtil.devLog(toLog, log);
     }
 
     @SuppressLint("NewApi")
