@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.DocumentsContract;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,13 +46,11 @@ public class WallpaperActivity extends AppCompatActivity {
 
     Integer uriSdkVersion;
 
-    Boolean devMode;
     String lacPath;
     String rawPath;
     String wpTreePath;
     String wpPath;
     String tempPath;
-    String logs = "";
 
     String wpName;
 
@@ -70,7 +67,6 @@ public class WallpaperActivity extends AppCompatActivity {
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
 
         uriSdkVersion = config.getInt("uriSdkVersion", 30);
-        devMode = config.getBoolean("enableDebug", false);
         wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
         lacPath = wpTreePath+"/";
         tempPath = update.getString("path-app", null)+"temp/wp/";
@@ -85,7 +81,7 @@ public class WallpaperActivity extends AppCompatActivity {
         importFile = findViewById(R.id.wallpaper_importFile);
         logView = findViewById(R.id.wallpaper_log);
 
-        if (!devMode) logView.setVisibility(View.GONE);
+        if (config.getBoolean("enableDebug", false)) logView.setVisibility(View.VISIBLE);
         devLog("WallpaperActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
         setListeners();
@@ -137,7 +133,7 @@ public class WallpaperActivity extends AppCompatActivity {
                 for (File file : files) {
                     if (file.getName().endsWith(".jpg")) {
                         devLog("found: " + file.getName());
-                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.wallpaper, rootLayout, false);
+                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_wallpaper, rootLayout, false);
                         setWallpaperView(layout, file);
                     }
                 }
@@ -259,12 +255,7 @@ public class WallpaperActivity extends AppCompatActivity {
     }
 
     void devLog(String toLog) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            logView.setText(Html.fromHtml(logs));
-        }
+        AppUtil.devLog(toLog, logView);
     }
 
     @SuppressLint("NewApi")

@@ -55,7 +55,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
         File[] files = context.getImportedMaps();
         for (File map : files) {
             if (map.getName().endsWith(".txt")) {
-                ViewGroup view = (ViewGroup) context.getLayoutInflater().inflate(R.layout.map, root, false);
+                ViewGroup view = (ViewGroup) context.getLayoutInflater().inflate(R.layout.inflate_map, root, false);
                 addMapView(map, view);
                 noImportedMaps.setVisibility(View.GONE);
             }

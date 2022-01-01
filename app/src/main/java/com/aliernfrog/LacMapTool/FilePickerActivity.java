@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ import java.util.Arrays;
 
 public class FilePickerActivity extends AppCompatActivity implements PickiTCallbacks {
     TextView pathView;
+    HorizontalScrollView pathScroll;
     LinearLayout goParent;
     ProgressBar progressBar;
     LinearLayout root;
@@ -65,6 +67,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         icon_folder = ContextCompat.getDrawable(getApplicationContext(), R.drawable.folder);
 
         pathView = findViewById(R.id.filePicker_path);
+        pathScroll = findViewById(R.id.filePicker_path_scroll);
         goParent = findViewById(R.id.filePicker_goParent);
         progressBar = findViewById(R.id.filePicker_progressBar);
         root = findViewById(R.id.filePicker_root);
@@ -91,10 +94,11 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
             pathView.setText(file.getPath());
             handler.postDelayed(() -> {
                 for (File cur : content) {
-                    ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.file, root, false);
+                    ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_file, root, false);
                     addFileView(view, cur);
                 }
                 progressBar.setVisibility(View.GONE);
+                pathScroll.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
             }, 50);
         }
     }

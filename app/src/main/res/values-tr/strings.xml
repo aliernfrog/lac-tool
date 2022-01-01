@@ -1,5 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="warning_missingLac">LAC yüklü değil, yüklemek için dokunun</string>
     <string name="warning_missingPerms">Eksik izinler, düzeltmek için dokunun</string>
+    <string name="info_lacNeeded">LAC Tool, LAC verilerinizi yönetmenize yardımcı olur. LAC olmadan, LAC Tool kullanışlı olmayacaktır.</string>
     <string name="info_storagePerm">Haritaları ve duvar kağıtlarını yönetmek için depolama izni gerekir</string>
     <string name="info_treePerm">LAC Tool, oyun dosyalarınızı yönetmek için yetki alması gerekiyor, "Bu klasörü kullan" seçeneğine dokunun ve gerekli yetkiler alınacaktır</string>
     <string name="info_saveChangesAndroid11">Değişiklikleri kaydetmek için uygulamanın geri tuşunu veya cihazınızın geri tuşunu kullanın</string>
@@ -26,6 +28,7 @@
     <string name="manageMaps">Haritaları yönet</string>
     <string name="manageWallpapers">Duvar kağıtlarını yönet</string>
     <string name="manageScreenshots">Ekran alıntılarını görüntüle</string>
+    <string name="startLac">LAC\'ı başlat</string>
     <string name="options">Ayarlar &amp; Bilgi</string>
     <string name="checkUpdates">LAC Tool güncellemelerini denetle</string>
     <string name="update_toastAvailable">Güncelleme mevcut!</string>
@@ -70,9 +73,10 @@
     <string name="mapEdit_replaceOldObjects">Kaldırılan objeleri yenileriyle değiştir</string>
     <string name="mapEdit_roles">Roller</string>
     <string name="optionsLac">LAC ayarları</string>
-    <string name="optionLacd">LACD yolu (LAC BETA)</string>
-    <string name="optionLacm">LACM yolu (LAC MOD)</string>
-    <string name="optionLacmb">LACMB yolu (LAC MB)</string>
+    <string name="optionLacDefault">Varsayılan</string>
+    <string name="optionLacd">LACD (LAC BETA)</string>
+    <string name="optionLacm">LACM (LAC MOD)</string>
+    <string name="optionLacmb">LACMB (LAC MB)</string>
     <string name="optionsBackup">Yedekleme ayarları</string>
     <string name="optionAutoBackup">Haritaları otomatik yedekle</string>
     <string name="optionBackupOnEdit">Haritaları düzenlemeden önce yedekle</string>
@@ -87,6 +91,12 @@
     <string name="optionsChangelogChangelog">Değişim kaydı sürümü</string>
     <string name="optionsFeedback">LAC Tool geri bildirimi</string>
     <string name="optionsFeedbackHint">Geri bildiriminiz..</string>
+    <string name="optionsExperimental">Deneysel ayarlar</string>
+    <string name="optionsExperimentalHint">Eğer deneysel ayarların ne yaptıklarını bilmiyorsanız değiştirmeyin!</string>
+    <string name="optionsStartActivity">İsimle aktivite başlat</string>
+    <string name="optionsUriSdkVersion">URI SDK sürümü (varsayılan 30)</string>
+    <string name="optionsUpdateUrl">Güncelleme URL</string>
+    <string name="optionsForceFdroid">-fdroid sonekini zorla</string>
     <string name="backupManage">Yedekleri yönet</string>
     <string name="wallpaperPick">Duvar kağıdı seç</string>
     <string name="wallpaperImport">Duvar kağıdını içe aktar</string>
