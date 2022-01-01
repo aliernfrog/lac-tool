@@ -33,8 +33,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -56,6 +54,7 @@
                     android:id="@+id/filePicker_path_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scrollbars="none"
                     tools:ignore="UselessParent">
 
                     <TextView
