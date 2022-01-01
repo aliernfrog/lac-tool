@@ -78,35 +78,45 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <CheckBox
-                    android:id="@+id/options_toggleLACD"
+                <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:text="@string/optionLacd"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                    android:padding="8dp">
 
-                <CheckBox
-                    android:id="@+id/options_toggleLACM"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:text="@string/optionLacm"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                    <RadioButton
+                        android:id="@+id/options_lac_default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/optionLacDefault"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
 
-                <CheckBox
-                    android:id="@+id/options_toggleLACMB"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:text="@string/optionLacmb"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                    <RadioButton
+                        android:id="@+id/options_lac_lacd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/optionLacd"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/options_lac_lacm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/optionLacm"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/options_lac_lacmb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/optionLacmb"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </RadioGroup>
 
             </LinearLayout>
 

@@ -117,9 +117,10 @@ public class SplashActivity extends AppCompatActivity {
         String pathLacmb = pathExternal+"/Android/data/com.MA.LACMB/files";
         String pathApp = pathDocs+"/LacMapTool/";
         String pathTemp = pathApp+"temp";
-        if (prefsConfig.getBoolean("enableLacd", false)) pathLac = pathLacd;
-        if (prefsConfig.getBoolean("enableLacm", false)) pathLac = pathLacm;
-        if (prefsConfig.getBoolean("enableLacmb", false)) pathLac = pathLacmb;
+        String lacId = prefsConfig.getString("lacId", "lac");
+        if (lacId.equals("lacd")) pathLac = pathLacd;
+        if (lacId.equals("lacm")) pathLac = pathLacm;
+        if (lacId.equals("lacmb")) pathLac = pathLacmb;
         prefsEditUpdate.putString("path-maps", pathLac+"/editor");
         prefsEditUpdate.putString("path-lac", pathLac+"/editor");
         prefsEditUpdate.putString("path-app", pathApp);
