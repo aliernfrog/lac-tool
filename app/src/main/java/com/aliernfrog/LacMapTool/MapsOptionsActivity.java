@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,8 +97,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         saveChanges = findViewById(R.id.mapsOptions_save_button);
         debugText = findViewById(R.id.mapsOptions_log);
 
-        boolean enableDebugUI = config.getBoolean("enableDebug", false);
-        if (enableDebugUI) debugText.setVisibility(View.VISIBLE);
+        if (config.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
 
         rolesAdd_desc.setText(Html.fromHtml("Roles without <font color=yellow>[ ]</font> will get removed by LAC automatically. So always add roles like <font color=yellow>[YOUR ROLE]</font>. To add a role with color do it like <font color=yellow>&#60;color=red&#62;[CRIMINAL]&#60;/color&#62;</font>"));
 
@@ -379,13 +377,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     void devLog(String toLog) {
-        if (debugText.getVisibility() == View.VISIBLE) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            String log = Html.toHtml(new SpannableString(debugText.getText()));
-            String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
-            debugText.setText(Html.fromHtml(full));
-        }
+        AppUtil.devLog(toLog, debugText);
     }
 
     void setListeners() {
