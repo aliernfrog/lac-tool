@@ -70,9 +70,10 @@
     <string name="mapEdit_replaceOldObjects">Kaldırılan objeleri yenileriyle değiştir</string>
     <string name="mapEdit_roles">Roller</string>
     <string name="optionsLac">LAC ayarları</string>
-    <string name="optionLacd">LACD yolu (LAC BETA)</string>
-    <string name="optionLacm">LACM yolu (LAC MOD)</string>
-    <string name="optionLacmb">LACMB yolu (LAC MB)</string>
+    <string name="optionLacDefault">Varsayılan</string>
+    <string name="optionLacd">LACD (LAC BETA)</string>
+    <string name="optionLacm">LACM (LAC MOD)</string>
+    <string name="optionLacmb">LACMB (LAC MB)</string>
     <string name="optionsBackup">Yedekleme ayarları</string>
     <string name="optionAutoBackup">Haritaları otomatik yedekle</string>
     <string name="optionBackupOnEdit">Haritaları düzenlemeden önce yedekle</string>

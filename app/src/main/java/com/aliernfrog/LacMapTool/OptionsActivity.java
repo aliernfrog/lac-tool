@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +30,10 @@ import org.json.JSONObject;
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
     LinearLayout lacOptions;
-    CheckBox lacd;
-    CheckBox lacm;
-    CheckBox lacmb;
+    RadioButton lacPathDefault;
+    RadioButton lacPathLacd;
+    RadioButton lacPathLacm;
+    RadioButton lacPathLacmb;
     LinearLayout backupOptions;
     CheckBox autoBackups;
     CheckBox backupOnEdit;
@@ -83,9 +85,10 @@ public class OptionsActivity extends AppCompatActivity {
 
         home = findViewById(R.id.options_goback);
         lacOptions = findViewById(R.id.options_lac);
-        lacd = findViewById(R.id.options_toggleLACD);
-        lacm = findViewById(R.id.options_toggleLACM);
-        lacmb = findViewById(R.id.options_toggleLACMB);
+        lacPathDefault = findViewById(R.id.options_lac_default);
+        lacPathLacd = findViewById(R.id.options_lac_lacd);
+        lacPathLacm = findViewById(R.id.options_lac_lacm);
+        lacPathLacmb = findViewById(R.id.options_lac_lacmb);
         backupOptions = findViewById(R.id.options_backup);
         autoBackups = findViewById(R.id.options_autoBackup);
         backupOnEdit = findViewById(R.id.options_backupOnEdit);
@@ -146,9 +149,11 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void checkConfig() {
-        if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
-        if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
-        if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
+        String lacId = config.getString("lacId", "lac");
+        if (lacId.equals("lac")) lacPathDefault.setChecked(true);
+        if (lacId.equals("lacd")) lacPathLacd.setChecked(true);
+        if (lacId.equals("lacm")) lacPathLacm.setChecked(true);
+        if (lacId.equals("lacmb")) lacPathLacmb.setChecked(true);
         if (config.getBoolean("useInAppFilePicker", false)) useInAppFilePicker.setChecked(true);
         if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
@@ -157,9 +162,15 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
     }
 
-    void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) requiresRestart = true;
-        configEdit.putBoolean(name, set);
+    void changeBoolean(String name, Boolean value) {
+        if (name.equals("enableDebug") || name.equals("forceEnglish")) requiresRestart = true;
+        configEdit.putBoolean(name, value);
+        configEdit.commit();
+    }
+
+    void changeString(String name, String value) {
+        if (name.equals("lacId")) requiresRestart = true;
+        configEdit.putString(name, value);
         configEdit.commit();
     }
 
@@ -212,17 +223,18 @@ public class OptionsActivity extends AppCompatActivity {
     void setListeners() {
         AppUtil.handleOnPressEvent(home, this::finishActivity);
         AppUtil.handleOnPressEvent(lacOptions);
-        lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
-        lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
-        lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
+        lacPathDefault.setOnClickListener(v -> changeString("lacId", "lac"));
+        lacPathLacd.setOnClickListener(v -> changeString("lacId", "lacd"));
+        lacPathLacm.setOnClickListener(v -> changeString("lacId", "lacm"));
+        lacPathLacmb.setOnClickListener(v -> changeString("lacId", "lacmb"));
         AppUtil.handleOnPressEvent(backupOptions);
-        autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
-        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
+        autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableAutoBackups", isChecked));
+        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableBackupOnEdit", isChecked));
         AppUtil.handleOnPressEvent(appOptions);
-        useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("useInAppFilePicker", isChecked)));
-        autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
-        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
-        dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
+        useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("useInAppFilePicker", isChecked)));
+        autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("autoCheckUpdates", isChecked)));
+        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("forceEnglish", isChecked)));
+        dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableDebug", isChecked));
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
         AppUtil.handleOnPressEvent(experimentalOptions);
 

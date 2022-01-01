@@ -71,9 +71,10 @@
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
     <string name="mapEdit_roles">Roles</string>
     <string name="optionsLac">LAC options</string>
-    <string name="optionLacd">LACD path (LAC BETA)</string>
-    <string name="optionLacm">LACM path (LAC MOD)</string>
-    <string name="optionLacmb">LACMB path (LAC MB)</string>
+    <string name="optionLacDefault">Default</string>
+    <string name="optionLacd">LACD (LAC BETA)</string>
+    <string name="optionLacm">LACM (LAC MOD)</string>
+    <string name="optionLacmb">LACMB (LAC MB)</string>
     <string name="optionsBackup">Backup options</string>
     <string name="optionAutoBackup">Auto map backups</string>
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
