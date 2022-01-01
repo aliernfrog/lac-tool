@@ -55,10 +55,13 @@ public class AppUtil {
         JSONObject object = new JSONObject(rawUpdate);
         updateEdit.putInt("updateLatest", object.getInt("latest"));
         updateEdit.putString("updateDownload", object.getString("download"));
-        if (versName.endsWith("-fdroid")) updateEdit.putString("updateDownload", object.getString("downloadFdroid"));
         updateEdit.putString("updateChangelog", object.getString("changelog"));
         updateEdit.putString("updateChangelogVersion", object.getString("changelogVersion"));
         updateEdit.putString("notes", object.getString("notes"));
+        if (versName.endsWith("-fdroid")) {
+            updateEdit.putInt("updateLatest", object.getInt("latestFdroid"));
+            updateEdit.putString("updateDownload", object.getString("downloadFdroid"));
+        }
         updateEdit.commit();
         return true;
     }
