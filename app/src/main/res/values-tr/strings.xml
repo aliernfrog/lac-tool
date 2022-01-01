@@ -1,5 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="warning_missingLac">LAC yüklü değil, yüklemek için dokunun</string>
     <string name="warning_missingPerms">Eksik izinler, düzeltmek için dokunun</string>
+    <string name="info_lacNeeded">LAC Tool, LAC verilerinizi yönetmenize yardımcı olur. LAC olmadan, LAC Tool kullanışlı olmayacaktır.</string>
     <string name="info_storagePerm">Haritaları ve duvar kağıtlarını yönetmek için depolama izni gerekir</string>
     <string name="info_treePerm">LAC Tool, oyun dosyalarınızı yönetmek için yetki alması gerekiyor, "Bu klasörü kullan" seçeneğine dokunun ve gerekli yetkiler alınacaktır</string>
     <string name="info_saveChangesAndroid11">Değişiklikleri kaydetmek için uygulamanın geri tuşunu veya cihazınızın geri tuşunu kullanın</string>
