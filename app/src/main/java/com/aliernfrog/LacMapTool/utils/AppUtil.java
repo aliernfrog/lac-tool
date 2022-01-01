@@ -42,14 +42,19 @@ public class AppUtil {
         return pInfo.versionCode;
     }
 
-    public static Boolean isLacInstalled(Context context) {
-        PackageManager pm = context.getPackageManager();
+    public static String getLacId(Context context) {
         SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         String lacId = config.getString("lacId", "lac");
-        String idToCheck = "com.MA.LAC";
-        if (lacId.equals("lacd")) idToCheck = "com.MA.LACD";
-        if (lacId.equals("lacm")) idToCheck = "com.MA.LACM";
-        if (lacId.equals("lacmb")) idToCheck = "com.MA.LACMB";
+        String finalId = "com.MA.LAC";
+        if (lacId.equals("lacd")) finalId = "com.MA.LACD";
+        if (lacId.equals("lacm")) finalId = "com.MA.LACM";
+        if (lacId.equals("lacmb")) finalId = "com.MA.LACMB";
+        return finalId;
+    }
+
+    public static Boolean isLacInstalled(Context context) {
+        PackageManager pm = context.getPackageManager();
+        String idToCheck = getLacId(context);
         try {
             pm.getPackageInfo(idToCheck, 0);
             return true;

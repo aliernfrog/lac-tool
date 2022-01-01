@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Button redirectWallpaper;
     Button redirectGallery;
     LinearLayout appLinear;
+    Button startLac;
     Button checkUpdates;
     Button redirectOptions;
     LinearLayout updateLinear;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         redirectWallpaper = findViewById(R.id.main_wallpapers);
         redirectGallery = findViewById(R.id.main_screenshots);
         appLinear = findViewById(R.id.main_optionsApp);
+        startLac = findViewById(R.id.main_startLac);
         checkUpdates = findViewById(R.id.main_checkUpdates);
         redirectOptions = findViewById(R.id.main_options);
         updateLinear = findViewById(R.id.main_update);
@@ -83,8 +85,12 @@ public class MainActivity extends AppCompatActivity {
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
+        if (!AppUtil.isLacInstalled(getApplicationContext())) {
+            missingLac.setVisibility(View.VISIBLE);
+            startLac.setVisibility(View.GONE);
+        }
+
         if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
-        if (!AppUtil.isLacInstalled(getApplicationContext())) missingLac.setVisibility(View.VISIBLE);
         checkUpdates(false);
         checkPerms();
         createFiles();
@@ -172,6 +178,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void mkdirs(File mk) {
+        boolean state = mk.mkdirs();
+        devLog(mk.getPath()+" //"+state);
+    }
+
     public void switchActivity(Class i, Boolean allowWithoutPerms) {
         if (!allowWithoutPerms && !hasPerms) {
             devLog("no required permissions, checking again");
@@ -183,9 +194,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void mkdirs(File mk) {
-        boolean state = mk.mkdirs();
-        devLog(mk.getPath()+" //"+state);
+    public void launchLac() {
+        PackageManager pm = getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(AppUtil.getLacId(getApplicationContext()));
+        finish();
+        startActivity(intent);
     }
 
     public void redirectURL(String url) {
@@ -206,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
         AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
         AppUtil.handleOnPressEvent(appLinear);
+        AppUtil.handleOnPressEvent(startLac, this::launchLac);
         AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
         AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true));
     }

@@ -28,6 +28,7 @@
     <string name="manageMaps">Haritaları yönet</string>
     <string name="manageWallpapers">Duvar kağıtlarını yönet</string>
     <string name="manageScreenshots">Ekran alıntılarını görüntüle</string>
+    <string name="startLac">LAC\'ı başlat</string>
     <string name="options">Ayarlar &amp; Bilgi</string>
     <string name="checkUpdates">LAC Tool güncellemelerini denetle</string>
     <string name="update_toastAvailable">Güncelleme mevcut!</string>
