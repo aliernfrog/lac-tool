@@ -47,6 +47,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     EditText mapNameInput;
     LinearLayout thumbnailLinear;
     ImageView thumbnailImage;
+    LinearLayout thumbnailLinearActions;
     Button thumbnailSetButton;
     Button thumbnailRemoveButton;
     LinearLayout otherOptionsLinear;
@@ -95,6 +96,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         mapNameInput = findViewById(R.id.maps_name_input);
         thumbnailLinear = findViewById(R.id.maps_thumbnail_linear);
         thumbnailImage = findViewById(R.id.maps_thumbnail_thumbnail);
+        thumbnailLinearActions = findViewById(R.id.maps_thumbnail_actions);
         thumbnailSetButton = findViewById(R.id.maps_thumbnail_set);
         thumbnailRemoveButton = findViewById(R.id.maps_thumbnail_remove);
         otherOptionsLinear = findViewById(R.id.maps_other);
@@ -159,6 +161,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
             thumbnailImage.setVisibility(View.GONE);
             thumbnailImage.setBackground(null);
+            thumbnailLinearActions.setVisibility(View.VISIBLE);
             thumbnailRemoveButton.setVisibility(View.GONE);
             devLog("no thumbnail");
         }
@@ -507,7 +510,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             renameMap(mapNameInput.getText().toString());
             return true;
         });
-        AppUtil.handleOnPressEvent(thumbnailLinear);
+        AppUtil.handleOnPressEvent(thumbnailLinear, () -> AppUtil.toggleView(thumbnailLinearActions));
         AppUtil.handleOnPressEvent(thumbnailSetButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
         AppUtil.handleOnPressEvent(thumbnailRemoveButton, this::removeThumbnail);
         AppUtil.handleOnPressEvent(otherOptionsLinear);

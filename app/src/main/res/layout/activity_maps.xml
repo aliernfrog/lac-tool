@@ -48,7 +48,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="24dp"
-        android:paddingEnd="24dp">
+        android:paddingEnd="24dp"
+        android:animateLayoutChanges="true">
 
       <LinearLayout
           android:layout_width="match_parent"
@@ -140,6 +141,7 @@
           android:orientation="vertical"
           android:padding="8dp"
           android:visibility="gone"
+          android:animateLayoutChanges="true"
           tools:visibility="visible">
 
         <TextView
@@ -160,27 +162,37 @@
             android:contentDescription="@string/mapThumbnail"
             android:padding="8dp" />
 
-        <Button
-            android:id="@+id/maps_thumbnail_set"
+        <LinearLayout
+            android:id="@+id/maps_thumbnail_actions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/linear_blue"
-            android:text="@string/mapThumbnailSet"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            app:backgroundTint="#005DFF" />
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-        <Button
-            android:id="@+id/maps_thumbnail_remove"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/linear_red"
-            android:text="@string/mapThumbnailRemove"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            app:backgroundTint="#960000" />
+          <Button
+              android:id="@+id/maps_thumbnail_set"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="8dp"
+              android:background="@drawable/linear_blue"
+              android:text="@string/mapThumbnailSet"
+              android:textColor="#FFFFFF"
+              android:textStyle="bold"
+              app:backgroundTint="#005DFF" />
+
+          <Button
+              android:id="@+id/maps_thumbnail_remove"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="8dp"
+              android:background="@drawable/linear_red"
+              android:text="@string/mapThumbnailRemove"
+              android:textColor="#FFFFFF"
+              android:textStyle="bold"
+              app:backgroundTint="#960000" />
+        </LinearLayout>
 
       </LinearLayout>
 
@@ -193,7 +205,8 @@
           android:orientation="vertical"
           android:padding="8dp"
           android:visibility="gone"
-          tools:visibility="visible">
+          tools:visibility="visible"
+          android:animateLayoutChanges="true">
 
         <Button
             android:id="@+id/maps_other_import"
