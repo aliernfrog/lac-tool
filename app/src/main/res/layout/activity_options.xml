@@ -310,8 +310,9 @@
                     android:id="@+id/options_changelog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:autoLink="web"
-                    android:gravity="center_horizontal"
                     android:linksClickable="true"
                     android:text="@string/optionsChangelogNoChangelog"
                     android:textColor="#FFFFFF" />
