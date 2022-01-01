@@ -47,6 +47,7 @@ public class OptionsActivity extends AppCompatActivity {
     EditText startActivityName;
     EditText uriSdkVersionInput;
     EditText updateUrlInput;
+    CheckBox forceFdroid;
     LinearLayout discord_linear;
     Button discord_aliern;
     Button discord_rcs;
@@ -101,6 +102,7 @@ public class OptionsActivity extends AppCompatActivity {
         startActivityName = findViewById(R.id.options_startActivity);
         uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
         updateUrlInput = findViewById(R.id.options_updateUrl);
+        forceFdroid = findViewById(R.id.options_forceFdroid);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         discord_linear = findViewById(R.id.options_dc);
         discord_aliern = findViewById(R.id.options_discord_aliern);
@@ -160,6 +162,7 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
         if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
+        if (config.getBoolean("forceFdroid", false)) forceFdroid.setChecked(true);
     }
 
     void changeBoolean(String name, Boolean value) {
@@ -262,6 +265,7 @@ public class OptionsActivity extends AppCompatActivity {
             return false;
         });
 
+        forceFdroid.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("forceFdroid", isChecked));
         AppUtil.handleOnPressEvent(discord_linear);
         AppUtil.handleOnPressEvent(discord_aliern, () -> redirectURL("https://discord.gg/SQXqBMs"));
         AppUtil.handleOnPressEvent(discord_rcs, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));

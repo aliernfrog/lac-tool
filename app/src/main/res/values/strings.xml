@@ -97,6 +97,7 @@
     <string name="optionsStartActivity">Start activity with name</string>
     <string name="optionsUriSdkVersion">URI SDK version (30 by default)</string>
     <string name="optionsUpdateUrl">Update URL</string>
+    <string name="optionsForceFdroid">Force -fdroid suffix</string>
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>

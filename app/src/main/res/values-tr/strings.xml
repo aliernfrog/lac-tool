@@ -93,6 +93,7 @@
     <string name="optionsStartActivity">İsimle aktivite başlat</string>
     <string name="optionsUriSdkVersion">URI SDK sürümü (varsayılan 30)</string>
     <string name="optionsUpdateUrl">Güncelleme URL</string>
+    <string name="optionsForceFdroid">-fdroid sonekini zorla</string>
     <string name="backupManage">Yedekleri yönet</string>
     <string name="wallpaperPick">Duvar kağıdı seç</string>
     <string name="wallpaperImport">Duvar kağıdını içe aktar</string>
