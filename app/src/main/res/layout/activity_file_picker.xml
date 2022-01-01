@@ -33,8 +33,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -44,21 +42,29 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:padding="8dp"
-                tools:ignore="UselessParent">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/filePicker_path"
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:id="@+id/filePicker_path_scroll"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-            </HorizontalScrollView>
+                    android:scrollbars="none"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/filePicker_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </HorizontalScrollView>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/filePicker_goParent"

@@ -42,7 +42,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp">
+            android:paddingEnd="24dp"
+            android:animateLayoutChanges="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,58 +68,57 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/optionsLac"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/options_lac_content"
+                <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp">
 
-                    <CheckBox
-                        android:id="@+id/options_toggleLACD"
+                    <RadioButton
+                        android:id="@+id/options_lac_default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
+                        android:text="@string/optionLacDefault"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/options_lac_lacd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="@string/optionLacd"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_toggleLACM"
+                    <RadioButton
+                        android:id="@+id/options_lac_lacm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
                         android:text="@string/optionLacm"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_toggleLACMB"
+                    <RadioButton
+                        android:id="@+id/options_lac_lacmb"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
                         android:text="@string/optionLacmb"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
-                </LinearLayout>
+                </RadioGroup>
+
             </LinearLayout>
 
             <LinearLayout
@@ -128,47 +128,37 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/optionsBackup"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/options_backup_content"
+                <CheckBox
+                    android:id="@+id/options_autoBackup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionAutoBackup"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_autoBackup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionAutoBackup"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_backupOnEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionBackupOnEdit"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_backupOnEdit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionBackupOnEdit"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -178,81 +168,68 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/optionsApp"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/options_app_content"
+                <CheckBox
+                    android:id="@+id/options_useInAppFilePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionsUseInAppFilePicker"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_useInAppFilePicker"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionsUseInAppFilePicker"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_autoCheckUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionAutoCheckUpdate"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_autoCheckUpdate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionAutoCheckUpdate"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_forceEnglish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionForceEnglish"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_forceEnglish"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionForceEnglish"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <CheckBox
+                    android:id="@+id/options_devtoggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionDebug"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/options_devtoggle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionDebug"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                <Button
+                    android:id="@+id/options_deleteTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionDeleteTemp"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FF0E0E0E" />
 
-                    <Button
-                        android:id="@+id/options_deleteTemp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/linear_button"
-                        android:text="@string/optionDeleteTemp"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -262,83 +239,105 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="16dp"
+                android:padding="8dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Experimental options"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/optionsExperimental"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:background="@drawable/linear_red"
                     android:padding="8dp"
-                    android:text="These are experimental options, do not change them if you do not know what they do!"
+                    android:text="@string/optionsExperimentalHint"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/options_startActivity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
-                    android:hint="Start activity with name"
+                    android:hint="@string/optionsStartActivity"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
-                    tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+                    android:textStyle="bold"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <EditText
                     android:id="@+id/options_uriSdkVersion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
-                    android:hint="URI SDK version (30 by default)"
+                    android:hint="@string/optionsUriSdkVersion"
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
-                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
+                    android:textStyle="bold"
+                    tools:ignore="TextFields,TouchTargetSizeCheck" />
 
                 <EditText
                     android:id="@+id/options_updateUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:autofillHints="false"
                     android:ems="10"
-                    android:hint="Update URL"
+                    android:hint="@string/optionsUpdateUrl"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
                     android:textColor="@color/white"
                     android:textColorHint="#777777"
-                    tools:ignore="HardcodedText,TextFields,TouchTargetSizeCheck" />
+                    android:textStyle="bold"
+                    tools:ignore="TextFields,TouchTargetSizeCheck" />
+
+                <CheckBox
+                    android:id="@+id/options_forceFdroid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/optionsForceFdroid"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/options_changelog"
+            <LinearLayout
+                android:id="@+id/options_changelog_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:gravity="center_horizontal"
-                android:padding="8dp"
-                android:text="@string/optionsChangelogNoChangelog"
-                android:textColor="#FFFFFF"
-                android:linksClickable="true"
-                android:autoLink="web" />
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/options_changelog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:text="@string/optionsChangelogNoChangelog"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/options_feedback_linear"
@@ -347,7 +346,8 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:animateLayoutChanges="true">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -364,7 +364,6 @@
                     android:id="@+id/options_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
                     android:orientation="vertical"
                     android:visibility="gone"
                     tools:visibility="visible">
@@ -373,16 +372,16 @@
                         android:id="@+id/options_feedback_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
                         android:autofillHints="false"
-                        android:background="@drawable/linear_button"
                         android:ems="10"
                         android:hint="@string/optionsFeedbackHint"
                         android:inputType="textMultiLine|textNoSuggestions|text|textImeMultiLine"
                         android:maxLength="1000"
-                        android:padding="8dp"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#6A6A6A"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="TouchTargetSizeCheck" />
 
                     <Button
                         android:id="@+id/options_feedback_submit"
@@ -400,7 +399,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/options_dc"
+                android:id="@+id/options_social"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -410,57 +409,81 @@
                 android:padding="8dp">
 
                 <LinearLayout
+                    android:id="@+id/options_social_discordLac"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <Button
-                        android:id="@+id/options_discord_rcs"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/discord"
-                        android:padding="8dp"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/optionsDiscordRcs"
+                        app:srcCompat="@drawable/social_discord_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="@string/optionsDiscordRcs"
                         android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E"/>
-
-                    <Button
-                        android:id="@+id/options_discord_aliern"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/discord"
-                        android:padding="8dp"
-                        android:text="@string/optionsDiscordAliern"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/options_social_discordLacTool"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <Button
-                        android:id="@+id/options_github"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/github"
-                        android:padding="8dp"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/optionsDiscordAliern"
+                        app:srcCompat="@drawable/social_discord_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/optionsDiscordAliern"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/options_social_githubLacTool"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/optionsGithub"
+                        app:srcCompat="@drawable/social_github_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="@string/optionsGithub"
                         android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>

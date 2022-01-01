@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,16 +30,14 @@ import org.json.JSONObject;
 public class OptionsActivity extends AppCompatActivity {
     ImageView home;
     LinearLayout lacOptions;
-    LinearLayout lacOptionsContent;
-    CheckBox lacd;
-    CheckBox lacm;
-    CheckBox lacmb;
+    RadioButton lacPathDefault;
+    RadioButton lacPathLacd;
+    RadioButton lacPathLacm;
+    RadioButton lacPathLacmb;
     LinearLayout backupOptions;
-    LinearLayout backupOptionsContent;
     CheckBox autoBackups;
     CheckBox backupOnEdit;
     LinearLayout appOptions;
-    LinearLayout appOptionsContent;
     CheckBox useInAppFilePicker;
     CheckBox autoCheckUpdate;
     CheckBox forceEnglish;
@@ -48,15 +47,17 @@ public class OptionsActivity extends AppCompatActivity {
     EditText startActivityName;
     EditText uriSdkVersionInput;
     EditText updateUrlInput;
-    LinearLayout discord_linear;
-    Button discord_aliern;
-    Button discord_rcs;
-    Button github;
+    CheckBox forceFdroid;
     LinearLayout feedbackLinear;
     LinearLayout feedback;
     EditText feedbackInput;
     Button feedbackSubmit;
+    LinearLayout changelogLinear;
     TextView changelog;
+    LinearLayout social_linear;
+    LinearLayout discord_lac;
+    LinearLayout discord_lacTool;
+    LinearLayout github;
 
     SharedPreferences update;
     SharedPreferences config;
@@ -65,13 +66,13 @@ public class OptionsActivity extends AppCompatActivity {
     PickiT pickiT;
 
     String tempPath;
-    String feedbackUrl = "https://ensibot-discord.aliernfrog.repl.co";
+    String feedbackUrl = "https://aliernfrog.repl.co";
 
     String appVers;
     Integer appVersCode;
 
     Integer changelogClicks = 0;
-    Integer activityResult = 0;
+    Boolean requiresRestart = false;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -85,16 +86,14 @@ public class OptionsActivity extends AppCompatActivity {
 
         home = findViewById(R.id.options_goback);
         lacOptions = findViewById(R.id.options_lac);
-        lacOptionsContent = findViewById(R.id.options_lac_content);
-        lacd = findViewById(R.id.options_toggleLACD);
-        lacm = findViewById(R.id.options_toggleLACM);
-        lacmb = findViewById(R.id.options_toggleLACMB);
+        lacPathDefault = findViewById(R.id.options_lac_default);
+        lacPathLacd = findViewById(R.id.options_lac_lacd);
+        lacPathLacm = findViewById(R.id.options_lac_lacm);
+        lacPathLacmb = findViewById(R.id.options_lac_lacmb);
         backupOptions = findViewById(R.id.options_backup);
-        backupOptionsContent = findViewById(R.id.options_backup_content);
         autoBackups = findViewById(R.id.options_autoBackup);
         backupOnEdit = findViewById(R.id.options_backupOnEdit);
         appOptions = findViewById(R.id.options_app);
-        appOptionsContent = findViewById(R.id.options_app_content);
         useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         forceEnglish = findViewById(R.id.options_forceEnglish);
@@ -103,16 +102,18 @@ public class OptionsActivity extends AppCompatActivity {
         startActivityName = findViewById(R.id.options_startActivity);
         uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
         updateUrlInput = findViewById(R.id.options_updateUrl);
+        forceFdroid = findViewById(R.id.options_forceFdroid);
         deleteTemp = findViewById(R.id.options_deleteTemp);
-        discord_linear = findViewById(R.id.options_dc);
-        discord_aliern = findViewById(R.id.options_discord_aliern);
-        discord_rcs = findViewById(R.id.options_discord_rcs);
-        github = findViewById(R.id.options_github);
         feedbackLinear = findViewById(R.id.options_feedback_linear);
         feedback = findViewById(R.id.options_feedback);
         feedbackInput = findViewById(R.id.options_feedback_input);
         feedbackSubmit = findViewById(R.id.options_feedback_submit);
+        changelogLinear = findViewById(R.id.options_changelog_linear);
         changelog = findViewById(R.id.options_changelog);
+        social_linear = findViewById(R.id.options_social);
+        discord_lac = findViewById(R.id.options_social_discordLac);
+        discord_lacTool = findViewById(R.id.options_social_discordLacTool);
+        github = findViewById(R.id.options_social_githubLacTool);
 
         tempPath = update.getString("path-temp", null);
 
@@ -150,20 +151,29 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void checkConfig() {
-        if (config.getBoolean("enableLacd", false)) lacd.setChecked(true);
-        if (config.getBoolean("enableLacm", false)) lacm.setChecked(true);
-        if (config.getBoolean("enableLacmb", false)) lacmb.setChecked(true);
+        String lacId = config.getString("lacId", "lac");
+        if (lacId.equals("lac")) lacPathDefault.setChecked(true);
+        if (lacId.equals("lacd")) lacPathLacd.setChecked(true);
+        if (lacId.equals("lacm")) lacPathLacm.setChecked(true);
+        if (lacId.equals("lacmb")) lacPathLacmb.setChecked(true);
         if (config.getBoolean("useInAppFilePicker", false)) useInAppFilePicker.setChecked(true);
         if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
         if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
+        if (config.getBoolean("forceFdroid", false)) forceFdroid.setChecked(true);
     }
 
-    void changeOption(String name, Boolean set) {
-        if (name.equals("enableLacd") || name.equals("enableLacm") || name.equals("enableLacmb") || name.equals("enableDebug") || name.equals("forceEnglish")) activityResult = 1;
-        configEdit.putBoolean(name, set);
+    void changeBoolean(String name, Boolean value) {
+        if (name.equals("enableDebug") || name.equals("forceEnglish")) requiresRestart = true;
+        configEdit.putBoolean(name, value);
+        configEdit.commit();
+    }
+
+    void changeString(String name, String value) {
+        if (name.equals("lacId")) requiresRestart = true;
+        configEdit.putString(name, value);
         configEdit.commit();
     }
 
@@ -173,7 +183,7 @@ public class OptionsActivity extends AppCompatActivity {
         try {
             JSONObject object = new JSONObject();
             object.put("type", "feedback");
-            object.put("body", feedback);
+            object.put("feedback", feedback);
             object.put("from", "LAC Tool "+appVersCode);
             String response = WebUtil.doPostRequest(feedbackUrl, object);
             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
@@ -205,25 +215,31 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void finishActivity() {
-        setResult(activityResult);
         finish();
+        if (requiresRestart) {
+            Intent intent = new Intent(this, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 
     void setListeners() {
         AppUtil.handleOnPressEvent(home, this::finishActivity);
-        AppUtil.handleOnPressEvent(lacOptions, () -> AppUtil.toggleView(lacOptionsContent));
-        lacd.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacd", isChecked));
-        lacm.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacm", isChecked));
-        lacmb.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableLacmb", isChecked));
-        AppUtil.handleOnPressEvent(backupOptions, () -> AppUtil.toggleView(backupOptionsContent));
-        autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableAutoBackups", isChecked));
-        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableBackupOnEdit", isChecked));
-        AppUtil.handleOnPressEvent(appOptions, () -> AppUtil.toggleView(appOptionsContent));
-        useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("useInAppFilePicker", isChecked)));
-        autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("autoCheckUpdates", isChecked)));
-        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeOption("forceEnglish", isChecked)));
-        dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeOption("enableDebug", isChecked));
+        AppUtil.handleOnPressEvent(lacOptions);
+        lacPathDefault.setOnClickListener(v -> changeString("lacId", "lac"));
+        lacPathLacd.setOnClickListener(v -> changeString("lacId", "lacd"));
+        lacPathLacm.setOnClickListener(v -> changeString("lacId", "lacm"));
+        lacPathLacmb.setOnClickListener(v -> changeString("lacId", "lacmb"));
+        AppUtil.handleOnPressEvent(backupOptions);
+        autoBackups.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableAutoBackups", isChecked));
+        backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableBackupOnEdit", isChecked));
+        AppUtil.handleOnPressEvent(appOptions);
+        useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("useInAppFilePicker", isChecked)));
+        autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("autoCheckUpdates", isChecked)));
+        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("forceEnglish", isChecked)));
+        dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableDebug", isChecked));
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
+        AppUtil.handleOnPressEvent(experimentalOptions);
 
         startActivityName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -249,16 +265,17 @@ public class OptionsActivity extends AppCompatActivity {
             return false;
         });
 
-        AppUtil.handleOnPressEvent(discord_linear);
-        AppUtil.handleOnPressEvent(discord_aliern, () -> redirectURL("https://discord.gg/SQXqBMs"));
-        AppUtil.handleOnPressEvent(discord_rcs, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));
-        AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
+        forceFdroid.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("forceFdroid", isChecked));
         AppUtil.handleOnPressEvent(feedbackLinear, () -> AppUtil.toggleView(feedback));
         AppUtil.handleOnPressEvent(feedbackSubmit, this::submitFeedback);
-        AppUtil.handleOnPressEvent(changelog, () -> {
+        AppUtil.handleOnPressEvent(changelogLinear, () -> {
             changelogClicks += 1;
-            if (changelogClicks >= 10) experimentalOptions.setVisibility(View.VISIBLE);
+            if (changelogClicks > 15) experimentalOptions.setVisibility(View.VISIBLE);
         });
+        AppUtil.handleOnPressEvent(social_linear);
+        AppUtil.handleOnPressEvent(discord_lac, () -> redirectURL("https://discord.gg/aQhGqHSc3W"));
+        AppUtil.handleOnPressEvent(discord_lacTool, () -> redirectURL("https://discord.gg/SQXqBMs"));
+        AppUtil.handleOnPressEvent(github, () -> redirectURL("https://github.com/aliernfrog/lac-tool"));
     }
 
     @Override

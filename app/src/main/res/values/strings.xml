@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">LAC Tool</string>
+    <string name="warning_missingLac">LAC is not installed, click to install</string>
     <string name="warning_missingPerms">Missing permissions, click to fix</string>
+    <string name="info_lacNeeded">LAC Tool helps you manage LAC data. Without LAC, LAC Tool will not be useful.</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
     <string name="info_treePerm">LAC Tool needs access to your LAC files in order to manage them, click "use this folder" option and it will get required permissions</string>
     <string name="info_saveChangesAndroid11">Click your device\'s back button or in app back button to save the changes you did</string>
@@ -27,6 +29,7 @@
     <string name="manageMaps">Manage maps</string>
     <string name="manageWallpapers">Manage wallpapers</string>
     <string name="manageScreenshots">View screenshots</string>
+    <string name="startLac">Start LAC</string>
     <string name="options">Options &amp; Info</string>
     <string name="checkUpdates">Check for LAC Tool updates</string>
     <string name="update_toastAvailable">Update available!</string>
@@ -71,9 +74,10 @@
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
     <string name="mapEdit_roles">Roles</string>
     <string name="optionsLac">LAC options</string>
-    <string name="optionLacd">LACD path (LAC BETA)</string>
-    <string name="optionLacm">LACM path (LAC MOD)</string>
-    <string name="optionLacmb">LACMB path (LAC MB)</string>
+    <string name="optionLacDefault">Default</string>
+    <string name="optionLacd">LACD (LAC BETA)</string>
+    <string name="optionLacm">LACM (LAC MOD)</string>
+    <string name="optionLacmb">LACMB (LAC MB)</string>
     <string name="optionsBackup">Backup options</string>
     <string name="optionAutoBackup">Auto map backups</string>
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
@@ -91,6 +95,12 @@
     <string name="optionsGithub" translatable="false">LAC Tool GitHub</string>
     <string name="optionsFeedback">LAC Tool feedback</string>
     <string name="optionsFeedbackHint">Your feedback..</string>
+    <string name="optionsExperimental">Experimental options</string>
+    <string name="optionsExperimentalHint">Do not change experimental options if you do not know what they do!</string>
+    <string name="optionsStartActivity">Start activity with name</string>
+    <string name="optionsUriSdkVersion">URI SDK version (30 by default)</string>
+    <string name="optionsUpdateUrl">Update URL</string>
+    <string name="optionsForceFdroid">Force -fdroid suffix</string>
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
     <string name="wallpaperImport">Import the wallpaper</string>

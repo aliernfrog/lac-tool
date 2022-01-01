@@ -27,12 +27,14 @@ import java.io.IOException;
 
 @SuppressLint({"CommitPrefEdits", "ClickableViewAccessibility"})
 public class MainActivity extends AppCompatActivity {
+    LinearLayout missingLac;
     LinearLayout missingPerms;
     LinearLayout lacLinear;
     Button redirectMaps;
     Button redirectWallpaper;
     Button redirectGallery;
     LinearLayout appLinear;
+    Button startLac;
     Button checkUpdates;
     Button redirectOptions;
     LinearLayout updateLinear;
@@ -48,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
     Boolean hasPerms;
     Integer version;
 
-    String logs = "";
-    Boolean devMode;
-
     SharedPreferences update;
     SharedPreferences config;
 
@@ -63,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        devMode = config.getBoolean("enableDebug", false);
 
-        devMode = config.getBoolean("enableDebug", false);
         lacPath = update.getString("path-lac", null);
         dataPath = update.getString("path-app", null);
         tempMapsPath = update.getString("path-temp-maps", null);
@@ -73,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
         aBackupPath = dataPath+"auto-backups/";
         version = update.getInt("versionCode", 0);
 
+        missingLac = findViewById(R.id.main_missingLac);
         missingPerms = findViewById(R.id.main_missingPerms);
         lacLinear = findViewById(R.id.main_optionsLac);
         redirectMaps = findViewById(R.id.main_maps);
         redirectWallpaper = findViewById(R.id.main_wallpapers);
         redirectGallery = findViewById(R.id.main_screenshots);
         appLinear = findViewById(R.id.main_optionsApp);
+        startLac = findViewById(R.id.main_startLac);
         checkUpdates = findViewById(R.id.main_checkUpdates);
         redirectOptions = findViewById(R.id.main_options);
         updateLinear = findViewById(R.id.main_update);
@@ -86,7 +85,12 @@ public class MainActivity extends AppCompatActivity {
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
-        if (devMode) log.setVisibility(View.VISIBLE);
+        if (!AppUtil.isLacInstalled(getApplicationContext())) {
+            missingLac.setVisibility(View.VISIBLE);
+            startLac.setVisibility(View.GONE);
+        }
+
+        if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
         checkUpdates(false);
         checkPerms();
         createFiles();
@@ -174,6 +178,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void mkdirs(File mk) {
+        boolean state = mk.mkdirs();
+        devLog(mk.getPath()+" //"+state);
+    }
+
     public void switchActivity(Class i, Boolean allowWithoutPerms) {
         if (!allowWithoutPerms && !hasPerms) {
             devLog("no required permissions, checking again");
@@ -181,17 +190,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(this.getApplicationContext(), i);
             devLog("attempting to redirect to "+i.toString());
-            if (i == OptionsActivity.class) {
-                startActivityForResult(intent, 5);
-            } else {
-                startActivity(intent);
-            }
+            startActivity(intent);
         }
     }
 
-    public void mkdirs(File mk) {
-        boolean state = mk.mkdirs();
-        devLog(mk.getPath()+" //"+state);
+    public void launchLac() {
+        PackageManager pm = getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(AppUtil.getLacId(getApplicationContext()));
+        finish();
+        startActivity(intent);
     }
 
     public void redirectURL(String url) {
@@ -201,32 +208,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void devLog(String toLog) {
-        if (devMode) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            logs = logs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            log.setText(Html.fromHtml(logs));
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 5) {
-            if (resultCode == 1) {
-                switchActivity(SplashActivity.class, true);
-                finish();
-            }
-        }
+        AppUtil.devLog(toLog, log);
     }
 
     public void setListeners() {
+        AppUtil.handleOnPressEvent(missingLac, () -> redirectURL("https://play.google.com/store/apps/details?id=com.MA.LAC"));
         AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
         AppUtil.handleOnPressEvent(lacLinear);
         AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false));
         AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
         AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
         AppUtil.handleOnPressEvent(appLinear);
+        AppUtil.handleOnPressEvent(startLac, this::launchLac);
         AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
         AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true));
     }

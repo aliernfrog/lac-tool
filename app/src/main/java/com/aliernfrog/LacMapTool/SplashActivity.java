@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
@@ -28,8 +27,6 @@ public class SplashActivity extends AppCompatActivity {
     SharedPreferences prefsConfig;
     SharedPreferences.Editor prefsEditUpdate;
     SharedPreferences.Editor prefsEditConfig;
-
-    String rawLogs = "";
 
     Integer switchDelay = 1000;
 
@@ -52,8 +49,7 @@ public class SplashActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= 19) pathDocs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
 
-        boolean enableDebugUI = prefsConfig.getBoolean("enableDebug", false);
-        if (enableDebugUI) debugText.setVisibility(View.VISIBLE);
+        if (prefsConfig.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
 
         devLog("SplashActivity started");
         devLog("Android SDK version: "+Build.VERSION.SDK_INT);
@@ -121,9 +117,10 @@ public class SplashActivity extends AppCompatActivity {
         String pathLacmb = pathExternal+"/Android/data/com.MA.LACMB/files";
         String pathApp = pathDocs+"/LacMapTool/";
         String pathTemp = pathApp+"temp";
-        if (prefsConfig.getBoolean("enableLacd", false)) pathLac = pathLacd;
-        if (prefsConfig.getBoolean("enableLacm", false)) pathLac = pathLacm;
-        if (prefsConfig.getBoolean("enableLacmb", false)) pathLac = pathLacmb;
+        String lacId = prefsConfig.getString("lacId", "lac");
+        if (lacId.equals("lacd")) pathLac = pathLacd;
+        if (lacId.equals("lacm")) pathLac = pathLacm;
+        if (lacId.equals("lacmb")) pathLac = pathLacmb;
         prefsEditUpdate.putString("path-maps", pathLac+"/editor");
         prefsEditUpdate.putString("path-lac", pathLac+"/editor");
         prefsEditUpdate.putString("path-app", pathApp);
@@ -148,11 +145,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     void devLog(String toLog) {
-        if (debugText.getVisibility() == View.VISIBLE) {
-            String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            rawLogs = rawLogs+"<br /><font color=#00FFFF>["+tag+"]</font> "+toLog;
-            debugText.setText(Html.fromHtml(rawLogs));
-        }
+        AppUtil.devLog(toLog, debugText);
     }
 }

@@ -41,7 +41,38 @@
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            android:animateLayoutChanges="true">
+
+            <LinearLayout
+                android:id="@+id/main_missingLac"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear_red"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/warning_missingLac"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/info_lacNeeded"
+                    android:textColor="#BFBFBF"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/main_missingPerms"
@@ -50,7 +81,9 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear_red"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -88,6 +121,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:drawableLeft="@drawable/maps"
+                    android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="@string/manageMaps"
                     android:textAlignment="textStart"
@@ -104,6 +138,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:drawableLeft="@drawable/wallpaper"
+                    android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="@string/manageWallpapers"
                     android:textAlignment="textStart"
@@ -120,6 +155,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:drawableLeft="@drawable/gallery"
+                    android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="@string/manageScreenshots"
                     android:textAlignment="textStart"
@@ -137,39 +173,65 @@
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <Button
-                    android:id="@+id/main_options"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:id="@+id/main_startLac"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:layout_weight="1"
                     android:background="@drawable/linear_button"
-                    android:drawableTop="@drawable/options"
+                    android:drawableLeft="@drawable/play"
+                    android:gravity="center_vertical"
                     android:padding="8dp"
-                    android:text="@string/options"
+                    android:text="@string/startLac"
+                    android:textAlignment="textStart"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:backgroundTint="#FF0E0E0E" />
 
-                <Button
-                    android:id="@+id/main_checkUpdates"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/linear_button"
-                    android:drawableTop="@drawable/update"
-                    android:padding="8dp"
-                    android:text="@string/checkUpdates"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/main_options"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/linear_button"
+                        android:drawableTop="@drawable/options"
+                        android:padding="8dp"
+                        android:text="@string/options"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="#FF0E0E0E" />
+
+                    <Button
+                        android:id="@+id/main_checkUpdates"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/linear_button"
+                        android:drawableTop="@drawable/update"
+                        android:padding="8dp"
+                        android:text="@string/checkUpdates"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="#FF0E0E0E" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -198,7 +260,7 @@
 
                 <TextView
                     android:id="@+id/main_update_description"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
                     android:linksClickable="true"
