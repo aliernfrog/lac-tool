@@ -1,0 +1,14 @@
+# New features
++ Start LAC option in home screen
++ App now warns you if LAC isn't installed
++ You can now hide set thumbnail and remove thumbnail options
+
+# Changes
++ Added a better picker for LAC path options, you can no longer enable multiple
++ Updated social media buttons
++ Path text in file picker now scrolls automatically
+
+# Fixes
++ Map thumbnails now show properly
++ Screenshots now show properly
++ In app feedbacks now work
