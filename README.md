@@ -21,7 +21,7 @@ Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</
 - Open .apk file & install the app
 
 # For Android 11 and above
-Due to some restrictions, LAC Tool fails to create some directories it needs.<br>
+Due to some restrictions, LAC Tool fails to create some directories it needs on Android 11 and above.<br>
 For the app to work properly, you can create these directories manually:
 - `Android/data/com.MA.LAC/files/editor`
 - `Android/data/com.MA.LAC/files/wallpaper`
