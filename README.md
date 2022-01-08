@@ -32,6 +32,6 @@ Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</
 - On Android 11, the app will request specific access to <a href="#required-directories">required directories</a> so it can access LAC data.
 
 # Building
-- Clone the repository
+- Clone a tag, or the master branch but it might be unstable
 - Open it in Android Studio
 - Remove signingConfigs from `app/build.gradle` if needed
