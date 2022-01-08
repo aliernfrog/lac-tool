@@ -16,20 +16,16 @@ Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</
 - Any Android version above 4.3
 
 # Installation
-- Start LAC before installing so the directories app needs will be created.
+- If you're on Android 11 and above, please <a href="#for-android-11-and-above">check this</a> for the app to work properly
 - Download .apk <a href="https://github.com/aliernfrog/lac-tool/releases">from here</a>
 - Open .apk file & install the app
 
-# Required directories
+# For Android 11 and above
+Due to some restrictions, LAC Tool fails to create some directories it needs.<br>
+For the app to work properly, you can create these directories manually:
 - `Android/data/com.MA.LAC/files/editor`
 - `Android/data/com.MA.LAC/files/wallpaper`
-- LAC Tool will create these folders automatically since it needs them
-- On Android 11 and above, LAC Tool will fail to create these folders
-- So make sure these folders are created
-
-# Notes
-- The app needs `READ_EXTERNAL_STORAGE` and `WRITE_EXTERNAL_STORAGE` to access LAC & LAC tool data.
-- On Android 11, the app will request specific access to <a href="#required-directories">required directories</a> so it can access LAC data.
+- `Android/data/com.MA.LAC/files/screenshots`
 
 # Building
 - Clone a tag, or the master branch but it might be unstable
