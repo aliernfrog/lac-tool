@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:title="@string/mapEdit"
             app:toolbarId="@+id/mapsOptions_toolbar">
 
