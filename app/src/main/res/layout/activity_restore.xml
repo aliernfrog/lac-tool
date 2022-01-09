@@ -6,7 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/restore_appbar"
@@ -17,10 +17,9 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="#000000"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:title="@string/backupManage"
             app:toolbarId="@+id/restore_toolbar">
 
@@ -86,8 +85,8 @@
                     android:layout_weight="2"
                     android:background="@drawable/linear_button"
                     android:text="@string/select"
-                    android:textColor="#FFFFFF"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:textColor="?android:textColorPrimary"
+                    app:backgroundTint="?lactool_button" />
             </LinearLayout>
 
             <LinearLayout
@@ -108,7 +107,7 @@
                     android:gravity="center_horizontal|center_vertical"
                     android:padding="8dp"
                     android:text="@string/mapName"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

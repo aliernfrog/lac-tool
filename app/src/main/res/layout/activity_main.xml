@@ -5,7 +5,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main_appbar"
@@ -16,6 +16,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/app_name"
@@ -38,11 +39,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:animateLayoutChanges="true">
+            android:paddingRight="24dp">
 
             <LinearLayout
                 android:id="@+id/main_missingLac"
@@ -114,56 +115,83 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <Button
+                <LinearLayout
                     android:id="@+id/main_maps"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:drawableLeft="@drawable/maps"
                     android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/manageMaps"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                <Button
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="?lactool_mapDrawable"
+                        android:contentDescription="@string/manageMaps" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/manageMaps"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/main_wallpapers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:drawableLeft="@drawable/wallpaper"
                     android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/manageWallpapers"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                <Button
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="?lactool_wallpaperDrawable"
+                        android:contentDescription="@string/manageWallpapers" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/manageWallpapers"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/main_screenshots"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:drawableLeft="@drawable/gallery"
                     android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/manageScreenshots"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="?lactool_screenshotDrawable"
+                        android:contentDescription="@string/manageScreenshots" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/manageScreenshots"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -176,61 +204,82 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <Button
+                <LinearLayout
                     android:id="@+id/main_startLac"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:drawableLeft="@drawable/play"
                     android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/startLac"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="?lactool_playDrawable"
+                        android:contentDescription="@string/startLac" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/startLac"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/main_checkUpdates"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <Button
-                        android:id="@+id/main_options"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/options"
-                        android:padding="8dp"
-                        android:text="@string/options"
-                        android:textAllCaps="false"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="?lactool_updateDrawable"
+                        android:contentDescription="@string/checkUpdates" />
 
-                    <Button
-                        android:id="@+id/main_checkUpdates"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/linear_button"
-                        android:drawableTop="@drawable/update"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:padding="8dp"
                         android:text="@string/checkUpdates"
-                        android:textAllCaps="false"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="#FF0E0E0E" />
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/main_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="?lactool_optionsDrawable"
+                        android:contentDescription="@string/options" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/options"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -252,7 +301,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/updateAvailable"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:visibility="gone"
@@ -265,14 +314,14 @@
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:padding="8dp"
-                    android:textColor="#E8E8E8" />
+                    android:textColor="?lactool_hint" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/main_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:visibility="gone"
                 tools:visibility="visible" />
 

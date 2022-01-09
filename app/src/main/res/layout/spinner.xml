@@ -6,4 +6,4 @@
     android:background="@drawable/linear_button"
     android:gravity="center_horizontal|center_vertical"
     android:padding="8dp"
-    android:textColor="#FFFFFF" />
+    android:textColor="?android:textColorPrimary" />

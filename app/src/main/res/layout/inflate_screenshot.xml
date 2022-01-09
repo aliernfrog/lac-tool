@@ -32,8 +32,8 @@
         android:background="@drawable/linear_button"
         android:padding="8dp"
         android:text="@string/action_share"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        app:backgroundTint="#FF0E0E0E" />
+        app:backgroundTint="?lactool_button" />
 
 </LinearLayout>

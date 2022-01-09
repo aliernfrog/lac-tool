@@ -22,7 +22,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:text="File name"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold" />
 
     <ImageView
@@ -42,9 +42,9 @@
         android:background="@drawable/linear_button"
         android:padding="8dp"
         android:text="@string/wallpaperCopyUrl"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        app:backgroundTint="#FF0E0E0E" />
+        app:backgroundTint="?lactool_button" />
 
     <Button
         android:id="@+id/wp_delete"
@@ -55,8 +55,8 @@
         android:background="@drawable/linear_red"
         android:padding="8dp"
         android:text="@string/action_delete"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        app:backgroundTint="#960000" />
+        app:backgroundTint="?lactool_red" />
 
 </LinearLayout>

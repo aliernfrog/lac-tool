@@ -8,7 +8,7 @@
     android:background="@drawable/linear_button"
     android:padding="16dp"
     android:text="Option title"
-    android:textColor="#FFFFFF"
+    android:textColor="?android:textColorPrimary"
     android:textStyle="bold"
     tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml">
 

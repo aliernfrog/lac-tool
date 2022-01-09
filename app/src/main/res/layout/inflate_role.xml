@@ -20,7 +20,7 @@
         android:padding="8dp"
         android:text="Role name"
         android:textAllCaps="false"
-        android:textColor="#F8F8F8"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold" />
 
     <Button
@@ -32,7 +32,7 @@
         android:background="@drawable/linear_red"
         android:padding="8dp"
         android:text="@string/action_delete"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        app:backgroundTint="#960000" />
+        app:backgroundTint="?lactool_red" />
 </LinearLayout>
