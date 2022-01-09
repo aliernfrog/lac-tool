@@ -2,9 +2,11 @@
 .gradle
 /local.properties
 /.idea
+/fastlane
 .DS_Store
 /build
 /captures
+index.html
 .externalNativeBuild
 .cxx
 local.properties
