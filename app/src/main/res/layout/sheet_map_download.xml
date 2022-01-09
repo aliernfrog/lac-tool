@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?lactool_background"
+    android:background="@drawable/sheet_background"
     android:orientation="vertical"
     android:padding="24dp">
 
