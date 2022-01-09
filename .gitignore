@@ -1,12 +1,13 @@
 *.iml
 .gradle
-/local.properties
+/.github
 /.idea
 /fastlane
 .DS_Store
 /build
 /captures
 index.html
+README.md
 .externalNativeBuild
 .cxx
 local.properties
