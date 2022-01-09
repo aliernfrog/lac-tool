@@ -28,6 +28,6 @@ For the app to work properly, you can create these directories manually:
 - `Android/data/com.MA.LAC/files/screenshots`
 
 # Building
-- Clone a tag, or the master branch but it might be unstable
+- Clone the repository
 - Open it in Android Studio
 - Remove signingConfigs from `app/build.gradle` if needed
