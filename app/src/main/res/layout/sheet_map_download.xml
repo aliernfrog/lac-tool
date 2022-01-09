@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#000000"
+    android:background="?lactool_background"
     android:orientation="vertical"
     android:padding="24dp">
 
@@ -17,7 +17,7 @@
         android:padding="8dp"
         android:text="@string/mapDownload"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textSize="30sp" />
 
     <ProgressBar
@@ -26,8 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        tools:progress="50"
         android:visibility="gone"
+        tools:progress="50"
         tools:visibility="visible" />
 
     <LinearLayout
@@ -46,8 +46,8 @@
             android:ems="10"
             android:hint="@string/mapDownload_linkInput"
             android:inputType="text|textNoSuggestions"
-            android:textColor="@color/white"
-            android:textColorHint="#777777"
+            android:textColor="?android:textColorPrimary"
+            android:textColorHint="?lactool_hint"
             android:textStyle="bold"
             tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
@@ -60,8 +60,8 @@
         android:background="@drawable/linear_blue"
         android:padding="8dp"
         android:text="@string/mapDownload_download"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        app:backgroundTint="#005DFF" />
+        app:backgroundTint="?lactool_blue" />
 
 </LinearLayout>

@@ -2,11 +2,11 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="ButtonStyle"
-
     android:layout_width="match_parent"
+
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background"
+    tools:ignore="ButtonStyle">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/options_appbar"
@@ -17,6 +17,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/options"
@@ -34,16 +35,15 @@
         android:layout_height="match_parent"
 
 
-        android:background="#000000"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:animateLayoutChanges="true">
+            android:paddingEnd="24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/optionsLac"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <RadioGroup
@@ -91,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/optionLacDefault"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textStyle="bold" />
 
                     <RadioButton
@@ -99,7 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/optionLacd"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textStyle="bold" />
 
                     <RadioButton
@@ -107,7 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/optionLacm"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textStyle="bold" />
 
                     <RadioButton
@@ -115,7 +115,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/optionLacmb"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textStyle="bold" />
                 </RadioGroup>
 
@@ -136,7 +136,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/optionsBackup"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <CheckBox
@@ -146,7 +146,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionAutoBackup"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <CheckBox
@@ -156,7 +156,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionBackupOnEdit"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -176,7 +176,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/optionsApp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <CheckBox
@@ -186,7 +186,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionsUseInAppFilePicker"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <CheckBox
@@ -196,7 +196,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionAutoCheckUpdate"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <CheckBox
@@ -206,7 +206,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionForceEnglish"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <CheckBox
@@ -216,7 +216,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionDebug"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <Button
@@ -226,9 +226,9 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionDeleteTemp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    app:backgroundTint="?lactool_button" />
 
             </LinearLayout>
 
@@ -249,7 +249,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/optionsExperimental"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <TextView
@@ -272,8 +272,8 @@
                     android:hint="@string/optionsStartActivity"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
-                    android:textColor="@color/white"
-                    android:textColorHint="#777777"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?lactool_hint"
                     android:textStyle="bold"
                     tools:ignore="TouchTargetSizeCheck" />
 
@@ -287,8 +287,8 @@
                     android:hint="@string/optionsUriSdkVersion"
                     android:imeOptions="actionDone"
                     android:inputType="number"
-                    android:textColor="@color/white"
-                    android:textColorHint="#777777"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?lactool_hint"
                     android:textStyle="bold"
                     tools:ignore="TextFields,TouchTargetSizeCheck" />
 
@@ -302,8 +302,8 @@
                     android:hint="@string/optionsUpdateUrl"
                     android:imeOptions="actionDone"
                     android:inputType="text|textNoSuggestions"
-                    android:textColor="@color/white"
-                    android:textColorHint="#777777"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?lactool_hint"
                     android:textStyle="bold"
                     tools:ignore="TextFields,TouchTargetSizeCheck" />
 
@@ -314,7 +314,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
                     android:text="@string/optionsForceFdroid"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -336,7 +336,7 @@
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:text="@string/optionsChangelogNoChangelog"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="?android:textColorPrimary" />
             </LinearLayout>
 
             <LinearLayout
@@ -344,10 +344,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="8dp"
-                android:animateLayoutChanges="true">
+                android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -356,7 +356,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/optionsFeedback"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -378,8 +378,8 @@
                         android:hint="@string/optionsFeedbackHint"
                         android:inputType="textMultiLine|textNoSuggestions|text|textImeMultiLine"
                         android:maxLength="1000"
-                        android:textColor="#FFFFFF"
-                        android:textColorHint="#6A6A6A"
+                        android:textColor="?android:textColorPrimary"
+                        android:textColorHint="?lactool_hint"
                         android:textStyle="bold"
                         tools:ignore="TouchTargetSizeCheck" />
 
@@ -429,7 +429,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/optionsDiscordRcs"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -455,7 +455,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/optionsDiscordAliern"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -481,7 +481,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/optionsGithub"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>

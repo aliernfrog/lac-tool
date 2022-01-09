@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
   <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/maps_appbar"
@@ -17,10 +17,9 @@
         android:id="@+id/maps_collapsingToolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:contentScrim="#000000"
+        app:contentScrim="?lactool_linear"
         app:expandedTitleGravity="center"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
-        app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
         app:title="@string/manageMaps"
         app:toolbarId="@+id/maps_toolbar">
 
@@ -46,10 +45,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:animateLayoutChanges="true">
+        android:paddingEnd="24dp">
 
       <LinearLayout
           android:layout_width="match_parent"
@@ -63,8 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/goback"
-            android:contentDescription="@string/action_back" />
+            android:contentDescription="@string/action_back"
+            app:srcCompat="@drawable/goback" />
 
         <ImageView
             android:id="@+id/maps_backups"
@@ -114,7 +113,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/mapName"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold" />
 
         <EditText
@@ -127,7 +126,7 @@
             android:imeOptions="actionDone"
             android:inputType="text|textNoSuggestions"
             android:padding="8dp"
-            android:textColor="@color/white"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold"
             tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
       </LinearLayout>
@@ -137,11 +136,11 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_margin="8dp"
+          android:animateLayoutChanges="true"
           android:background="@drawable/linear"
           android:orientation="vertical"
           android:padding="8dp"
           android:visibility="gone"
-          android:animateLayoutChanges="true"
           tools:visibility="visible">
 
         <TextView
@@ -150,7 +149,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/mapThumbnail"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold" />
 
         <ImageView
@@ -191,7 +190,7 @@
               android:text="@string/mapThumbnailRemove"
               android:textColor="#FFFFFF"
               android:textStyle="bold"
-              app:backgroundTint="#960000" />
+              app:backgroundTint="?lactool_red" />
         </LinearLayout>
 
       </LinearLayout>
@@ -201,12 +200,12 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_margin="8dp"
+          android:animateLayoutChanges="true"
           android:background="@drawable/linear"
           android:orientation="vertical"
           android:padding="8dp"
           android:visibility="gone"
-          tools:visibility="visible"
-          android:animateLayoutChanges="true">
+          tools:visibility="visible">
 
         <Button
             android:id="@+id/maps_other_import"
@@ -228,9 +227,9 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_button"
             android:text="@string/mapEdit"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold"
-            app:backgroundTint="#FF0E0E0E" />
+            app:backgroundTint="?lactool_button" />
 
         <Button
             android:id="@+id/maps_other_duplicate"
@@ -239,9 +238,9 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_button"
             android:text="@string/mapDuplicate"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold"
-            app:backgroundTint="#FF0E0E0E" />
+            app:backgroundTint="?lactool_button" />
 
         <Button
             android:id="@+id/maps_other_backup"
@@ -250,9 +249,9 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_button"
             android:text="@string/mapBackup"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold"
-            app:backgroundTint="#FF0E0E0E" />
+            app:backgroundTint="?lactool_button" />
 
         <Button
             android:id="@+id/maps_other_share"
@@ -261,9 +260,9 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_button"
             android:text="@string/mapShare"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="bold"
-            app:backgroundTint="#FF0E0E0E" />
+            app:backgroundTint="?lactool_button" />
 
         <Button
             android:id="@+id/maps_other_delete"
@@ -275,7 +274,7 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:visibility="gone"
-            app:backgroundTint="#FF960000"
+            app:backgroundTint="?lactool_red"
             tools:visibility="visible" />
       </LinearLayout>
 
@@ -283,7 +282,7 @@
           android:id="@+id/maps_debug"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textColor="#FFFFFF"
+          android:textColor="?android:textColorPrimary"
           android:visibility="gone"
           tools:visibility="visible" />
 

@@ -6,7 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/wallpaper_appbar"
@@ -17,6 +17,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/manageWallpapers"
@@ -117,7 +118,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="@string/wallpaperPickedWallpaper"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -151,7 +152,7 @@
                 android:id="@+id/wallpaper_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF" />
+                android:textColor="?android:textColorPrimary" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

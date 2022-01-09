@@ -5,7 +5,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/gallery_appbar"
@@ -16,6 +16,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/manageScreenshots"
@@ -68,7 +69,7 @@
                 android:background="@drawable/linear_red"
                 android:padding="8dp"
                 android:text="@string/galleryNoScreenshots"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -77,13 +78,13 @@
                 android:id="@+id/gallery_linear_screenshots"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/gallery_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF" />
+                android:textColor="?android:textColorPrimary" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/filePicker_appbar"
@@ -16,10 +16,9 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="#000000"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:title="@string/filePicker_title"
             app:toolbarId="@+id/filePicker_toolbar">
 
@@ -61,7 +60,7 @@
                         android:id="@+id/filePicker_path"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textStyle="bold" />
                 </HorizontalScrollView>
             </LinearLayout>
@@ -87,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/filePicker_goParent"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>

@@ -5,7 +5,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/mapsOptions_appbar"
@@ -16,6 +16,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/mapEdit"
@@ -69,7 +70,7 @@
                 android:gravity="center_horizontal"
                 android:padding="8dp"
                 android:text="@string/mapName"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -90,7 +91,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/mapEdit_serverName"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <EditText
@@ -103,8 +104,8 @@
                     android:hint="@string/mapEdit_serverName"
                     android:inputType="textNoSuggestions"
                     android:padding="8dp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?lactool_hint"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -125,7 +126,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:text="@string/mapEdit_mapType"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -144,7 +145,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:id="@+id/mapsOptions_roles_linear"
@@ -165,7 +166,7 @@
                     android:layout_marginRight="8dp"
                     android:padding="1dp"
                     android:text="@string/mapEdit_roles"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -194,8 +195,8 @@
                             android:hint="@string/info_name"
                             android:inputType="textNoSuggestions"
                             android:padding="8dp"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#FFFFFF"
+                            android:textColor="?android:textColorPrimary"
+                            android:textColorHint="?lactool_hint"
                             android:textStyle="bold" />
 
                         <Button
@@ -219,7 +220,7 @@
                         android:layout_marginTop="8dp"
                         android:background="@drawable/linear_button"
                         android:padding="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:textColorPrimary"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -242,9 +243,9 @@
                     android:padding="8dp"
                     android:text="@string/mapEdit_removeAll_tdm"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    app:backgroundTint="?lactool_button" />
 
                 <Button
                     android:id="@+id/mapsOptions_removeAll_race"
@@ -255,9 +256,9 @@
                     android:padding="8dp"
                     android:text="@string/mapEdit_removeAll_race"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    app:backgroundTint="?lactool_button" />
 
                 <Button
                     android:id="@+id/mapsOptions_fix_button"
@@ -268,9 +269,9 @@
                     android:padding="8dp"
                     android:text="@string/mapEdit_replaceOldObjects"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
-                    app:backgroundTint="#FF0E0E0E" />
+                    app:backgroundTint="?lactool_button" />
 
             </LinearLayout>
 
@@ -278,7 +279,7 @@
                 android:id="@+id/mapsOptions_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -291,8 +292,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:focusable="true"
         android:contentDescription="@string/action_save"
+        android:focusable="true"
         app:backgroundTint="#005DFF"
         app:layout_anchor="@+id/mapsOptions_nestedScroll"
         app:layout_anchorGravity="end|bottom"
