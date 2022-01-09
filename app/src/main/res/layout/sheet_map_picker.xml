@@ -7,7 +7,18 @@
     android:background="@drawable/sheet_background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:padding="8dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        app:srcCompat="?lactool_indicatorDrawable"
+        tools:ignore="ContentDescription" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
