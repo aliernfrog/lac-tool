@@ -26,6 +26,7 @@
         <item name="lactool_blue">@color/blueDark</item>
         <item name="lactool_red">@color/redDark</item>
         <item name="lactool_backDrawable">@drawable/leftarrow_white</item>
+        <item name="lactool_indicatorDrawable">@drawable/indicator_white</item>
         <item name="lactool_mapDrawable">@drawable/map_white</item>
         <item name="lactool_wallpaperDrawable">@drawable/wallpaper_white</item>
         <item name="lactool_screenshotDrawable">@drawable/gallery_white</item>
