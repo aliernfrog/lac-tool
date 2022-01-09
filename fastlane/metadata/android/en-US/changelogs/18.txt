@@ -1,2 +1,0 @@
-+ Option to remove map thumbnails
-+ Some changes & fixes
