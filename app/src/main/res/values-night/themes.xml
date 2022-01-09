@@ -17,6 +17,7 @@
         <item name="android:colorEdgeEffect" tools:targetApi="l">@color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.LACMapTool.BottomSheetDialog</item>
         <!-- LAC Tool -->
         <item name="lactool_background">@color/backgroundDark</item>
         <item name="lactool_hint">@color/hintDark</item>
