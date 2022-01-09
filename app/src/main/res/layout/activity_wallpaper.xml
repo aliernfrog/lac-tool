@@ -26,7 +26,10 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/wallpaper_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="?lactool_backDrawable"
+                app:navigationContentDescription="@string/action_back" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,25 +46,6 @@
             android:orientation="vertical"
             android:paddingStart="24dp"
             android:paddingEnd="24dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:orientation="horizontal"
-                android:padding="1dp">
-
-                <ImageView
-                    android:id="@+id/wallpaper_goback"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:srcCompat="@drawable/goback" />
-
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/wallpaper_desc"

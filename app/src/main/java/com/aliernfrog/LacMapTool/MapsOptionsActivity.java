@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 @SuppressLint({"ClickableViewAccessibility", "UseSwitchCompatOrMaterialCode"})
 public class MapsOptionsActivity extends AppCompatActivity {
-    ImageView goback;
+    Toolbar toolbar;
     TextView mapName;
     EditText serverName;
     LinearLayout serverNameLinear;
@@ -77,7 +77,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         rawPath = getIntent().getStringExtra("path");
         if (rawPath == null) finish();
 
-        goback = findViewById(R.id.mapsOptions_goback);
+        toolbar = findViewById(R.id.mapsOptions_toolbar);
         mapName = findViewById(R.id.mapsOptions_mapName);
         serverName = findViewById(R.id.mapsOptions_serverName_input);
         serverNameLinear = findViewById(R.id.mapsOptions_serverName_linear);
@@ -381,7 +381,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(goback, this::finish);
+        toolbar.setNavigationOnClickListener(v -> finish());
         AppUtil.handleOnPressEvent(mapName);
         AppUtil.handleOnPressEvent(serverNameLinear);
 
