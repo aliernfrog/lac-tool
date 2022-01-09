@@ -2,6 +2,7 @@ package com.aliernfrog.LacMapTool;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
 import android.annotation.SuppressLint;
@@ -33,7 +34,7 @@ import java.io.File;
 
 @SuppressLint("ClickableViewAccessibility")
 public class GalleryActivity extends AppCompatActivity {
-    ImageView goback;
+    Toolbar toolbar;
     TextView noScreenshots;
     LinearLayout rootLinear;
     TextView log;
@@ -66,7 +67,7 @@ public class GalleryActivity extends AppCompatActivity {
         lacPath = update.getString("path-lac", null).replace("/editor", "/screenshots");
         tempPath = update.getString("path-app", null)+"temp/screenshots/";
 
-        goback = findViewById(R.id.gallery_goback);
+        toolbar = findViewById(R.id.gallery_toolbar);
         noScreenshots = findViewById(R.id.gallery_noScreenshots);
         rootLinear = findViewById(R.id.gallery_linear_screenshots);
         log = findViewById(R.id.gallery_log);
@@ -230,7 +231,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(goback, this::saveChangesAndFinish);
+        toolbar.setNavigationOnClickListener(v -> saveChangesAndFinish());
         AppUtil.handleOnPressEvent(noScreenshots);
     }
 

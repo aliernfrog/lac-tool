@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.util.Arrays;
 
 public class FilePickerActivity extends AppCompatActivity implements PickiTCallbacks {
+    Toolbar toolbar;
     TextView pathView;
     HorizontalScrollView pathScroll;
     LinearLayout goParent;
@@ -66,6 +68,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         icon_file = ContextCompat.getDrawable(getApplicationContext(), R.drawable.file);
         icon_folder = ContextCompat.getDrawable(getApplicationContext(), R.drawable.folder);
 
+        toolbar = findViewById(R.id.filePicker_toolbar);
         pathView = findViewById(R.id.filePicker_path);
         pathScroll = findViewById(R.id.filePicker_path_scroll);
         goParent = findViewById(R.id.filePicker_goParent);
@@ -181,6 +184,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     }
 
     void setListeners() {
+        toolbar.setNavigationOnClickListener(v -> goParentDir());
         AppUtil.handleOnPressEvent(goParent, this::goParentDir);
     }
 

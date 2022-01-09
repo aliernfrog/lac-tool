@@ -25,7 +25,10 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/filePicker_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="?lactool_backDrawable"
+                app:navigationContentDescription="@string/action_back" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -78,7 +81,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:srcCompat="@drawable/goback"
+                    app:srcCompat="?lactool_backDrawable"
                     tools:ignore="ContentDescription" />
 
                 <TextView

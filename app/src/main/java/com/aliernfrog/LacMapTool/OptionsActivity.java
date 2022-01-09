@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,7 +15,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
-    ImageView home;
+    Toolbar toolbar;
     LinearLayout lacOptions;
     RadioButton lacPathDefault;
     RadioButton lacPathLacd;
@@ -84,7 +84,7 @@ public class OptionsActivity extends AppCompatActivity {
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         configEdit = config.edit();
 
-        home = findViewById(R.id.options_goback);
+        toolbar = findViewById(R.id.options_toolbar);
         lacOptions = findViewById(R.id.options_lac);
         lacPathDefault = findViewById(R.id.options_lac_default);
         lacPathLacd = findViewById(R.id.options_lac_lacd);
@@ -224,7 +224,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(home, this::finishActivity);
+        toolbar.setNavigationOnClickListener(v -> finishActivity());
         AppUtil.handleOnPressEvent(lacOptions);
         lacPathDefault.setOnClickListener(v -> changeString("lacId", "lac"));
         lacPathLacd.setOnClickListener(v -> changeString("lacId", "lacd"));

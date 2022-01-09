@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.aliernfrog.LacMapTool.fragments.MapDeleteSheet;
@@ -37,8 +38,7 @@ import java.util.Arrays;
 
 public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDownloadSheet.MapDownloadListener, MapDuplicateSheet.MapDuplicateListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
-    ImageView goBack;
-    ImageView manageBackupsButton;
+    Toolbar toolbar;
     FloatingActionButton saveButton;
     ImageView appBarImage;
     LinearLayout mapsPickLinear;
@@ -86,8 +86,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         setContentView(R.layout.activity_maps);
 
         collapsingToolbarLayout = findViewById(R.id.maps_collapsingToolbar);
-        goBack = findViewById(R.id.maps_goback);
-        manageBackupsButton = findViewById(R.id.maps_backups);
+        toolbar = findViewById(R.id.maps_toolbar);
         saveButton = findViewById(R.id.maps_save);
         appBarImage = findViewById(R.id.maps_appbar_image);
         mapsPickLinear = findViewById(R.id.maps_pick_linear);
@@ -500,8 +499,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(goBack, this::saveChangesAndFinish);
-        AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
+        toolbar.setNavigationOnClickListener(v -> saveChangesAndFinish());
         AppUtil.handleOnPressEvent(saveButton, this::saveChangesAndFinish);
         AppUtil.handleOnPressEvent(mapsPickLinear);
         AppUtil.handleOnPressEvent(pickMap, this::pickMap);

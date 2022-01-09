@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
 import android.annotation.SuppressLint;
@@ -31,7 +32,7 @@ import java.io.File;
 
 @SuppressLint("ClickableViewAccessibility")
 public class WallpaperActivity extends AppCompatActivity {
-    ImageView goback;
+    Toolbar toolbar;
     LinearLayout rootLayout;
     TextView desc;
     LinearLayout actionsLinear;
@@ -71,7 +72,7 @@ public class WallpaperActivity extends AppCompatActivity {
         lacPath = wpTreePath+"/";
         tempPath = update.getString("path-app", null)+"temp/wp/";
 
-        goback = findViewById(R.id.wallpaper_goback);
+        toolbar = findViewById(R.id.wallpaper_toolbar);
         rootLayout = findViewById(R.id.wallpaper_rootLinear);
         desc = findViewById(R.id.wallpaper_desc);
         actionsLinear = findViewById(R.id.wallpaper_actionsLinear);
@@ -286,7 +287,7 @@ public class WallpaperActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(goback, this::saveChangesAndFinish);
+        toolbar.setNavigationOnClickListener(v -> saveChangesAndFinish());
         AppUtil.handleOnPressEvent(desc, () -> desc.setVisibility(View.GONE));
         AppUtil.handleOnPressEvent(actionsLinear);
         AppUtil.handleOnPressEvent(pickFile, this::pickFile);
