@@ -51,7 +51,7 @@
                 android:text="@string/mapDownload"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                app:backgroundTint="?lactool_button" />
+                app:backgroundTint="?lactool_linear" />
 
             <TextView
                 android:layout_width="match_parent"
