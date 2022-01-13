@@ -1,7 +1,6 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             linearVisible = true;
             full = changelog+"<br /><br /><b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+changelogVersion;
             updateLinearTitle.setVisibility(View.VISIBLE);
-            updateLinear.setBackground(ContextCompat.getDrawable(getApplicationContext() ,R.drawable.linear_blue));
+            updateLinear.setBackgroundResource(R.drawable.linear_blue);
             AppUtil.handleOnPressEvent(updateLinear, () -> redirectURL(download));
             if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastAvailable, Toast.LENGTH_SHORT).show();
         } else {
