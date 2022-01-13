@@ -117,6 +117,7 @@
           android:layout_margin="8dp"
           android:animateLayoutChanges="true"
           android:background="@drawable/linear"
+          android:gravity="center_horizontal"
           android:orientation="vertical"
           android:padding="8dp"
           android:visibility="gone"
@@ -133,7 +134,7 @@
 
         <ImageView
             android:id="@+id/maps_thumbnail_thumbnail"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:adjustViewBounds="true"
