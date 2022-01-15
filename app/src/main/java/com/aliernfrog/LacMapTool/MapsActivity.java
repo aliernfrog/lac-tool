@@ -157,7 +157,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             devLog("set thumbnail bitmap");
         } else {
             appBarImage.setBackground(null);
-            collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
+            collapsingToolbarLayout.setExpandedTitleColor(AppUtil.getColor(android.R.attr.textColorPrimary, this));
             thumbnailImage.setVisibility(View.GONE);
             thumbnailImage.setBackground(null);
             thumbnailLinearActions.setVisibility(View.VISIBLE);
