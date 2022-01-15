@@ -11,11 +11,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.Html;
 import android.text.SpannableString;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import org.json.JSONObject;
 
@@ -112,6 +114,12 @@ public class AppUtil {
             return false;
         }
         return true;
+    }
+
+    public static int getColor(int resId, Context context) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(resId, typedValue, true);
+        return ContextCompat.getColor(context, typedValue.resourceId);
     }
 
     public static void clearTempData(String path) {
