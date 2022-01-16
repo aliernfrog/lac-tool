@@ -33,8 +33,8 @@ public class FileUtil {
         InputStream in;
         OutputStream out;
         if (src.isFile()) {
-            in =  new FileInputStream(new File(source));
-            out = new FileOutputStream(new File(destination));
+            in =  new FileInputStream(source);
+            out = new FileOutputStream(destination);
             byte[] buffer = new byte[1024];
             int length;
             while ((length = in.read(buffer)) > 0) {
@@ -44,8 +44,10 @@ public class FileUtil {
             out.close();
         } else {
             File[] files = src.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copyFile(files[i].getPath(), destination+"/"+files[i].getName());
+            if (files != null) {
+                for (File file : files) {
+                    copyFile(file.getPath(), destination + "/" + file.getName());
+                }
             }
         }
     }
@@ -57,7 +59,7 @@ public class FileUtil {
         InputStream in;
         OutputStream out;
         if (src.isFile()) {
-            in = new FileInputStream(new File(source));
+            in = new FileInputStream(source);
             out = resolver.openOutputStream(destination.getUri());
             byte[] buffer = new byte[1024];
             int length;
@@ -68,21 +70,22 @@ public class FileUtil {
             out.close();
         } else {
             File[] files = src.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copyFile(files[i].getPath(), destination.createFile("", files[i].getName()), context);
+            if (files != null) {
+                for (File file : files) {
+                    copyFile(file.getPath(), destination.createFile("", file.getName()), context);
+                }
             }
         }
     }
 
     public static void copyFile(DocumentFile source, String destination, Context context) throws Exception {
-        DocumentFile src = source;
         File dst = new File(destination);
         ContentResolver resolver = context.getContentResolver();
         InputStream in;
         OutputStream out;
-        if (!src.isDirectory()) {
+        if (!source.isDirectory()) {
             in = resolver.openInputStream(source.getUri());
-            out = new FileOutputStream(new File(destination));
+            out = new FileOutputStream(destination);
             byte[] buffer = new byte[1024];
             int length;
             while ((length = in.read(buffer)) > 0) {
@@ -92,9 +95,9 @@ public class FileUtil {
             out.close();
         } else {
             if (!dst.exists()) dst.mkdirs();
-            DocumentFile[] files = src.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                copyFile(files[i], destination + "/" + files[i].getName(), context);
+            DocumentFile[] files = source.listFiles();
+            for (DocumentFile file : files) {
+                copyFile(file, destination + "/" + file.getName(), context);
             }
         }
     }
@@ -102,16 +105,16 @@ public class FileUtil {
     public static String readFile(String source) throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(new File(source).getPath()));
         String _line;
-        String _full = "";
+        StringBuilder _full = new StringBuilder();
         while ((_line = reader.readLine()) != null) {
             if (_full.length() > 0) {
-                _full += "\n"+_line;
+                _full.append("\n").append(_line);
             } else {
-                _full += _line;
+                _full.append(_line);
             }
         }
         reader.close();
-        return _full;
+        return _full.toString();
     }
 
     public static Intent shareFile(String source, String type, Context context) {
@@ -129,29 +132,32 @@ public class FileUtil {
         return intent;
     }
 
-    public static boolean deleteDirectory(File directory) {
+    public static void deleteDirectory(File directory) {
         if (directory.exists()) {
             File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    delete(file);
+                }
+            }
+        }
+        directory.delete();
+    }
+
+    public static void deleteDirectoryContent(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
             for (File file : files) {
                 delete(file);
             }
         }
-        return (directory.delete());
     }
 
-    public static boolean deleteDirectoryContent(File directory) {
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            delete(file);
-        }
-        return true;
-    }
-
-    public static boolean delete(File file) {
+    public static void delete(File file) {
         if (file.isDirectory()) {
-            return deleteDirectory(file);
+            deleteDirectory(file);
         } else {
-            return file.delete();
+            file.delete();
         }
     }
 }
