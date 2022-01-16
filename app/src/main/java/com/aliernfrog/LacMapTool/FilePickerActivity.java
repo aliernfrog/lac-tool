@@ -39,6 +39,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     String fileTypeSaf;
     String[] fileTypeInApp;
     Boolean useInAppFilePicker;
+    Boolean loadImages = false;
 
     SharedPreferences config;
     Handler handler = new Handler();
@@ -78,6 +79,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         if (!useInAppFilePicker) pickFileSaf();
         if (useInAppFilePicker) loadDir(homeDir);
 
+        getLoadImages();
         setListeners();
     }
 
@@ -114,7 +116,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         String name = file.getName();
         String details = getString(R.string.filePicker_folder);
         if (file.isDirectory()) icon = icon_folder;
-        if (file.isFile() && (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
+        if (file.isFile() && loadImages && (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
         if (file.isFile()) details = (file.length()/1024)+" KB";
         iconView.setImageDrawable(icon);
         nameView.setText(name);
@@ -163,6 +165,18 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
             File currentFile = new File(currentPath);
             String parentPath = currentFile.getParent();
             loadDir(parentPath);
+        }
+    }
+
+    public void getLoadImages() {
+        boolean hasSpecifiedType = fileTypeInApp != null && fileTypeInApp.length > 0;
+        if (!hasSpecifiedType) return;
+        for (String cur : fileTypeInApp) {
+            if (!cur.startsWith(".")) cur = "."+cur;
+            if (cur.equals(".jpg") || cur.equals(".jpeg") || cur.equals(".png")) {
+                loadImages = true;
+                break;
+            }
         }
     }
 
