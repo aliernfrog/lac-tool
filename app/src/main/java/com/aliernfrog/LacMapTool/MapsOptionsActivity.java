@@ -28,6 +28,8 @@ import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.aliernfrog.LacMapTool.utils.LacMapUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -161,24 +163,18 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     public void addNumberOption(Integer line, String title, String value) {
         ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_option_number, optionsLinear, false);
-        TextView titleView = view.findViewById(R.id.option_number_title);
-        EditText valueView = view.findViewById(R.id.option_number_value);
-        titleView.setText(title);
-        valueView.setText(value);
-        valueView.addTextChangedListener(new TextWatcher() {
+        TextInputLayout textInputLayout = view.findViewById(R.id.option_number_layout);
+        TextInputEditText textInputEditText = view.findViewById(R.id.option_number_input);
+        textInputLayout.setHint(title);
+        textInputEditText.setText(value);
+        textInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                setString(line, valueView.getText().toString());
+                setString(line, textInputEditText.getText());
             }
         });
         optionsLinear.addView(view);

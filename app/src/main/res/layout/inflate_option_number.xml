@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:padding="8dp"
     tools:ignore="HardcodedText">
 
-    <TextView
-        android:id="@+id/option_number_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="2"
-        android:padding="8dp"
-        android:text="Option title"
-        android:textColor="?android:textColorPrimary"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/option_number_value"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/option_number_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:autofillHints="false"
-        android:background="@drawable/linear_button"
-        android:ems="10"
-        android:gravity="center_horizontal|center_vertical"
-        android:inputType="number"
-        android:textColor="?android:textColorPrimary"
-        tools:ignore="LabelFor" />
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:textColorHint="?lactool_hint"
+        app:boxStrokeColor="#005DFF">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/option_number_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:hint="adss"
+            android:textColor="?android:textColorPrimary"
+            android:textColorHint="?lactool_hint"
+            android:textStyle="bold"
+            android:inputType="number"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
