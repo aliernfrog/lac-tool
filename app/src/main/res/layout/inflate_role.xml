@@ -18,7 +18,7 @@
         android:layout_margin="8dp"
         android:layout_weight="1"
         android:padding="8dp"
-        android:text="Role name"
+        android:text="@string/app_name"
         android:textAllCaps="false"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold" />
