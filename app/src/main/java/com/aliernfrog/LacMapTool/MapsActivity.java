@@ -399,7 +399,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         }
     }
 
-    @SuppressLint("NewApi")
     public void checkUriPerms() {
         if (Build.VERSION.SDK_INT >= uriSdkVersion) {
             Intent intent = new Intent(this, UriPermActivity.class);
