@@ -104,7 +104,8 @@
                 android:id="@+id/filePicker_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:animateLayoutChanges="true">
 
             </LinearLayout>
 
