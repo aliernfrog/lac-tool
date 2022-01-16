@@ -31,7 +31,7 @@
         <activity android:name=".MapsOptionsActivity" />
         <activity android:name=".RestoreActivity" />
         <activity android:name=".OptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".UriPermActivity" android:exported="true" android:noHistory="true" />
+        <activity android:name=".UriPermActivity" android:noHistory="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
