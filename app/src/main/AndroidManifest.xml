@@ -17,12 +17,9 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.LACMapTool">
         <activity
-            android:name=".SplashActivity"
-            android:noHistory="true"
-            android:exported="true">
+            android:name=".SplashActivity" android:exported="true" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,6 +31,7 @@
         <activity android:name=".MapsOptionsActivity" />
         <activity android:name=".RestoreActivity" />
         <activity android:name=".OptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".UriPermActivity" android:exported="true" android:noHistory="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
