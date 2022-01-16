@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
 import java.io.File;
-import java.io.IOException;
 
 @SuppressLint({"CommitPrefEdits", "ClickableViewAccessibility"})
 public class MainActivity extends AppCompatActivity {
@@ -40,11 +39,6 @@ public class MainActivity extends AppCompatActivity {
     TextView updateLog;
     TextView log;
 
-    String dataPath;
-    String tempMapsPath;
-    String lacPath;
-    String backupPath;
-    String aBackupPath;
     Boolean hasPerms;
     Integer version;
 
@@ -60,12 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-
-        lacPath = update.getString("path-lac", null);
-        dataPath = update.getString("path-app", null);
-        tempMapsPath = update.getString("path-temp-maps", null);
-        backupPath = dataPath+"backups/";
-        aBackupPath = dataPath+"auto-backups/";
         version = update.getInt("versionCode", 0);
 
         missingLac = findViewById(R.id.main_missingLac);
@@ -155,25 +143,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createFiles() {
-        File dataFolder = new File(dataPath);
-        File tempMapsFolder = new File(tempMapsPath);
-        File backupFolder = new File(backupPath);
-        File aBackupFolder = new File(aBackupPath);
-        File lacFolder = new File(lacPath);
-        File wallpaperFolder = new File(lacPath.replace("editor", "wallpaper"));
-        File nomedia = new File(dataPath+".nomedia");
-        if (!dataFolder.exists()) mkdirs(dataFolder);
-        if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder);
-        if (!backupFolder.exists()) mkdirs(backupFolder);
-        if (!aBackupFolder.exists()) mkdirs(aBackupFolder);
-        if (!lacFolder.exists()) mkdirs(lacFolder);
-        if (!wallpaperFolder.exists()) mkdirs(wallpaperFolder);
-        if (!nomedia.exists()) {
-            try {
-                nomedia.createNewFile();
-            } catch (IOException e) {
-                devLog(e.toString());
-            }
+        try {
+            File mapsFolder = new File(update.getString("path-maps", ""));
+            File wallpaperFolder = new File(mapsFolder.getPath().replace("editor", "wallpaper"));
+            File appFolder = new File(update.getString("path-app", ""));
+            File backupFolder = new File(appFolder.getPath()+"/backups/");
+            File aBackupFolder = new File(appFolder.getPath()+"/auto-backups/");
+            File tempMapsFolder = new File(update.getString("path-temp-maps", ""));
+            File nomedia = new File(appFolder.getPath()+"/.nomedia");
+            if (!mapsFolder.exists()) mkdirs(mapsFolder);
+            if (!wallpaperFolder.exists()) mkdirs(wallpaperFolder);
+            if (!appFolder.exists()) mkdirs(appFolder);
+            if (!backupFolder.exists()) mkdirs(backupFolder);
+            if (!aBackupFolder.exists()) mkdirs(aBackupFolder);
+            if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder);
+            if (!nomedia.exists()) nomedia.createNewFile();
+        } catch (Exception e) {
+            devLog(e.toString());
         }
     }
 
