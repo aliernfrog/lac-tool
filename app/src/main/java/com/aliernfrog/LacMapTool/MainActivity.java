@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
         AppUtil.handleOnPressEvent(lacLinear);
         AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false));
-        AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(OldWallpaperActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
         AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
         AppUtil.handleOnPressEvent(appLinear);
         AppUtil.handleOnPressEvent(startLac, this::launchLac);
