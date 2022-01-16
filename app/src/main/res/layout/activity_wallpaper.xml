@@ -55,7 +55,7 @@
                 android:background="@drawable/linear_blue"
                 android:padding="16dp"
                 android:text="@string/wallpaperDesc"
-                android:textColor="#FFFFFF"
+                android:textColor="?lactool_textOnRed"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -76,9 +76,9 @@
                     android:background="@drawable/linear_blue"
                     android:padding="8dp"
                     android:text="@string/wallpaperPick"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textStyle="bold"
-                    app:backgroundTint="#005DFF" />
+                    app:backgroundTint="?lactool_blue" />
 
             </LinearLayout>
 
@@ -121,9 +121,9 @@
                     android:background="@drawable/linear_blue"
                     android:padding="8dp"
                     android:text="@string/wallpaperImport"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textStyle="bold"
-                    app:backgroundTint="#005DFF" />
+                    app:backgroundTint="?lactool_blue" />
             </LinearLayout>
 
             <LinearLayout

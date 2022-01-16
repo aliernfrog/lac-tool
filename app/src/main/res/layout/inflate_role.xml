@@ -32,7 +32,7 @@
         android:background="@drawable/linear_red"
         android:padding="8dp"
         android:text="@string/action_delete"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="?lactool_textOnRed"
         android:textStyle="bold"
         app:backgroundTint="?lactool_red" />
 </LinearLayout>

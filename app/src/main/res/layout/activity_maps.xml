@@ -69,9 +69,9 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_blue"
             android:text="@string/mapPick"
-            android:textColor="#FFFFFF"
+            android:textColor="?lactool_textOnRed"
             android:textStyle="bold"
-            app:backgroundTint="#FF005DFF" />
+            app:backgroundTint="?lactool_blue" />
 
       </LinearLayout>
 
@@ -157,9 +157,9 @@
               android:layout_margin="8dp"
               android:background="@drawable/linear_blue"
               android:text="@string/mapThumbnailSet"
-              android:textColor="#FFFFFF"
+              android:textColor="?lactool_textOnRed"
               android:textStyle="bold"
-              app:backgroundTint="#005DFF" />
+              app:backgroundTint="?lactool_blue" />
 
           <Button
               android:id="@+id/maps_thumbnail_remove"
@@ -168,7 +168,7 @@
               android:layout_margin="8dp"
               android:background="@drawable/linear_red"
               android:text="@string/mapThumbnailRemove"
-              android:textColor="#FFFFFF"
+              android:textColor="?lactool_textOnRed"
               android:textStyle="bold"
               app:backgroundTint="?lactool_red" />
         </LinearLayout>
@@ -194,10 +194,10 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_blue"
             android:text="@string/mapImport"
-            android:textColor="#FFFFFF"
+            android:textColor="?lactool_textOnRed"
             android:textStyle="bold"
             android:visibility="gone"
-            app:backgroundTint="#FF005DFF"
+            app:backgroundTint="?lactool_blue"
             tools:visibility="visible" />
 
         <Button
@@ -251,7 +251,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/linear_red"
             android:text="@string/mapDelete"
-            android:textColor="#FFFFFF"
+            android:textColor="?lactool_textOnRed"
             android:textStyle="bold"
             android:visibility="gone"
             app:backgroundTint="?lactool_red"
@@ -277,6 +277,6 @@
       android:layout_margin="16dp"
       android:contentDescription="@string/action_save"
       android:src="@drawable/save"
-      app:backgroundTint="#FF005DFF" />
+      app:backgroundTint="?lactool_blue" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

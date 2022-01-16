@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/warning_missingLac"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/info_lacNeeded"
-                    android:textColor="#BFBFBF"
+                    android:textColor="?lactool_hintOnRed"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/warning_missingPerms"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/info_storagePerm"
-                    android:textColor="#BFBFBF"
+                    android:textColor="?lactool_hintOnRed"
                     android:textStyle="bold" />
             </LinearLayout>
 

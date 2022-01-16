@@ -61,7 +61,7 @@
         android:background="@drawable/linear_blue"
         android:padding="8dp"
         android:text="@string/mapDuplicate_duplicate"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="?lactool_textOnRed"
         android:textStyle="bold"
         app:backgroundTint="?lactool_blue" />
 
