@@ -3,6 +3,8 @@ package com.aliernfrog.LacMapTool;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -143,16 +145,16 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         File thumbnailFile = new File(thumbnailPath);
         boolean hasThumbnail = isImported && thumbnailFile.exists();
         if (hasThumbnail) {
-            Drawable drawable = Drawable.createFromPath(thumbnailFile.getPath());
-            appBarImage.setBackground(drawable);
+            Bitmap bitmap = BitmapFactory.decodeFile(thumbnailFile.getPath());
+            appBarImage.setImageBitmap(bitmap);
             thumbnailImage.setVisibility(View.VISIBLE);
-            thumbnailImage.setBackground(drawable);
+            thumbnailImage.setImageBitmap(bitmap);
             thumbnailRemoveButton.setVisibility(View.VISIBLE);
             devLog("set thumbnail bitmap");
         } else {
-            appBarImage.setBackground(null);
+            appBarImage.setImageBitmap(null);
             thumbnailImage.setVisibility(View.GONE);
-            thumbnailImage.setBackground(null);
+            thumbnailImage.setImageBitmap(null);
             thumbnailLinearActions.setVisibility(View.VISIBLE);
             thumbnailRemoveButton.setVisibility(View.GONE);
             devLog("no thumbnail");
