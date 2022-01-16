@@ -149,7 +149,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     public void readOption(Integer line) {
         String str = updatedContent[line];
-        String[] split = str.split(":");
+        String[] split = str.split(": ");
         String title = split[0];
         String value = split[1];
         Boolean isNumber = AppUtil.stringIsNumber(value);
