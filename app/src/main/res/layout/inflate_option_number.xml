@@ -30,7 +30,7 @@
             android:textColor="?android:textColorPrimary"
             android:textColorHint="?lactool_hint"
             android:textStyle="bold"
-            android:inputType="number"
+            android:inputType="numberDecimal|numberSigned"
             tools:ignore="SpeakableTextPresentCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
