@@ -19,9 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
         android:text="@string/app_name"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold" />
@@ -31,7 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
         android:padding="8dp"
         tools:ignore="ContentDescription" />
 
@@ -40,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
         android:background="@drawable/linear_button"
         android:padding="8dp"
         android:text="@string/wallpaperCopyUrl"
@@ -53,7 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="0"
         android:background="@drawable/linear_red"
         android:padding="8dp"
         android:text="@string/action_delete"

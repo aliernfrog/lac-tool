@@ -18,17 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:padding="8dp"
-        android:contentDescription="@string/manageScreenshots"/>
+        android:contentDescription="@string/manageScreenshots"
+        android:padding="8dp" />
 
     <Button
         android:id="@+id/ss_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
         android:background="@drawable/linear_button"
         android:padding="8dp"
         android:text="@string/action_share"
