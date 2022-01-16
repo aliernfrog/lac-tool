@@ -406,23 +406,9 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     @SuppressLint("NewApi")
     public void checkUriPerms() {
         if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            saveButton.setVisibility(View.VISIBLE);
-            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
-            Uri uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId);
-            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request");
-                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-                        .addFlags(takeFlags);
-                startActivityForResult(intent, REQUEST_URI);
-            } else {
-                useTempPath();
-            }
+            Intent intent = new Intent(this, UriPermActivity.class);
+            intent.putExtra("path", lacPath);
+            startActivityForResult(intent, REQUEST_URI);
         }
     }
 
@@ -473,15 +459,11 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         boolean hasData = data != null;
-        devLog(requestCode+": received result");
         devLog(requestCode+": hasData = "+hasData);
         if (!hasData) return;
         if (requestCode == REQUEST_URI) {
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-            grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
-            getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-            devLog(requestCode+": granted permissions for: "+data.getData());
-            finish();
+            lacTreeUri = data.getParcelableExtra("uri");
+            useTempPath();
         } else if (requestCode == REQUEST_PICK_MAP) {
             String path = data.getStringExtra("path");
             devLog("received path: "+path);
