@@ -145,18 +145,20 @@ public class MainActivity extends AppCompatActivity {
     public void createFiles() {
         try {
             File mapsFolder = new File(update.getString("path-maps", ""));
-            File wallpaperFolder = new File(mapsFolder.getPath().replace("editor", "wallpaper"));
+            File wallpapersFolder = new File(update.getString("path-wallpapers", ""));
             File appFolder = new File(update.getString("path-app", ""));
             File backupFolder = new File(appFolder.getPath()+"/backups/");
             File aBackupFolder = new File(appFolder.getPath()+"/auto-backups/");
             File tempMapsFolder = new File(update.getString("path-temp-maps", ""));
+            File tempWallpapersFolder = new File(update.getString("path-temp-wallpapers", ""));
             File nomedia = new File(appFolder.getPath()+"/.nomedia");
             if (!mapsFolder.exists()) mkdirs(mapsFolder);
-            if (!wallpaperFolder.exists()) mkdirs(wallpaperFolder);
+            if (!wallpapersFolder.exists()) mkdirs(wallpapersFolder);
             if (!appFolder.exists()) mkdirs(appFolder);
             if (!backupFolder.exists()) mkdirs(backupFolder);
             if (!aBackupFolder.exists()) mkdirs(aBackupFolder);
             if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder);
+            if (!tempWallpapersFolder.exists()) mkdirs(tempWallpapersFolder);
             if (!nomedia.exists()) nomedia.createNewFile();
         } catch (Exception e) {
             devLog(e.toString());
