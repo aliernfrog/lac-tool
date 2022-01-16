@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
         checkUpdates(false);
         checkPerms();
-        createFiles();
         setListeners();
     }
 
@@ -145,11 +144,13 @@ public class MainActivity extends AppCompatActivity {
                 hasPerms = true;
                 missingPerms.setVisibility(View.GONE);
                 devLog("permissions granted");
+                createFiles();
             }
         } else {
             hasPerms = true;
             missingPerms.setVisibility(View.GONE);
             devLog("old SDK version detected");
+            createFiles();
         }
     }
 
