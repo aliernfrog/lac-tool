@@ -49,7 +49,7 @@
             android:animateLayoutChanges="true">
 
             <TextView
-                android:id="@+id/wallpaper_desc"
+                android:id="@+id/wallpaper_helpText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -98,9 +98,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
                     android:text="@string/wallpaperPickedWallpaper"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -114,11 +111,10 @@
                     tools:ignore="ContentDescription" />
 
                 <Button
-                    android:id="@+id/wallpaper_importFile"
+                    android:id="@+id/wallpaper_picked_import"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:layout_weight="1"
                     android:background="@drawable/linear_blue"
                     android:padding="8dp"
                     android:text="@string/wallpaperImport"
@@ -135,7 +131,7 @@
                 android:animateLayoutChanges="true" />
 
             <TextView
-                android:id="@+id/wallpaper_log"
+                android:id="@+id/wallpaper_debug"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:textColorPrimary" />
