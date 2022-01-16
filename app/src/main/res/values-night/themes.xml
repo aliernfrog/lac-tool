@@ -21,6 +21,8 @@
         <!-- LAC Tool -->
         <item name="lactool_background">@color/backgroundDark</item>
         <item name="lactool_hint">@color/hintDark</item>
+        <item name="lactool_textOnRed">@color/textOnRedDark</item>
+        <item name="lactool_hintOnRed">@color/hintOnRedDark</item>
         <item name="lactool_linear">@color/linearDark</item>
         <item name="lactool_button">@color/buttonDark</item>
         <item name="lactool_blue">@color/blueDark</item>

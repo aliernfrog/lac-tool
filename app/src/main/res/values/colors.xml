@@ -11,6 +11,10 @@
     <color name="backgroundDark">#FF000000</color>
     <color name="hintLight">#FF616161</color>
     <color name="hintDark">#FFACACAC</color>
+    <color name="textOnRedLight">#FFFFFFFF</color>
+    <color name="textOnRedDark">#FFFFFFFF</color>
+    <color name="hintOnRedLight">#BFBFBF</color>
+    <color name="hintOnRedDark">#BFBFBF</color>
     <color name="linearLight">#FFFFFFFF</color>
     <color name="linearDark">#FF202020</color>
     <color name="buttonLight">#FFE2E2E2</color>

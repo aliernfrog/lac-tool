@@ -2,6 +2,8 @@
 <resources>
     <attr name="lactool_background" format="reference"/>
     <attr name="lactool_hint" format="reference"/>
+    <attr name="lactool_textOnRed" format="reference"/>
+    <attr name="lactool_hintOnRed" format="reference"/>
     <attr name="lactool_linear" format="reference"/>
     <attr name="lactool_button" format="reference"/>
     <attr name="lactool_blue" format="reference"/>

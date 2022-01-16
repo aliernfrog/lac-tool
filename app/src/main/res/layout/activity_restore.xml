@@ -104,10 +104,10 @@
                     android:background="@drawable/linear_blue"
                     android:padding="8dp"
                     android:text="@string/action_restore"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textStyle="bold"
                     android:visibility="invisible"
-                    app:backgroundTint="#005DFF"
+                    app:backgroundTint="?lactool_blue"
                     tools:visibility="visible" />
             </LinearLayout>
 
