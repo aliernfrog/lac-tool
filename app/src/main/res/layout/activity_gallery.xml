@@ -63,7 +63,8 @@
                 android:id="@+id/gallery_linear_screenshots"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:animateLayoutChanges="true" />
 
             <TextView
                 android:id="@+id/gallery_log"
