@@ -17,6 +17,6 @@
     <color name="buttonDark">#FF0E0E0E</color>
     <color name="blueLight">#005DFF</color>
     <color name="blueDark">#005DFF</color>
-    <color name="redLight">#FFCD0000</color>
+    <color name="redLight">#FF960000</color>
     <color name="redDark">#FF960000</color>
 </resources>
