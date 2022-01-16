@@ -51,6 +51,8 @@ public class UriPermActivity extends AppCompatActivity {
                     .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
                     .addFlags(takeFlags);
             startActivityForResult(intent, REQUEST_URI);
+        } else {
+            finishChecking();
         }
     }
 
@@ -69,6 +71,8 @@ public class UriPermActivity extends AppCompatActivity {
             grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
             getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
             finishChecking();
+        } else {
+            finish();
         }
     }
 }
