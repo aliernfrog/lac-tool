@@ -27,6 +27,7 @@
           android:id="@+id/maps_appbar_image"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:alpha="0.35"
           android:contentDescription="@string/app_name"
           android:scaleType="centerCrop" />
 
