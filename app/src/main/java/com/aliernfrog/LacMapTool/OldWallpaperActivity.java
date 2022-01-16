@@ -31,7 +31,7 @@ import com.aliernfrog.LacMapTool.utils.FileUtil;
 import java.io.File;
 
 @SuppressLint("ClickableViewAccessibility")
-public class WallpaperActivity extends AppCompatActivity {
+public class OldWallpaperActivity extends AppCompatActivity {
     Toolbar toolbar;
     LinearLayout rootLayout;
     TextView desc;
