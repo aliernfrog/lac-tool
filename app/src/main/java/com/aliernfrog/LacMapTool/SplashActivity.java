@@ -123,7 +123,7 @@ public class SplashActivity extends AppCompatActivity {
         if (lacId.equals("lacmb")) pathLac = pathLacmb;
         prefsEditUpdate.putString("path-maps", pathLac+"/editor");
         prefsEditUpdate.putString("path-wallpapers", pathLac+"/wallpaper");
-        prefsEditUpdate.putString("path-lac", pathLac+"/editor");
+        prefsEditUpdate.putString("path-lac", pathLac);
         prefsEditUpdate.putString("path-app", pathApp);
         prefsEditUpdate.putString("path-temp", pathTemp);
         prefsEditUpdate.putString("path-temp-maps", pathTemp+"/editor");
