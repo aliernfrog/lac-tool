@@ -133,11 +133,11 @@ public class WallpaperActivity extends AppCompatActivity {
                 name.setText(file.getName());
                 image.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
                 AppUtil.handleOnPressEvent(copyUrl, () -> {
-                    AppUtil.copyToClipboard("file://"+rawLacPath+file.getName(), getApplicationContext());
+                    AppUtil.copyToClipboard("file://"+rawLacPath+"/"+file.getName(), getApplicationContext());
                     Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
                 });
                 AppUtil.handleOnPressEvent(delete, () -> {
-                    devLog(file.getPath());
+                    devLog("deleting: "+file.getPath());
                     file.delete();
                     if (Build.VERSION.SDK_INT >= uriSdkVersion) {
                         DocumentFile documentFile = lacTreeFile.findFile(file.getName());
