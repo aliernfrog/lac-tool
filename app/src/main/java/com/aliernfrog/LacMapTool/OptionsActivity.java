@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aliernfrog.LacMapTool.fragments.ThemeSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;
@@ -41,6 +42,7 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox useInAppFilePicker;
     CheckBox autoCheckUpdate;
     CheckBox dev;
+    Button changeTheme;
     Button deleteTemp;
     LinearLayout experimentalOptions;
     EditText startActivityName;
@@ -96,12 +98,13 @@ public class OptionsActivity extends AppCompatActivity {
         useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         dev = findViewById(R.id.options_devtoggle);
+        changeTheme = findViewById(R.id.options_changeTheme);
+        deleteTemp = findViewById(R.id.options_deleteTemp);
         experimentalOptions = findViewById(R.id.options_ex);
         startActivityName = findViewById(R.id.options_startActivity);
         uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
         updateUrlInput = findViewById(R.id.options_updateUrl);
         forceFdroid = findViewById(R.id.options_forceFdroid);
-        deleteTemp = findViewById(R.id.options_deleteTemp);
         feedbackLinear = findViewById(R.id.options_feedback_linear);
         feedback = findViewById(R.id.options_feedback);
         feedbackInput = findViewById(R.id.options_feedback_input);
@@ -190,6 +193,11 @@ public class OptionsActivity extends AppCompatActivity {
         }
     }
 
+    void openChangeThemeView() {
+        ThemeSheet themeSheet = new ThemeSheet();
+        themeSheet.show(getSupportFragmentManager(), "theme_change");
+    }
+
     void deleteTempData() {
         AppUtil.clearTempData(tempPath);
         pickiT.deleteTemporaryFile(getApplicationContext());
@@ -234,6 +242,7 @@ public class OptionsActivity extends AppCompatActivity {
         useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("useInAppFilePicker", isChecked)));
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("autoCheckUpdates", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableDebug", isChecked));
+        AppUtil.handleOnPressEvent(changeTheme, this::openChangeThemeView);
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
         AppUtil.handleOnPressEvent(experimentalOptions);
 
