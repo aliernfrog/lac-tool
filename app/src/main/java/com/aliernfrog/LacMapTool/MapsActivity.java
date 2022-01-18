@@ -55,6 +55,8 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     Button backupMapButton;
     Button shareMapButton;
     Button deleteMapButton;
+    LinearLayout otherLinear;
+    Button manageBackupsButton;
     TextView debugText;
 
     SharedPreferences prefsUpdate;
@@ -102,6 +104,8 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         backupMapButton = findViewById(R.id.maps_mapActions_backup);
         shareMapButton = findViewById(R.id.maps_mapActions_share);
         deleteMapButton = findViewById(R.id.maps_mapActions_delete);
+        otherLinear = findViewById(R.id.maps_other);
+        manageBackupsButton = findViewById(R.id.maps_other_manageBackups);
         debugText = findViewById(R.id.maps_debug);
 
         prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
@@ -488,6 +492,8 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         AppUtil.handleOnPressEvent(backupMapButton, () -> backupMap(true));
         AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
         AppUtil.handleOnPressEvent(deleteMapButton, this::openDeleteMapView);
+        AppUtil.handleOnPressEvent(otherLinear);
+        AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
     }
 
     @Override
