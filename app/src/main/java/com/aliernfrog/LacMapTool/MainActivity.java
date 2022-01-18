@@ -82,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
         setListeners();
     }
 
+    public void launchLac() {
+        PackageManager pm = getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(AppUtil.getLacId(getApplicationContext()));
+        finish();
+        startActivity(intent);
+    }
+
     public void getUpdates() {
         devLog("attempting to get updates from website");
         try {
@@ -179,13 +186,6 @@ public class MainActivity extends AppCompatActivity {
             devLog("attempting to redirect to "+i.toString());
             startActivity(intent);
         }
-    }
-
-    public void launchLac() {
-        PackageManager pm = getPackageManager();
-        Intent intent = pm.getLaunchIntentForPackage(AppUtil.getLacId(getApplicationContext()));
-        finish();
-        startActivity(intent);
     }
 
     public void redirectURL(String url) {
