@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
     Integer switchDelay = 1000;
 
     String pathExternal = Environment.getExternalStorageDirectory().toString();
-    String pathDocs = pathExternal +"/Documents";
+    String pathDocs = pathExternal+"/Documents";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
 
         devLog("SplashActivity started");
         devLog("Android SDK version: "+Build.VERSION.SDK_INT);
-        devLog("External path: "+ pathExternal);
+        devLog("External path: "+pathExternal);
         devLog("Documents path: "+pathDocs);
 
         getVersion();
