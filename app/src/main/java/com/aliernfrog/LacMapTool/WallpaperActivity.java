@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,7 +43,6 @@ public class WallpaperActivity extends AppCompatActivity {
     SharedPreferences prefsConfig;
 
     Integer REQUEST_PICK_WALLPAPER = 1;
-    Integer REQUEST_URI = 2;
 
     Integer uriSdkVersion;
 
@@ -81,8 +82,9 @@ public class WallpaperActivity extends AppCompatActivity {
 
         devLog("WallpaperActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
-        checkUriPerms();
         setListeners();
+        useTempPath();
+        devLog("lacPath: "+lacPath);
         getImportedWallpapers();
     }
 
@@ -149,23 +151,21 @@ public class WallpaperActivity extends AppCompatActivity {
         }
     }
 
-    public void checkUriPerms() {
-        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            Intent intent = new Intent(this, UriPermActivity.class);
-            intent.putExtra("path", lacPath);
-            startActivityForResult(intent, REQUEST_URI);
-        }
-    }
-
+    @SuppressLint("NewApi")
     public void useTempPath() {
-        lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
-        if (lacTreeFile != null) {
-            DocumentFile[] files = lacTreeFile.listFiles();
-            for (DocumentFile file : files) {
-                copyFile(file, tempPath + "/" + file.getName());
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+            lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
+            if (lacTreeFile != null) {
+                DocumentFile[] files = lacTreeFile.listFiles();
+                for (DocumentFile file : files) {
+                    copyFile(file, tempPath + "/" + file.getName());
+                }
             }
+            lacPath = tempPath;
+            devLog("using temp path as lac path");
         }
-        lacPath = tempPath;
     }
 
     public void copyFile(String source, String destination, Boolean toastResult) {
@@ -233,9 +233,6 @@ public class WallpaperActivity extends AppCompatActivity {
         if (!hasData) return;
         if (requestCode == REQUEST_PICK_WALLPAPER) {
             getWp(data.getStringExtra("path"));
-        } else if (requestCode == REQUEST_URI) {
-            lacTreeUri = data.getParcelableExtra("uri");
-            useTempPath();
         } else {
             devLog("result is not handled");
         }

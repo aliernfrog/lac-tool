@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +62,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
     Integer REQUEST_PICK_MAP = 1;
     Integer REQUEST_PICK_THUMBNAIL = 2;
-    Integer REQUEST_URI = 3;
 
     Integer uriSdkVersion;
 
@@ -119,8 +120,8 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
         devLog("MapsActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
-        checkUriPerms();
         setListeners();
+        useTempPath();
         devLog("lacPath: "+lacPath);
         autoBackup();
     }
@@ -400,27 +401,25 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         }
     }
 
-    public void checkUriPerms() {
-        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            Intent intent = new Intent(this, UriPermActivity.class);
-            intent.putExtra("path", lacPath);
-            startActivityForResult(intent, REQUEST_URI);
-        }
-    }
-
     public String getMapPath() {
         return currentPath;
     }
 
+    @SuppressLint("NewApi")
     public void useTempPath() {
-        lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
-        if (lacTreeFile != null) {
-            DocumentFile[] files = lacTreeFile.listFiles();
-            for (DocumentFile file : files) {
-                copyFile(file, tempPath + "/" + file.getName(), false);
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+            lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
+            if (lacTreeFile != null) {
+                DocumentFile[] files = lacTreeFile.listFiles();
+                for (DocumentFile file : files) {
+                    copyFile(file, tempPath + "/" + file.getName(), false);
+                }
             }
+            lacPath = tempPath;
+            devLog("using temp path as lac path");
         }
-        lacPath = tempPath;
     }
 
     public void saveChangesAndFinish() {
@@ -456,10 +455,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         boolean hasData = data != null;
         devLog(requestCode+": hasData = "+hasData);
         if (!hasData) return;
-        if (requestCode == REQUEST_URI) {
-            lacTreeUri = data.getParcelableExtra("uri");
-            useTempPath();
-        } else if (requestCode == REQUEST_PICK_MAP) {
+        if (requestCode == REQUEST_PICK_MAP) {
             String path = data.getStringExtra("path");
             devLog("received path: "+path);
             getMap(path);
