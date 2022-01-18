@@ -48,7 +48,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     LinearLayout thumbnailLinearActions;
     Button thumbnailSetButton;
     Button thumbnailRemoveButton;
-    LinearLayout otherOptionsLinear;
+    LinearLayout mapActionsLinear;
     Button importMapButton;
     Button editMapButton;
     Button duplicateMapButton;
@@ -95,13 +95,13 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         thumbnailLinearActions = findViewById(R.id.maps_thumbnail_actions);
         thumbnailSetButton = findViewById(R.id.maps_thumbnail_set);
         thumbnailRemoveButton = findViewById(R.id.maps_thumbnail_remove);
-        otherOptionsLinear = findViewById(R.id.maps_other);
-        importMapButton = findViewById(R.id.maps_other_import);
-        editMapButton = findViewById(R.id.maps_other_edit);
-        duplicateMapButton = findViewById(R.id.maps_other_duplicate);
-        backupMapButton = findViewById(R.id.maps_other_backup);
-        shareMapButton = findViewById(R.id.maps_other_share);
-        deleteMapButton = findViewById(R.id.maps_other_delete);
+        mapActionsLinear = findViewById(R.id.maps_mapActions);
+        importMapButton = findViewById(R.id.maps_mapActions_import);
+        editMapButton = findViewById(R.id.maps_mapActions_edit);
+        duplicateMapButton = findViewById(R.id.maps_mapActions_duplicate);
+        backupMapButton = findViewById(R.id.maps_mapActions_backup);
+        shareMapButton = findViewById(R.id.maps_mapActions_share);
+        deleteMapButton = findViewById(R.id.maps_mapActions_delete);
         debugText = findViewById(R.id.maps_debug);
 
         prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
@@ -163,7 +163,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
     public void resetVisibilities() {
         mapNameLinear.setVisibility(View.VISIBLE);
-        otherOptionsLinear.setVisibility(View.VISIBLE);
+        mapActionsLinear.setVisibility(View.VISIBLE);
         if (isImported) {
             importMapButton.setVisibility(View.GONE);
             thumbnailLinear.setVisibility(View.VISIBLE);
@@ -481,7 +481,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         AppUtil.handleOnPressEvent(thumbnailLinear, () -> AppUtil.toggleView(thumbnailLinearActions));
         AppUtil.handleOnPressEvent(thumbnailSetButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
         AppUtil.handleOnPressEvent(thumbnailRemoveButton, this::removeThumbnail);
-        AppUtil.handleOnPressEvent(otherOptionsLinear);
+        AppUtil.handleOnPressEvent(mapActionsLinear);
         AppUtil.handleOnPressEvent(importMapButton, this::importMap);
         AppUtil.handleOnPressEvent(editMapButton, this::editMap);
         AppUtil.handleOnPressEvent(duplicateMapButton, this::openDuplicateMapView);
