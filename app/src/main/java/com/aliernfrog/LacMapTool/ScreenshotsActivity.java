@@ -33,7 +33,7 @@ import com.aliernfrog.LacMapTool.utils.FileUtil;
 import java.io.File;
 
 @SuppressLint("ClickableViewAccessibility")
-public class GalleryActivity extends AppCompatActivity {
+public class ScreenshotsActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView noScreenshots;
     LinearLayout rootLinear;
@@ -57,7 +57,7 @@ public class GalleryActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_screenshots);
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
@@ -67,14 +67,14 @@ public class GalleryActivity extends AppCompatActivity {
         lacPath = update.getString("path-lac", null).replace("/editor", "/screenshots");
         tempPath = update.getString("path-app", null)+"temp/screenshots/";
 
-        toolbar = findViewById(R.id.gallery_toolbar);
-        noScreenshots = findViewById(R.id.gallery_noScreenshots);
-        rootLinear = findViewById(R.id.gallery_linear_screenshots);
-        log = findViewById(R.id.gallery_log);
+        toolbar = findViewById(R.id.screenshots_toolbar);
+        noScreenshots = findViewById(R.id.screenshots_noScreenshots);
+        rootLinear = findViewById(R.id.screenshots_linear_screenshots);
+        log = findViewById(R.id.screenshots_log);
 
         if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
 
-        devLog("GalleryActivity started");
+        devLog("ScreenshotsActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
 
         if (Build.VERSION.SDK_INT >= uriSdkVersion) {

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout lacLinear;
     LinearLayout redirectMaps;
     LinearLayout redirectWallpapers;
-    LinearLayout redirectGallery;
+    LinearLayout redirectScreenshots;
     LinearLayout appLinear;
     LinearLayout startLac;
     LinearLayout checkUpdates;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         lacLinear = findViewById(R.id.main_optionsLac);
         redirectMaps = findViewById(R.id.main_maps);
         redirectWallpapers = findViewById(R.id.main_wallpapers);
-        redirectGallery = findViewById(R.id.main_screenshots);
+        redirectScreenshots = findViewById(R.id.main_screenshots);
         appLinear = findViewById(R.id.main_optionsApp);
         startLac = findViewById(R.id.main_startLac);
         checkUpdates = findViewById(R.id.main_checkUpdates);
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(lacLinear);
         AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false, mapsPath));
         AppUtil.handleOnPressEvent(redirectWallpapers, () -> switchActivity(WallpaperActivity.class, false, wallpapersPath));
-        AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false, screenshotsPath));
+        AppUtil.handleOnPressEvent(redirectScreenshots, () -> switchActivity(ScreenshotsActivity.class, false, screenshotsPath));
         AppUtil.handleOnPressEvent(appLinear);
         AppUtil.handleOnPressEvent(startLac, this::launchLac);
         AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
