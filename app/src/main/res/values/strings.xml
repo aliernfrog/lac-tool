@@ -11,7 +11,6 @@
     <string name="info_sharing">Sharing file</string>
     <string name="info_error">Something went wrong</string>
     <string name="info_wait">Please wait..</string>
-    <string name="info_android11notAvailable">This feature currently isn\'t available for Android 11</string>
     <string name="info_name">Name</string>
     <string name="denied_alreadyExists">A file with this name already exists</string>
     <string name="denied_doesntExist">File does not exist</string>
