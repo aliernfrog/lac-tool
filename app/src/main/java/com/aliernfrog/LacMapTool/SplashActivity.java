@@ -5,19 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-
-import java.util.Locale;
 
 @SuppressLint("CommitPrefEdits")
 public class SplashActivity extends AppCompatActivity {
@@ -57,7 +52,6 @@ public class SplashActivity extends AppCompatActivity {
         devLog("Documents path: "+pathDocs);
 
         getVersion();
-        setLocale();
         checkUpdates();
     }
 
@@ -76,20 +70,6 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
             devLog(e.toString());
         }
-    }
-
-    public void setLocale() {
-        devLog("attempting to set locale");
-        String lang = Locale.getDefault().getLanguage();
-        boolean forceEnglish = prefsConfig.getBoolean("forceEnglish", false);
-        if (forceEnglish) lang = "en";
-        Locale locale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        Configuration configuration = res.getConfiguration();
-        configuration.locale = locale;
-        res.updateConfiguration(configuration, metrics);
-        devLog("set locale to: "+lang);
     }
 
     public void checkUpdates() {

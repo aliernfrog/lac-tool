@@ -187,16 +187,6 @@
                     android:textStyle="bold" />
 
                 <CheckBox
-                    android:id="@+id/options_forceEnglish"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
-                    android:text="@string/optionForceEnglish"
-                    android:textColor="?android:textColorPrimary"
-                    android:textStyle="bold" />
-
-                <CheckBox
                     android:id="@+id/options_devtoggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

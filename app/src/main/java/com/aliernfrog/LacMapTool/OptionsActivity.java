@@ -40,7 +40,6 @@ public class OptionsActivity extends AppCompatActivity {
     LinearLayout appOptions;
     CheckBox useInAppFilePicker;
     CheckBox autoCheckUpdate;
-    CheckBox forceEnglish;
     CheckBox dev;
     Button deleteTemp;
     LinearLayout experimentalOptions;
@@ -96,7 +95,6 @@ public class OptionsActivity extends AppCompatActivity {
         appOptions = findViewById(R.id.options_app);
         useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
-        forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
         experimentalOptions = findViewById(R.id.options_ex);
         startActivityName = findViewById(R.id.options_startActivity);
@@ -160,7 +158,6 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
-        if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
         if (config.getBoolean("forceFdroid", false)) forceFdroid.setChecked(true);
     }
@@ -236,7 +233,6 @@ public class OptionsActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(appOptions);
         useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("useInAppFilePicker", isChecked)));
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("autoCheckUpdates", isChecked)));
-        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableDebug", isChecked));
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
         AppUtil.handleOnPressEvent(experimentalOptions);
