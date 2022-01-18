@@ -103,11 +103,24 @@ public class ScreenshotsActivity extends AppCompatActivity {
         LinearLayout background = layout.findViewById(R.id.ss_bg);
         ImageView image = layout.findViewById(R.id.ss_image);
         Button share = layout.findViewById(R.id.ss_share);
+        Button delete = layout.findViewById(R.id.ss_delete);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         image.setImageBitmap(bitmap);
         AppUtil.handleOnPressEvent(background);
         AppUtil.handleOnPressEvent(share, () -> shareFile(file.getPath()));
+        AppUtil.handleOnPressEvent(delete, () -> deleteScreenshot(layout, file));
         rootLinear.addView(layout);
+    }
+
+    public void deleteScreenshot(ViewGroup layout, File file) {
+        devLog("attempting to delete: "+file.getPath());
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            DocumentFile documentFile = lacTreeFile.findFile(file.getName());
+            if (documentFile != null) documentFile.delete();
+        }
+        file.delete();
+        rootLinear.removeView(layout);
+        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
     public void saveChangesAndFinish() {
