@@ -259,6 +259,27 @@
             tools:visibility="visible" />
       </LinearLayout>
 
+      <LinearLayout
+          android:id="@+id/maps_other"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="8dp"
+          android:background="@drawable/linear"
+          android:orientation="vertical"
+          android:padding="8dp">
+
+        <Button
+            android:id="@+id/maps_other_manageBackups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/linear_button"
+            android:text="@string/backupManage"
+            android:textColor="?android:textColorPrimary"
+            android:textStyle="bold"
+            app:backgroundTint="?lactool_button" />
+      </LinearLayout>
+
       <TextView
           android:id="@+id/maps_debug"
           android:layout_width="match_parent"
