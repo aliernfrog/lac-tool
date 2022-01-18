@@ -1,5 +1,6 @@
 package com.aliernfrog.LacMapTool;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -11,7 +12,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Process;
 import android.os.StrictMode;
+import android.provider.DocumentsContract;
 import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout missingPerms;
     LinearLayout lacLinear;
     LinearLayout redirectMaps;
-    LinearLayout redirectWallpaper;
+    LinearLayout redirectWallpapers;
     LinearLayout redirectGallery;
     LinearLayout appLinear;
     LinearLayout startLac;
@@ -39,11 +43,18 @@ public class MainActivity extends AppCompatActivity {
     TextView updateLog;
     TextView log;
 
+    Integer REQUEST_URI = 1;
+
     Boolean hasPerms;
+    Integer uriSdkVersion;
     Integer version;
 
     SharedPreferences update;
     SharedPreferences config;
+
+    String mapsPath;
+    String wallpapersPath;
+    String screenshotsPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +65,17 @@ public class MainActivity extends AppCompatActivity {
 
         update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
+        uriSdkVersion = config.getInt("uriSdkVersion", 30);
         version = update.getInt("versionCode", 0);
+        mapsPath = update.getString("path-maps", "");
+        wallpapersPath = update.getString("path-wallpapers", "");
+        screenshotsPath = update.getString("path-screenshots", "");
 
         missingLac = findViewById(R.id.main_missingLac);
         missingPerms = findViewById(R.id.main_missingPerms);
         lacLinear = findViewById(R.id.main_optionsLac);
         redirectMaps = findViewById(R.id.main_maps);
-        redirectWallpaper = findViewById(R.id.main_wallpapers);
+        redirectWallpapers = findViewById(R.id.main_wallpapers);
         redirectGallery = findViewById(R.id.main_screenshots);
         appLinear = findViewById(R.id.main_optionsApp);
         startLac = findViewById(R.id.main_startLac);
@@ -71,12 +86,16 @@ public class MainActivity extends AppCompatActivity {
         updateLog = findViewById(R.id.main_update_description);
         log = findViewById(R.id.main_log);
 
+        if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
+        devLog("MainActivity started");
+        devLog("uriSdkVersion: "+uriSdkVersion);
+
         if (!AppUtil.isLacInstalled(getApplicationContext())) {
+            devLog("lac wasnt found");
             missingLac.setVisibility(View.VISIBLE);
             startLac.setVisibility(View.GONE);
         }
 
-        if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
         checkUpdates(false);
         checkPerms();
         setListeners();
@@ -177,14 +196,38 @@ public class MainActivity extends AppCompatActivity {
         devLog(mk.getPath()+" //"+state);
     }
 
-    public void switchActivity(Class i, Boolean allowWithoutPerms) {
+    @SuppressLint("NewApi")
+    public Boolean checkUriPerms(@Nullable String path) {
+        if (Build.VERSION.SDK_INT < uriSdkVersion) return true;
+        if (path == null) return true;
+        String treeId = path.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+        Uri uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId);
+        Uri treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+        devLog("checking uri permissions: "+treeId);
+        int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+        if (getApplicationContext().checkUriPermission(treeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            devLog("permissions not granted, requesting");
+            Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                    .putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
+                    .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                    .addFlags(takeFlags);
+            startActivityForResult(intent, REQUEST_URI);
+            return false;
+        } else {
+            devLog("permissions granted");
+            return true;
+        }
+    }
+
+    public void switchActivity(Class i, Boolean allowWithoutPerms, @Nullable String path) {
         if (!allowWithoutPerms && !hasPerms) {
             devLog("no required permissions, checking again");
             checkPerms();
         } else {
             Intent intent = new Intent(this.getApplicationContext(), i);
             devLog("attempting to redirect to "+i.toString());
-            startActivity(intent);
+            if (checkUriPerms(path)) startActivity(intent);
         }
     }
 
@@ -198,16 +241,31 @@ public class MainActivity extends AppCompatActivity {
         AppUtil.devLog(toLog, log);
     }
 
+    @SuppressLint("NewApi")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        devLog(requestCode+": hasData = "+(data != null));
+        if (requestCode == REQUEST_URI && data != null) {
+            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+            grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
+            getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+            devLog("took uri permissions");
+        } else {
+            devLog("data is null");
+        }
+    }
+
     public void setListeners() {
         AppUtil.handleOnPressEvent(missingLac, () -> redirectURL("https://play.google.com/store/apps/details?id=com.MA.LAC"));
         AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
         AppUtil.handleOnPressEvent(lacLinear);
-        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false));
-        AppUtil.handleOnPressEvent(redirectWallpaper, () -> switchActivity(WallpaperActivity.class, false));
-        AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false));
+        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false, mapsPath));
+        AppUtil.handleOnPressEvent(redirectWallpapers, () -> switchActivity(WallpaperActivity.class, false, wallpapersPath));
+        AppUtil.handleOnPressEvent(redirectGallery, () -> switchActivity(GalleryActivity.class, false, screenshotsPath));
         AppUtil.handleOnPressEvent(appLinear);
         AppUtil.handleOnPressEvent(startLac, this::launchLac);
         AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
-        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true));
+        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true, null));
     }
 }
