@@ -34,19 +34,20 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
+
+
         android:layout_height="match_parent"
-
-
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:animateLayoutChanges="true">
+            android:paddingEnd="24dp">
 
             <TextView
                 android:id="@+id/wallpaper_helpText"
@@ -128,8 +129,8 @@
                 android:id="@+id/wallpaper_rootLinear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:animateLayoutChanges="true" />
+                android:animateLayoutChanges="true"
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/wallpaper_debug"
@@ -139,6 +140,16 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/wallpaper_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/action_save"
+        android:src="@drawable/save"
+        app:backgroundTint="?lactool_blue" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
