@@ -10,7 +10,6 @@
     <string name="info_sharing">Dosya paylaşılıyor</string>
     <string name="info_error">Bir şeyler ters gitti</string>
     <string name="info_wait">Lütfen bekleyin..</string>
-    <string name="info_android11notAvailable">Bu özellik henüz Android 11\'de kullanılamıyor</string>
     <string name="info_name">İsim</string>
     <string name="denied_alreadyExists">Bu isimde bir dosya zaten var</string>
     <string name="denied_doesntExist">Bu dosya yok</string>
