@@ -84,6 +84,10 @@
     <string name="optionsUseInAppFilePicker">Use in app file picker</string>
     <string name="optionAutoCheckUpdate">Automatically check for LAC Tool updates</string>
     <string name="optionDebug">Debug mode</string>
+    <string name="optionChangeTheme">Change theme</string>
+    <string name="optionsChangeTheme_system">Follow system</string>
+    <string name="optionsChangeTheme_light">Light</string>
+    <string name="optionsChangeTheme_dark">Dark</string>
     <string name="optionDeleteTemp">Delete temporary data</string>
     <string name="optionsChangelogNoChangelog">No changelog has been found, go to main menu, then check for updates to get changelog</string>
     <string name="optionsChangelogCurrent">Current version</string>
