@@ -5,7 +5,6 @@
     <string name="info_lacNeeded">LAC Tool helps you manage LAC data. Without LAC, LAC Tool will not be useful.</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
     <string name="info_treePerm">LAC Tool needs access to your LAC files in order to manage them, click "use this folder" option and it will get required permissions</string>
-    <string name="info_saveChangesAndroid11">Click your device\'s back button or in app back button to save the changes you did</string>
     <string name="info_setThumbnail">Pick the image that you want it to be the thumbnail of your map</string>
     <string name="info_done">Done!</string>
     <string name="info_sharing">Sharing file</string>
