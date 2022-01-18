@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -52,6 +53,7 @@ public class SplashActivity extends AppCompatActivity {
         devLog("Documents path: "+pathDocs);
 
         getVersion();
+        setTheme();
         checkUpdates();
     }
 
@@ -87,6 +89,12 @@ public class SplashActivity extends AppCompatActivity {
             devLog("skipping updates");
         }
         setConfig();
+    }
+
+    public void setTheme() {
+        int theme = prefsConfig.getInt("appTheme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        devLog("attempting to set theme: "+theme);
+        AppCompatDelegate.setDefaultNightMode(theme);
     }
 
     public void setConfig() {
