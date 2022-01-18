@@ -446,12 +446,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         finish();
     }
 
-    public void switchActivity(Class i) {
-        devLog("attempting to redirect to class: "+i.toString());
-        Intent intent = new Intent(this.getApplicationContext(), i);
-        startActivity(intent);
-    }
-
     void devLog(String toLog) {
         AppUtil.devLog(toLog, debugText);
     }
