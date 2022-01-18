@@ -1,6 +1,5 @@
 package com.aliernfrog.LacMapTool;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
@@ -9,14 +8,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Process;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.view.View;
@@ -46,8 +43,6 @@ public class ScreenshotsActivity extends AppCompatActivity {
     String lacPath;
     String tempPath;
 
-    int TREE_REQUEST_CODE = 4;
-
     SharedPreferences config;
     SharedPreferences update;
 
@@ -64,8 +59,8 @@ public class ScreenshotsActivity extends AppCompatActivity {
 
         uriSdkVersion = config.getInt("uriSdkVersion", 30);
 
-        lacPath = update.getString("path-lac", null).replace("/editor", "/screenshots");
-        tempPath = update.getString("path-app", null)+"temp/screenshots/";
+        lacPath = update.getString("path-screenshots", null);
+        tempPath = update.getString("path-temp-screenshots", null);
 
         toolbar = findViewById(R.id.screenshots_toolbar);
         noScreenshots = findViewById(R.id.screenshots_noScreenshots);
@@ -77,30 +72,10 @@ public class ScreenshotsActivity extends AppCompatActivity {
         devLog("ScreenshotsActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
 
-        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            String lacTreeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
-            Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
-            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request");
-                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-                        .addFlags(takeFlags);
-                startActivityForResult(intent, TREE_REQUEST_CODE);
-            } else {
-                useTempPath();
-            }
-        } else {
-            lacPath += "/";
-        }
-        devLog(lacPath);
-
-        getScreenshots();
         setListeners();
+        useTempPath();
+        devLog("lacPath: "+lacPath);
+        getScreenshots();
     }
 
     public void getScreenshots() {
@@ -136,39 +111,37 @@ public class ScreenshotsActivity extends AppCompatActivity {
     }
 
     public void saveChangesAndFinish() {
-        if (Build.VERSION.SDK_INT >= 30) {
-            devLog("attempting to save changes");
-            File file = new File(tempPath);
-            File[] files = file.listFiles();
-            try {
-                if (files != null) {
-                    for (File value : files) {
-                        DocumentFile fileInLac = lacTreeFile.findFile(value.getName());
-                        if (fileInLac == null)
-                            fileInLac = lacTreeFile.createFile("", value.getName());
-                        copyFile(value.getPath(), fileInLac);
-                    }
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            devLog("attempting to save changes and finish");
+            File tempFile = new File(tempPath);
+            File[] files = tempFile.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    DocumentFile fileInLac = lacTreeFile.findFile(file.getName());
+                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", file.getName());
+                    copyFile(file.getPath(), fileInLac);
                 }
-            } finally {
-                FileUtil.deleteDirectory(file);
-                finish();
             }
-        } else {
-            finish();
+            FileUtil.deleteDirectoryContent(tempFile);
         }
+        finish();
     }
 
+    @SuppressLint("NewApi")
     public void useTempPath() {
-        lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
-        File tempFile = new File(tempPath);
-        if (!tempFile.exists()) tempFile.mkdirs();
-        if (lacTreeFile != null) {
-            DocumentFile[] files = lacTreeFile.listFiles();
-            for (DocumentFile file : files) {
-                copyFile(file, tempPath + file.getName());
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+            lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
+            if (lacTreeFile != null) {
+                DocumentFile[] files = lacTreeFile.listFiles();
+                for (DocumentFile file : files) {
+                    copyFile(file, tempPath + "/" + file.getName());
+                }
             }
+            lacPath = tempPath;
+            devLog("using temp path as lac path");
         }
-        lacPath = tempPath;
     }
 
     public void shareFile(String path) {
@@ -194,7 +167,7 @@ public class ScreenshotsActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("NewApi")
     public void copyFile(String src, DocumentFile dst) {
         devLog("attempting to copy "+src+" to "+dst);
         try {
@@ -208,26 +181,6 @@ public class ScreenshotsActivity extends AppCompatActivity {
 
     void devLog(String toLog) {
         AppUtil.devLog(toLog, log);
-    }
-
-    @SuppressLint("NewApi")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        devLog("received result for: "+requestCode);
-        if (requestCode == TREE_REQUEST_CODE) {
-            if (data == null) {
-                devLog(requestCode+": no data");
-            } else {
-                if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-                    int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-                    grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
-                    getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-                    devLog(requestCode+": granted permissions for: "+data.getData());
-                    finish();
-                }
-            }
-        }
     }
 
     void setListeners() {
