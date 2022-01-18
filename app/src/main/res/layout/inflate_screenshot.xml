@@ -34,4 +34,16 @@
         android:textStyle="bold"
         app:backgroundTint="?lactool_button" />
 
+    <Button
+        android:id="@+id/ss_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/linear_red"
+        android:padding="8dp"
+        android:text="@string/action_delete"
+        android:textColor="?lactool_textOnRed"
+        android:textStyle="bold"
+        app:backgroundTint="?lactool_red" />
+
 </LinearLayout>
