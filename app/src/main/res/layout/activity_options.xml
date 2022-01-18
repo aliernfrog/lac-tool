@@ -410,7 +410,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:contentDescription="@string/optionsDiscordRcs"
-                        app:srcCompat="@drawable/social_discord_white" />
+                        app:srcCompat="@drawable/social_discord" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -436,7 +436,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:contentDescription="@string/optionsDiscordAliern"
-                        app:srcCompat="@drawable/social_discord_white" />
+                        app:srcCompat="@drawable/social_discord" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -462,7 +462,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:contentDescription="@string/optionsGithub"
-                        app:srcCompat="@drawable/social_github_white" />
+                        app:srcCompat="@drawable/social_github" />
 
                     <TextView
                         android:layout_width="match_parent"
