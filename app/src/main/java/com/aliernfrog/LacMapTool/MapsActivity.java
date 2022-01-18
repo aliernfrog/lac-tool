@@ -311,10 +311,13 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             if (dataFile != null) dataFile.delete();
             if (mapFile != null) mapFile.delete();
         }
+        mapNameLinear.setVisibility(View.GONE);
+        thumbnailLinear.setVisibility(View.GONE);
+        mapActionsLinear.setVisibility(View.GONE);
+        appBarImage.setImageBitmap(null);
+        collapsingToolbarLayout.setTitle(getString(R.string.manageMaps));
         devLog("deleted the map");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-        saveChangesAndFinish();
-        switchActivity(MapsActivity.class);
     }
 
     public void manageBackups() {
