@@ -116,12 +116,6 @@ public class AppUtil {
         return true;
     }
 
-    public static int getColor(int resId, Context context) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(resId, typedValue, true);
-        return ContextCompat.getColor(context, typedValue.resourceId);
-    }
-
     public static void clearTempData(String path) {
         File tempDir = new File(path);
         File[] files = tempDir.listFiles();
