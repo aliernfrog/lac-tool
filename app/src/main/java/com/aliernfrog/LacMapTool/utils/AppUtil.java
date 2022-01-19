@@ -9,15 +9,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.text.Html;
-import android.text.SpannableString;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import org.json.JSONObject;
 
@@ -130,10 +126,10 @@ public class AppUtil {
     public static void devLog(String toLog, TextView logView) {
         if (logView.getVisibility() == View.VISIBLE) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            String log = Html.toHtml(new SpannableString(logView.getText()));
-            String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
-            logView.setText(Html.fromHtml(full));
+            if (toLog.contains("Exception")) tag = "ERR-"+tag;
+            String log = logView.getText().toString();
+            String full = log+"\n["+tag+"] "+toLog;
+            logView.setText(full);
         }
     }
 
