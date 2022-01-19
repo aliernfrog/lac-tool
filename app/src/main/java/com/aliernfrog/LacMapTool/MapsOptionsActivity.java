@@ -14,16 +14,14 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aliernfrog.LacMapTool.fragments.MapTypeSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.aliernfrog.LacMapTool.utils.LacMapUtil;
@@ -36,13 +34,13 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 
 @SuppressLint({"ClickableViewAccessibility", "UseSwitchCompatOrMaterialCode"})
-public class MapsOptionsActivity extends AppCompatActivity {
+public class MapsOptionsActivity extends AppCompatActivity implements MapTypeSheet.MapTypeListener {
     Toolbar toolbar;
     TextView mapName;
-    EditText serverName;
     LinearLayout serverNameLinear;
+    EditText serverName;
     LinearLayout mapTypeLinear;
-    Spinner mapType;
+    Button mapTypeButton;
     LinearLayout optionsLinear;
     LinearLayout rolesLinear;
     TextView roles_title;
@@ -66,6 +64,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
     Integer LINE_SERVER_NAME;
     Integer LINE_MAP_TYPE;
     Integer LINE_ROLES;
+    Integer mapTypeInt;
     ArrayList<String> roles = new ArrayList<>();
 
     @Override
@@ -81,10 +80,10 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.mapsOptions_toolbar);
         mapName = findViewById(R.id.mapsOptions_mapName);
-        serverName = findViewById(R.id.mapsOptions_serverName_input);
         serverNameLinear = findViewById(R.id.mapsOptions_serverName_linear);
+        serverName = findViewById(R.id.mapsOptions_serverName_input);
         mapTypeLinear = findViewById(R.id.mapsOptions_mapType_linear);
-        mapType = findViewById(R.id.mapsOptions_mapType_spinner);
+        mapTypeButton = findViewById(R.id.mapsOptions_mapType_change);
         optionsLinear = findViewById(R.id.mapsOptions_options_linear);
         rolesLinear = findViewById(R.id.mapsOptions_roles_linear);
         roles_title = findViewById(R.id.mapsOptions_roles_title);
@@ -103,7 +102,6 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
         rolesAdd_desc.setText(Html.fromHtml("Roles without <font color=yellow>[ ]</font> will get removed by LAC automatically. So always add roles like <font color=yellow>[YOUR ROLE]</font>. To add a role with color do it like <font color=yellow>&#60;color=red&#62;[CRIMINAL]&#60;/color&#62;</font>"));
 
-        putMapTypes();
         getMap(rawPath);
         setListeners();
     }
@@ -199,9 +197,13 @@ public class MapsOptionsActivity extends AppCompatActivity {
     public void getMapType(Integer line) {
         LINE_MAP_TYPE = line;
         String str = updatedContent[line].replace("Map Type:", "");
-        int typeInt = Integer.parseInt(str);
-        mapType.setSelection(typeInt);
+        mapTypeInt = Integer.parseInt(str);
+        mapTypeButton.setText(LacMapUtil.getMapTypeFromInt(mapTypeInt, getApplicationContext()));
         mapTypeLinear.setVisibility(View.VISIBLE);
+    }
+
+    public int getMapTypeInt() {
+        return mapTypeInt;
     }
 
     public void setMapName(String name) {
@@ -211,7 +213,9 @@ public class MapsOptionsActivity extends AppCompatActivity {
 
     public void setMapType(Integer mapTypeNumber) {
         devLog("attempting to change map type to: "+mapTypeNumber);
+        mapTypeInt = mapTypeNumber;
         updatedContent[LINE_MAP_TYPE] = "Map Type:"+mapTypeNumber.toString();
+        mapTypeButton.setText(LacMapUtil.getMapTypeFromInt(mapTypeNumber, getApplicationContext()));
     }
 
     public void setBoolean(Integer line, Boolean bool) {
@@ -361,15 +365,9 @@ public class MapsOptionsActivity extends AppCompatActivity {
         }
     }
 
-    public void putMapTypes() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner);
-        adapter.add(getResources().getString(R.string.mapEdit_type_0));
-        adapter.add(getResources().getString(R.string.mapEdit_type_1));
-        adapter.add(getResources().getString(R.string.mapEdit_type_2));
-        adapter.add(getResources().getString(R.string.mapEdit_type_3));
-        adapter.add(getResources().getString(R.string.mapEdit_type_4));
-        adapter.add(getResources().getString(R.string.mapEdit_type_5));
-        mapType.setAdapter(adapter);
+    void openMapTypeView() {
+        MapTypeSheet mapTypeSheet = new MapTypeSheet();
+        mapTypeSheet.show(getSupportFragmentManager(), "map_type");
     }
 
     void devLog(String toLog) {
@@ -399,20 +397,7 @@ public class MapsOptionsActivity extends AppCompatActivity {
         });
 
         AppUtil.handleOnPressEvent(mapTypeLinear);
-
-        mapType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setMapType(position);
-                devLog("selected position: "+position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
+        AppUtil.handleOnPressEvent(mapTypeButton, this::openMapTypeView);
         AppUtil.handleOnPressEvent(optionsLinear);
         AppUtil.handleOnPressEvent(rolesLinear);
         AppUtil.handleOnPressEvent(rolesAdd_linear2);
@@ -422,5 +407,10 @@ public class MapsOptionsActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(removeAllRace, () -> removeAllObjects("Checkpoint_Editor"));
         AppUtil.handleOnPressEvent(fixMapButton, this::fixMap);
         AppUtil.handleOnPressEvent(saveChanges, this::saveMap);
+    }
+
+    @Override
+    public void onMapTypeChoose(int type) {
+        setMapType(type);
     }
 }

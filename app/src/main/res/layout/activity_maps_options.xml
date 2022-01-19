@@ -118,17 +118,20 @@
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
-                <Spinner
-                    android:id="@+id/mapsOptions_mapType_spinner"
+                <Button
+                    android:id="@+id/mapsOptions_mapType_change"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
-                    android:contentDescription="@string/mapEdit_mapType"
-                    android:minHeight="48dp"
-                    android:padding="8dp"
-                    android:spinnerMode="dialog"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/mapEdit_mapType"
+                    android:textAllCaps="false"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"
+                    app:backgroundTint="?lactool_button"
                     tools:ignore="DuplicateSpeakableTextCheck" />
+
             </LinearLayout>
 
             <LinearLayout
