@@ -128,7 +128,7 @@ public class AppUtil {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
             if (toLog.contains("Exception")) tag = "ERR-"+tag;
             String log = logView.getText().toString();
-            String full = log+"\n["+tag+"] "+toLog;
+            String full = log+"["+tag+"] "+toLog+"\n\n";
             logView.setText(full);
         }
     }
