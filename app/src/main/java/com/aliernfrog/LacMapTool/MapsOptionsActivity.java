@@ -331,7 +331,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         Toast.makeText(getApplicationContext(), R.string.info_wait, Toast.LENGTH_SHORT).show();
         devLog("attempting to fix the map");
         try {
-            updatedContent = LacMapUtil.fixMap(updatedContent);
+            LacMapUtil.fixMap(updatedContent);
         } catch (Exception e) {
             devLog(e.toString());
         }
