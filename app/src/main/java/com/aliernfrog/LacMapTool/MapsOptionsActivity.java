@@ -206,9 +206,9 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         return mapTypeInt;
     }
 
-    public void setMapName(String name) {
-        devLog("attempting to change map name to: "+name);
-        updatedContent[0] = "Map Name:"+name;
+    public void setServerName(String name) {
+        devLog("attempting to change server name to: "+name);
+        updatedContent[LINE_SERVER_NAME] = "Map Name:"+name;
     }
 
     public void setMapType(Integer mapTypeNumber) {
@@ -387,7 +387,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setMapName(serverName.getText().toString());
+                setServerName(serverName.getText().toString());
             }
 
             @Override
