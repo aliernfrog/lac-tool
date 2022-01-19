@@ -85,14 +85,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
+                    android:autofillHints="false"
                     android:background="@drawable/linear_button"
                     android:ems="10"
                     android:hint="@string/mapEdit_serverName"
                     android:inputType="textNoSuggestions"
+                    android:minHeight="48dp"
                     android:padding="8dp"
                     android:textColor="?android:textColorPrimary"
                     android:textColorHint="?lactool_hint"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
             </LinearLayout>
 
             <LinearLayout
@@ -121,8 +124,11 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:background="@drawable/linear_button"
+                    android:contentDescription="@string/mapEdit_mapType"
+                    android:minHeight="48dp"
                     android:padding="8dp"
-                    android:spinnerMode="dialog" />
+                    android:spinnerMode="dialog"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
             </LinearLayout>
 
             <LinearLayout
@@ -166,8 +172,7 @@
                     <LinearLayout
                         android:id="@+id/mapsOptions_roleAdd_linear2"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/linear_button"
                         android:orientation="horizontal">
 
@@ -177,9 +182,11 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
                             android:layout_weight="1"
+                            android:autofillHints="false"
                             android:ems="10"
                             android:hint="@string/info_name"
                             android:inputType="textNoSuggestions"
+                            android:minHeight="48dp"
                             android:padding="8dp"
                             android:textColor="?android:textColorPrimary"
                             android:textColorHint="?lactool_hint"
