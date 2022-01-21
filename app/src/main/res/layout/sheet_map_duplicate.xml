@@ -19,50 +19,64 @@
         app:srcCompat="?lactool_indicatorDrawable"
         tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/mapDuplicate_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/mapDuplicate"
-        android:textAlignment="center"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="30sp" />
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:background="@drawable/linear"
-        android:orientation="vertical"
-        android:padding="8dp">
+        tools:ignore="SpeakableTextPresentCheck">
 
-        <EditText
-            android:id="@+id/mapDuplicate_nameInput"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="false"
-            android:ems="10"
-            android:hint="@string/mapDuplicate_name"
-            android:inputType="text|textNoSuggestions"
-            android:textColor="?android:textColorPrimary"
-            android:textColorHint="?lactool_hint"
-            android:textStyle="bold"
-            tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/mapDuplicate_duplicate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/linear_blue"
-        android:padding="8dp"
-        android:text="@string/mapDuplicate_duplicate"
-        android:textColor="?lactool_textOnRed"
-        android:textStyle="bold"
-        app:backgroundTint="?lactool_blue" />
+            <TextView
+                android:id="@+id/mapDuplicate_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/mapDuplicate"
+                android:textAlignment="center"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="30sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/mapDuplicate_nameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:ems="10"
+                    android:hint="@string/mapDuplicate_name"
+                    android:inputType="text|textNoSuggestions"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?lactool_hint"
+                    android:textStyle="bold"
+                    tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/mapDuplicate_duplicate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/linear_blue"
+                android:padding="8dp"
+                android:text="@string/mapDuplicate_duplicate"
+                android:textColor="?lactool_textOnRed"
+                android:textStyle="bold"
+                app:backgroundTint="?lactool_blue" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
