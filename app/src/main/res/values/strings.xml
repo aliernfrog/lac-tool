@@ -71,6 +71,13 @@
     <string name="mapEdit_removeAll_race">Remove all race checkpoints</string>
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
     <string name="mapEdit_roles">Roles</string>
+    <string name="mapRoles">Edit map roles</string>
+    <string name="mapRoles_addRole">Add role</string>
+    <string name="mapRoles_roleName">Role name</string>
+    <string name="mapRoles_roleColor">Role color</string>
+    <string name="mapRoles_copied">Copied</string>
+    <string name="mapRoles_add_noName">Role must have a name!</string>
+    <string name="mapRoles_add_cantInclude">Role must not include \",\" or \":\"!</string>
     <string name="optionsLac">LAC options</string>
     <string name="optionLacDefault">Default</string>
     <string name="optionLacd">LACD (LAC BETA)</string>

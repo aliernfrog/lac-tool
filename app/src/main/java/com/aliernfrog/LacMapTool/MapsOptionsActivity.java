@@ -1,16 +1,17 @@
 package com.aliernfrog.LacMapTool;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
 
 @SuppressLint({"ClickableViewAccessibility", "UseSwitchCompatOrMaterialCode"})
 public class MapsOptionsActivity extends AppCompatActivity implements MapTypeSheet.MapTypeListener {
@@ -43,12 +43,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     Button mapTypeButton;
     LinearLayout optionsLinear;
     LinearLayout rolesLinear;
-    TextView roles_title;
-    LinearLayout rolesAdd_linear;
-    LinearLayout rolesAdd_linear2;
-    EditText rolesAdd_input;
-    Button rolesAdd_button;
-    TextView rolesAdd_desc;
+    Button editRolesButton;
     Button removeAllTdm;
     Button removeAllRace;
     Button fixMapButton;
@@ -61,11 +56,11 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
 
     String[] updatedContent;
 
+    Integer REQUEST_ROLES = 1;
     Integer LINE_SERVER_NAME;
     Integer LINE_MAP_TYPE;
     Integer LINE_ROLES;
     Integer mapTypeInt;
-    ArrayList<String> roles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +81,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         mapTypeButton = findViewById(R.id.mapsOptions_mapType_change);
         optionsLinear = findViewById(R.id.mapsOptions_options_linear);
         rolesLinear = findViewById(R.id.mapsOptions_roles_linear);
-        roles_title = findViewById(R.id.mapsOptions_roles_title);
-        rolesAdd_linear = findViewById(R.id.mapsOptions_roleAdd_linear);
-        rolesAdd_linear2 = findViewById(R.id.mapsOptions_roleAdd_linear2);
-        rolesAdd_input = findViewById(R.id.mapsOptions_roleAdd_name);
-        rolesAdd_button = findViewById(R.id.mapsOptions_roleAdd_button);
-        rolesAdd_desc = findViewById(R.id.mapsOptions_roleAdd_desc);
+        editRolesButton = findViewById(R.id.mapsOptions_roles_editRoles);
         removeAllTdm = findViewById(R.id.mapsOptions_removeAll_tdm);
         removeAllRace = findViewById(R.id.mapsOptions_removeAll_race);
         fixMapButton = findViewById(R.id.mapsOptions_fix_button);
@@ -99,8 +89,6 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         debugText = findViewById(R.id.mapsOptions_log);
 
         if (config.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
-
-        rolesAdd_desc.setText(Html.fromHtml("Roles without <font color=yellow>[ ]</font> will get removed by LAC automatically. So always add roles like <font color=yellow>[YOUR ROLE]</font>. To add a role with color do it like <font color=yellow>&#60;color=red&#62;[CRIMINAL]&#60;/color&#62;</font>"));
 
         getMap(rawPath);
         setListeners();
@@ -138,7 +126,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
                     getMapType(i);
                     break;
                 case "rolesList":
-                    readRoles(i, true);
+                    readRoles(i);
                 case "option":
                     if (!cur.startsWith("Roles List:")) readOption(i);
             }
@@ -260,56 +248,15 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         }
     }
 
-    public void readRoles(Integer line, Boolean putRoles) {
+    public void readRoles(Integer line) {
         LINE_ROLES = line;
         rolesLinear.setVisibility(View.VISIBLE);
-        rolesLinear.removeAllViews();
-        rolesLinear.addView(roles_title);
-        rolesLinear.addView(rolesAdd_linear);
-        devLog("attempting to read roles");
-        rolesLinear.setVisibility(View.VISIBLE);
-        String[] rolesString = updatedContent[line].replace("Roles List:", "").split(",");
-        if (putRoles) {
-            for (String s : rolesString) {
-                if (!s.equals("")) roles.add(s);
-            }
-        }
-        for (int i = 0; i < roles.size(); i++) {
-            if (!roles.get(i).equals("")) {
-                String name = roles.get(i);
-                ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_role, rolesLinear, false);
-                LinearLayout roleLinear = layout.findViewById(R.id.role_bg);
-                TextView roleName = layout.findViewById(R.id.role_name);
-                Button roleDel = layout.findViewById(R.id.role_delete);
-                roleName.setText(name);
-                int finalI = i;
-                AppUtil.handleOnPressEvent(roleLinear);
-                AppUtil.handleOnPressEvent(roleDel, () -> {
-                    roles.remove(finalI);
-                    readRoles(line, false);
-                });
-                rolesLinear.addView(layout);
-                rolesLinear.removeView(rolesAdd_linear);
-                rolesLinear.addView(rolesAdd_linear);
-            }
-        }
     }
 
-    public void addRole() {
-        String roleName = rolesAdd_input.getText().toString();
-        roles.add(roleName);
-        devLog("added role: " + roleName);
-        readRoles(LINE_ROLES, false);
-    }
-
-    public void saveRoles() {
-        if (LINE_ROLES == null) return;
-        devLog("attempting to save roles");
-        StringBuilder finalRoles = new StringBuilder();
-        for (int i = 0; i < roles.size(); i++) {
-            finalRoles.append(",").append(roles.get(i));
-        }
-        updatedContent[LINE_ROLES] = "Roles List:"+finalRoles;
+    public void editRoles() {
+        Intent intent = new Intent(this, MapsRolesActivity.class);
+        intent.putExtra("roles", updatedContent[LINE_ROLES].replace("Roles List:",""));
+        startActivityForResult(intent, REQUEST_ROLES);
     }
 
     public void removeAllObjects(String object) {
@@ -340,7 +287,6 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     }
 
     public void saveMap() {
-        saveRoles();
         devLog("attempting to save the map");
         StringBuilder newContent = new StringBuilder();
         for (String s : updatedContent) {
@@ -374,6 +320,17 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         AppUtil.devLog(toLog, debugText);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        devLog(requestCode+": hasData = "+(data != null));
+        if (requestCode == REQUEST_ROLES && data != null) {
+            setLine(LINE_ROLES, "Roles List:"+data.getStringExtra("roles"));
+        } else {
+            devLog("data is null");
+        }
+    }
+
     void setListeners() {
         toolbar.setNavigationOnClickListener(v -> finish());
         AppUtil.handleOnPressEvent(mapName);
@@ -400,9 +357,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         AppUtil.handleOnPressEvent(mapTypeButton, this::openMapTypeView);
         AppUtil.handleOnPressEvent(optionsLinear);
         AppUtil.handleOnPressEvent(rolesLinear);
-        AppUtil.handleOnPressEvent(rolesAdd_linear2);
-        AppUtil.handleOnPressEvent(rolesAdd_button, this::addRole);
-        AppUtil.handleOnPressEvent(rolesAdd_desc, () -> rolesAdd_desc.setVisibility(View.GONE));
+        AppUtil.handleOnPressEvent(editRolesButton, this::editRoles);
         AppUtil.handleOnPressEvent(removeAllTdm, () -> removeAllObjects("Team_"));
         AppUtil.handleOnPressEvent(removeAllRace, () -> removeAllObjects("Checkpoint_Editor"));
         AppUtil.handleOnPressEvent(fixMapButton, this::fixMap);

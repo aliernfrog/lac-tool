@@ -2,18 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/role_bg"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    android:background="@drawable/linear_button"
-    android:clickable="true"
-    android:focusable="true"
-    android:gravity="center_horizontal|center_vertical"
+    android:layout_margin="8dp"
+    android:background="@drawable/linear"
+    android:padding="8dp"
     android:textColor="#FFFFFF">
 
     <TextView
         android:id="@+id/role_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_weight="1"
@@ -21,6 +19,7 @@
         android:text="@string/app_name"
         android:textAllCaps="false"
         android:textColor="?android:textColorPrimary"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <Button
@@ -28,9 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="0"
         android:background="@drawable/linear_red"
-        android:padding="8dp"
         android:text="@string/action_delete"
         android:textColor="?lactool_textOnRed"
         android:textStyle="bold"
