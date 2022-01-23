@@ -145,6 +145,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
             Boolean bool = value.contains("true") || value.contains("enabled");
             addBoolOption(line, title, bool);
         }
+        optionsLinear.setVisibility(View.VISIBLE);
     }
 
     public void addNumberOption(Integer line, String title, String value) {
