@@ -126,6 +126,7 @@ public class AppUtil {
     public static void devLog(String toLog, TextView logView) {
         if (logView.getVisibility() == View.VISIBLE) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
+            if (tag.equals("devLog")) tag = Thread.currentThread().getStackTrace()[4].getMethodName();
             if (toLog.contains("Exception")) tag = "ERR-"+tag;
             String log = logView.getText().toString();
             String full = log+"["+tag+"] "+toLog+"\n\n";
