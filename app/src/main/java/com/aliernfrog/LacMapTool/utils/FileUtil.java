@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -115,6 +116,15 @@ public class FileUtil {
         }
         reader.close();
         return _full.toString();
+    }
+
+    public static void saveFile(String folder, String fileName, String content) throws Exception {
+        File folderFile = new File(folder);
+        File file = new File(folderFile, fileName);
+        FileWriter writer = new FileWriter(file);
+        writer.append(content);
+        writer.flush();
+        writer.close();
     }
 
     public static Intent shareFile(String source, String type, Context context) {
