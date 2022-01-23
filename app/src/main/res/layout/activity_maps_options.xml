@@ -141,7 +141,9 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/linear"
                 android:orientation="vertical"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/mapsOptions_roles_linear"
