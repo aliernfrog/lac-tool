@@ -155,7 +155,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/mapsOptions_roles_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -165,61 +164,17 @@
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/mapsOptions_roleAdd_linear"
+                <Button
+                    android:id="@+id/mapsOptions_roles_editRoles"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="16dp"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/mapsOptions_roleAdd_linear2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/linear_button"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/mapsOptions_roleAdd_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:layout_weight="1"
-                            android:autofillHints="false"
-                            android:ems="10"
-                            android:hint="@string/info_name"
-                            android:inputType="textNoSuggestions"
-                            android:minHeight="48dp"
-                            android:padding="8dp"
-                            android:textColor="?android:textColorPrimary"
-                            android:textColorHint="?lactool_hint"
-                            android:textStyle="bold" />
-
-                        <Button
-                            android:id="@+id/mapsOptions_roleAdd_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/linear_blue"
-                            android:padding="8dp"
-                            android:text="@string/action_add"
-                            android:textColor="?lactool_textOnRed"
-                            android:textStyle="bold"
-                            app:backgroundTint="?lactool_blue" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/mapsOptions_roleAdd_desc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/linear_button"
-                        android:padding="8dp"
-                        android:textColor="?android:textColorPrimary"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:padding="8dp"
+                    android:text="@string/mapRoles"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"
+                    app:backgroundTint="?lactool_button" />
 
             </LinearLayout>
 
