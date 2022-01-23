@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,17 +25,17 @@ import com.aliernfrog.LacMapTool.fragments.MapTypeSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.aliernfrog.LacMapTool.utils.LacMapUtil;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
-import java.io.FileWriter;
 
 @SuppressLint({"ClickableViewAccessibility", "UseSwitchCompatOrMaterialCode"})
 public class MapsOptionsActivity extends AppCompatActivity implements MapTypeSheet.MapTypeListener {
+    CollapsingToolbarLayout collapsingToolbarLayout;
     Toolbar toolbar;
-    TextView mapName;
     LinearLayout serverNameLinear;
     EditText serverName;
     LinearLayout mapTypeLinear;
@@ -53,6 +52,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     SharedPreferences config;
 
     String rawPath;
+    String mapName;
 
     String[] updatedContent;
 
@@ -71,10 +71,11 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         rawPath = getIntent().getStringExtra("path");
+        mapName = getIntent().getStringExtra("name");
         if (rawPath == null) finish();
 
+        collapsingToolbarLayout = findViewById(R.id.mapsOptions_collapsingToolbar);
         toolbar = findViewById(R.id.mapsOptions_toolbar);
-        mapName = findViewById(R.id.mapsOptions_mapName);
         serverNameLinear = findViewById(R.id.mapsOptions_serverName_linear);
         serverName = findViewById(R.id.mapsOptions_serverName_input);
         mapTypeLinear = findViewById(R.id.mapsOptions_mapType_linear);
@@ -90,17 +91,15 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
 
         if (config.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
 
-        getMap(rawPath);
+        getMap();
         setListeners();
     }
 
-    public void getMap(String path) {
-        rawPath = path.replace("/document/primary:", Environment.getExternalStorageDirectory().toString()+"/").replace("/document/raw:/", "");
-        String[] arr = path.replace(".txt", "").split("/");
-        mapName.setText(arr[arr.length - 1]);
+    public void getMap() {
         devLog("rawPath: "+ rawPath);
-        devLog("mapName: "+ mapName.getText());
-        readMap(path);
+        devLog("mapName: "+ mapName);
+        collapsingToolbarLayout.setTitle(mapName);
+        readMap(rawPath);
     }
 
     public void readMapLines() {
@@ -257,6 +256,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     public void editRoles() {
         Intent intent = new Intent(this, MapsRolesActivity.class);
         intent.putExtra("roles", updatedContent[LINE_ROLES].replace("Roles List:",""));
+        intent.putExtra("mapName", mapName);
         startActivityForResult(intent, REQUEST_ROLES);
     }
 
@@ -288,22 +288,18 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     }
 
     public void saveMap() {
-        devLog("attempting to save the map");
-        StringBuilder newContent = new StringBuilder();
-        for (String s : updatedContent) {
-            if (newContent.length() > 0) {
-                newContent.append("\n").append(s);
-            } else {
-                newContent.append(s);
-            }
-        }
         try {
-            File fileDir = new File(rawPath.replace(mapName.getText().toString()+".txt", ""));
-            File mapFile = new File(fileDir, mapName.getText().toString()+".txt");
-            FileWriter writer = new FileWriter(mapFile);
-            writer.append(newContent.toString());
-            writer.flush();
-            writer.close();
+            devLog("attempting to save the map");
+            StringBuilder newContent = new StringBuilder();
+            for (String s : updatedContent) {
+                if (newContent.length() > 0) {
+                    newContent.append("\n").append(s);
+                } else {
+                    newContent.append(s);
+                }
+            }
+            File currentFile = new File(rawPath);
+            FileUtil.saveFile(currentFile.getParent(), currentFile.getName(), newContent.toString());
             Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
             devLog("done saving the map");
             finish();
@@ -334,7 +330,6 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
 
     void setListeners() {
         toolbar.setNavigationOnClickListener(v -> finish());
-        AppUtil.handleOnPressEvent(mapName);
         AppUtil.handleOnPressEvent(serverNameLinear);
 
         serverName.addTextChangedListener(new TextWatcher() {

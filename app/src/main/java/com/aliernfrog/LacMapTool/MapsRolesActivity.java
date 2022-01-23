@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MapsRolesActivity extends AppCompatActivity {
+    CollapsingToolbarLayout collapsingToolbarLayout;
     Toolbar toolbar;
     FloatingActionButton saveButton;
     LinearLayout addRoleLinear;
@@ -46,7 +48,9 @@ public class MapsRolesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_maps_roles);
 
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
+        String mapName = getIntent().getStringExtra("mapName");
 
+        collapsingToolbarLayout = findViewById(R.id.mapsRoles_collapsingToolbar);
         toolbar = findViewById(R.id.mapsRoles_toolbar);
         saveButton = findViewById(R.id.mapsRoles_save);
         addRoleLinear = findViewById(R.id.mapsRoles_addRole_linear);
@@ -62,6 +66,7 @@ public class MapsRolesActivity extends AppCompatActivity {
         if (rolesString != null) roleList = new ArrayList<>(Arrays.asList(rolesString.split(",")));
 
         if (config.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
+        if (mapName != null) collapsingToolbarLayout.setTitle(mapName);
 
         devLog("MapsRolesActivity started");
         devLog("rolesString: "+rolesString);
