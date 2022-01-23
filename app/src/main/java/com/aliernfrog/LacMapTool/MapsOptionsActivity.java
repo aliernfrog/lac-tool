@@ -161,7 +161,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                setString(line, textInputEditText.getText());
+                if (textInputEditText.getText() != null) setString(line, textInputEditText.getText().toString());
             }
         });
         optionsLinear.addView(view);
