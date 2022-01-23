@@ -13,6 +13,7 @@
         android:background="#00000000">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/mapsRoles_collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?lactool_linear"
@@ -26,8 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="?lactool_backDrawable"
-                app:navigationContentDescription="@string/action_back" />
+                app:navigationContentDescription="@string/action_back"
+                app:navigationIcon="?lactool_backDrawable" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
