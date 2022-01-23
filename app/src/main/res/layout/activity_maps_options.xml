@@ -143,7 +143,17 @@
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                tools:visibility="visible" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/mapEdit_mapOptions"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/mapsOptions_roles_linear"
@@ -187,6 +197,15 @@
                 android:background="@drawable/linear"
                 android:orientation="vertical"
                 android:padding="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/mapEdit_otherOptions"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/mapsOptions_removeAll_tdm"

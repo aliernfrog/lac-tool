@@ -67,6 +67,8 @@
     <string name="mapEdit_type_3">sand</string>
     <string name="mapEdit_type_4">desert</string>
     <string name="mapEdit_type_5">water</string>
+    <string name="mapEdit_mapOptions">Map options</string>
+    <string name="mapEdit_otherOptions">Other options</string>
     <string name="mapEdit_removeAll_tdm">Remove all Team Deathmatch spawnpoints</string>
     <string name="mapEdit_removeAll_race">Remove all race checkpoints</string>
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
