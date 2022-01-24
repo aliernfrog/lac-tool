@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Process;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
+import android.provider.Settings;
 import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -148,24 +149,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkPerms() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23 && Build.VERSION.SDK_INT < 30) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                hasPerms = false;
-                missingPerms.setVisibility(View.VISIBLE);
+                afterPermsDenied();
                 devLog("permission denied, attempting to request permission");
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
             } else {
-                hasPerms = true;
-                missingPerms.setVisibility(View.GONE);
                 devLog("permissions granted");
-                createFiles();
+                afterPermsGranted();
+            }
+        } else if (Build.VERSION.SDK_INT >= 30) {
+            if (!Environment.isExternalStorageManager()) {
+                afterPermsDenied();
+                devLog("not external storage manager, requesting");
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            } else {
+                devLog("is external storage manager");
+                afterPermsGranted();
             }
         } else {
-            hasPerms = true;
-            missingPerms.setVisibility(View.GONE);
             devLog("old SDK version detected");
-            createFiles();
+            afterPermsGranted();
         }
+    }
+
+    void afterPermsGranted() {
+        hasPerms = true;
+        missingPerms.setVisibility(View.GONE);
+        createFiles();
+    }
+
+    void afterPermsDenied() {
+        hasPerms = false;
+        missingPerms.setVisibility(View.VISIBLE);
     }
 
     public void createFiles() {
@@ -255,8 +274,6 @@ public class MainActivity extends AppCompatActivity {
             grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
             getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
             devLog("took uri permissions");
-        } else {
-            devLog("data is null");
         }
     }
 

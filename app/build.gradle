@@ -19,8 +19,7 @@ android {
     defaultConfig {
         applicationId "com.aliernfrog.LacMapTool"
         minSdkVersion 18
-        //noinspection OldTargetApi
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 20
         versionName '2.0'
     }
