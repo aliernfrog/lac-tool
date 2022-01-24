@@ -162,26 +162,8 @@ public class MapsRolesActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
         AppUtil.handleOnPressEvent(saveButton, this::saveRolesAndExit);
         AppUtil.handleOnPressEvent(addRoleLinear);
-        addRoleNameInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                getRawRole();
-            }
-        });
-        addRoleColorInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                getRawRole();
-            }
-        });
+        AppUtil.afterTextChanged(addRoleNameInput, this::getRawRole);
+        AppUtil.afterTextChanged(addRoleColorInput, this::getRawRole);
         AppUtil.handleOnPressEvent(addRoleButton, this::addRole);
     }
 }

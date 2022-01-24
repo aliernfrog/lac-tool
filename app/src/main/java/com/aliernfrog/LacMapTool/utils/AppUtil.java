@@ -9,8 +9,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -88,14 +91,6 @@ public class AppUtil {
         return true;
     }
 
-    public static void toggleView(View view) {
-        if (view.getVisibility() == View.VISIBLE) {
-            view.setVisibility(View.GONE);
-        } else {
-            view.setVisibility(View.VISIBLE);
-        }
-    }
-
     @SuppressLint("SimpleDateFormat")
     public static String timeString(String format) {
         SimpleDateFormat frm = new SimpleDateFormat(format);
@@ -132,6 +127,27 @@ public class AppUtil {
             String full = log+"["+tag+"] "+toLog+"\n\n";
             logView.setText(full);
         }
+    }
+
+    public static void toggleView(View view) {
+        if (view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void afterTextChanged(EditText view, Runnable runnable) {
+        view.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                runnable.run();
+            }
+        });
     }
 
     public static void handleOnPressEvent(View view, MotionEvent event, @Nullable Runnable onClick) {
