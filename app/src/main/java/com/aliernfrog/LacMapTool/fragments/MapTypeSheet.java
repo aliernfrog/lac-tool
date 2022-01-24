@@ -12,7 +12,6 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.aliernfrog.LacMapTool.MapsOptionsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -23,7 +22,7 @@ public class MapTypeSheet extends BottomSheetDialogFragment {
     RadioGroup typeGroup;
     Button doneButton;
 
-    MapsOptionsActivity context;
+    Context context;
 
     @Nullable
     @Override
@@ -33,17 +32,12 @@ public class MapTypeSheet extends BottomSheetDialogFragment {
         typeGroup = view.findViewById(R.id.mapType_group);
         doneButton = view.findViewById(R.id.mapType_done);
 
-        context = (MapsOptionsActivity) getActivity();
+        context = getActivity();
+        if (getArguments() != null) ((RadioButton)typeGroup.getChildAt(getArguments().getInt("mapTypeInt"))).setChecked(true);
 
-        getChosen();
         setListeners();
 
         return view;
-    }
-
-    void getChosen() {
-        int mapTypeInt = context.getMapTypeInt();
-        ((RadioButton)typeGroup.getChildAt(mapTypeInt)).setChecked(true);
     }
 
     void finishChoosing() {

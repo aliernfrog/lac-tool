@@ -32,7 +32,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDownloadSheet.MapDownloadListener, MapDuplicateSheet.MapDuplicateListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
@@ -263,7 +262,11 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     public void openDuplicateMapView() {
+        File currentFile = new File(currentPath);
+        Bundle bundle = new Bundle();
+        bundle.putString("mapName", FileUtil.removeExtension(currentFile.getName()));
         MapDuplicateSheet mapDuplicateSheet = new MapDuplicateSheet();
+        mapDuplicateSheet.setArguments(bundle);
         mapDuplicateSheet.show(getSupportFragmentManager(), "map_duplicate");
     }
 
@@ -343,16 +346,11 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     public void pickMap() {
+        Bundle bundle = new Bundle();
+        bundle.putString("mapsPath", lacPath);
         MapPickerSheet mapPickerSheet = new MapPickerSheet();
+        mapPickerSheet.setArguments(bundle);
         mapPickerSheet.show(getSupportFragmentManager(), "map_picker");
-    }
-
-    public File[] getImportedMaps() {
-        File directory = new File(lacPath);
-        File[] files = directory.listFiles();
-        if (files == null) return null;
-        Arrays.sort(files);
-        return files;
     }
 
     public void autoBackup() {
@@ -408,10 +406,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             e.printStackTrace();
             devLog(e.toString());
         }
-    }
-
-    public String getMapPath() {
-        return currentPath;
     }
 
     @SuppressLint("NewApi")
@@ -497,6 +491,12 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     public void onMapPicked(String path) {
         devLog("received path: "+path);
         getMap(path);
+    }
+
+    @Override
+    public void onFilePickRequested() {
+        devLog("map file pick requested");
+        pickMapFile();
     }
 
     @Override

@@ -181,10 +181,6 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         mapTypeLinear.setVisibility(View.VISIBLE);
     }
 
-    public int getMapTypeInt() {
-        return mapTypeInt;
-    }
-
     public void setServerName(String name) {
         devLog("attempting to change server name to: "+name);
         updatedContent[LINE_SERVER_NAME] = "Map Name:"+name;
@@ -300,7 +296,10 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     }
 
     void openMapTypeView() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("mapTypeInt", mapTypeInt);
         MapTypeSheet mapTypeSheet = new MapTypeSheet();
+        mapTypeSheet.setArguments(bundle);
         mapTypeSheet.show(getSupportFragmentManager(), "map_type");
     }
 

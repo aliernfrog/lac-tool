@@ -1,5 +1,7 @@
 package com.aliernfrog.LacMapTool.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,7 +22,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.aliernfrog.LacMapTool.MapsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -40,7 +41,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
 
     DownloadManager downloadManager;
 
-    MapsActivity context;
+    Context context;
 
     @Nullable
     @Override
@@ -53,7 +54,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
         linkInput = view.findViewById(R.id.mapDownload_linkInput);
         downloadConfirm = view.findViewById(R.id.mapDownload_download);
 
-        context = (MapsActivity) getActivity();
+        context = getActivity();
         if (context != null) downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
         setListeners();
@@ -87,6 +88,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
         }
     }
 
+    @SuppressLint("Range")
     void watchProgress(long reference) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -104,7 +106,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
                         timer.cancel();
                         String uri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                         String name = new File(uri).getName();
-                        context.runOnUiThread(() -> finishDownloading(name));
+                        ((Activity)context).runOnUiThread(() -> finishDownloading(name));
                     }
                     cursor.close();
                 }
