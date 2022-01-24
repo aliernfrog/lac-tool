@@ -9,7 +9,6 @@
     android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/wallpaper_appbar"
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="#00000000">
@@ -34,7 +33,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
 
 
