@@ -29,7 +29,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:navigationContentDescription="@string/action_back"
-                app:navigationIcon="?lactool_backDrawable" />
+                app:navigationIcon="?attr/homeAsUpIndicator" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
