@@ -8,7 +8,6 @@
     android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/main_appbar"
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="#00000000">

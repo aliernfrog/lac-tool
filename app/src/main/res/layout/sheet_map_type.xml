@@ -49,7 +49,6 @@
                 android:padding="8dp">
 
                 <RadioButton
-                    android:id="@+id/mapType_button_0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/mapEdit_type_0"
@@ -57,7 +56,6 @@
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/mapType_button_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/mapEdit_type_1"
@@ -65,7 +63,6 @@
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/mapType_button_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/mapEdit_type_2"
@@ -73,7 +70,6 @@
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/mapType_button_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/mapEdit_type_3"
@@ -81,7 +77,6 @@
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/mapType_button_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/mapEdit_type_4"
@@ -89,7 +84,6 @@
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/mapType_button_5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/mapEdit_type_5"
