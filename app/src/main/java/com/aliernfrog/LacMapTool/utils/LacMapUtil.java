@@ -19,7 +19,7 @@ public class LacMapUtil {
         return ret;
     }
 
-    public static String[] fixMap(String[] content) {
+    public static void fixMap(String[] content) {
         for (int i = 0; i < content.length; i++) {
             String line = content[i];
             String[] strArr = line.split(":");
@@ -89,6 +89,5 @@ public class LacMapUtil {
                 content[i] = full;
             }
         }
-        return content;
     }
 }
