@@ -466,8 +466,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             String path = data.getStringExtra("path");
             devLog("received path: "+path);
             setThumbnail(path);
-        } else {
-            devLog("result is not handled");
         }
     }
 
