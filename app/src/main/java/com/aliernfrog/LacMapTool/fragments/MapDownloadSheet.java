@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import java.util.TimerTask;
 public class MapDownloadSheet extends BottomSheetDialogFragment {
     private MapDownloadListener listener;
 
+    ImageView indicator;
     TextView title;
     ProgressBar progressBar;
     LinearLayout optionsLinear;
@@ -48,6 +50,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sheet_map_download, container, false);
 
+        indicator = view.findViewById(R.id.mapDownload_indicator);
         title = view.findViewById(R.id.mapDownload_title);
         progressBar = view.findViewById(R.id.mapDownload_progress);
         optionsLinear = view.findViewById(R.id.mapDownload_optionsLinear);
@@ -65,6 +68,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
     void download(String url) {
         setCancelable(false);
         title.setText(R.string.mapDownload_downloading);
+        indicator.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         optionsLinear.setVisibility(View.GONE);
         downloadConfirm.setVisibility(View.GONE);
