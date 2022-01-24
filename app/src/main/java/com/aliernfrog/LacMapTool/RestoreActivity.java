@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,8 +29,6 @@ public class RestoreActivity extends AppCompatActivity {
     TextView mapname;
     Button restore;
 
-    SharedPreferences update;
-
     String backupPath;
     String mapsPath;
     String rawPath;
@@ -51,7 +47,6 @@ public class RestoreActivity extends AppCompatActivity {
         mapname = findViewById(R.id.restore_mapname);
         restore = findViewById(R.id.restore_backuprestore);
 
-        update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         backupPath = getIntent().getStringExtra("backupPath");
         mapsPath = getIntent().getStringExtra("mapsPath");
 
