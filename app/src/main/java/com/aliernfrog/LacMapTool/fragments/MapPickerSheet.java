@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.aliernfrog.LacMapTool.MapsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
@@ -31,7 +30,8 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     TextView noImportedMaps;
     LinearLayout root;
 
-    MapsActivity context;
+    Context context;
+    String mapsPath;
 
     @Nullable
     @Override
@@ -43,7 +43,8 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
         noImportedMaps = view.findViewById(R.id.mapPicker_noMapsWarning);
         root = view.findViewById(R.id.mapPicker_root);
 
-        context = (MapsActivity) getActivity();
+        context = getActivity();
+        if (getArguments() != null) mapsPath = getArguments().getString("mapsPath");
 
         getImportedMaps();
         setListeners();
@@ -52,17 +53,18 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     }
 
     void getImportedMaps() {
-        File[] files = context.getImportedMaps();
-        for (File map : files) {
-            if (map.getName().endsWith(".txt")) {
-                ViewGroup view = (ViewGroup) context.getLayoutInflater().inflate(R.layout.inflate_map, root, false);
-                addMapView(map, view);
+        File[] files = new File(mapsPath).listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            if (file.getName().endsWith(".txt")) {
+                ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_map, root, false);
+                setMapView(file, view);
                 noImportedMaps.setVisibility(View.GONE);
             }
         }
     }
 
-    void addMapView(File map, ViewGroup view) {
+    void setMapView(File map, ViewGroup view) {
         TextView name = view.findViewById(R.id.map_name);
         TextView size = view.findViewById(R.id.map_size);
         ImageView thumbnail = view.findViewById(R.id.map_thumbnail);
@@ -84,7 +86,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     }
 
     void pickMapFile() {
-        context.pickMapFile();
+        listener.onFilePickRequested();
         dismiss();
     }
 
@@ -93,13 +95,14 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
         AppUtil.handleOnPressEvent(downloadMap, () -> {
             dismiss();
             MapDownloadSheet mapDownloadSheet = new MapDownloadSheet();
-            mapDownloadSheet.show(context.getSupportFragmentManager(), "map_download");
+            mapDownloadSheet.show(getParentFragmentManager(), "map_download");
         });
         AppUtil.handleOnPressEvent(noImportedMaps);
     }
 
     public interface MapPickerListener {
         void onMapPicked(String path);
+        void onFilePickRequested();
     }
 
     @Override
