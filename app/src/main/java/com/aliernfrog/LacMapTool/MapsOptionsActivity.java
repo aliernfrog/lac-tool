@@ -331,24 +331,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     void setListeners() {
         toolbar.setNavigationOnClickListener(v -> finish());
         AppUtil.handleOnPressEvent(serverNameLinear);
-
-        serverName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setServerName(serverName.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
+        AppUtil.afterTextChanged(serverName, () -> setServerName(serverName.getText().toString()));
         AppUtil.handleOnPressEvent(mapTypeLinear);
         AppUtil.handleOnPressEvent(mapTypeButton, this::openMapTypeView);
         AppUtil.handleOnPressEvent(optionsLinear);
