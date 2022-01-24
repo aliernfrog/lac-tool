@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -153,15 +151,8 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         TextInputEditText textInputEditText = view.findViewById(R.id.option_number_input);
         textInputLayout.setHint(title);
         textInputEditText.setText(value);
-        textInputEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (textInputEditText.getText() != null) setString(line, textInputEditText.getText().toString());
-            }
+        AppUtil.afterTextChanged(textInputEditText, () -> {
+            if (textInputEditText.getText() != null) setString(line, textInputEditText.getText().toString());
         });
         optionsLinear.addView(view);
     }
