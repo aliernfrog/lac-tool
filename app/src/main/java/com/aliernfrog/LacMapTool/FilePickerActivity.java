@@ -26,6 +26,7 @@ import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FilePickerActivity extends AppCompatActivity implements PickiTCallbacks {
@@ -220,6 +221,11 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         finishGettingFile(path);
+    }
+
+    @Override
+    public void PickiTonMultipleCompleteListener(ArrayList<String> paths, boolean wasSuccessful, String Reason) {
+
     }
 
     @Override
