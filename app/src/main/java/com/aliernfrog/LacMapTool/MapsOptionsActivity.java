@@ -39,7 +39,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
     LinearLayout mapTypeLinear;
     Button mapTypeButton;
     LinearLayout optionsLinear;
-    LinearLayout rolesLinear;
+    LinearLayout otherOptionsLinear;
     Button editRolesButton;
     Button removeAllTdm;
     Button removeAllRace;
@@ -79,7 +79,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         mapTypeLinear = findViewById(R.id.mapsOptions_mapType_linear);
         mapTypeButton = findViewById(R.id.mapsOptions_mapType_change);
         optionsLinear = findViewById(R.id.mapsOptions_options_linear);
-        rolesLinear = findViewById(R.id.mapsOptions_roles_linear);
+        otherOptionsLinear = findViewById(R.id.mapsOptions_otherOptions_linear);
         editRolesButton = findViewById(R.id.mapsOptions_roles_editRoles);
         removeAllTdm = findViewById(R.id.mapsOptions_removeAll_tdm);
         removeAllRace = findViewById(R.id.mapsOptions_removeAll_race);
@@ -237,7 +237,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
 
     public void readRoles(Integer line) {
         LINE_ROLES = line;
-        rolesLinear.setVisibility(View.VISIBLE);
+        editRolesButton.setVisibility(View.VISIBLE);
     }
 
     public void editRoles() {
@@ -325,7 +325,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         AppUtil.handleOnPressEvent(mapTypeLinear);
         AppUtil.handleOnPressEvent(mapTypeButton, this::openMapTypeView);
         AppUtil.handleOnPressEvent(optionsLinear);
-        AppUtil.handleOnPressEvent(rolesLinear);
+        AppUtil.handleOnPressEvent(otherOptionsLinear);
         AppUtil.handleOnPressEvent(editRolesButton, this::editRoles);
         AppUtil.handleOnPressEvent(removeAllTdm, () -> removeAllObjects("Team_"));
         AppUtil.handleOnPressEvent(removeAllRace, () -> removeAllObjects("Checkpoint_Editor"));
