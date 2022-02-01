@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
-@SuppressLint("CommitPrefEdits")
+@SuppressLint({"CommitPrefEdits", "CustomSplashScreen"})
 public class SplashActivity extends AppCompatActivity {
     TextView debugText;
 
