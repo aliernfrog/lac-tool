@@ -21,14 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FilePickerActivity" />
-        <activity android:name=".MapsActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ScreenshotsActivity" />
-        <activity android:name=".WallpaperActivity" />
+        <activity android:name=".MapsActivity" />
         <activity android:name=".MapsOptionsActivity" />
         <activity android:name=".MapsRolesActivity" />
         <activity android:name=".RestoreActivity" />
+        <activity android:name=".WallpaperActivity" />
+        <activity android:name=".ScreenshotsActivity" />
+        <activity android:name=".FilePickerActivity" />
         <activity android:name=".OptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
 
         <provider
