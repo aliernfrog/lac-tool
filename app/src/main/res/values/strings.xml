@@ -51,6 +51,17 @@
     <string name="mapBackup">Backup the map</string>
     <string name="mapDelete">Delete the map</string>
     <string name="mapDelete_question">Are you sure you want to delete this map?\n It cannot be undone!</string>
+    <string name="mapMerge">Merge maps</string>
+    <string name="mapMerge_notSelected">No map selected</string>
+    <string name="mapMerge_baseMap">Base map</string>
+    <string name="mapMerge_mapToAdd">Map to add</string>
+    <string name="mapMerge_mapToAdd_pos">Position (X,Y,Z)</string>
+    <string name="mapMerge_output">Output</string>
+    <string name="mapMerge_output_name">Map name</string>
+    <string name="mapMerge_output_merge">Merge now</string>
+    <string name="mapMerge_warning_noMapSelected">Please select both maps!</string>
+    <string name="mapMerge_warning_posNotValid">Map to add position is not valid!\nExample: 0,0,0</string>
+    <string name="mapMerge_warning_noOutputName">Please set output name!</string>
     <string name="mapEdit_serverName">Server name</string>
     <string name="mapEdit_mapType">Map type</string>
     <string name="mapEdit_type_0">white-grid</string>
