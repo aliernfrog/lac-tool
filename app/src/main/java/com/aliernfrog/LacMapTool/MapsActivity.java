@@ -55,6 +55,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     Button shareMapButton;
     Button deleteMapButton;
     LinearLayout otherLinear;
+    Button mergeMapsButton;
     Button manageBackupsButton;
     TextView debugText;
 
@@ -104,6 +105,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         shareMapButton = findViewById(R.id.maps_mapActions_share);
         deleteMapButton = findViewById(R.id.maps_mapActions_delete);
         otherLinear = findViewById(R.id.maps_other);
+        mergeMapsButton = findViewById(R.id.maps_other_mergeMaps);
         manageBackupsButton = findViewById(R.id.maps_other_manageBackups);
         debugText = findViewById(R.id.maps_debug);
 
@@ -325,6 +327,13 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
     }
 
+    public void mergeMaps() {
+        devLog("attempting to open merge maps screen");
+        Intent intent = new Intent(this, MapsMergeActivity.class);
+        intent.putExtra("mapsPath", lacPath);
+        startActivity(intent);
+    }
+
     public void manageBackups() {
         devLog("attempting to open manage backups screen");
         Intent intent = new Intent(this, RestoreActivity.class);
@@ -484,6 +493,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
         AppUtil.handleOnPressEvent(deleteMapButton, this::openDeleteMapView);
         AppUtil.handleOnPressEvent(otherLinear);
+        AppUtil.handleOnPressEvent(mergeMapsButton, this::mergeMaps);
         AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
     }
 
