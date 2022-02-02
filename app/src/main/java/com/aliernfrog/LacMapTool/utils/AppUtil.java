@@ -100,7 +100,7 @@ public class AppUtil {
 
     public static Boolean stringIsNumber(String string) {
         try {
-            Integer.parseInt(string.trim());
+            Double.parseDouble(string);
         } catch (Exception e) {
             return false;
         }
