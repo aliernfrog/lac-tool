@@ -142,7 +142,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
         }
     }
 
-    public void pickMap(String request) {
+    void pickMap(String request) {
         currentPickRequest = request;
         Bundle bundle = new Bundle();
         bundle.putString("mapsPath", mapsPath);
