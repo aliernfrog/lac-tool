@@ -80,8 +80,14 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
         } else if (getOutputName() == null) {
             Toast.makeText(getApplicationContext(), R.string.mapMerge_warning_noOutputName, Toast.LENGTH_SHORT).show();
         } else {
-            devLog("passed check, map to add pos: "+ TextUtils.join(",", getMapToAddPosition()));
-            mergeMap();
+            File check = new File(mapsPath+"/"+getOutputName()+".txt");
+            devLog("checking path: "+check.getPath());
+            if (check.exists()) {
+                Toast.makeText(getApplicationContext(), R.string.denied_alreadyExists, Toast.LENGTH_SHORT).show();
+            } else {
+                devLog("passed check, map to add pos: "+ TextUtils.join(",", getMapToAddPosition()));
+                mergeMap();
+            }
         }
     }
 
