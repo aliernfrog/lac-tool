@@ -75,7 +75,6 @@
     <string name="mapEdit_removeAll_tdm">Remove all Team Deathmatch spawnpoints</string>
     <string name="mapEdit_removeAll_race">Remove all race checkpoints</string>
     <string name="mapEdit_replaceOldObjects">Replace removed objects with new ones</string>
-    <string name="mapEdit_roles">Roles</string>
     <string name="mapRoles">Edit map roles</string>
     <string name="mapRoles_addRole">Add role</string>
     <string name="mapRoles_roleName">Role name</string>
