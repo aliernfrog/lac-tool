@@ -23,12 +23,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aliernfrog.LacMapTool.fragments.OkCancelSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
 import java.io.File;
 
 @SuppressLint({"CommitPrefEdits", "ClickableViewAccessibility"})
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OkCancelSheet.OkCancelListener {
     LinearLayout missingLac;
     LinearLayout missingPerms;
     LinearLayout lacLinear;
@@ -161,11 +162,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (Build.VERSION.SDK_INT >= 30) {
             if (!Environment.isExternalStorageManager()) {
                 afterPermsDenied();
-                devLog("not external storage manager, requesting");
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
+                devLog("not external storage manager, showing all file access dialog");
+                showAllFilesAccessDialog();
             } else {
                 devLog("is external storage manager");
                 afterPermsGranted();
@@ -174,6 +172,14 @@ public class MainActivity extends AppCompatActivity {
             devLog("old SDK version detected");
             afterPermsGranted();
         }
+    }
+
+    void showAllFilesAccessDialog() {
+        Bundle bundle = new Bundle();
+        bundle.putString("text", getString(R.string.info_storagePermSdk30));
+        OkCancelSheet okCancelSheet = new OkCancelSheet();
+        okCancelSheet.setArguments(bundle);
+        okCancelSheet.show(getSupportFragmentManager(), "allfiles");
     }
 
     void afterPermsGranted() {
@@ -288,5 +294,15 @@ public class MainActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(startLac, this::launchLac);
         AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
         AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true, null));
+    }
+
+    @SuppressLint("InlinedApi")
+    @Override
+    public void onOkClick() {
+        devLog("clicked ok, requesting all files access");
+        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
     }
 }
