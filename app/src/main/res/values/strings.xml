@@ -58,6 +58,7 @@
     <string name="mapMerge_mapToAdd_pos">Position (X,Y,Z)</string>
     <string name="mapMerge_mapToAdd_includeSpawns">Include spawnpoints</string>
     <string name="mapMerge_mapToAdd_includeTdmSpawns">Include TDM spawnpoints</string>
+    <string name="mapMerge_mapToAdd_includeCheckpoints">Include race checkpoints</string>
     <string name="mapMerge_output">Output</string>
     <string name="mapMerge_output_name">Map name</string>
     <string name="mapMerge_output_merge">Merge now</string>

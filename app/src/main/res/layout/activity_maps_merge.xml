@@ -126,6 +126,16 @@
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
+                <CheckBox
+                    android:id="@+id/mapsMerge_mapToAdd_includeCheckpoints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/mapMerge_mapToAdd_includeCheckpoints"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
