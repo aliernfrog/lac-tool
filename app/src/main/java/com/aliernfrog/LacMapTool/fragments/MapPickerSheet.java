@@ -21,6 +21,7 @@ import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class MapPickerSheet extends BottomSheetDialogFragment {
     private MapPickerListener listener;
@@ -55,6 +56,7 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     void getImportedMaps() {
         File[] files = new File(mapsPath).listFiles();
         if (files == null) return;
+        Arrays.sort(files);
         for (File file : files) {
             if (file.getName().endsWith(".txt")) {
                 ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_map, root, false);
