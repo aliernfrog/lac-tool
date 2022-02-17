@@ -31,6 +31,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
     LinearLayout mapToAddLinear;
     TextView mapToAddName;
     CheckBox mapToAddIncludeSpawns;
+    CheckBox mapToAddIncludeTdmSpawns;
     TextInputEditText mapToAddPos;
     LinearLayout outputLinear;
     TextInputEditText outputMapName;
@@ -61,6 +62,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
         mapToAddLinear = findViewById(R.id.mapsMerge_mapToAdd_linear);
         mapToAddName = findViewById(R.id.mapsMerge_mapToAdd_name);
         mapToAddIncludeSpawns = findViewById(R.id.mapsMerge_mapToAdd_includeSpawns);
+        mapToAddIncludeTdmSpawns = findViewById(R.id.mapsMerge_mapToAdd_includeTdmSpawns);
         mapToAddPos = findViewById(R.id.mapsMerge_mapToAdd_pos);
         outputLinear = findViewById(R.id.mapsMerge_output_linear);
         outputMapName = findViewById(R.id.mapsMerge_output_name);
@@ -157,6 +159,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
     Boolean checkObjectForMerge(String line) {
         String object = line.split(":")[0];
         if (object.equals("Spawn_Point_Editor")) return mapToAddIncludeSpawns.isChecked();
+        if (object.startsWith("Team_")) return mapToAddIncludeTdmSpawns.isChecked();
         return true;
     }
 
