@@ -104,7 +104,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
             ArrayList<String> secondaryMapLines = new ArrayList<>(Arrays.asList(secondaryMapRaw.split("\n")));
             for (int i = 0; i < secondaryMapLines.size(); i++) {
                 String line = secondaryMapLines.get(i);
-                if (line.split(":").length > 1 && line.split(":")[0].endsWith("_Editor")) {
+                if (line.split(":").length > 1 && line.split(":")[0].contains("_Editor")) {
                     //editor object
                     if (checkObjectForMerge(line)) primaryMapLines.add(getNewObjectPos(line));
                 } else if (line.startsWith("Vehicle_")) {
