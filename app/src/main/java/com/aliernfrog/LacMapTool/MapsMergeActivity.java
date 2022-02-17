@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
     TextView baseMapName;
     LinearLayout mapToAddLinear;
     TextView mapToAddName;
+    CheckBox mapToAddIncludeSpawns;
     TextInputEditText mapToAddPos;
     LinearLayout outputLinear;
     TextInputEditText outputMapName;
@@ -58,6 +60,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
         baseMapName = findViewById(R.id.mapsMerge_baseMap_name);
         mapToAddLinear = findViewById(R.id.mapsMerge_mapToAdd_linear);
         mapToAddName = findViewById(R.id.mapsMerge_mapToAdd_name);
+        mapToAddIncludeSpawns = findViewById(R.id.mapsMerge_mapToAdd_includeSpawns);
         mapToAddPos = findViewById(R.id.mapsMerge_mapToAdd_pos);
         outputLinear = findViewById(R.id.mapsMerge_output_linear);
         outputMapName = findViewById(R.id.mapsMerge_output_name);
@@ -101,7 +104,7 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
                 String line = secondaryMapLines.get(i);
                 if (line.split(":").length > 1 && line.split(":")[0].endsWith("_Editor")) {
                     //editor object
-                    primaryMapLines.add(getNewObjectPos(line));
+                    if (checkObjectForMerge(line)) primaryMapLines.add(getNewObjectPos(line));
                 } else if (line.startsWith("Vehicle_")) {
                     //vehicle
                     primaryMapLines.add(getNewVehiclePos(line));
@@ -149,6 +152,12 @@ public class MapsMergeActivity extends AppCompatActivity implements MapPickerShe
         MapPickerSheet mapPickerSheet = new MapPickerSheet();
         mapPickerSheet.setArguments(bundle);
         mapPickerSheet.show(getSupportFragmentManager(), "map_pick");
+    }
+
+    Boolean checkObjectForMerge(String line) {
+        String object = line.split(":")[0];
+        if (object.equals("Spawn_Point_Editor")) return mapToAddIncludeSpawns.isChecked();
+        return true;
     }
 
     String getNewObjectPos(String line) {
