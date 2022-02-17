@@ -105,7 +105,7 @@ public class MapsOptionsActivity extends AppCompatActivity implements MapTypeShe
         for (int i = 0; i < updatedContent.length; i++) {
             String cur = updatedContent[i];
             String type = "option";
-            if (cur.split(":").length > 1 && cur.split(":")[0].endsWith("_Editor")) type = "object";
+            if (cur.split(":").length > 1 && cur.split(":")[0].contains("_Editor")) type = "object";
             if (cur.startsWith("Map Name:")) type = "serverName";
             if (cur.startsWith("Map Type:")) type = "mapType";
             if (cur.startsWith("Map Logo:")) type = "serverLogo";
