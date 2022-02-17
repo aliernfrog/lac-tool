@@ -106,11 +106,21 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <CheckBox
+                    android:id="@+id/mapsMerge_mapToAdd_includeSpawns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/linear_button"
+                    android:text="@string/mapMerge_mapToAdd_includeSpawns"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_margin="8dp"
                     android:textColorHint="?lactool_hint"
                     app:boxStrokeColor="#005DFF">
 
@@ -120,9 +130,9 @@
                         android:layout_height="wrap_content"
                         android:background="#00000000"
                         android:hint="@string/mapMerge_mapToAdd_pos"
-                        android:text="0,0,0"
                         android:importantForAutofill="no"
                         android:singleLine="true"
+                        android:text="0,0,0"
                         android:textColor="?android:textColorPrimary"
                         android:textColorHint="?lactool_hint"
                         android:textStyle="bold"
