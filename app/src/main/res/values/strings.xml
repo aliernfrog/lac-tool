@@ -4,6 +4,7 @@
     <string name="warning_missingPerms">Missing permissions, click to fix</string>
     <string name="info_lacNeeded">LAC Tool helps you manage LAC data. Without LAC, LAC Tool will not be useful.</string>
     <string name="info_storagePerm">Storage permission is required to manage maps &amp; wallpapers</string>
+    <string name="info_storagePermSdk30">LAC Tool needs access to all files in order to access, add and manage LAC files.\nGrant all files access to LAC Tool in the next screen.</string>
     <string name="info_treePerm">LAC Tool needs access to your LAC files in order to manage them, click "use this folder" option and it will get required permissions</string>
     <string name="info_done">Done!</string>
     <string name="info_sharing">Sharing file</string>
