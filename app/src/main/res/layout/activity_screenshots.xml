@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear_red"
+                android:background="?lactool_linearRedDrawable"
                 android:padding="8dp"
                 android:text="@string/galleryNoScreenshots"
                 android:textColor="?lactool_textOnRed"

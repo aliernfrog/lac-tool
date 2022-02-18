@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:padding="8dp">
 
                     <RadioButton
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -127,7 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionAutoBackup"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -137,7 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionBackupOnEdit"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -149,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -167,7 +167,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionsUseInAppFilePicker"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionAutoCheckUpdate"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -187,7 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionDebug"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -197,7 +197,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionChangeTheme"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
@@ -208,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionDeleteTemp"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
@@ -221,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="gone"
@@ -240,7 +240,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_red"
+                    android:background="?lactool_linearRedDrawable"
                     android:padding="8dp"
                     android:text="@string/optionsExperimentalHint"
                     android:textColor="?lactool_textOnRed"
@@ -296,7 +296,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/optionsForceFdroid"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
@@ -307,7 +307,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -329,7 +329,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:animateLayoutChanges="true"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -372,7 +372,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:background="@drawable/linear_blue"
+                        android:background="?lactool_linearBlueDrawable"
                         android:text="@string/action_done"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
@@ -387,7 +387,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:gravity="bottom"
                 android:orientation="vertical"
                 android:padding="8dp">
@@ -397,7 +397,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -423,7 +423,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -449,7 +449,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">

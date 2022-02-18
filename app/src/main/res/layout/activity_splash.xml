@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/linear"
+                    android:background="?lactool_linearDrawable"
                     android:padding="8dp"
                     android:textColor="?android:textColorPrimary"
                     android:visibility="gone"

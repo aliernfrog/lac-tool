@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear_red"
+                android:background="?lactool_linearRedDrawable"
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="gone"
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear_red"
+                android:background="?lactool_linearRedDrawable"
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="gone"
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="vertical"
@@ -118,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -126,8 +126,8 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        app:srcCompat="?lactool_mapDrawable"
-                        android:contentDescription="@string/manageMaps" />
+                        android:contentDescription="@string/manageMaps"
+                        app:srcCompat="?lactool_mapDrawable" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -152,8 +152,8 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        app:srcCompat="?lactool_wallpaperDrawable"
-                        android:contentDescription="@string/manageWallpapers" />
+                        android:contentDescription="@string/manageWallpapers"
+                        app:srcCompat="?lactool_wallpaperDrawable" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -170,7 +170,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -178,8 +178,8 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        app:srcCompat="?lactool_screenshotDrawable"
-                        android:contentDescription="@string/manageScreenshots" />
+                        android:contentDescription="@string/manageScreenshots"
+                        app:srcCompat="?lactool_screenshotDrawable" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -198,7 +198,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -207,7 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -215,8 +215,8 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        app:srcCompat="?lactool_playDrawable"
-                        android:contentDescription="@string/startLac" />
+                        android:contentDescription="@string/startLac"
+                        app:srcCompat="?lactool_playDrawable" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -233,7 +233,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -241,8 +241,8 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        app:srcCompat="?lactool_updateDrawable"
-                        android:contentDescription="@string/checkUpdates" />
+                        android:contentDescription="@string/checkUpdates"
+                        app:srcCompat="?lactool_updateDrawable" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -259,7 +259,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp">
@@ -267,8 +267,8 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        app:srcCompat="?lactool_optionsDrawable"
-                        android:contentDescription="@string/options" />
+                        android:contentDescription="@string/options"
+                        app:srcCompat="?lactool_optionsDrawable" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -287,7 +287,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="gone"

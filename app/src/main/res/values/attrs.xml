@@ -8,6 +8,11 @@
     <attr name="lactool_button" format="reference"/>
     <attr name="lactool_blue" format="reference"/>
     <attr name="lactool_red" format="reference"/>
+    <attr name="lactool_linearDrawable" format="reference"/>
+    <attr name="lactool_linearButtonDrawable" format="reference"/>
+    <attr name="lactool_linearBlueDrawable" format="reference"/>
+    <attr name="lactool_linearRedDrawable" format="reference"/>
+    <attr name="lactool_sheetBackgroundDrawable" format="reference"/>
     <attr name="lactool_indicatorDrawable" format="reference"/>
     <attr name="lactool_mapDrawable" format="reference"/>
     <attr name="lactool_wallpaperDrawable" format="reference"/>

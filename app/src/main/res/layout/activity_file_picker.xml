@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="8dp">
