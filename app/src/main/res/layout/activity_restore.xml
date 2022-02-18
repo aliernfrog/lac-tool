@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/select"
                     android:textColor="?android:textColorPrimary"
                     app:backgroundTint="?lactool_button" />
@@ -74,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_horizontal|center_vertical"
                     android:padding="8dp"
                     android:text="@string/mapName"
@@ -96,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_blue"
+                    android:background="?lactool_linearBlueDrawable"
                     android:padding="8dp"
                     android:text="@string/action_restore"
                     android:textColor="?lactool_textOnRed"

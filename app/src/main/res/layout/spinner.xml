@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/linear_button"
+    android:background="?lactool_linearButtonDrawable"
     android:gravity="center_horizontal|center_vertical"
     android:padding="8dp"
     android:textColor="?android:textColorPrimary" />

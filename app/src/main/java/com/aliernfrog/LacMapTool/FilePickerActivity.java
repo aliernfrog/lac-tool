@@ -129,7 +129,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
                 checkFile(file);
             }
         });
-        if (file.isFile() && checkFileExtension(file)) view.setBackgroundResource(R.drawable.linear_blue);
+        if (file.isFile() && checkFileExtension(file)) view.setBackgroundResource(R.drawable.linear_blue_light);
         root.addView(view);
     }
 

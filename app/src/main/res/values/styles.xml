@@ -5,6 +5,6 @@
     </style>
 
     <style name="Theme.LACMapTool.BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/sheet_background</item>
+        <item name="android:background">?lactool_sheetBackgroundDrawable</item>
     </style>
 </resources>

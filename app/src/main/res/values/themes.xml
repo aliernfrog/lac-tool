@@ -27,6 +27,11 @@
         <item name="lactool_button">@color/buttonLight</item>
         <item name="lactool_blue">@color/blueLight</item>
         <item name="lactool_red">@color/redLight</item>
+        <item name="lactool_linearDrawable">@drawable/linear_light</item>
+        <item name="lactool_linearButtonDrawable">@drawable/linear_button_light</item>
+        <item name="lactool_linearBlueDrawable">@drawable/linear_blue_light</item>
+        <item name="lactool_linearRedDrawable">@drawable/linear_red_light</item>
+        <item name="lactool_sheetBackgroundDrawable">@drawable/sheet_background_light</item>
         <item name="lactool_indicatorDrawable">@drawable/indicator_black</item>
         <item name="lactool_mapDrawable">@drawable/map_black</item>
         <item name="lactool_wallpaperDrawable">@drawable/wallpaper_black</item>

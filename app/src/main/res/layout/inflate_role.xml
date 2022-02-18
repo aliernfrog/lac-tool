@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/linear"
+    android:background="?lactool_linearDrawable"
     android:padding="8dp"
     android:textColor="#FFFFFF">
 
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@drawable/linear_red"
+        android:background="?lactool_linearRedDrawable"
         android:text="@string/action_delete"
         android:textColor="?lactool_textOnRed"
         android:textStyle="bold"
