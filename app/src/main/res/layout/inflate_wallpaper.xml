@@ -55,5 +55,4 @@
         android:textColor="?lactool_textOnRed"
         android:textStyle="bold"
         app:backgroundTint="?lactool_red" />
-
 </LinearLayout>

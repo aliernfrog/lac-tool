@@ -31,7 +31,6 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
     TextView noImportedMaps;
     LinearLayout root;
 
-    Context context;
     String mapsPath;
 
     @Nullable
@@ -44,7 +43,6 @@ public class MapPickerSheet extends BottomSheetDialogFragment {
         noImportedMaps = view.findViewById(R.id.mapPicker_noMapsWarning);
         root = view.findViewById(R.id.mapPicker_root);
 
-        context = getActivity();
         if (getArguments() != null) mapsPath = getArguments().getString("mapsPath");
 
         getImportedMaps();

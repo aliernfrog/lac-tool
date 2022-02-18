@@ -21,8 +21,6 @@ public class MapDuplicateSheet extends BottomSheetDialogFragment {
     EditText nameInput;
     Button duplicateConfirm;
 
-    Context context;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,7 +29,6 @@ public class MapDuplicateSheet extends BottomSheetDialogFragment {
         nameInput = view.findViewById(R.id.mapDuplicate_nameInput);
         duplicateConfirm = view.findViewById(R.id.mapDuplicate_duplicate);
 
-        context = getActivity();
         if (getArguments() != null) nameInput.setText(getArguments().getString("mapName"));
 
         setListeners();
