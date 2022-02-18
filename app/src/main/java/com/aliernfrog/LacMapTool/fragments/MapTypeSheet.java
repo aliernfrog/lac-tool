@@ -22,8 +22,6 @@ public class MapTypeSheet extends BottomSheetDialogFragment {
     RadioGroup typeGroup;
     Button doneButton;
 
-    Context context;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,7 +30,6 @@ public class MapTypeSheet extends BottomSheetDialogFragment {
         typeGroup = view.findViewById(R.id.mapType_group);
         doneButton = view.findViewById(R.id.mapType_done);
 
-        context = getActivity();
         if (getArguments() != null) ((RadioButton)typeGroup.getChildAt(getArguments().getInt("mapTypeInt"))).setChecked(true);
 
         setListeners();

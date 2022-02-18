@@ -41,5 +41,4 @@
             android:textColor="?lactool_hint"
             android:textSize="11sp" />
     </LinearLayout>
-
 </LinearLayout>

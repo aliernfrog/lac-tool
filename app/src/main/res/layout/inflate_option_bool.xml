@@ -11,5 +11,4 @@
     android:textColor="?android:textColorPrimary"
     android:textStyle="bold"
     tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml">
-
 </Switch>

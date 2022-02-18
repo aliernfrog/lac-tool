@@ -103,7 +103,5 @@
                 app:backgroundTint="?lactool_blue" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
-
 </LinearLayout>
