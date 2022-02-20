@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OkCancelSheet.OkC
         startActivity(intent);
     }
 
-    public void getUpdates() {
+    public void fetchUpdates() {
         devLog("attempting to get updates from website");
         try {
             if (AppUtil.getUpdates(getApplicationContext())) checkUpdates(true);
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements OkCancelSheet.OkC
         AppUtil.handleOnPressEvent(redirectScreenshots, () -> switchActivity(ScreenshotsActivity.class, false, screenshotsPath));
         AppUtil.handleOnPressEvent(appLinear);
         AppUtil.handleOnPressEvent(startLac, this::launchLac);
-        AppUtil.handleOnPressEvent(checkUpdates, this::getUpdates);
+        AppUtil.handleOnPressEvent(checkUpdates, this::fetchUpdates);
         AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true, null));
     }
 
