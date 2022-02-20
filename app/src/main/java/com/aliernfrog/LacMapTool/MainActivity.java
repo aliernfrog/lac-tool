@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OkCancelSheet.OkC
     }
 
     public void fetchUpdates() {
-        devLog("attempting to get updates from website");
+        devLog("attempting to fetch updates from "+config.getString("updateUrl", "default site"));
         try {
             if (AppUtil.getUpdates(getApplicationContext())) checkUpdates(true);
         } catch (Exception e) {
