@@ -32,8 +32,11 @@ public class OkCancelSheet extends BottomSheetDialogFragment {
         cancelButton = view.findViewById(R.id.okCancel_cancel);
 
         if (getArguments() != null) textView.setText(getArguments().getString("text"));
-        AppUtil.handleOnPressEvent(okButton, () -> listener.onOkClick());
         AppUtil.handleOnPressEvent(cancelButton, this::dismiss);
+        AppUtil.handleOnPressEvent(okButton, () -> {
+            listener.onOkClick();
+            dismiss();
+        });
 
         return view;
     }
