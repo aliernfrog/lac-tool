@@ -15,7 +15,7 @@
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <item name="android:colorEdgeEffect" tools:targetApi="l">@color/white</item>
-        <item name="colorControlActivated">@color/blueLight</item>
+        <item name="colorControlActivated">@color/blueDark</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="bottomSheetDialogTheme">@style/Theme.LACMapTool.BottomSheetDialog</item>
