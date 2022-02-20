@@ -76,7 +76,6 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
     }
 
     void startDownloading(String url) {
-        if (url.startsWith("http://")) url.replace("http://", "https://");
         String fileName = URLUtil.guessFileName(url, null, null);
         boolean isMap = fileName.endsWith(".txt");
         if (isMap) {
