@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements OkCancelSheet.OkC
             linearVisible = true;
             full = changelog+"<br /><br /><b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+changelogVersion;
             updateLinearTitle.setVisibility(View.VISIBLE);
-            updateLinear.setBackgroundResource(R.drawable.linear_blue_light);
             AppUtil.handleOnPressEvent(updateLinear, () -> redirectURL(download));
             if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastAvailable, Toast.LENGTH_SHORT).show();
         } else {

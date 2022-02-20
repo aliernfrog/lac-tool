@@ -287,7 +287,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="?lactool_linearDrawable"
+                android:background="?lactool_linearBlueDrawable"
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="gone"
@@ -299,7 +299,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/updateAvailable"
-                    android:textColor="?android:textColorPrimary"
+                    android:textColor="?lactool_textOnRed"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:visibility="gone"
@@ -312,7 +312,7 @@
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:padding="8dp"
-                    android:textColor="?lactool_hint" />
+                    android:textColor="?lactool_hintOnRed" />
             </LinearLayout>
 
             <TextView
