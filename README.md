@@ -8,7 +8,7 @@ Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</
 # Features
 - LAC map management (importing and more)
 - LAC map role & option management
-- LAC mamerging
+- LAC map merging
 - LAC in game cellphone wallpaper management
 - Import LAC in game cellphone wallpapers without internet connection
 - LAC in game screenshot management
