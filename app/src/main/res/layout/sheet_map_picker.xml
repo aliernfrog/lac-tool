@@ -4,10 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black"
+    android:background="?lactool_sheetBackgroundDrawable"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:padding="8dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        app:srcCompat="?lactool_indicatorDrawable"
+        tools:ignore="ContentDescription" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -26,7 +37,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/mapPick"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="30sp" />
 
             <Button
@@ -34,24 +45,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearBlueDrawable"
                 android:padding="8dp"
                 android:text="@string/mapPickExternal"
-                android:textColor="#FFFFFF"
+                android:textColor="?lactool_textOnRed"
                 android:textStyle="bold"
-                app:backgroundTint="#FF005DFF" />
+                app:backgroundTint="?lactool_blue" />
 
             <Button
                 android:id="@+id/mapPicker_download"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:padding="8dp"
                 android:text="@string/mapDownload"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                app:backgroundTint="#FF202020" />
+                app:backgroundTint="?lactool_linear" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -59,7 +70,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/mapImportedMaps"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -73,14 +84,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_red"
+                    android:background="?lactool_linearRedDrawable"
                     android:padding="8dp"
                     android:text="@string/mapNoImported"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textStyle="bold" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </LinearLayout>

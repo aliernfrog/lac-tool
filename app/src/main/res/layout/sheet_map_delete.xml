@@ -1,55 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black"
+    android:background="?lactool_sheetBackgroundDrawable"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:text="@string/mapDelete_question"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        tools:ignore="SpeakableTextPresentCheck">
 
-        <Button
-            android:id="@+id/mapDelete_cancel"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/linear_blue"
-            android:padding="8dp"
-            android:text="@string/action_cancel"
-            android:textColor="#EEEEEE"
-            android:textStyle="bold"
-            app:backgroundTint="#FF005DFF" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/mapDelete_confirm"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/linear_red"
-            android:padding="8dp"
-            android:text="@string/action_delete"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            app:backgroundTint="#FF960000" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="@string/mapDelete_question"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/mapDelete_cancel"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="?lactool_linearBlueDrawable"
+                    android:padding="8dp"
+                    android:text="@string/action_cancel"
+                    android:textColor="?lactool_textOnRed"
+                    android:textStyle="bold"
+                    app:backgroundTint="?lactool_blue" />
+
+                <Button
+                    android:id="@+id/mapDelete_confirm"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="?lactool_linearRedDrawable"
+                    android:padding="8dp"
+                    android:text="@string/action_delete"
+                    android:textColor="?lactool_textOnRed"
+                    android:textStyle="bold"
+                    app:backgroundTint="?lactool_red" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

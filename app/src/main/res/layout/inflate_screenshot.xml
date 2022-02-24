@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/linear"
+    android:background="?lactool_linearDrawable"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
@@ -18,22 +18,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:padding="8dp"
-        android:contentDescription="@string/manageScreenshots"/>
+        android:contentDescription="@string/manageScreenshots"
+        android:padding="8dp" />
 
     <Button
         android:id="@+id/ss_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:background="@drawable/linear_button"
+        android:background="?lactool_linearButtonDrawable"
         android:padding="8dp"
         android:text="@string/action_share"
-        android:textColor="#FFFFFF"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        app:backgroundTint="#FF0E0E0E" />
+        app:backgroundTint="?lactool_button" />
 
+    <Button
+        android:id="@+id/ss_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="?lactool_linearRedDrawable"
+        android:padding="8dp"
+        android:text="@string/action_delete"
+        android:textColor="?lactool_textOnRed"
+        android:textStyle="bold"
+        app:backgroundTint="?lactool_red" />
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,12 +15,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aliernfrog.LacMapTool.fragments.ThemeSheet;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;
@@ -28,7 +29,7 @@ import org.json.JSONObject;
 
 @SuppressLint({"UseSwitchCompatOrMaterialCode", "ClickableViewAccessibility"})
 public class OptionsActivity extends AppCompatActivity {
-    ImageView home;
+    Toolbar toolbar;
     LinearLayout lacOptions;
     RadioButton lacPathDefault;
     RadioButton lacPathLacd;
@@ -40,8 +41,8 @@ public class OptionsActivity extends AppCompatActivity {
     LinearLayout appOptions;
     CheckBox useInAppFilePicker;
     CheckBox autoCheckUpdate;
-    CheckBox forceEnglish;
     CheckBox dev;
+    Button changeTheme;
     Button deleteTemp;
     LinearLayout experimentalOptions;
     EditText startActivityName;
@@ -84,7 +85,7 @@ public class OptionsActivity extends AppCompatActivity {
         config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         configEdit = config.edit();
 
-        home = findViewById(R.id.options_goback);
+        toolbar = findViewById(R.id.options_toolbar);
         lacOptions = findViewById(R.id.options_lac);
         lacPathDefault = findViewById(R.id.options_lac_default);
         lacPathLacd = findViewById(R.id.options_lac_lacd);
@@ -96,14 +97,14 @@ public class OptionsActivity extends AppCompatActivity {
         appOptions = findViewById(R.id.options_app);
         useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
         autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
-        forceEnglish = findViewById(R.id.options_forceEnglish);
         dev = findViewById(R.id.options_devtoggle);
+        changeTheme = findViewById(R.id.options_changeTheme);
+        deleteTemp = findViewById(R.id.options_deleteTemp);
         experimentalOptions = findViewById(R.id.options_ex);
         startActivityName = findViewById(R.id.options_startActivity);
         uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
         updateUrlInput = findViewById(R.id.options_updateUrl);
         forceFdroid = findViewById(R.id.options_forceFdroid);
-        deleteTemp = findViewById(R.id.options_deleteTemp);
         feedbackLinear = findViewById(R.id.options_feedback_linear);
         feedback = findViewById(R.id.options_feedback);
         feedbackInput = findViewById(R.id.options_feedback_input);
@@ -160,7 +161,6 @@ public class OptionsActivity extends AppCompatActivity {
         if (config.getBoolean("enableAutoBackups", false)) autoBackups.setChecked(true);
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
         if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
-        if (config.getBoolean("forceEnglish", false)) forceEnglish.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
         if (config.getBoolean("forceFdroid", false)) forceFdroid.setChecked(true);
     }
@@ -191,6 +191,11 @@ public class OptionsActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    void openChangeThemeView() {
+        ThemeSheet themeSheet = new ThemeSheet();
+        themeSheet.show(getSupportFragmentManager(), "theme_change");
     }
 
     void deleteTempData() {
@@ -224,7 +229,7 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(home, this::finishActivity);
+        toolbar.setNavigationOnClickListener(v -> finishActivity());
         AppUtil.handleOnPressEvent(lacOptions);
         lacPathDefault.setOnClickListener(v -> changeString("lacId", "lac"));
         lacPathLacd.setOnClickListener(v -> changeString("lacId", "lacd"));
@@ -236,8 +241,8 @@ public class OptionsActivity extends AppCompatActivity {
         AppUtil.handleOnPressEvent(appOptions);
         useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("useInAppFilePicker", isChecked)));
         autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("autoCheckUpdates", isChecked)));
-        forceEnglish.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("forceEnglish", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableDebug", isChecked));
+        AppUtil.handleOnPressEvent(changeTheme, this::openChangeThemeView);
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
         AppUtil.handleOnPressEvent(experimentalOptions);
 

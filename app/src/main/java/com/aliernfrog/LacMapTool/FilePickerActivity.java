@@ -1,6 +1,7 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
@@ -25,9 +26,11 @@ import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FilePickerActivity extends AppCompatActivity implements PickiTCallbacks {
+    Toolbar toolbar;
     TextView pathView;
     HorizontalScrollView pathScroll;
     LinearLayout goParent;
@@ -37,6 +40,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     String fileTypeSaf;
     String[] fileTypeInApp;
     Boolean useInAppFilePicker;
+    Boolean loadImages = false;
 
     SharedPreferences config;
     Handler handler = new Handler();
@@ -66,6 +70,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         icon_file = ContextCompat.getDrawable(getApplicationContext(), R.drawable.file);
         icon_folder = ContextCompat.getDrawable(getApplicationContext(), R.drawable.folder);
 
+        toolbar = findViewById(R.id.filePicker_toolbar);
         pathView = findViewById(R.id.filePicker_path);
         pathScroll = findViewById(R.id.filePicker_path_scroll);
         goParent = findViewById(R.id.filePicker_goParent);
@@ -75,6 +80,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         if (!useInAppFilePicker) pickFileSaf();
         if (useInAppFilePicker) loadDir(homeDir);
 
+        getLoadImages();
         setListeners();
     }
 
@@ -111,7 +117,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         String name = file.getName();
         String details = getString(R.string.filePicker_folder);
         if (file.isDirectory()) icon = icon_folder;
-        if (file.isFile() && (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
+        if (file.isFile() && loadImages && (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png"))) icon = Drawable.createFromPath(file.getPath());
         if (file.isFile()) details = (file.length()/1024)+" KB";
         iconView.setImageDrawable(icon);
         nameView.setText(name);
@@ -123,7 +129,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
                 checkFile(file);
             }
         });
-        if (file.isFile() && checkFileExtension(file)) view.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.linear_blue));
+        if (file.isFile() && checkFileExtension(file)) view.setBackgroundResource(R.drawable.linear_blue_light);
         root.addView(view);
     }
 
@@ -163,6 +169,18 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
         }
     }
 
+    public void getLoadImages() {
+        boolean hasSpecifiedType = fileTypeInApp != null && fileTypeInApp.length > 0;
+        if (!hasSpecifiedType) return;
+        for (String cur : fileTypeInApp) {
+            if (!cur.startsWith(".")) cur = "."+cur;
+            if (cur.equals(".jpg") || cur.equals(".jpeg") || cur.equals(".png")) {
+                loadImages = true;
+                break;
+            }
+        }
+    }
+
     public void finishGettingFile(String path) {
         Intent intent = new Intent();
         intent.putExtra("path", path);
@@ -181,6 +199,7 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     }
 
     void setListeners() {
+        toolbar.setNavigationOnClickListener(v -> goParentDir());
         AppUtil.handleOnPressEvent(goParent, this::goParentDir);
     }
 
@@ -202,6 +221,11 @@ public class FilePickerActivity extends AppCompatActivity implements PickiTCallb
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         finishGettingFile(path);
+    }
+
+    @Override
+    public void PickiTonMultipleCompleteListener(ArrayList<String> paths, boolean wasSuccessful, String Reason) {
+
     }
 
     @Override

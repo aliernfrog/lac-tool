@@ -2,14 +2,11 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?lactool_background">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/restore_appbar"
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="#00000000">
@@ -17,25 +14,25 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="#000000"
+            app:contentScrim="?lactool_linear"
             app:expandedTitleGravity="center"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:title="@string/backupManage"
             app:toolbarId="@+id/restore_toolbar">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/restore_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:navigationContentDescription="@string/action_back" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
@@ -46,29 +43,11 @@
             android:paddingRight="24dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/linear"
-                android:orientation="horizontal"
-                android:padding="1dp">
-
-                <ImageView
-                    android:id="@+id/restore_goback"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/goback"
-                    tools:ignore="ContentDescription" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/restore_mapsselect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
@@ -84,10 +63,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:text="@string/select"
-                    android:textColor="#FFFFFF"
-                    app:backgroundTint="#FF0E0E0E" />
+                    android:textColor="?android:textColorPrimary"
+                    app:backgroundTint="?lactool_button" />
             </LinearLayout>
 
             <LinearLayout
@@ -95,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/linear"
+                android:background="?lactool_linearDrawable"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -104,11 +83,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_button"
+                    android:background="?lactool_linearButtonDrawable"
                     android:gravity="center_horizontal|center_vertical"
                     android:padding="8dp"
                     android:text="@string/mapName"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -117,18 +96,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/linear_blue"
+                    android:background="?lactool_linearBlueDrawable"
                     android:padding="8dp"
                     android:text="@string/action_restore"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?lactool_textOnRed"
                     android:textStyle="bold"
                     android:visibility="invisible"
-                    app:backgroundTint="#005DFF"
+                    app:backgroundTint="?lactool_blue"
                     tools:visibility="visible" />
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

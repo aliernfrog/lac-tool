@@ -1,16 +1,14 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,15 +21,13 @@ import java.io.File;
 
 @SuppressLint("ClickableViewAccessibility")
 public class RestoreActivity extends AppCompatActivity {
-    ImageView goHome;
+    Toolbar toolbar;
     LinearLayout mapsselect;
     Spinner mapsList;
     Button select;
     LinearLayout restoreLinear;
     TextView mapname;
     Button restore;
-
-    SharedPreferences update;
 
     String backupPath;
     String mapsPath;
@@ -43,7 +39,7 @@ public class RestoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore);
 
-        goHome = findViewById(R.id.restore_goback);
+        toolbar = findViewById(R.id.restore_toolbar);
         mapsselect = findViewById(R.id.restore_mapsselect);
         mapsList = findViewById(R.id.restore_maps);
         select = findViewById(R.id.restore_selectButton);
@@ -51,7 +47,6 @@ public class RestoreActivity extends AppCompatActivity {
         mapname = findViewById(R.id.restore_mapname);
         restore = findViewById(R.id.restore_backuprestore);
 
-        update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         backupPath = getIntent().getStringExtra("backupPath");
         mapsPath = getIntent().getStringExtra("mapsPath");
 
@@ -96,7 +91,7 @@ public class RestoreActivity extends AppCompatActivity {
     }
 
     void setOnClick() {
-        AppUtil.handleOnPressEvent(goHome, this::finish);
+        toolbar.setNavigationOnClickListener(v -> finish());
         AppUtil.handleOnPressEvent(mapsselect);
         AppUtil.handleOnPressEvent(select, () -> {
             if (mapsList.getSelectedItem() == null) return;

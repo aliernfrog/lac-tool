@@ -3,14 +3,12 @@ package com.aliernfrog.LacMapTool;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Process;
 import android.provider.DocumentsContract;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.aliernfrog.LacMapTool.fragments.MapDeleteSheet;
@@ -33,12 +32,10 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class MapsActivity extends AppCompatActivity implements MapPickerSheet.MapPickerListener, MapDownloadSheet.MapDownloadListener, MapDuplicateSheet.MapDuplicateListener, MapDeleteSheet.MapDeleteListener {
     CollapsingToolbarLayout collapsingToolbarLayout;
-    ImageView goBack;
-    ImageView manageBackupsButton;
+    Toolbar toolbar;
     FloatingActionButton saveButton;
     ImageView appBarImage;
     LinearLayout mapsPickLinear;
@@ -50,13 +47,16 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     LinearLayout thumbnailLinearActions;
     Button thumbnailSetButton;
     Button thumbnailRemoveButton;
-    LinearLayout otherOptionsLinear;
+    LinearLayout mapActionsLinear;
     Button importMapButton;
     Button editMapButton;
     Button duplicateMapButton;
     Button backupMapButton;
     Button shareMapButton;
     Button deleteMapButton;
+    LinearLayout otherLinear;
+    Button mergeMapsButton;
+    Button manageBackupsButton;
     TextView debugText;
 
     SharedPreferences prefsUpdate;
@@ -64,7 +64,6 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
     Integer REQUEST_PICK_MAP = 1;
     Integer REQUEST_PICK_THUMBNAIL = 2;
-    Integer REQUEST_URI = 3;
 
     Integer uriSdkVersion;
 
@@ -86,8 +85,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         setContentView(R.layout.activity_maps);
 
         collapsingToolbarLayout = findViewById(R.id.maps_collapsingToolbar);
-        goBack = findViewById(R.id.maps_goback);
-        manageBackupsButton = findViewById(R.id.maps_backups);
+        toolbar = findViewById(R.id.maps_toolbar);
         saveButton = findViewById(R.id.maps_save);
         appBarImage = findViewById(R.id.maps_appbar_image);
         mapsPickLinear = findViewById(R.id.maps_pick_linear);
@@ -99,13 +97,16 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         thumbnailLinearActions = findViewById(R.id.maps_thumbnail_actions);
         thumbnailSetButton = findViewById(R.id.maps_thumbnail_set);
         thumbnailRemoveButton = findViewById(R.id.maps_thumbnail_remove);
-        otherOptionsLinear = findViewById(R.id.maps_other);
-        importMapButton = findViewById(R.id.maps_other_import);
-        editMapButton = findViewById(R.id.maps_other_edit);
-        duplicateMapButton = findViewById(R.id.maps_other_duplicate);
-        backupMapButton = findViewById(R.id.maps_other_backup);
-        shareMapButton = findViewById(R.id.maps_other_share);
-        deleteMapButton = findViewById(R.id.maps_other_delete);
+        mapActionsLinear = findViewById(R.id.maps_mapActions);
+        importMapButton = findViewById(R.id.maps_mapActions_import);
+        editMapButton = findViewById(R.id.maps_mapActions_edit);
+        duplicateMapButton = findViewById(R.id.maps_mapActions_duplicate);
+        backupMapButton = findViewById(R.id.maps_mapActions_backup);
+        shareMapButton = findViewById(R.id.maps_mapActions_share);
+        deleteMapButton = findViewById(R.id.maps_mapActions_delete);
+        otherLinear = findViewById(R.id.maps_other);
+        mergeMapsButton = findViewById(R.id.maps_other_mergeMaps);
+        manageBackupsButton = findViewById(R.id.maps_other_manageBackups);
         debugText = findViewById(R.id.maps_debug);
 
         prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
@@ -124,8 +125,8 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
         devLog("MapsActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
-        checkUriPerms();
         setListeners();
+        useTempPath();
         devLog("lacPath: "+lacPath);
         autoBackup();
     }
@@ -149,18 +150,16 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         File thumbnailFile = new File(thumbnailPath);
         boolean hasThumbnail = isImported && thumbnailFile.exists();
         if (hasThumbnail) {
-            Drawable drawable = Drawable.createFromPath(thumbnailFile.getPath());
-            appBarImage.setBackground(drawable);
-            collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#00000000"));
+            Bitmap bitmap = BitmapFactory.decodeFile(thumbnailFile.getPath());
+            appBarImage.setImageBitmap(bitmap);
             thumbnailImage.setVisibility(View.VISIBLE);
-            thumbnailImage.setBackground(drawable);
+            thumbnailImage.setImageBitmap(bitmap);
             thumbnailRemoveButton.setVisibility(View.VISIBLE);
             devLog("set thumbnail bitmap");
         } else {
-            appBarImage.setBackground(null);
-            collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
+            appBarImage.setImageBitmap(null);
             thumbnailImage.setVisibility(View.GONE);
-            thumbnailImage.setBackground(null);
+            thumbnailImage.setImageBitmap(null);
             thumbnailLinearActions.setVisibility(View.VISIBLE);
             thumbnailRemoveButton.setVisibility(View.GONE);
             devLog("no thumbnail");
@@ -169,7 +168,7 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
 
     public void resetVisibilities() {
         mapNameLinear.setVisibility(View.VISIBLE);
-        otherOptionsLinear.setVisibility(View.VISIBLE);
+        mapActionsLinear.setVisibility(View.VISIBLE);
         if (isImported) {
             importMapButton.setVisibility(View.GONE);
             thumbnailLinear.setVisibility(View.VISIBLE);
@@ -257,13 +256,19 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     public void editMap() {
         devLog("attempting to edit the map");
         if (backupOnEdit) backupMap(false);
+        File currentFile = new File(currentPath);
         Intent intent = new Intent(this, MapsOptionsActivity.class);
         intent.putExtra("path", currentPath);
+        intent.putExtra("name", FileUtil.removeExtension(currentFile.getName()));
         startActivity(intent);
     }
 
     public void openDuplicateMapView() {
+        File currentFile = new File(currentPath);
+        Bundle bundle = new Bundle();
+        bundle.putString("mapName", FileUtil.removeExtension(currentFile.getName()));
         MapDuplicateSheet mapDuplicateSheet = new MapDuplicateSheet();
+        mapDuplicateSheet.setArguments(bundle);
         mapDuplicateSheet.show(getSupportFragmentManager(), "map_duplicate");
     }
 
@@ -313,10 +318,20 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             if (dataFile != null) dataFile.delete();
             if (mapFile != null) mapFile.delete();
         }
+        mapNameLinear.setVisibility(View.GONE);
+        thumbnailLinear.setVisibility(View.GONE);
+        mapActionsLinear.setVisibility(View.GONE);
+        appBarImage.setImageBitmap(null);
+        collapsingToolbarLayout.setTitle(getString(R.string.manageMaps));
         devLog("deleted the map");
         Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-        saveChangesAndFinish();
-        switchActivity(MapsActivity.class);
+    }
+
+    public void mergeMaps() {
+        devLog("attempting to open merge maps screen");
+        Intent intent = new Intent(this, MapsMergeActivity.class);
+        intent.putExtra("mapsPath", lacPath);
+        startActivity(intent);
     }
 
     public void manageBackups() {
@@ -340,16 +355,11 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     public void pickMap() {
+        Bundle bundle = new Bundle();
+        bundle.putString("mapsPath", lacPath);
         MapPickerSheet mapPickerSheet = new MapPickerSheet();
+        mapPickerSheet.setArguments(bundle);
         mapPickerSheet.show(getSupportFragmentManager(), "map_picker");
-    }
-
-    public File[] getImportedMaps() {
-        File directory = new File(lacPath);
-        File[] files = directory.listFiles();
-        if (files == null) return null;
-        Arrays.sort(files);
-        return files;
     }
 
     public void autoBackup() {
@@ -408,41 +418,20 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
     }
 
     @SuppressLint("NewApi")
-    public void checkUriPerms() {
-        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            saveButton.setVisibility(View.VISIBLE);
-            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
-            Uri uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId);
-            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request");
-                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-                        .addFlags(takeFlags);
-                startActivityForResult(intent, REQUEST_URI);
-            } else {
-                useTempPath();
-            }
-        }
-    }
-
-    public String getMapPath() {
-        return currentPath;
-    }
-
     public void useTempPath() {
-        lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
-        if (lacTreeFile != null) {
-            DocumentFile[] files = lacTreeFile.listFiles();
-            for (DocumentFile file : files) {
-                copyFile(file, tempPath + "/" + file.getName(), false);
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+            lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
+            if (lacTreeFile != null) {
+                DocumentFile[] files = lacTreeFile.listFiles();
+                for (DocumentFile file : files) {
+                    copyFile(file, tempPath + "/" + file.getName(), false);
+                }
             }
+            lacPath = tempPath;
+            devLog("using temp path as lac path");
         }
-        lacPath = tempPath;
     }
 
     public void saveChangesAndFinish() {
@@ -462,31 +451,17 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         finish();
     }
 
-    public void switchActivity(Class i) {
-        devLog("attempting to redirect to class: "+i.toString());
-        Intent intent = new Intent(this.getApplicationContext(), i);
-        startActivity(intent);
-    }
-
     void devLog(String toLog) {
         AppUtil.devLog(toLog, debugText);
     }
 
-    @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         boolean hasData = data != null;
-        devLog(requestCode+": received result");
         devLog(requestCode+": hasData = "+hasData);
         if (!hasData) return;
-        if (requestCode == REQUEST_URI) {
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-            grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
-            getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-            devLog(requestCode+": granted permissions for: "+data.getData());
-            finish();
-        } else if (requestCode == REQUEST_PICK_MAP) {
+        if (requestCode == REQUEST_PICK_MAP) {
             String path = data.getStringExtra("path");
             devLog("received path: "+path);
             getMap(path);
@@ -494,14 +469,11 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
             String path = data.getStringExtra("path");
             devLog("received path: "+path);
             setThumbnail(path);
-        } else {
-            devLog("result is not handled");
         }
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(goBack, this::saveChangesAndFinish);
-        AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
+        toolbar.setNavigationOnClickListener(v -> saveChangesAndFinish());
         AppUtil.handleOnPressEvent(saveButton, this::saveChangesAndFinish);
         AppUtil.handleOnPressEvent(mapsPickLinear);
         AppUtil.handleOnPressEvent(pickMap, this::pickMap);
@@ -513,19 +485,28 @@ public class MapsActivity extends AppCompatActivity implements MapPickerSheet.Ma
         AppUtil.handleOnPressEvent(thumbnailLinear, () -> AppUtil.toggleView(thumbnailLinearActions));
         AppUtil.handleOnPressEvent(thumbnailSetButton, () -> pickFile("image/*", new String[]{"jpg","jpeg","png"}, REQUEST_PICK_THUMBNAIL));
         AppUtil.handleOnPressEvent(thumbnailRemoveButton, this::removeThumbnail);
-        AppUtil.handleOnPressEvent(otherOptionsLinear);
+        AppUtil.handleOnPressEvent(mapActionsLinear);
         AppUtil.handleOnPressEvent(importMapButton, this::importMap);
         AppUtil.handleOnPressEvent(editMapButton, this::editMap);
         AppUtil.handleOnPressEvent(duplicateMapButton, this::openDuplicateMapView);
         AppUtil.handleOnPressEvent(backupMapButton, () -> backupMap(true));
         AppUtil.handleOnPressEvent(shareMapButton, this::shareMap);
         AppUtil.handleOnPressEvent(deleteMapButton, this::openDeleteMapView);
+        AppUtil.handleOnPressEvent(otherLinear);
+        AppUtil.handleOnPressEvent(mergeMapsButton, this::mergeMaps);
+        AppUtil.handleOnPressEvent(manageBackupsButton, this::manageBackups);
     }
 
     @Override
     public void onMapPicked(String path) {
         devLog("received path: "+path);
         getMap(path);
+    }
+
+    @Override
+    public void onFilePickRequested() {
+        devLog("map file pick requested");
+        pickMapFile();
     }
 
     @Override

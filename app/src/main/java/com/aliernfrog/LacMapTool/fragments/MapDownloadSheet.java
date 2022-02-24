@@ -1,5 +1,7 @@
 package com.aliernfrog.LacMapTool.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,7 +23,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.aliernfrog.LacMapTool.MapsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -32,6 +34,7 @@ import java.util.TimerTask;
 public class MapDownloadSheet extends BottomSheetDialogFragment {
     private MapDownloadListener listener;
 
+    ImageView indicator;
     TextView title;
     ProgressBar progressBar;
     LinearLayout optionsLinear;
@@ -40,20 +43,21 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
 
     DownloadManager downloadManager;
 
-    MapsActivity context;
+    Context context;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sheet_map_download, container, false);
 
+        indicator = view.findViewById(R.id.mapDownload_indicator);
         title = view.findViewById(R.id.mapDownload_title);
         progressBar = view.findViewById(R.id.mapDownload_progress);
         optionsLinear = view.findViewById(R.id.mapDownload_optionsLinear);
         linkInput = view.findViewById(R.id.mapDownload_linkInput);
         downloadConfirm = view.findViewById(R.id.mapDownload_download);
 
-        context = (MapsActivity) getActivity();
+        context = getActivity();
         if (context != null) downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
         setListeners();
@@ -64,6 +68,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
     void download(String url) {
         setCancelable(false);
         title.setText(R.string.mapDownload_downloading);
+        indicator.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         optionsLinear.setVisibility(View.GONE);
         downloadConfirm.setVisibility(View.GONE);
@@ -87,6 +92,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
         }
     }
 
+    @SuppressLint("Range")
     void watchProgress(long reference) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -104,7 +110,7 @@ public class MapDownloadSheet extends BottomSheetDialogFragment {
                         timer.cancel();
                         String uri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                         String name = new File(uri).getName();
-                        context.runOnUiThread(() -> finishDownloading(name));
+                        ((Activity)context).runOnUiThread(() -> finishDownloading(name));
                     }
                     cursor.close();
                 }

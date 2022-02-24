@@ -1,20 +1,14 @@
 package com.aliernfrog.LacMapTool;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.documentfile.provider.DocumentFile;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Process;
 import android.provider.DocumentsContract;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,184 +18,177 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.documentfile.provider.DocumentFile;
+
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 
-@SuppressLint("ClickableViewAccessibility")
 public class WallpaperActivity extends AppCompatActivity {
-    ImageView goback;
-    LinearLayout rootLayout;
-    TextView desc;
+    Toolbar toolbar;
+    FloatingActionButton saveButton;
+    TextView helpText;
     LinearLayout actionsLinear;
-    Button pickFile;
-    LinearLayout pickedWpLinear;
-    ImageView wallpaperView;
-    Button importFile;
-    TextView logView;
+    Button pickWallpaperButton;
+    LinearLayout pickedWallpaperLinear;
+    ImageView pickedWallpaperImage;
+    Button importWallpaperButton;
+    LinearLayout rootLinear;
+    TextView debugText;
 
-    SharedPreferences config;
-    SharedPreferences update;
+    SharedPreferences prefsUpdate;
+    SharedPreferences prefsConfig;
+
+    Integer REQUEST_PICK_WALLPAPER = 1;
 
     Integer uriSdkVersion;
 
+    String currentPath;
     String lacPath;
-    String rawPath;
-    String wpTreePath;
-    String wpPath;
+    String rawLacPath;
     String tempPath;
-
-    String wpName;
 
     Uri lacTreeUri;
     DocumentFile lacTreeFile;
 
-    @SuppressLint("InlinedApi")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper);
 
-        config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
-
-        uriSdkVersion = config.getInt("uriSdkVersion", 30);
-        wpTreePath = update.getString("path-lac", null).replace("/editor", "/wallpaper");
-        lacPath = wpTreePath+"/";
-        tempPath = update.getString("path-app", null)+"temp/wp/";
-
-        goback = findViewById(R.id.wallpaper_goback);
-        rootLayout = findViewById(R.id.wallpaper_rootLinear);
-        desc = findViewById(R.id.wallpaper_desc);
+        toolbar = findViewById(R.id.wallpaper_toolbar);
+        saveButton = findViewById(R.id.wallpaper_save);
+        helpText = findViewById(R.id.wallpaper_helpText);
         actionsLinear = findViewById(R.id.wallpaper_actionsLinear);
-        pickFile = findViewById(R.id.wallpaper_pickFile);
-        pickedWpLinear = findViewById(R.id.wallpaper_picked_linear);
-        wallpaperView = findViewById(R.id.wallpaper_picked_image);
-        importFile = findViewById(R.id.wallpaper_importFile);
-        logView = findViewById(R.id.wallpaper_log);
+        pickWallpaperButton = findViewById(R.id.wallpaper_pickFile);
+        pickedWallpaperLinear = findViewById(R.id.wallpaper_picked_linear);
+        pickedWallpaperImage = findViewById(R.id.wallpaper_picked_image);
+        importWallpaperButton = findViewById(R.id.wallpaper_picked_import);
+        rootLinear = findViewById(R.id.wallpaper_rootLinear);
+        debugText = findViewById(R.id.wallpaper_debug);
 
-        if (config.getBoolean("enableDebug", false)) logView.setVisibility(View.VISIBLE);
+        prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
+        prefsConfig = getSharedPreferences("APP_CONFIG", MODE_PRIVATE);
+
+        lacPath = prefsUpdate.getString("path-wallpapers", "");
+        rawLacPath = prefsUpdate.getString("path-wallpapers", "");
+        tempPath = prefsUpdate.getString("path-temp-wallpapers", "");
+
+        uriSdkVersion = prefsConfig.getInt("uriSdkVersion", 30);
+
+        if (prefsConfig.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
+
         devLog("WallpaperActivity started");
         devLog("uriSdkVersion: "+uriSdkVersion);
         setListeners();
-
-        wpPath = wpTreePath+"/";
-
-        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            String lacTreeId = wpTreePath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
-            Uri lacUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", lacTreeId);
-            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", lacTreeId);
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-            if (getApplicationContext().checkUriPermission(lacTreeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                devLog("no permissions to lac data, attempting to request");
-                Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                        .putExtra(DocumentsContract.EXTRA_INITIAL_URI, lacUri)
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                        .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-                        .addFlags(takeFlags);
-                startActivityForResult(intent, 1);
-            } else {
-                useTempPath();
-            }
-        }
-
-        devLog("wpPath = "+wpPath);
-        devLog("");
-
+        useTempPath();
+        devLog("lacPath: "+lacPath);
         getImportedWallpapers();
     }
 
     public void getWp(String path) {
-        wpName = new File(path).getName().replace(".png", ".jpg").replace(".jpeg", ".jpg");
-        rawPath = path;
-        pickedWpLinear.setVisibility(View.VISIBLE);
-        Bitmap wpBitmap = BitmapFactory.decodeFile(new File(rawPath).getAbsolutePath());
-        wallpaperView.setImageBitmap(wpBitmap);
-        devLog("wpName = "+wpName);
-        devLog("rawPath = "+ rawPath);
+        devLog("attempting to read: "+path);
+        currentPath = path;
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        pickedWallpaperImage.setImageBitmap(bitmap);
+        pickedWallpaperLinear.setVisibility(View.VISIBLE);
+        devLog("done reading");
+    }
+
+    public void pickWallpaperFile() {
+        devLog("attempting to pick a file with request code: "+REQUEST_PICK_WALLPAPER);
+        Intent intent = new Intent(this, FilePickerActivity.class);
+        intent.putExtra("FILE_TYPE_SAF", "image/*");
+        intent.putExtra("FILE_TYPE_INAPP", new String[]{"jpg","jpeg","png"});
+        startActivityForResult(intent, REQUEST_PICK_WALLPAPER);
+    }
+
+    public void importWallpaper() {
+        devLog("attempting to import chosen wallpaper");
+        File file = new File(currentPath);
+        String name = FileUtil.removeExtension(file.getName());
+        String dest = lacPath+"/"+name+".jpg";
+        copyFile(currentPath, dest, true);
+        devLog("imported the wallpaper");
+        pickedWallpaperLinear.setVisibility(View.GONE);
+        getImportedWallpapers();
     }
 
     public void getImportedWallpapers() {
         devLog("attempting to get imported wallpapers");
-        rootLayout.removeAllViews();
-        File wpFile = new File(wpPath);
-        if (wpFile.exists()) {
-            File[] files = wpFile.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.getName().endsWith(".jpg")) {
-                        devLog("found: " + file.getName());
-                        ViewGroup layout = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_wallpaper, rootLayout, false);
-                        setWallpaperView(layout, file);
+        rootLinear.removeAllViews();
+        File lacFolder = new File(lacPath);
+        File[] files = lacFolder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.inflate_wallpaper, rootLinear, false);
+                LinearLayout bg = viewGroup.findViewById(R.id.wp_bg);
+                TextView name = viewGroup.findViewById(R.id.wp_name);
+                ImageView image = viewGroup.findViewById(R.id.wp_image);
+                Button copyUrl = viewGroup.findViewById(R.id.wp_copyUrl);
+                Button delete = viewGroup.findViewById(R.id.wp_delete);
+                AppUtil.handleOnPressEvent(bg);
+                name.setText(file.getName());
+                image.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                AppUtil.handleOnPressEvent(copyUrl, () -> {
+                    AppUtil.copyToClipboard("file://"+rawLacPath+"/"+file.getName(), getApplicationContext());
+                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+                });
+                AppUtil.handleOnPressEvent(delete, () -> {
+                    devLog("deleting: "+file.getPath());
+                    file.delete();
+                    if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+                        DocumentFile documentFile = lacTreeFile.findFile(file.getName());
+                        if (documentFile != null) documentFile.delete();
                     }
+                    rootLinear.removeView(viewGroup);
+                    Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+                });
+                rootLinear.addView(viewGroup);
+            }
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public void useTempPath() {
+        if (Build.VERSION.SDK_INT >= uriSdkVersion) {
+            String treeId = lacPath.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
+            lacTreeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
+            lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
+            if (lacTreeFile != null) {
+                DocumentFile[] files = lacTreeFile.listFiles();
+                for (DocumentFile file : files) {
+                    copyFile(file, tempPath + "/" + file.getName());
                 }
             }
-        } else {
-            devLog("wallpaper file doesnt exist"+wpFile.getPath());
+            lacPath = tempPath;
+            devLog("using temp path as lac path");
         }
     }
 
-    public void setWallpaperView(ViewGroup layout, File file) {
-        LinearLayout bg = layout.findViewById(R.id.wp_bg);
-        TextView name = layout.findViewById(R.id.wp_name);
-        ImageView image = layout.findViewById(R.id.wp_image);
-        Button copyUrl = layout.findViewById(R.id.wp_copyUrl);
-        Button delete = layout.findViewById(R.id.wp_delete);
-        name.setText(file.getName());
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-        image.setImageBitmap(bitmap);
-        rootLayout.addView(layout);
-        AppUtil.handleOnPressEvent(bg);
-        AppUtil.handleOnPressEvent(copyUrl, () -> {
-            AppUtil.copyToClipboard("file://"+lacPath+file.getName(), getApplicationContext());
-            Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-        });
-        AppUtil.handleOnPressEvent(delete, () -> {
-            if (Build.VERSION.SDK_INT < 30) {
-                file.delete();
-                rootLayout.removeView(layout);
-                Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.info_android11notAvailable, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void importWp() {
-        copyFile(rawPath, wpPath+wpName);
-        pickedWpLinear.setVisibility(View.GONE);
-        getImportedWallpapers();
-        Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
-    }
-
-    public void pickFile() {
-        Intent intent = new Intent(this, FilePickerActivity.class);
-        intent.putExtra("FILE_TYPE_SAF", "image/*");
-        intent.putExtra("FILE_TYPE_INAPP", new String[]{"jpg","jpeg","png"});
-        startActivityForResult(intent, 2);
-        devLog("attempting to pick a file with request code 2");
-    }
-
-    public void useTempPath() {
-        lacTreeFile = DocumentFile.fromTreeUri(getApplicationContext(), lacTreeUri);
-        File tempFile = new File(tempPath);
-        if (!tempFile.exists()) tempFile.mkdirs();
-        if (lacTreeFile != null) {
-            DocumentFile[] files = lacTreeFile.listFiles();
-            for (DocumentFile file : files) {
-                copyFile(file, tempPath + file.getName());
-            }
-        }
-        wpPath = tempPath;
-    }
-
-    public void copyFile(String src, String dst) {
-        devLog("attempting to copy "+src+" to "+dst);
+    public void copyFile(String source, String destination, Boolean toastResult) {
+        devLog("attempting to copy "+source+" to "+destination);
         try {
-            FileUtil.copyFile(src, dst);
-            devLog("copied from "+src+" to "+dst);
+            FileUtil.copyFile(source, destination);
+            devLog("copied successfully");
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.info_done, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            devLog(e.toString());
+            if (toastResult) Toast.makeText(getApplicationContext(), R.string.info_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void copyFile(DocumentFile source, String destination) {
+        devLog("attempting to copy "+source.getUri()+" to "+destination);
+        try {
+            FileUtil.copyFile(source, destination, getApplicationContext());
+            devLog("copied successfully");
         } catch (Exception e) {
             e.printStackTrace();
             devLog(e.toString());
@@ -220,83 +207,53 @@ public class WallpaperActivity extends AppCompatActivity {
         }
     }
 
-    public void copyFile(DocumentFile src, String dst) {
-        devLog("attempting to copy "+src.getUri()+" to "+dst);
-        try {
-            FileUtil.copyFile(src, dst, getApplicationContext());
-            devLog("copied successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
-        }
-    }
-
     public void saveChangesAndFinish() {
         if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-            devLog("attempting to save changes");
-            File file = new File(tempPath);
-            File[] files = file.listFiles();
-            try {
-                if (files != null) {
-                    for (File value : files) {
-                        DocumentFile fileInLac = lacTreeFile.findFile(value.getName());
-                        if (fileInLac == null)
-                            fileInLac = lacTreeFile.createFile("", value.getName());
-                        copyFile(value.getPath(), fileInLac);
-                    }
+            devLog("attempting to save changes and finish");
+            File tempFile = new File(tempPath);
+            File[] files = tempFile.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    DocumentFile fileInLac = lacTreeFile.findFile(file.getName());
+                    if (fileInLac == null) fileInLac = lacTreeFile.createFile("", file.getName());
+                    copyFile(file.getPath(), fileInLac);
                 }
-            } finally {
-                FileUtil.deleteDirectory(file);
-                finish();
             }
-        } else {
-            finish();
+            FileUtil.deleteDirectoryContent(tempFile);
         }
+        finish();
     }
 
     void devLog(String toLog) {
-        AppUtil.devLog(toLog, logView);
+        AppUtil.devLog(toLog, debugText);
     }
 
-    @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2) {
-            if (data == null) {
-                devLog("2: no data");
-            } else {
-                String path = data.getStringExtra("path");
-                devLog("2: "+path);
-                getWp(path);
-            }
-        } else if (requestCode == 1) {
-            if (data == null) {
-                devLog(requestCode+": no data");
-            } else {
-                if (Build.VERSION.SDK_INT >= uriSdkVersion) {
-                    int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-                    grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
-                    getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-                    devLog(requestCode+": granted permissions for: "+data.getData());
-                    finish();
-                }
-            }
+        boolean hasData = data != null;
+        devLog(requestCode+": hasData = "+hasData);
+        if (!hasData) return;
+        if (requestCode == REQUEST_PICK_WALLPAPER) {
+            getWp(data.getStringExtra("path"));
+        } else {
+            devLog("result is not handled");
         }
     }
 
     void setListeners() {
-        AppUtil.handleOnPressEvent(goback, this::saveChangesAndFinish);
-        AppUtil.handleOnPressEvent(desc, () -> desc.setVisibility(View.GONE));
+        toolbar.setNavigationOnClickListener(v -> saveChangesAndFinish());
+        AppUtil.handleOnPressEvent(saveButton, this::saveChangesAndFinish);
+        AppUtil.handleOnPressEvent(helpText, () -> helpText.setVisibility(View.GONE));
         AppUtil.handleOnPressEvent(actionsLinear);
-        AppUtil.handleOnPressEvent(pickFile, this::pickFile);
-        AppUtil.handleOnPressEvent(importFile, this::importWp);
-        AppUtil.handleOnPressEvent(pickedWpLinear);
+        AppUtil.handleOnPressEvent(pickWallpaperButton, this::pickWallpaperFile);
+        AppUtil.handleOnPressEvent(pickedWallpaperLinear);
+        AppUtil.handleOnPressEvent(importWallpaperButton, this::importWallpaper);
     }
 
     @Override
     public void onBackPressed() {
-        saveChangesAndFinish();
         super.onBackPressed();
+        saveChangesAndFinish();
     }
 }
