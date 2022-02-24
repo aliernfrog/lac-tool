@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="lactool_background" format="reference"/>
+    <attr name="lactool_hint" format="reference"/>
+    <attr name="lactool_textOnRed" format="reference"/>
+    <attr name="lactool_hintOnRed" format="reference"/>
+    <attr name="lactool_linear" format="reference"/>
+    <attr name="lactool_button" format="reference"/>
+    <attr name="lactool_blue" format="reference"/>
+    <attr name="lactool_red" format="reference"/>
+    <attr name="lactool_linearDrawable" format="reference"/>
+    <attr name="lactool_linearButtonDrawable" format="reference"/>
+    <attr name="lactool_linearBlueDrawable" format="reference"/>
+    <attr name="lactool_linearRedDrawable" format="reference"/>
+    <attr name="lactool_sheetBackgroundDrawable" format="reference"/>
+    <attr name="lactool_indicatorDrawable" format="reference"/>
+    <attr name="lactool_mapDrawable" format="reference"/>
+    <attr name="lactool_wallpaperDrawable" format="reference"/>
+    <attr name="lactool_screenshotDrawable" format="reference"/>
+    <attr name="lactool_playDrawable" format="reference"/>
+    <attr name="lactool_optionsDrawable" format="reference"/>
+    <attr name="lactool_updateDrawable" format="reference"/>
+</resources>

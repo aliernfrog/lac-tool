@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/linear"
+    android:background="?lactool_linearDrawable"
     android:gravity="center_vertical"
     android:padding="8dp">
 
@@ -29,7 +29,7 @@
             android:id="@+id/map_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -38,8 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:textColor="#B8B8B8"
+            android:textColor="?lactool_hint"
             android:textSize="11sp" />
     </LinearLayout>
-
 </LinearLayout>

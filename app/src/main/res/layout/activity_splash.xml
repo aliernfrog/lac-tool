@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
+        android:background="?lactool_background"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
         android:padding="24dp"
@@ -40,13 +40,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/linear"
+                    android:background="?lactool_linearDrawable"
                     android:padding="8dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:textColorPrimary"
                     android:visibility="gone"
                     tools:visibility="visible" />
             </LinearLayout>
         </ScrollView>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,25 @@
 package com.aliernfrog.LacMapTool.utils;
 
+import android.content.Context;
+
+import com.aliernfrog.LacMapTool.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LacMapUtil {
-    public static String[] fixMap(String[] content) {
+    public static String getMapTypeFromInt(int num, Context context) {
+        String ret = "unknown";
+        if (num == 0) ret = context.getString(R.string.mapEdit_type_0);
+        if (num == 1) ret = context.getString(R.string.mapEdit_type_1);
+        if (num == 2) ret = context.getString(R.string.mapEdit_type_2);
+        if (num == 3) ret = context.getString(R.string.mapEdit_type_3);
+        if (num == 4) ret = context.getString(R.string.mapEdit_type_4);
+        if (num == 5) ret = context.getString(R.string.mapEdit_type_5);
+        return ret;
+    }
+
+    public static void fixMap(String[] content) {
         for (int i = 0; i < content.length; i++) {
             String line = content[i];
             String[] strArr = line.split(":");
@@ -74,6 +89,5 @@ public class LacMapUtil {
                 content[i] = full;
             }
         }
-        return content;
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
-    android:background="@drawable/linear"
+    android:background="?lactool_linearDrawable"
     android:gravity="center"
     android:padding="8dp">
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="@string/app_name"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -38,8 +38,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/app_name"
-            android:textColor="#B8B8B8"
+            android:textColor="?lactool_hint"
             android:textSize="11sp" />
     </LinearLayout>
-
 </LinearLayout>

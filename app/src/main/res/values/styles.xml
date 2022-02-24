@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.LACMapTool.BottomSheetDialog" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Theme.LACMapTool.BottomSheetStyle</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="l">@color/black</item>
+        <item name="colorControlActivated">@color/blueLight</item>
+    </style>
+
+    <style name="Theme.LACMapTool.BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">?lactool_sheetBackgroundDrawable</item>
+    </style>
+</resources>

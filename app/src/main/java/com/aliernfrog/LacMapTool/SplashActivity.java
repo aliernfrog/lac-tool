@@ -1,25 +1,21 @@
 package com.aliernfrog.LacMapTool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
 import com.aliernfrog.LacMapTool.utils.AppUtil;
 
-import java.util.Locale;
-
-@SuppressLint("CommitPrefEdits")
+@SuppressLint({"CommitPrefEdits", "CustomSplashScreen"})
 public class SplashActivity extends AppCompatActivity {
     TextView debugText;
 
@@ -31,7 +27,7 @@ public class SplashActivity extends AppCompatActivity {
     Integer switchDelay = 1000;
 
     String pathExternal = Environment.getExternalStorageDirectory().toString();
-    String pathDocs = pathExternal +"/Documents";
+    String pathDocs = pathExternal+"/Documents";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +49,11 @@ public class SplashActivity extends AppCompatActivity {
 
         devLog("SplashActivity started");
         devLog("Android SDK version: "+Build.VERSION.SDK_INT);
-        devLog("External path: "+ pathExternal);
+        devLog("External path: "+pathExternal);
         devLog("Documents path: "+pathDocs);
 
         getVersion();
-        setLocale();
+        setTheme();
         checkUpdates();
     }
 
@@ -78,20 +74,6 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    public void setLocale() {
-        devLog("attempting to set locale");
-        String lang = Locale.getDefault().getLanguage();
-        boolean forceEnglish = prefsConfig.getBoolean("forceEnglish", false);
-        if (forceEnglish) lang = "en";
-        Locale locale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        Configuration configuration = res.getConfiguration();
-        configuration.locale = locale;
-        res.updateConfiguration(configuration, metrics);
-        devLog("set locale to: "+lang);
-    }
-
     public void checkUpdates() {
         boolean shouldCheck = prefsConfig.getBoolean("autoCheckUpdates", true);
         devLog("should check for updates: "+shouldCheck);
@@ -109,6 +91,12 @@ public class SplashActivity extends AppCompatActivity {
         setConfig();
     }
 
+    public void setTheme() {
+        int theme = prefsConfig.getInt("appTheme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        devLog("attempting to set theme: "+theme);
+        AppCompatDelegate.setDefaultNightMode(theme);
+    }
+
     public void setConfig() {
         devLog("attempting to set config");
         String pathLac = pathExternal+"/Android/data/com.MA.LAC/files";
@@ -122,10 +110,14 @@ public class SplashActivity extends AppCompatActivity {
         if (lacId.equals("lacm")) pathLac = pathLacm;
         if (lacId.equals("lacmb")) pathLac = pathLacmb;
         prefsEditUpdate.putString("path-maps", pathLac+"/editor");
-        prefsEditUpdate.putString("path-lac", pathLac+"/editor");
+        prefsEditUpdate.putString("path-wallpapers", pathLac+"/wallpaper");
+        prefsEditUpdate.putString("path-screenshots", pathLac+"/screenshots");
+        prefsEditUpdate.putString("path-lac", pathLac);
         prefsEditUpdate.putString("path-app", pathApp);
         prefsEditUpdate.putString("path-temp", pathTemp);
         prefsEditUpdate.putString("path-temp-maps", pathTemp+"/editor");
+        prefsEditUpdate.putString("path-temp-wallpapers", pathTemp+"/wallpaper");
+        prefsEditUpdate.putString("path-temp-screenshots", pathTemp+"/screenshots");
         prefsEditUpdate.commit();
         devLog("set config");
         clearTempData(pathTemp);

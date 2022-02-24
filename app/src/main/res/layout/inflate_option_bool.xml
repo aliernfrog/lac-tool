@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/linear_button"
+    android:background="?lactool_linearButtonDrawable"
     android:padding="16dp"
     android:text="Option title"
-    android:textColor="#FFFFFF"
+    android:textColor="?android:textColorPrimary"
     android:textStyle="bold"
     tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml">
-
 </Switch>

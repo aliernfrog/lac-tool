@@ -11,21 +11,15 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.aliernfrog.LacMapTool.MapsActivity;
 import com.aliernfrog.LacMapTool.R;
 import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.FileUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import java.io.File;
 
 public class MapDuplicateSheet extends BottomSheetDialogFragment {
     private MapDuplicateListener listener;
 
     EditText nameInput;
     Button duplicateConfirm;
-
-    MapsActivity context;
 
     @Nullable
     @Override
@@ -35,18 +29,11 @@ public class MapDuplicateSheet extends BottomSheetDialogFragment {
         nameInput = view.findViewById(R.id.mapDuplicate_nameInput);
         duplicateConfirm = view.findViewById(R.id.mapDuplicate_duplicate);
 
-        context = (MapsActivity) getActivity();
+        if (getArguments() != null) nameInput.setText(getArguments().getString("mapName"));
 
-        getMapName();
         setListeners();
 
         return view;
-    }
-
-    void getMapName() {
-        File file = new File(context.getMapPath());
-        String name = FileUtil.removeExtension(file.getName());
-        nameInput.setText(name);
     }
 
     void duplicate(String name) {

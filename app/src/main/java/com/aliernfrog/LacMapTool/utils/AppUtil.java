@@ -9,10 +9,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.text.Html;
-import android.text.SpannableString;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -74,7 +75,7 @@ public class AppUtil {
         SharedPreferences update = context.getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
         SharedPreferences config = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
         SharedPreferences.Editor updateEdit = update.edit();
-        String updateUrl = config.getString("updateUrl", "https://aliernfrog.glitch.me/lacmaptool/update.json");
+        String updateUrl = config.getString("updateUrl", "https://aliernfrog.github.io/lactool/update.json");
         String rawUpdate = WebUtil.getContentFromURL(updateUrl);
         JSONObject object = new JSONObject(rawUpdate);
         updateEdit.putInt("updateLatest", object.getInt("latest"));
@@ -90,14 +91,6 @@ public class AppUtil {
         return true;
     }
 
-    public static void toggleView(View view) {
-        if (view.getVisibility() == View.VISIBLE) {
-            view.setVisibility(View.GONE);
-        } else {
-            view.setVisibility(View.VISIBLE);
-        }
-    }
-
     @SuppressLint("SimpleDateFormat")
     public static String timeString(String format) {
         SimpleDateFormat frm = new SimpleDateFormat(format);
@@ -107,7 +100,7 @@ public class AppUtil {
 
     public static Boolean stringIsNumber(String string) {
         try {
-            Integer.parseInt(string.trim());
+            Double.parseDouble(string);
         } catch (Exception e) {
             return false;
         }
@@ -128,11 +121,33 @@ public class AppUtil {
     public static void devLog(String toLog, TextView logView) {
         if (logView.getVisibility() == View.VISIBLE) {
             String tag = Thread.currentThread().getStackTrace()[3].getMethodName();
-            if (toLog.contains("Exception")) toLog = "<font color=red>"+toLog+"</font>";
-            String log = Html.toHtml(new SpannableString(logView.getText()));
-            String full = log+"<font color=#00FFFF>["+tag+"]</font> "+toLog;
-            logView.setText(Html.fromHtml(full));
+            if (tag.equals("devLog")) tag = Thread.currentThread().getStackTrace()[4].getMethodName();
+            if (toLog.contains("Exception")) tag = "ERR-"+tag;
+            String log = logView.getText().toString();
+            String full = log+"["+tag+"] "+toLog+"\n\n";
+            logView.setText(full);
         }
+    }
+
+    public static void toggleView(View view) {
+        if (view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void afterTextChanged(EditText view, Runnable runnable) {
+        view.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                runnable.run();
+            }
+        });
     }
 
     public static void handleOnPressEvent(View view, MotionEvent event, @Nullable Runnable onClick) {
