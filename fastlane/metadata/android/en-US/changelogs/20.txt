@@ -1,0 +1,43 @@
+# Design
++ Light theme
++ Option to change theme
++ Back button for toolbars
++ Checkboxes, switches and progress bars are now blue when activated
++ Rounded corners for bottom dialogs
++ All bottom dialogs are now scrollable
++ More animations
+
+# Merging maps
++ You can now add maps on top of a map
++ Manage maps > Merge maps
+
+# Maps management
++ Activity doesn't restart anymore when deleting maps
++ Updated thumbnail look
++ Fixed thumbnails not showing correctly
+
+# Map options
++ Title now changes to map name
++ Better picker for map types
++ Better input for number options
++ Server name no longer uses hardcoded value
++ Fixed number options having an additional space
++ Fixed checkpoints causing error
+
+# Map roles
++ Separate activity for managing map roles
++ Role colors now show in app (not all colors are supported)
++ You can now copy role name by long pressing on it
+
+# Wallpapers management
++ Deleting wallpapers now also works on Android 11 and above
++ Floating save button
++ Fixed wallpapers not showing correctly
+
+# Changes & fixes
++ Screenshots can now be deleted
++ Imported maps are now in alphabetical order
++ LAC now gets detected properly on Android 11 and above
++ Fixed some dialogs' titles not being centered
++ Fixed app not creating required folders on first launch
+Check GitHub for more info
