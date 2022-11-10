@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.aliernfrog.LacMapTool">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -16,9 +14,10 @@
     </queries>
 
     <application
+        android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.LACMapTool"
@@ -30,25 +29,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".MapsMergeActivity" />
-        <activity android:name=".MapsOptionsActivity" />
-        <activity android:name=".MapsRolesActivity" />
-        <activity android:name=".RestoreActivity" />
-        <activity android:name=".WallpaperActivity" />
-        <activity android:name=".ScreenshotsActivity" />
-        <activity android:name=".FilePickerActivity" />
+        <activity android:name=".MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MapsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MapsMergeActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MapsOptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MapsRolesActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".RestoreActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".WallpaperActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ScreenshotsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".FilePickerActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".OptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
 
         <provider
-            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
+            android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
         </provider>
     </application>
 
