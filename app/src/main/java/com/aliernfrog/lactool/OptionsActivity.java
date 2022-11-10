@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool;
+package com.aliernfrog.lactool;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,9 +20,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aliernfrog.LacMapTool.fragments.ThemeSheet;
-import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.WebUtil;
+import com.aliernfrog.LacMapTool.R;
+import com.aliernfrog.lactool.fragments.ThemeSheet;
+import com.aliernfrog.lactool.utils.AppUtil;
+import com.aliernfrog.lactool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;
 
 import org.json.JSONObject;

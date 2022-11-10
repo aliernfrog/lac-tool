@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool;
+package com.aliernfrog.lactool;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -13,7 +13,8 @@ import android.os.StrictMode;
 import android.view.View;
 import android.widget.TextView;
 
-import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.LacMapTool.R;
+import com.aliernfrog.lactool.utils.AppUtil;
 
 @SuppressLint({"CommitPrefEdits", "CustomSplashScreen"})
 public class SplashActivity extends AppCompatActivity {

@@ -23,22 +23,22 @@
         android:theme="@style/Theme.LACMapTool"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".SplashActivity" android:exported="true" android:noHistory="true">
+        <activity android:name="com.aliernfrog.lactool.SplashActivity" android:exported="true" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MapsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MapsMergeActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MapsOptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MapsRolesActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".RestoreActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".WallpaperActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ScreenshotsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".FilePickerActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".OptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.MapsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.MapsMergeActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.MapsOptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.MapsRolesActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.RestoreActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.WallpaperActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.ScreenshotsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.FilePickerActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.aliernfrog.lactool.OptionsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:authorities="${applicationId}.provider"

@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool;
+package com.aliernfrog.lactool;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,8 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
-import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.aliernfrog.LacMapTool.R;
+import com.aliernfrog.lactool.utils.AppUtil;
+import com.aliernfrog.lactool.utils.FileUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;

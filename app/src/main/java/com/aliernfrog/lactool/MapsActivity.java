@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool;
+package com.aliernfrog.lactool;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -22,12 +22,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
-import com.aliernfrog.LacMapTool.fragments.MapDeleteSheet;
-import com.aliernfrog.LacMapTool.fragments.MapDownloadSheet;
-import com.aliernfrog.LacMapTool.fragments.MapDuplicateSheet;
-import com.aliernfrog.LacMapTool.fragments.MapPickerSheet;
-import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.aliernfrog.LacMapTool.R;
+import com.aliernfrog.lactool.fragments.MapDeleteSheet;
+import com.aliernfrog.lactool.fragments.MapDownloadSheet;
+import com.aliernfrog.lactool.fragments.MapDuplicateSheet;
+import com.aliernfrog.lactool.fragments.MapPickerSheet;
+import com.aliernfrog.lactool.utils.AppUtil;
+import com.aliernfrog.lactool.utils.FileUtil;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

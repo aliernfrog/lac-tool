@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool;
+package com.aliernfrog.lactool;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,8 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aliernfrog.LacMapTool.fragments.OkCancelSheet;
-import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.LacMapTool.R;
+import com.aliernfrog.lactool.fragments.OkCancelSheet;
+import com.aliernfrog.lactool.utils.AppUtil;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool.fragments;
+package com.aliernfrog.lactool.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.LacMapTool.utils.AppUtil;
+import com.aliernfrog.lactool.utils.AppUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class OkCancelSheet extends BottomSheetDialogFragment {

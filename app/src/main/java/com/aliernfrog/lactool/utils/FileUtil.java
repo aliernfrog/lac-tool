@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool.utils;
+package com.aliernfrog.lactool.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;

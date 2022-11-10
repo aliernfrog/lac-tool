@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.aliernfrog.LacMapTool.*
--keepclassmembers class com.aliernfrog.LacMapTool.*  {
+-keep class com.aliernfrog.lactool.*
+-keepclassmembers class com.aliernfrog.lactool.*  {
     public <methods>;
 }

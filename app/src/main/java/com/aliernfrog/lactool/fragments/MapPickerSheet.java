@@ -1,4 +1,4 @@
-package com.aliernfrog.LacMapTool.fragments;
+package com.aliernfrog.lactool.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.LacMapTool.utils.AppUtil;
-import com.aliernfrog.LacMapTool.utils.FileUtil;
+import com.aliernfrog.lactool.utils.AppUtil;
+import com.aliernfrog.lactool.utils.FileUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
