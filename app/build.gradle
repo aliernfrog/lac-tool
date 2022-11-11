@@ -59,4 +59,5 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     implementation 'androidx.documentfile:documentfile:1.0.1'
     implementation 'com.github.HBiSoft:PickiT:2.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }

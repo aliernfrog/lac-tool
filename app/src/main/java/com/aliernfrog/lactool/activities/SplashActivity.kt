@@ -1,143 +1,87 @@
-package com.aliernfrog.lactool;
+package com.aliernfrog.lactool.activities
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
+import android.annotation.SuppressLint
+import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.os.StrictMode.ThreadPolicy
+import android.os.StrictMode
+import com.aliernfrog.LacMapTool.R
+import com.aliernfrog.lactool.utils.AppUtil
+import androidx.appcompat.app.AppCompatDelegate
+import android.content.Intent
+import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.MainActivity
+import java.lang.Exception
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.StrictMode;
-import android.view.View;
-import android.widget.TextView;
+@SuppressLint("CommitPrefEdits", "CustomSplashScreen")
+class SplashActivity : AppCompatActivity() {
+    private lateinit var prefsUpdate: SharedPreferences
+    private lateinit var prefsConfig: SharedPreferences
 
-import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.utils.AppUtil;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        StrictMode.setThreadPolicy(ThreadPolicy.Builder().permitAll().build())
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
 
-@SuppressLint({"CommitPrefEdits", "CustomSplashScreen"})
-public class SplashActivity extends AppCompatActivity {
-    TextView debugText;
+        prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE)
+        prefsConfig = getSharedPreferences("APP_CONFIG", MODE_PRIVATE)
 
-    SharedPreferences prefsUpdate;
-    SharedPreferences prefsConfig;
-    SharedPreferences.Editor prefsEditUpdate;
-    SharedPreferences.Editor prefsEditConfig;
-
-    Integer switchDelay = 1000;
-
-    String pathExternal = Environment.getExternalStorageDirectory().toString();
-    String pathDocs = pathExternal+"/Documents";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-
-        debugText = findViewById(R.id.splash_debug);
-
-        prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE);
-        prefsConfig = getSharedPreferences("APP_CONFIG", MODE_PRIVATE);
-        prefsEditUpdate = prefsUpdate.edit();
-        prefsEditConfig = prefsConfig.edit();
-
-        if (Build.VERSION.SDK_INT >= 19) pathDocs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
-
-        if (prefsConfig.getBoolean("enableDebug", false)) debugText.setVisibility(View.VISIBLE);
-
-        devLog("SplashActivity started");
-        devLog("Android SDK version: "+Build.VERSION.SDK_INT);
-        devLog("External path: "+pathExternal);
-        devLog("Documents path: "+pathDocs);
-
-        getVersion();
-        setTheme();
-        checkUpdates();
+        getVersion()
+        setTheme()
+        checkUpdatesAndStart()
     }
 
-    public void getVersion() {
-        devLog("attempting to get version");
-        try {
-            String versName = AppUtil.getVersName(getApplicationContext());
-            Integer versCode = AppUtil.getVersCode(getApplicationContext());
-            devLog("version name: "+versName);
-            devLog("version code: "+versCode);
-            prefsEditUpdate.putString("versionName", versName);
-            prefsEditUpdate.putInt("versionCode", versCode);
-            prefsEditUpdate.commit();
-            devLog("saved version name & code");
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
-        }
+    private fun getVersion() {
+        val updateEditor = prefsUpdate.edit()
+        updateEditor.putString("versionName", AppUtil.getVersName(applicationContext))
+        updateEditor.putInt("versionCode", AppUtil.getVersCode(applicationContext))
+        updateEditor.apply()
     }
 
-    public void checkUpdates() {
-        boolean shouldCheck = prefsConfig.getBoolean("autoCheckUpdates", true);
-        devLog("should check for updates: "+shouldCheck);
+    private fun setTheme() {
+        val theme = prefsConfig.getInt("appTheme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(theme)
+    }
+
+    private fun checkUpdatesAndStart() {
+        val shouldCheck = prefsConfig.getBoolean("autoCheckUpdates", true)
         if (shouldCheck) {
             try {
-                if (AppUtil.getUpdates(getApplicationContext())) devLog("saved update config");
-            } catch (Exception e) {
-                e.printStackTrace();
-                devLog(e.toString());
-                devLog("something went wrong, skipping updates");
+                AppUtil.getUpdates(applicationContext)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } else {
-            devLog("skipping updates");
         }
-        setConfig();
+        setConfig()
     }
 
-    public void setTheme() {
-        int theme = prefsConfig.getInt("appTheme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        devLog("attempting to set theme: "+theme);
-        AppCompatDelegate.setDefaultNightMode(theme);
+    private fun setConfig() {
+        val updateEditor = prefsUpdate.edit()
+        val appPath = ConfigKey.DEFAULT_APP_PATH
+        val lacPath = ConfigKey.DEFAULT_LAC_PATH
+        val tempPath = "$appPath/temp"
+        updateEditor.putString("path-maps", "$lacPath/editor")
+        updateEditor.putString("path-wallpapers", "$lacPath/wallpaper")
+        updateEditor.putString("path-screenshots", "$lacPath/screenshots")
+        updateEditor.putString("path-lac", lacPath)
+        updateEditor.putString("path-app", appPath)
+        updateEditor.putString("path-temp", tempPath)
+        updateEditor.putString("path-temp-maps", "$tempPath/editor")
+        updateEditor.putString("path-temp-wallpapers", "$tempPath/wallpaper")
+        updateEditor.putString("path-temp-screenshots", "$tempPath/screenshots")
+        updateEditor.apply()
+        clearTempData(tempPath)
     }
 
-    public void setConfig() {
-        devLog("attempting to set config");
-        String pathLac = pathExternal+"/Android/data/com.MA.LAC/files";
-        String pathLacd = pathExternal+"/Android/data/com.MA.LACD/files";
-        String pathLacm = pathExternal+"/Android/data/com.MA.LACM/files";
-        String pathLacmb = pathExternal+"/Android/data/com.MA.LACMB/files";
-        String pathApp = pathDocs+"/LacMapTool/";
-        String pathTemp = pathApp+"temp";
-        String lacId = prefsConfig.getString("lacId", "lac");
-        if (lacId.equals("lacd")) pathLac = pathLacd;
-        if (lacId.equals("lacm")) pathLac = pathLacm;
-        if (lacId.equals("lacmb")) pathLac = pathLacmb;
-        prefsEditUpdate.putString("path-maps", pathLac+"/editor");
-        prefsEditUpdate.putString("path-wallpapers", pathLac+"/wallpaper");
-        prefsEditUpdate.putString("path-screenshots", pathLac+"/screenshots");
-        prefsEditUpdate.putString("path-lac", pathLac);
-        prefsEditUpdate.putString("path-app", pathApp);
-        prefsEditUpdate.putString("path-temp", pathTemp);
-        prefsEditUpdate.putString("path-temp-maps", pathTemp+"/editor");
-        prefsEditUpdate.putString("path-temp-wallpapers", pathTemp+"/wallpaper");
-        prefsEditUpdate.putString("path-temp-screenshots", pathTemp+"/screenshots");
-        prefsEditUpdate.commit();
-        devLog("set config");
-        clearTempData(pathTemp);
+    private fun clearTempData(tempPath: String) {
+        AppUtil.clearTempData(tempPath)
+        switchActivity()
     }
 
-    public void clearTempData(String tempPath) {
-        devLog("attempting to clear temp data");
-        AppUtil.clearTempData(tempPath);
-        switchActivity();
-    }
-
-    public void switchActivity() {
-        devLog("attempting to switch in "+switchDelay);
-        Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    void devLog(String toLog) {
-        AppUtil.devLog(toLog, debugText);
+    private fun switchActivity() {
+        val intent = Intent(this.applicationContext, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

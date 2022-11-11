@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -41,6 +43,11 @@ public class AppUtil {
         PackageManager pm = context.getPackageManager();
         PackageInfo pInfo = pm.getPackageInfo(context.getPackageName(), 0);
         return pInfo.versionCode;
+    }
+
+    public static String getAppPath() {
+        if (Build.VERSION.SDK_INT >= 19) return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString();
+        else return Environment.getExternalStorageDirectory()+"/Documents";
     }
 
     public static String getLacId(Context context) {
