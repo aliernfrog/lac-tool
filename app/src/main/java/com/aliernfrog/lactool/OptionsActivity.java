@@ -21,8 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.activities.SplashActivity;
-import com.aliernfrog.lactool.fragments.ThemeSheet;
+import com.aliernfrog.lactool.activity.SplashActivity;
+import com.aliernfrog.lactool.fragment.ThemeSheet;
 import com.aliernfrog.lactool.utils.AppUtil;
 import com.aliernfrog.lactool.utils.WebUtil;
 import com.hbisoft.pickit.PickiT;

@@ -23,10 +23,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.fragments.MapDeleteSheet;
-import com.aliernfrog.lactool.fragments.MapDownloadSheet;
-import com.aliernfrog.lactool.fragments.MapDuplicateSheet;
-import com.aliernfrog.lactool.fragments.MapPickerSheet;
+import com.aliernfrog.lactool.fragment.MapDeleteSheet;
+import com.aliernfrog.lactool.fragment.MapDownloadSheet;
+import com.aliernfrog.lactool.fragment.MapDuplicateSheet;
+import com.aliernfrog.lactool.fragment.MapPickerSheet;
 import com.aliernfrog.lactool.utils.AppUtil;
 import com.aliernfrog.lactool.utils.FileUtil;
 import com.google.android.material.appbar.CollapsingToolbarLayout;

@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.fragments;
+package com.aliernfrog.lactool.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

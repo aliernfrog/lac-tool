@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.fragments;
+package com.aliernfrog.lactool.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;

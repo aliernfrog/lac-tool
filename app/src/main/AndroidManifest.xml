@@ -23,7 +23,7 @@
         android:theme="@style/Theme.LACMapTool"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name="com.aliernfrog.lactool.activities.SplashActivity" android:exported="true" android:noHistory="true">
+        <activity android:name="com.aliernfrog.lactool.activity.SplashActivity" android:exported="true" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

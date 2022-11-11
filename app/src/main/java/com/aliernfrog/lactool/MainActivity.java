@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.fragments.OkCancelSheet;
+import com.aliernfrog.lactool.fragment.OkCancelSheet;
 import com.aliernfrog.lactool.utils.AppUtil;
 
 import java.io.File;

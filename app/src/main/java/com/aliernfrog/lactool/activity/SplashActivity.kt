@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.activities
+package com.aliernfrog.lactool.activity
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity

@@ -15,8 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.fragments.MapDownloadSheet;
-import com.aliernfrog.lactool.fragments.MapPickerSheet;
+import com.aliernfrog.lactool.fragment.MapDownloadSheet;
+import com.aliernfrog.lactool.fragment.MapPickerSheet;
 import com.aliernfrog.lactool.utils.AppUtil;
 import com.aliernfrog.lactool.utils.FileUtil;
 import com.google.android.material.textfield.TextInputEditText;

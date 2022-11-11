@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.fragments.MapTypeSheet;
+import com.aliernfrog.lactool.fragment.MapTypeSheet;
 import com.aliernfrog.lactool.utils.AppUtil;
 import com.aliernfrog.lactool.utils.FileUtil;
 import com.aliernfrog.lactool.utils.LacMapUtil;
