@@ -1,308 +1,283 @@
-package com.aliernfrog.lactool;
+package com.aliernfrog.lactool.activity
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import android.Manifest
+import android.annotation.SuppressLint
+import androidx.appcompat.app.AppCompatActivity
+import com.aliernfrog.lactool.fragment.OkCancelSheet.OkCancelListener
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.os.StrictMode.ThreadPolicy
+import android.os.StrictMode
+import com.aliernfrog.LacMapTool.R
+import com.aliernfrog.lactool.utils.AppUtil
+import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
+import android.text.Html
+import android.os.Build
+import android.os.Environment
+import android.os.Process
+import com.aliernfrog.lactool.fragment.OkCancelSheet
+import android.provider.DocumentsContract
+import android.provider.Settings
+import android.view.View
+import com.aliernfrog.lactool.MapsActivity
+import com.aliernfrog.lactool.OptionsActivity
+import com.aliernfrog.lactool.ScreenshotsActivity
+import com.aliernfrog.lactool.WallpaperActivity
+import java.io.File
+import java.lang.Exception
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Process;
-import android.os.StrictMode;
-import android.provider.DocumentsContract;
-import android.provider.Settings;
-import android.text.Html;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+@Suppress("DEPRECATION")
+@SuppressLint("CommitPrefEdits", "ClickableViewAccessibility")
+class MainActivity : AppCompatActivity(), OkCancelListener {
+    private lateinit var missingLac: LinearLayout
+    private lateinit var missingPerms: LinearLayout
+    private lateinit var lacLinear: LinearLayout
+    private lateinit var redirectMaps: LinearLayout
+    private lateinit var redirectWallpapers: LinearLayout
+    private lateinit var redirectScreenshots: LinearLayout
+    private lateinit var appLinear: LinearLayout
+    private lateinit var startLac: LinearLayout
+    private lateinit var checkUpdates: LinearLayout
+    private lateinit var redirectOptions: LinearLayout
+    private lateinit var updateLinear: LinearLayout
+    private lateinit var updateLinearTitle: TextView
+    private lateinit var updateLog: TextView
+    private lateinit var update: SharedPreferences
+    private lateinit var config: SharedPreferences
+    private lateinit var mapsPath: String
+    private lateinit var wallpapersPath: String
+    private lateinit var screenshotsPath: String
 
-import com.aliernfrog.LacMapTool.R;
-import com.aliernfrog.lactool.fragment.OkCancelSheet;
-import com.aliernfrog.lactool.utils.AppUtil;
+    private val requestUri = 1
+    private var uriSdkVersion = 30
+    private var hasPerms = true
+    private var version = 0
 
-import java.io.File;
-
-@SuppressLint({"CommitPrefEdits", "ClickableViewAccessibility"})
-public class MainActivity extends AppCompatActivity implements OkCancelSheet.OkCancelListener {
-    LinearLayout missingLac;
-    LinearLayout missingPerms;
-    LinearLayout lacLinear;
-    LinearLayout redirectMaps;
-    LinearLayout redirectWallpapers;
-    LinearLayout redirectScreenshots;
-    LinearLayout appLinear;
-    LinearLayout startLac;
-    LinearLayout checkUpdates;
-    LinearLayout redirectOptions;
-    LinearLayout updateLinear;
-    TextView updateLinearTitle;
-    TextView updateLog;
-    TextView log;
-
-    Integer REQUEST_URI = 1;
-
-    Boolean hasPerms;
-    Integer uriSdkVersion;
-    Integer version;
-
-    SharedPreferences update;
-    SharedPreferences config;
-
-    String mapsPath;
-    String wallpapersPath;
-    String screenshotsPath;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        update = getSharedPreferences("APP_UPDATE", Context.MODE_PRIVATE);
-        config = getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE);
-        uriSdkVersion = config.getInt("uriSdkVersion", 30);
-        version = update.getInt("versionCode", 0);
-        mapsPath = update.getString("path-maps", "");
-        wallpapersPath = update.getString("path-wallpapers", "");
-        screenshotsPath = update.getString("path-screenshots", "");
-
-        missingLac = findViewById(R.id.main_missingLac);
-        missingPerms = findViewById(R.id.main_missingPerms);
-        lacLinear = findViewById(R.id.main_optionsLac);
-        redirectMaps = findViewById(R.id.main_maps);
-        redirectWallpapers = findViewById(R.id.main_wallpapers);
-        redirectScreenshots = findViewById(R.id.main_screenshots);
-        appLinear = findViewById(R.id.main_optionsApp);
-        startLac = findViewById(R.id.main_startLac);
-        checkUpdates = findViewById(R.id.main_checkUpdates);
-        redirectOptions = findViewById(R.id.main_options);
-        updateLinear = findViewById(R.id.main_update);
-        updateLinearTitle = findViewById(R.id.main_update_title);
-        updateLog = findViewById(R.id.main_update_description);
-        log = findViewById(R.id.main_log);
-
-        if (config.getBoolean("enableDebug", false)) log.setVisibility(View.VISIBLE);
-        devLog("MainActivity started");
-        devLog("uriSdkVersion: "+uriSdkVersion);
-
-        if (!AppUtil.isLacInstalled(getApplicationContext())) {
-            devLog("lac wasnt found");
-            missingLac.setVisibility(View.VISIBLE);
-            startLac.setVisibility(View.GONE);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        update = getSharedPreferences("APP_UPDATE", MODE_PRIVATE)
+        config = getSharedPreferences("APP_CONFIG", MODE_PRIVATE)
+        uriSdkVersion = config.getInt("uriSdkVersion", 30)
+        version = update.getInt("versionCode", 0)
+        mapsPath = update.getString("path-maps", "")!!
+        wallpapersPath = update.getString("path-wallpapers", "")!!
+        screenshotsPath = update.getString("path-screenshots", "")!!
+        missingLac = findViewById(R.id.main_missingLac)
+        missingPerms = findViewById(R.id.main_missingPerms)
+        lacLinear = findViewById(R.id.main_optionsLac)
+        redirectMaps = findViewById(R.id.main_maps)
+        redirectWallpapers = findViewById(R.id.main_wallpapers)
+        redirectScreenshots = findViewById(R.id.main_screenshots)
+        appLinear = findViewById(R.id.main_optionsApp)
+        startLac = findViewById(R.id.main_startLac)
+        checkUpdates = findViewById(R.id.main_checkUpdates)
+        redirectOptions = findViewById(R.id.main_options)
+        updateLinear = findViewById(R.id.main_update)
+        updateLinearTitle = findViewById(R.id.main_update_title)
+        updateLog = findViewById(R.id.main_update_description)
+        if (!AppUtil.isLacInstalled(applicationContext)) {
+            missingLac.visibility = View.VISIBLE
+            startLac.visibility = View.GONE
         }
-
-        checkUpdates(false);
-        checkPerms();
-        setListeners();
+        checkUpdates(false)
+        checkPerms()
+        setListeners()
     }
 
-    public void launchLac() {
-        PackageManager pm = getPackageManager();
-        Intent intent = pm.getLaunchIntentForPackage(AppUtil.getLacId(getApplicationContext()));
-        finish();
-        startActivity(intent);
+    private fun launchLac() {
+        val intent = packageManager.getLaunchIntentForPackage(AppUtil.getLacId(applicationContext))
+        finish()
+        startActivity(intent)
     }
 
-    public void fetchUpdates() {
-        devLog("attempting to fetch updates from "+config.getString("updateUrl", "default site"));
+    private fun fetchUpdates() {
         try {
-            if (AppUtil.getUpdates(getApplicationContext())) checkUpdates(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            devLog(e.toString());
+            if (AppUtil.getUpdates(applicationContext)) checkUpdates(true)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    public void checkUpdates(Boolean toastResult) {
-        devLog("checking for updates");
-        int latest = update.getInt("updateLatest", 0);
-        String download = update.getString("updateDownload", null);
-        String changelog = update.getString("updateChangelog", null);
-        String changelogVersion = update.getString("updateChangelogVersion", null);
-        String notes = update.getString("notes", null);
-        boolean hasUpdate = latest > version;
-        boolean linearVisible = false;
-        String full = "";
+    private fun checkUpdates(toastResult: Boolean) {
+        val latest = update.getInt("updateLatest", 0)
+        val download = update.getString("updateDownload", null)
+        val changelog = update.getString("updateChangelog", null)
+        val changelogVersion = update.getString("updateChangelogVersion", null)
+        val notes = update.getString("notes", null)
+        val hasUpdate = latest > version
+        var linearVisible = false
+        var full: String? = ""
         if (hasUpdate) {
-            linearVisible = true;
-            full = changelog+"<br /><br /><b>"+getString(R.string.optionsChangelogChangelog)+":</b> "+changelogVersion;
-            updateLinearTitle.setVisibility(View.VISIBLE);
-            AppUtil.handleOnPressEvent(updateLinear, () -> redirectURL(download));
-            if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastAvailable, Toast.LENGTH_SHORT).show();
+            linearVisible = true
+            full = changelog + "<br /><br /><b>" + getString(R.string.optionsChangelogChangelog) + ":</b> " + changelogVersion
+            updateLinearTitle.visibility = View.VISIBLE
+            AppUtil.handleOnPressEvent(updateLinear) { redirectURL(download) }
+            if (toastResult) Toast.makeText(applicationContext, R.string.update_toastAvailable, Toast.LENGTH_SHORT).show()
         } else {
-            if (notes != null && !notes.equals("")) {
-                linearVisible = true;
-                full = notes;
+            if (notes != null && notes != "") {
+                linearVisible = true
+                full = notes
             }
-            AppUtil.handleOnPressEvent(updateLinear);
-            if (toastResult) Toast.makeText(getApplicationContext(), R.string.update_toastNoUpdates, Toast.LENGTH_SHORT).show();
+            AppUtil.handleOnPressEvent(updateLinear)
+            if (toastResult) Toast.makeText(applicationContext, R.string.update_toastNoUpdates, Toast.LENGTH_SHORT).show()
         }
-        updateLog.setText(Html.fromHtml(full));
-        if (linearVisible) updateLinear.setVisibility(View.VISIBLE);
+        updateLog.text = Html.fromHtml(full)
+        if (linearVisible) updateLinear.visibility = View.VISIBLE
     }
 
-    public void checkPerms() {
-        if (Build.VERSION.SDK_INT >= 23 && Build.VERSION.SDK_INT < 30) {
+    @SuppressLint("NewApi")
+    fun checkPerms() {
+        if (Build.VERSION.SDK_INT in 23..29) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                afterPermsDenied();
-                devLog("permission denied, attempting to request permission");
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-            } else {
-                devLog("permissions granted");
-                afterPermsGranted();
-            }
+                afterPermsDenied()
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 3)
+            } else afterPermsGranted()
         } else if (Build.VERSION.SDK_INT >= 30) {
             if (!Environment.isExternalStorageManager()) {
-                afterPermsDenied();
-                devLog("not external storage manager, showing all file access dialog");
-                showAllFilesAccessDialog();
-            } else {
-                devLog("is external storage manager");
-                afterPermsGranted();
-            }
-        } else {
-            devLog("old SDK version detected");
-            afterPermsGranted();
-        }
+                afterPermsDenied()
+                showAllFilesAccessDialog()
+            } else afterPermsGranted()
+        } else afterPermsGranted()
     }
 
-    void showAllFilesAccessDialog() {
-        Bundle bundle = new Bundle();
-        bundle.putString("text", getString(R.string.info_storagePermSdk30));
-        OkCancelSheet okCancelSheet = new OkCancelSheet();
-        okCancelSheet.setArguments(bundle);
-        okCancelSheet.show(getSupportFragmentManager(), "allfiles");
+    private fun showAllFilesAccessDialog() {
+        val bundle = Bundle()
+        bundle.putString("text", getString(R.string.info_storagePermSdk30))
+        val okCancelSheet = OkCancelSheet()
+        okCancelSheet.arguments = bundle
+        okCancelSheet.show(supportFragmentManager, "allfiles")
     }
 
-    void afterPermsGranted() {
-        hasPerms = true;
-        missingPerms.setVisibility(View.GONE);
-        createFiles();
+    private fun afterPermsGranted() {
+        hasPerms = true
+        missingPerms.visibility = View.GONE
+        createFiles()
     }
 
-    void afterPermsDenied() {
-        hasPerms = false;
-        missingPerms.setVisibility(View.VISIBLE);
+    private fun afterPermsDenied() {
+        hasPerms = false
+        missingPerms.visibility = View.VISIBLE
     }
 
-    public void createFiles() {
+    private fun createFiles() {
         try {
-            File mapsFolder = new File(update.getString("path-maps", ""));
-            File wallpapersFolder = new File(update.getString("path-wallpapers", ""));
-            File screenshotsFolder = new File(update.getString("path-screenshots", ""));
-            File appFolder = new File(update.getString("path-app", ""));
-            File backupFolder = new File(appFolder.getPath()+"/backups/");
-            File aBackupFolder = new File(appFolder.getPath()+"/auto-backups/");
-            File tempMapsFolder = new File(update.getString("path-temp-maps", ""));
-            File tempWallpapersFolder = new File(update.getString("path-temp-wallpapers", ""));
-            File tempScreenshotsFolder = new File(update.getString("path-temp-screenshots", ""));
-            File nomedia = new File(appFolder.getPath()+"/.nomedia");
-            if (!mapsFolder.exists()) mkdirs(mapsFolder);
-            if (!wallpapersFolder.exists()) mkdirs(wallpapersFolder);
-            if (!screenshotsFolder.exists()) mkdirs(screenshotsFolder);
-            if (!appFolder.exists()) mkdirs(appFolder);
-            if (!backupFolder.exists()) mkdirs(backupFolder);
-            if (!aBackupFolder.exists()) mkdirs(aBackupFolder);
-            if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder);
-            if (!tempWallpapersFolder.exists()) mkdirs(tempWallpapersFolder);
-            if (!tempScreenshotsFolder.exists()) mkdirs(tempScreenshotsFolder);
-            if (!nomedia.exists()) nomedia.createNewFile();
-        } catch (Exception e) {
-            devLog(e.toString());
+            val mapsFolder = File(update.getString("path-maps", "")!!)
+            val wallpapersFolder = File(update.getString("path-wallpapers", "")!!)
+            val screenshotsFolder = File(update.getString("path-screenshots", "")!!)
+            val appFolder = File(update.getString("path-app", "")!!)
+            val backupFolder = File(appFolder.path + "/backups/")
+            val aBackupFolder = File(appFolder.path + "/auto-backups/")
+            val tempMapsFolder = File(update.getString("path-temp-maps", "")!!)
+            val tempWallpapersFolder = File(update.getString("path-temp-wallpapers", "")!!)
+            val tempScreenshotsFolder = File(update.getString("path-temp-screenshots", "")!!)
+            val nomedia = File(appFolder.path + "/.nomedia")
+            if (!mapsFolder.exists()) mkdirs(mapsFolder)
+            if (!wallpapersFolder.exists()) mkdirs(wallpapersFolder)
+            if (!screenshotsFolder.exists()) mkdirs(screenshotsFolder)
+            if (!appFolder.exists()) mkdirs(appFolder)
+            if (!backupFolder.exists()) mkdirs(backupFolder)
+            if (!aBackupFolder.exists()) mkdirs(aBackupFolder)
+            if (!tempMapsFolder.exists()) mkdirs(tempMapsFolder)
+            if (!tempWallpapersFolder.exists()) mkdirs(tempWallpapersFolder)
+            if (!tempScreenshotsFolder.exists()) mkdirs(tempScreenshotsFolder)
+            if (!nomedia.exists()) nomedia.createNewFile()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    public void mkdirs(File mk) {
-        boolean state = mk.mkdirs();
-        devLog(mk.getPath()+" //"+state);
+    private fun mkdirs(mk: File) {
+        mk.mkdirs()
     }
 
     @SuppressLint("NewApi")
-    public Boolean checkUriPerms(@Nullable String path) {
-        if (Build.VERSION.SDK_INT < uriSdkVersion) return true;
-        if (path == null) return true;
-        String treeId = path.replace(Environment.getExternalStorageDirectory()+"/", "primary:");
-        Uri uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId);
-        Uri treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId);
-        devLog("checking uri permissions: "+treeId);
-        int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-        if (getApplicationContext().checkUriPermission(treeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            devLog("permissions not granted, requesting");
-            Toast.makeText(getApplicationContext(), R.string.info_treePerm, Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                    .putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
-                    .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-                    .addFlags(takeFlags);
-            startActivityForResult(intent, REQUEST_URI);
-            return false;
-        } else {
-            devLog("permissions granted");
-            return true;
+    fun checkUriPerms(path: String?): Boolean {
+        if (Build.VERSION.SDK_INT < uriSdkVersion) return true
+        if (path == null) return true
+        val treeId = path.replace(Environment.getExternalStorageDirectory().toString() + "/", "primary:")
+        val uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId)
+        val treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId)
+        val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        return if (applicationContext.checkUriPermission(treeUri, Process.myPid(), Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(applicationContext, R.string.info_treePerm, Toast.LENGTH_LONG).show()
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                .putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
+                .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                .addFlags(takeFlags)
+            startActivityForResult(intent, requestUri)
+            false
+        }
+        else true
+    }
+
+    private fun switchActivity(i: Class<*>, allowWithoutPerms: Boolean?, path: String?) {
+        if (!allowWithoutPerms!! && !hasPerms) checkPerms()
+        else {
+            val intent = Intent(this.applicationContext, i)
+            if (checkUriPerms(path)) startActivity(intent)
         }
     }
 
-    public void switchActivity(Class i, Boolean allowWithoutPerms, @Nullable String path) {
-        if (!allowWithoutPerms && !hasPerms) {
-            devLog("no required permissions, checking again");
-            checkPerms();
-        } else {
-            Intent intent = new Intent(this.getApplicationContext(), i);
-            devLog("attempting to redirect to "+i.toString());
-            if (checkUriPerms(path)) startActivity(intent);
-        }
+    private fun redirectURL(url: String?) {
+        val viewIntent = Intent("android.intent.action.VIEW", Uri.parse(url))
+        startActivity(viewIntent)
     }
 
-    public void redirectURL(String url) {
-        devLog("attempting to redirect to:"+url);
-        Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-        startActivity(viewIntent);
-    }
-
-    void devLog(String toLog) {
-        AppUtil.devLog(toLog, log);
-    }
-
+    @Deprecated("Deprecated in Java")
     @SuppressLint("NewApi")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        devLog(requestCode+": hasData = "+(data != null));
-        if (requestCode == REQUEST_URI && data != null) {
-            int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-            grantUriPermission(getApplicationContext().getPackageName(), data.getData(), takeFlags);
-            getApplicationContext().getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
-            devLog("took uri permissions");
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == requestUri && data != null) {
+            val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            grantUriPermission(applicationContext.packageName, data.data, takeFlags)
+            applicationContext.contentResolver.takePersistableUriPermission(data.data!!, takeFlags)
         }
     }
 
-    public void setListeners() {
-        AppUtil.handleOnPressEvent(missingLac, () -> redirectURL("https://play.google.com/store/apps/details?id=com.MA.LAC"));
-        AppUtil.handleOnPressEvent(missingPerms, this::checkPerms);
-        AppUtil.handleOnPressEvent(lacLinear);
-        AppUtil.handleOnPressEvent(redirectMaps, () -> switchActivity(MapsActivity.class, false, mapsPath));
-        AppUtil.handleOnPressEvent(redirectWallpapers, () -> switchActivity(WallpaperActivity.class, false, wallpapersPath));
-        AppUtil.handleOnPressEvent(redirectScreenshots, () -> switchActivity(ScreenshotsActivity.class, false, screenshotsPath));
-        AppUtil.handleOnPressEvent(appLinear);
-        AppUtil.handleOnPressEvent(startLac, this::launchLac);
-        AppUtil.handleOnPressEvent(checkUpdates, this::fetchUpdates);
-        AppUtil.handleOnPressEvent(redirectOptions, () -> switchActivity(OptionsActivity.class, true, null));
+    fun setListeners() {
+        AppUtil.handleOnPressEvent(missingLac) { redirectURL("https://play.google.com/store/apps/details?id=com.MA.LAC") }
+        AppUtil.handleOnPressEvent(missingPerms) { checkPerms() }
+        AppUtil.handleOnPressEvent(lacLinear)
+        AppUtil.handleOnPressEvent(redirectMaps) {
+            switchActivity(
+                MapsActivity::class.java,
+                false,
+                mapsPath
+            )
+        }
+        AppUtil.handleOnPressEvent(redirectWallpapers) {
+            switchActivity(
+                WallpaperActivity::class.java, false, wallpapersPath
+            )
+        }
+        AppUtil.handleOnPressEvent(redirectScreenshots) {
+            switchActivity(
+                ScreenshotsActivity::class.java, false, screenshotsPath
+            )
+        }
+        AppUtil.handleOnPressEvent(appLinear)
+        AppUtil.handleOnPressEvent(startLac) { launchLac() }
+        AppUtil.handleOnPressEvent(checkUpdates) { fetchUpdates() }
+        AppUtil.handleOnPressEvent(redirectOptions) {
+            switchActivity(
+                OptionsActivity::class.java, true, null
+            )
+        }
     }
 
     @SuppressLint("InlinedApi")
-    @Override
-    public void onOkClick() {
-        devLog("clicked ok, requesting all files access");
-        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
+    override fun onOkClick() {
+        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
     }
 }

@@ -11,7 +11,6 @@ import com.aliernfrog.lactool.utils.AppUtil
 import androidx.appcompat.app.AppCompatDelegate
 import android.content.Intent
 import com.aliernfrog.lactool.ConfigKey
-import com.aliernfrog.lactool.MainActivity
 import com.aliernfrog.lactool.UpdateKey
 import java.lang.Exception
 
