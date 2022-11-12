@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import android.content.Intent
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.MainActivity
+import com.aliernfrog.lactool.UpdateKey
 import java.lang.Exception
 
 @SuppressLint("CommitPrefEdits", "CustomSplashScreen")
@@ -24,8 +25,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        prefsUpdate = getSharedPreferences("APP_UPDATE", MODE_PRIVATE)
-        prefsConfig = getSharedPreferences("APP_CONFIG", MODE_PRIVATE)
+        prefsUpdate = getSharedPreferences(UpdateKey.PREF_NAME, MODE_PRIVATE)
+        prefsConfig = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
 
         getVersion()
         setTheme()
@@ -34,24 +35,22 @@ class SplashActivity : AppCompatActivity() {
 
     private fun getVersion() {
         val updateEditor = prefsUpdate.edit()
-        updateEditor.putString("versionName", AppUtil.getVersName(applicationContext))
-        updateEditor.putInt("versionCode", AppUtil.getVersCode(applicationContext))
+        updateEditor.putString(UpdateKey.KEY_APP_VERSION_NAME, AppUtil.getVersName(applicationContext))
+        updateEditor.putInt(UpdateKey.KEY_APP_VERSION_CODE, AppUtil.getVersCode(applicationContext))
         updateEditor.apply()
     }
 
     private fun setTheme() {
-        val theme = prefsConfig.getInt("appTheme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val theme = prefsConfig.getInt(ConfigKey.KEY_APP_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         AppCompatDelegate.setDefaultNightMode(theme)
     }
 
     private fun checkUpdatesAndStart() {
-        val shouldCheck = prefsConfig.getBoolean("autoCheckUpdates", true)
-        if (shouldCheck) {
-            try {
-                AppUtil.getUpdates(applicationContext)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        val shouldCheck = prefsConfig.getBoolean(ConfigKey.KEY_APP_AUTO_CHECK_UPDATES, true)
+        if (shouldCheck) try {
+            AppUtil.getUpdates(applicationContext)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         setConfig()
     }
@@ -61,15 +60,15 @@ class SplashActivity : AppCompatActivity() {
         val appPath = ConfigKey.DEFAULT_APP_PATH
         val lacPath = ConfigKey.DEFAULT_LAC_PATH
         val tempPath = "$appPath/temp"
-        updateEditor.putString("path-maps", "$lacPath/editor")
-        updateEditor.putString("path-wallpapers", "$lacPath/wallpaper")
-        updateEditor.putString("path-screenshots", "$lacPath/screenshots")
-        updateEditor.putString("path-lac", lacPath)
-        updateEditor.putString("path-app", appPath)
-        updateEditor.putString("path-temp", tempPath)
-        updateEditor.putString("path-temp-maps", "$tempPath/editor")
-        updateEditor.putString("path-temp-wallpapers", "$tempPath/wallpaper")
-        updateEditor.putString("path-temp-screenshots", "$tempPath/screenshots")
+        updateEditor.putString(UpdateKey.KEY_PATH_MAPS, "$lacPath/editor")
+        updateEditor.putString(UpdateKey.KEY_PATH_WALLPAPERS, "$lacPath/wallpaper")
+        updateEditor.putString(UpdateKey.KEY_PATH_SCREENSHOTS, "$lacPath/screenshots")
+        updateEditor.putString(UpdateKey.KEY_PATH_LAC, lacPath)
+        updateEditor.putString(UpdateKey.KEY_PATH_APP, appPath)
+        updateEditor.putString(UpdateKey.KEY_PATH_TEMP, tempPath)
+        updateEditor.putString(UpdateKey.KEY_PATH_TEMP_MAPS, "$tempPath/editor")
+        updateEditor.putString(UpdateKey.KEY_PATH_TEMP_WALLPAPERS, "$tempPath/wallpaper")
+        updateEditor.putString(UpdateKey.KEY_PATH_TEMP_SCREENSHOTS, "$tempPath/screenshots")
         updateEditor.apply()
         clearTempData(tempPath)
     }
