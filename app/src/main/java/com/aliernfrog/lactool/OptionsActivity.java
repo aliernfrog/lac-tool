@@ -32,14 +32,12 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox backupOnEdit;
     LinearLayout appOptions;
     CheckBox useInAppFilePicker;
-    CheckBox autoCheckUpdate;
     CheckBox dev;
     Button changeTheme;
     Button deleteTemp;
     LinearLayout experimentalOptions;
     EditText startActivityName;
     EditText uriSdkVersionInput;
-    EditText updateUrlInput;
     CheckBox forceFdroid;
     LinearLayout changelogLinear;
     TextView changelog;
@@ -76,14 +74,12 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit = findViewById(R.id.options_backupOnEdit);
         appOptions = findViewById(R.id.options_app);
         useInAppFilePicker = findViewById(R.id.options_useInAppFilePicker);
-        autoCheckUpdate = findViewById(R.id.options_autoCheckUpdate);
         dev = findViewById(R.id.options_devtoggle);
         changeTheme = findViewById(R.id.options_changeTheme);
         deleteTemp = findViewById(R.id.options_deleteTemp);
         experimentalOptions = findViewById(R.id.options_ex);
         startActivityName = findViewById(R.id.options_startActivity);
         uriSdkVersionInput = findViewById(R.id.options_uriSdkVersion);
-        updateUrlInput = findViewById(R.id.options_updateUrl);
         forceFdroid = findViewById(R.id.options_forceFdroid);
         changelogLinear = findViewById(R.id.options_changelog_linear);
         changelog = findViewById(R.id.options_changelog);
@@ -129,7 +125,6 @@ public class OptionsActivity extends AppCompatActivity {
     void checkConfig() {
         if (config.getBoolean("useInAppFilePicker", false)) useInAppFilePicker.setChecked(true);
         if (config.getBoolean("enableBackupOnEdit", true)) backupOnEdit.setChecked(true);
-        if (config.getBoolean("autoCheckUpdates", true)) autoCheckUpdate.setChecked(true);
         if (config.getBoolean("enableDebug", false)) dev.setChecked(true);
         if (config.getBoolean("forceFdroid", false)) forceFdroid.setChecked(true);
     }
@@ -181,7 +176,6 @@ public class OptionsActivity extends AppCompatActivity {
         backupOnEdit.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableBackupOnEdit", isChecked));
         AppUtil.handleOnPressEvent(appOptions);
         useInAppFilePicker.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("useInAppFilePicker", isChecked)));
-        autoCheckUpdate.setOnCheckedChangeListener(((buttonView, isChecked) -> changeBoolean("autoCheckUpdates", isChecked)));
         dev.setOnCheckedChangeListener((buttonView, isChecked) -> changeBoolean("enableDebug", isChecked));
         AppUtil.handleOnPressEvent(changeTheme, this::openChangeThemeView);
         AppUtil.handleOnPressEvent(deleteTemp, this::deleteTempData);
@@ -197,14 +191,6 @@ public class OptionsActivity extends AppCompatActivity {
         uriSdkVersionInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 configEdit.putInt("uriSdkVersion", Integer.parseInt(uriSdkVersionInput.getText().toString()));
-                configEdit.commit();
-                return true;
-            }
-            return false;
-        });
-        updateUrlInput.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                configEdit.putString("updateUrl", updateUrlInput.getText().toString());
                 configEdit.commit();
                 return true;
             }

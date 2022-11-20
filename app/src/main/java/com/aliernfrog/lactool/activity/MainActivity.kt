@@ -10,17 +10,14 @@ import android.os.*
 import android.os.StrictMode.ThreadPolicy
 import android.provider.DocumentsContract
 import android.provider.Settings
-import android.text.Html
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aliernfrog.LacMapTool.R
 import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.fragment.OkCancelSheet
 import com.aliernfrog.lactool.fragment.OkCancelSheet.OkCancelListener
-import com.aliernfrog.lactool.utils.AppUtil
 import java.io.File
 
 @Suppress("DEPRECATION")
@@ -32,11 +29,7 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
     private lateinit var redirectWallpapers: LinearLayout
     private lateinit var redirectScreenshots: LinearLayout
     private lateinit var appLinear: LinearLayout
-    private lateinit var checkUpdates: LinearLayout
     private lateinit var redirectOptions: LinearLayout
-    private lateinit var updateLinear: LinearLayout
-    private lateinit var updateLinearTitle: TextView
-    private lateinit var updateLog: TextView
     private lateinit var update: SharedPreferences
     private lateinit var config: SharedPreferences
     private lateinit var mapsPath: String
@@ -66,48 +59,9 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
         redirectWallpapers = findViewById(R.id.main_wallpapers)
         redirectScreenshots = findViewById(R.id.main_screenshots)
         appLinear = findViewById(R.id.main_optionsApp)
-        checkUpdates = findViewById(R.id.main_checkUpdates)
         redirectOptions = findViewById(R.id.main_options)
-        updateLinear = findViewById(R.id.main_update)
-        updateLinearTitle = findViewById(R.id.main_update_title)
-        updateLog = findViewById(R.id.main_update_description)
-        checkUpdates(false)
         checkPerms()
         setListeners()
-    }
-
-    private fun fetchUpdates() {
-        try {
-            if (AppUtil.getUpdates(applicationContext)) checkUpdates(true)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun checkUpdates(toastResult: Boolean) {
-        val latest = update.getInt("updateLatest", 0)
-        val download = update.getString("updateDownload", null)
-        val changelog = update.getString("updateChangelog", null)
-        val changelogVersion = update.getString("updateChangelogVersion", null)
-        val notes = update.getString("notes", null)
-        val hasUpdate = latest > version
-        var linearVisible = false
-        var full: String? = ""
-        if (hasUpdate) {
-            linearVisible = true
-            full = changelog + "<br /><br /><b>" + getString(R.string.optionsChangelogChangelog) + ":</b> " + changelogVersion
-            updateLinearTitle.visibility = View.VISIBLE
-            updateLinear.onClick { redirectURL(download) }
-            if (toastResult) Toast.makeText(applicationContext, R.string.update_toastAvailable, Toast.LENGTH_SHORT).show()
-        } else {
-            if (notes != null && notes != "") {
-                linearVisible = true
-                full = notes
-            }
-            if (toastResult) Toast.makeText(applicationContext, R.string.update_toastNoUpdates, Toast.LENGTH_SHORT).show()
-        }
-        updateLog.text = Html.fromHtml(full)
-        if (linearVisible) updateLinear.visibility = View.VISIBLE
     }
 
     @SuppressLint("NewApi")
@@ -203,11 +157,6 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
         }
     }
 
-    private fun redirectURL(url: String?) {
-        val viewIntent = Intent("android.intent.action.VIEW", Uri.parse(url))
-        startActivity(viewIntent)
-    }
-
     @Deprecated("Deprecated in Java")
     @SuppressLint("NewApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -224,7 +173,6 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
         redirectMaps.onClick { switchActivity(MapsActivity::class.java, false, mapsPath) }
         redirectWallpapers.onClick { switchActivity(WallpaperActivity::class.java, false, wallpapersPath) }
         redirectScreenshots.onClick { switchActivity(ScreenshotsActivity::class.java, false, screenshotsPath) }
-        checkUpdates.onClick { fetchUpdates() }
         redirectOptions.onClick { switchActivity(OptionsActivity::class.java, true) }
     }
 

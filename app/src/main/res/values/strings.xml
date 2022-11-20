@@ -23,10 +23,6 @@
     <string name="manageWallpapers">Manage wallpapers</string>
     <string name="manageScreenshots">View screenshots</string>
     <string name="options">Options &amp; Info</string>
-    <string name="checkUpdates">Check for LAC Tool updates</string>
-    <string name="update_toastAvailable">Update available!</string>
-    <string name="update_toastNoUpdates">No updates</string>
-    <string name="updateAvailable">Update available, click to update</string>
     <string name="mapImportedMaps">Your maps</string>
     <string name="mapPick">Pick map</string>
     <string name="mapPickExternal">Pick another map</string>
@@ -87,7 +83,6 @@
     <string name="optionBackupOnEdit">Backup maps before editing them</string>
     <string name="optionsApp">App options</string>
     <string name="optionsUseInAppFilePicker">Use in app file picker</string>
-    <string name="optionAutoCheckUpdate">Automatically check for LAC Tool updates</string>
     <string name="optionDebug">Debug mode</string>
     <string name="optionChangeTheme">Change theme</string>
     <string name="optionsChangeTheme_system">Follow system</string>
@@ -103,7 +98,6 @@
     <string name="optionsExperimentalHint">Do not change experimental options if you do not know what they do!</string>
     <string name="optionsStartActivity">Start activity with name</string>
     <string name="optionsUriSdkVersion">URI SDK version (30 by default)</string>
-    <string name="optionsUpdateUrl">Update URL</string>
     <string name="optionsForceFdroid">Force -fdroid suffix</string>
     <string name="backupManage">Manage backups</string>
     <string name="wallpaperPick">Pick wallpaper</string>
