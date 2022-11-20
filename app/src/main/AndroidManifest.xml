@@ -6,13 +6,6 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <queries>
-        <package android:name="com.MA.LAC"/>
-        <package android:name="com.MA.LACD"/>
-        <package android:name="com.MA.LACM"/>
-        <package android:name="com.MA.LACMB"/>
-    </queries>
-
     <application
         android:allowBackup="true"
         android:requestLegacyExternalStorage="true"

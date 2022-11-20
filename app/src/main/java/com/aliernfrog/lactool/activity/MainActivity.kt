@@ -34,14 +34,12 @@ import java.lang.Exception
 @Suppress("DEPRECATION")
 @SuppressLint("CommitPrefEdits", "ClickableViewAccessibility")
 class MainActivity : AppCompatActivity(), OkCancelListener {
-    private lateinit var missingLac: LinearLayout
     private lateinit var missingPerms: LinearLayout
     private lateinit var lacLinear: LinearLayout
     private lateinit var redirectMaps: LinearLayout
     private lateinit var redirectWallpapers: LinearLayout
     private lateinit var redirectScreenshots: LinearLayout
     private lateinit var appLinear: LinearLayout
-    private lateinit var startLac: LinearLayout
     private lateinit var checkUpdates: LinearLayout
     private lateinit var redirectOptions: LinearLayout
     private lateinit var updateLinear: LinearLayout
@@ -70,32 +68,20 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
         mapsPath = update.getString("path-maps", "")!!
         wallpapersPath = update.getString("path-wallpapers", "")!!
         screenshotsPath = update.getString("path-screenshots", "")!!
-        missingLac = findViewById(R.id.main_missingLac)
         missingPerms = findViewById(R.id.main_missingPerms)
         lacLinear = findViewById(R.id.main_optionsLac)
         redirectMaps = findViewById(R.id.main_maps)
         redirectWallpapers = findViewById(R.id.main_wallpapers)
         redirectScreenshots = findViewById(R.id.main_screenshots)
         appLinear = findViewById(R.id.main_optionsApp)
-        startLac = findViewById(R.id.main_startLac)
         checkUpdates = findViewById(R.id.main_checkUpdates)
         redirectOptions = findViewById(R.id.main_options)
         updateLinear = findViewById(R.id.main_update)
         updateLinearTitle = findViewById(R.id.main_update_title)
         updateLog = findViewById(R.id.main_update_description)
-        if (!AppUtil.isLacInstalled(applicationContext)) {
-            missingLac.visibility = View.VISIBLE
-            startLac.visibility = View.GONE
-        }
         checkUpdates(false)
         checkPerms()
         setListeners()
-    }
-
-    private fun launchLac() {
-        val intent = packageManager.getLaunchIntentForPackage(AppUtil.getLacId(applicationContext))
-        finish()
-        startActivity(intent)
     }
 
     private fun fetchUpdates() {
@@ -243,7 +229,6 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
     }
 
     fun setListeners() {
-        AppUtil.handleOnPressEvent(missingLac) { redirectURL("https://play.google.com/store/apps/details?id=com.MA.LAC") }
         AppUtil.handleOnPressEvent(missingPerms) { checkPerms() }
         AppUtil.handleOnPressEvent(lacLinear)
         AppUtil.handleOnPressEvent(redirectMaps) {
@@ -264,7 +249,6 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
             )
         }
         AppUtil.handleOnPressEvent(appLinear)
-        AppUtil.handleOnPressEvent(startLac) { launchLac() }
         AppUtil.handleOnPressEvent(checkUpdates) { fetchUpdates() }
         AppUtil.handleOnPressEvent(redirectOptions) {
             switchActivity(
