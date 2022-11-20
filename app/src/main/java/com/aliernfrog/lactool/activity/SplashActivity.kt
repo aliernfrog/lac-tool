@@ -1,18 +1,17 @@
 package com.aliernfrog.lactool.activity
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode
-import com.aliernfrog.LacMapTool.R
-import com.aliernfrog.lactool.utils.AppUtil
+import android.os.StrictMode.ThreadPolicy
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import android.content.Intent
+import com.aliernfrog.LacMapTool.R
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.UpdateKey
-import java.lang.Exception
+import com.aliernfrog.lactool.utils.AppUtil
 
 @SuppressLint("CommitPrefEdits", "CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {

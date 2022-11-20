@@ -2,34 +2,29 @@ package com.aliernfrog.lactool.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
-import com.aliernfrog.lactool.fragment.OkCancelSheet.OkCancelListener
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.content.SharedPreferences
-import android.os.Bundle
-import android.os.StrictMode.ThreadPolicy
-import android.os.StrictMode
-import com.aliernfrog.LacMapTool.R
-import com.aliernfrog.lactool.utils.AppUtil
-import android.content.pm.PackageManager
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
-import android.widget.Toast
-import android.text.Html
-import android.os.Build
-import android.os.Environment
-import android.os.Process
-import com.aliernfrog.lactool.fragment.OkCancelSheet
+import android.os.*
+import android.os.StrictMode.ThreadPolicy
 import android.provider.DocumentsContract
 import android.provider.Settings
+import android.text.Html
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.aliernfrog.LacMapTool.R
 import com.aliernfrog.lactool.MapsActivity
 import com.aliernfrog.lactool.OptionsActivity
 import com.aliernfrog.lactool.ScreenshotsActivity
 import com.aliernfrog.lactool.WallpaperActivity
+import com.aliernfrog.lactool.fragment.OkCancelSheet
+import com.aliernfrog.lactool.fragment.OkCancelSheet.OkCancelListener
+import com.aliernfrog.lactool.utils.AppUtil
 import java.io.File
-import java.lang.Exception
 
 @Suppress("DEPRECATION")
 @SuppressLint("CommitPrefEdits", "ClickableViewAccessibility")
