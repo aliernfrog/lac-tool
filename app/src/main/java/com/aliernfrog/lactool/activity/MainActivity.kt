@@ -17,10 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aliernfrog.LacMapTool.R
-import com.aliernfrog.lactool.MapsActivity
-import com.aliernfrog.lactool.OptionsActivity
-import com.aliernfrog.lactool.ScreenshotsActivity
-import com.aliernfrog.lactool.WallpaperActivity
+import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.fragment.OkCancelSheet
 import com.aliernfrog.lactool.fragment.OkCancelSheet.OkCancelListener
 import com.aliernfrog.lactool.utils.AppUtil
@@ -100,14 +97,13 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
             linearVisible = true
             full = changelog + "<br /><br /><b>" + getString(R.string.optionsChangelogChangelog) + ":</b> " + changelogVersion
             updateLinearTitle.visibility = View.VISIBLE
-            AppUtil.handleOnPressEvent(updateLinear) { redirectURL(download) }
+            updateLinear.onClick { redirectURL(download) }
             if (toastResult) Toast.makeText(applicationContext, R.string.update_toastAvailable, Toast.LENGTH_SHORT).show()
         } else {
             if (notes != null && notes != "") {
                 linearVisible = true
                 full = notes
             }
-            AppUtil.handleOnPressEvent(updateLinear)
             if (toastResult) Toast.makeText(applicationContext, R.string.update_toastNoUpdates, Toast.LENGTH_SHORT).show()
         }
         updateLog.text = Html.fromHtml(full)
@@ -199,7 +195,7 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
         else true
     }
 
-    private fun switchActivity(i: Class<*>, allowWithoutPerms: Boolean?, path: String?) {
+    private fun switchActivity(i: Class<*>, allowWithoutPerms: Boolean? = false, path: String? = null) {
         if (!allowWithoutPerms!! && !hasPerms) checkPerms()
         else {
             val intent = Intent(this.applicationContext, i)
@@ -224,32 +220,12 @@ class MainActivity : AppCompatActivity(), OkCancelListener {
     }
 
     fun setListeners() {
-        AppUtil.handleOnPressEvent(missingPerms) { checkPerms() }
-        AppUtil.handleOnPressEvent(lacLinear)
-        AppUtil.handleOnPressEvent(redirectMaps) {
-            switchActivity(
-                MapsActivity::class.java,
-                false,
-                mapsPath
-            )
-        }
-        AppUtil.handleOnPressEvent(redirectWallpapers) {
-            switchActivity(
-                WallpaperActivity::class.java, false, wallpapersPath
-            )
-        }
-        AppUtil.handleOnPressEvent(redirectScreenshots) {
-            switchActivity(
-                ScreenshotsActivity::class.java, false, screenshotsPath
-            )
-        }
-        AppUtil.handleOnPressEvent(appLinear)
-        AppUtil.handleOnPressEvent(checkUpdates) { fetchUpdates() }
-        AppUtil.handleOnPressEvent(redirectOptions) {
-            switchActivity(
-                OptionsActivity::class.java, true, null
-            )
-        }
+        missingPerms.onClick { checkPerms() }
+        redirectMaps.onClick { switchActivity(MapsActivity::class.java, false, mapsPath) }
+        redirectWallpapers.onClick { switchActivity(WallpaperActivity::class.java, false, wallpapersPath) }
+        redirectScreenshots.onClick { switchActivity(ScreenshotsActivity::class.java, false, screenshotsPath) }
+        checkUpdates.onClick { fetchUpdates() }
+        redirectOptions.onClick { switchActivity(OptionsActivity::class.java, true) }
     }
 
     @SuppressLint("InlinedApi")
