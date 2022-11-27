@@ -107,9 +107,7 @@ class MapsState(
     suspend fun deleteChosenMap(context: Context) {
         withContext(Dispatchers.IO) {
             if (chosenMap.value!!.isFromUri) {
-                getChosenMapFiles().forEach { file ->
-                    file.delete()
-                }
+                getChosenMapFiles().forEach { it.delete() }
                 getImportedMaps()
             } else {
                 File(chosenMap.value!!.filePath).delete()
