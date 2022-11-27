@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import android.provider.DocumentsContract
+import androidx.compose.foundation.ScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.NavRoutes
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.data.LacMap
@@ -28,8 +31,10 @@ class MapsState(
     _deleteMapSheetState: ModalBottomSheetState
 ) {
     private val topToastManager = _topToastManager
+    val mapsEditState = MapsEditState()
     val pickMapSheetState = _pickMapSheetState
     val deleteMapSheetState = _deleteMapSheetState
+    val scrollState = ScrollState(0)
     val mapsDir = config.getString(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)!!
     val mapsExportDir = config.getString(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)!!
     private lateinit var mapsFile: DocumentFileCompat
@@ -88,6 +93,12 @@ class MapsState(
             topToastManager.showToast(context.getString(R.string.info_exportedMap), iconDrawableId = R.drawable.share, iconTintColorType = TopToastColorType.PRIMARY)
             getExportedMaps()
         }
+    }
+
+    suspend fun editChosenMap(context: Context, navController: NavController) {
+        if (chosenMap.value!!.isFromUri) mapsEditState.loadMap(null, mapsFile.findFile(chosenMap.value!!.fileName)!!, context)
+        else mapsEditState.loadMap(File(chosenMap.value!!.filePath), null, context)
+        navController.navigate(NavRoutes.MAPS_EDIT)
     }
 
     suspend fun deleteChosenMap(context: Context) {

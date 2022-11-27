@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
+import com.aliernfrog.lactool.ui.screen.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.MapsScreenRoot
 import com.aliernfrog.lactool.ui.screen.OptionsScreen
 import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
@@ -63,19 +64,15 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val navController = rememberNavController()
-        val scrollState = rememberScrollState()
-        LACToolBaseScaffold(navController, scrollState) {
+        LACToolBaseScaffold(navController) {
             NavHost(
                 navController = navController,
                 startDestination = NavRoutes.MAPS,
-                modifier = Modifier.fillMaxSize().padding(it).verticalScroll(scrollState)
+                modifier = Modifier.fillMaxSize().padding(it)
             ) {
-                composable(route = NavRoutes.MAPS) {
-                    MapsScreenRoot(mapsState)
-                }
-                composable(route = NavRoutes.OPTIONS) {
-                    OptionsScreen(config, topToastManager, optionsState)
-                }
+                composable(route = NavRoutes.MAPS) { MapsScreenRoot(mapsState, navController) }
+                composable(route = NavRoutes.MAPS_EDIT) { MapsEditScreen(mapsState.mapsEditState, navController) }
+                composable(route = NavRoutes.OPTIONS) { OptionsScreen(config, topToastManager, optionsState) }
             }
         }
         PickMapSheet(

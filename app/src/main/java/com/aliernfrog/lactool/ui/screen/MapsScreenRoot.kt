@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.LACToolComposableShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsState
@@ -36,12 +37,12 @@ private var hasStoragePerms = mutableStateOf(true)
 private var hasUriPerms = mutableStateOf(true)
 
 @Composable
-fun MapsScreenRoot(mapsState: MapsState) {
+fun MapsScreenRoot(mapsState: MapsState, navController: NavController) {
     val context = LocalContext.current
     hasStoragePerms.value = GeneralUtil.checkStoragePermissions(context)
     hasUriPerms.value = FileUtil.checkUriPermission(mapsState.mapsDir, context)
     Crossfade(targetState = (hasUriPerms.value && hasStoragePerms.value)) {
-        if (it) MapsScreen(mapsState)
+        if (it) MapsScreen(mapsState, navController)
         else Column { PermissionsSetUp(mapsState.mapsDir) }
     }
 }

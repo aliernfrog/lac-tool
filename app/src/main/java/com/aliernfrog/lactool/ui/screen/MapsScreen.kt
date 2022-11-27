@@ -2,14 +2,17 @@ package com.aliernfrog.lactool.ui.screen
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.composable.LACToolButton
@@ -19,12 +22,12 @@ import com.aliernfrog.lactool.util.FileUtil
 import kotlinx.coroutines.launch
 
 @Composable
-fun MapsScreen(mapsState: MapsState) {
+fun MapsScreen(mapsState: MapsState, navController: NavController) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { mapsState.getMapsFile(context); mapsState.getImportedMaps(); mapsState.getExportedMaps() }
-    Column {
+    Column(Modifier.verticalScroll(mapsState.scrollState)) {
         PickMapFileButton(mapsState)
-        MapActions(mapsState)
+        MapActions(mapsState, navController)
     }
 }
 
@@ -45,7 +48,7 @@ private fun PickMapFileButton(mapsState: MapsState) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun MapActions(mapsState: MapsState) {
+private fun MapActions(mapsState: MapsState, navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val mapChosen = mapsState.chosenMap.value != null
@@ -96,6 +99,15 @@ private fun MapActions(mapsState: MapsState) {
             painter = painterResource(id = R.drawable.share)
         ) {
             FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "text/plain", context)
+        }
+    }
+    MapActionVisibility(visible = mapChosen) {
+        LACToolButton(
+            title = context.getString(R.string.manageMapsEdit),
+            description = context.getString(R.string.manageMapsEditDescription),
+            painter = painterResource(id = R.drawable.edit)
+        ) {
+            scope.launch { mapsState.editChosenMap(context, navController) }
         }
     }
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
