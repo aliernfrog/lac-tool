@@ -13,9 +13,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aliernfrog.lactool.LACToolComposableShape
 
 @Composable
 fun LACToolRadioButtons(
@@ -23,6 +26,7 @@ fun LACToolRadioButtons(
     initialIndex: Int = 0,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
+    optionsRounded: Boolean = false,
     onSelect: (Int) -> Unit
 ) {
     val (selectedIndex, onOptionSelect) = remember { mutableStateOf(initialIndex) }
@@ -31,7 +35,7 @@ fun LACToolRadioButtons(
         val onSelected = { onOptionSelect(index); onSelect(index) }
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().clickable { onSelected() }.padding(horizontal = 2.dp)
+            modifier = Modifier.fillMaxWidth().clip(if (optionsRounded) LACToolComposableShape else RectangleShape).clickable { onSelected() }.padding(horizontal = 2.dp)
         ) {
             RadioButton(
                 selected = selected,

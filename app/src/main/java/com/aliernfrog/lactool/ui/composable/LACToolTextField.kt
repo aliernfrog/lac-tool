@@ -22,8 +22,8 @@ fun LACToolTextField(
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     singleLine: Boolean = false,
-    contentColor: Color = MaterialTheme.colorScheme.onSecondary,
     containerColor: Color = MaterialTheme.colorScheme.secondary,
+    contentColor: Color = contentColorFor(containerColor),
     rounded: Boolean = true,
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(
         textColor = contentColor,

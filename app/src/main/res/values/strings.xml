@@ -35,6 +35,14 @@
     <string name="manageMapsEditDescription">Edit your map\'s options and roles</string>
     <string name="manageMapsDelete">Delete this map</string>
     <string name="mapsEdit">Edit map</string>
+    <string name="mapsEdit_serverName">Server name</string>
+    <string name="mapsEdit_mapType">Map type</string>
+    <string name="mapsEdit_mapType_0">White grid</string>
+    <string name="mapsEdit_mapType_1">Grass</string>
+    <string name="mapsEdit_mapType_2">Snow</string>
+    <string name="mapsEdit_mapType_3">Sand</string>
+    <string name="mapsEdit_mapType_4">Desert</string>
+    <string name="mapsEdit_mapType_5">Water</string>
     <string name="options">Options</string>
     <string name="optionsTheme">Theme</string>
     <string name="optionsThemeSystem">Follow system</string>
