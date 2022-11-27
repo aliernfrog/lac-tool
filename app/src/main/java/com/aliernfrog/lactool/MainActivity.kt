@@ -22,7 +22,8 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
 import com.aliernfrog.lactool.ui.screen.MapsEditScreen
-import com.aliernfrog.lactool.ui.screen.MapsScreenRoot
+import com.aliernfrog.lactool.ui.screen.MapsScreen
+import com.aliernfrog.lactool.ui.screen.PermissionsScreen
 import com.aliernfrog.lactool.ui.screen.OptionsScreen
 import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 startDestination = NavRoutes.MAPS,
                 modifier = Modifier.fillMaxSize().padding(it)
             ) {
-                composable(route = NavRoutes.MAPS) { MapsScreenRoot(mapsState, navController) }
+                composable(route = NavRoutes.MAPS) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
                 composable(route = NavRoutes.MAPS_EDIT) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(route = NavRoutes.OPTIONS) { OptionsScreen(config, topToastManager, optionsState) }
             }
