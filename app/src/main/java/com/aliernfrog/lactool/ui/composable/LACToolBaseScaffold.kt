@@ -53,11 +53,15 @@ private fun TopBar(navController: NavController, scrollBehavior: TopAppBarScroll
             }
         },
         navigationIcon = {
-            AnimatedVisibility(visible = navController.previousBackStackEntry != null) {
+            AnimatedVisibility(
+                visible = navController.previousBackStackEntry != null,
+                enter = slideInHorizontally() + expandHorizontally() + fadeIn(),
+                exit = slideOutHorizontally() + shrinkHorizontally() + fadeOut()
+            ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = context.getString(R.string.action_back),
-                    modifier = Modifier.padding(horizontal = 8.dp).clickable(
+                    modifier = Modifier.padding(8.dp).clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple(bounded = false),
                         onClick = { navController.navigateUp() }
