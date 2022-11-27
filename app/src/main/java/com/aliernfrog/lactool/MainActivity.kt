@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, optionsState.materialYou.value) {
-                TopToastBase(backgroundColor = MaterialTheme.colorScheme.background, manager = topToastManager, content = { BaseScaffold() })
+                TopToastBase(backgroundColor = MaterialTheme.colorScheme.background, manager = topToastManager) { BaseScaffold() }
                 SystemBars(darkTheme)
             }
         }
