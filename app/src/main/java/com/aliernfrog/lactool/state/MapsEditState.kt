@@ -13,8 +13,8 @@ import java.io.File
 
 class MapsEditState() {
     val scrollState = ScrollState(0)
-    var mapLines: MutableList<String>? = null
 
+    var mapLines: MutableList<String>? = null
     val serverName: MutableState<String?> = mutableStateOf(null)
     val mapType: MutableState<Int?> = mutableStateOf(null)
 
@@ -40,6 +40,8 @@ class MapsEditState() {
     suspend fun finishEditing(navController: NavController) {
         navController.popBackStack()
         mapLines = null
+        serverName.value = null
+        mapType.value = null
         scrollState.scrollTo(0)
     }
 }
