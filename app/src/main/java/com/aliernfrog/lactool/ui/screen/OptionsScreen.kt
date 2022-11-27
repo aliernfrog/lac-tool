@@ -45,7 +45,7 @@ private const val experimentalRequiredClicks = 10
 
 @Composable
 fun OptionsScreen(config: SharedPreferences, topToastManager: TopToastManager, optionsState: OptionsState) {
-    Column(Modifier.verticalScroll(optionsState.scrollState)) {
+    Column(Modifier.fillMaxSize().verticalScroll(optionsState.scrollState)) {
         ThemeOptions(optionsState)
         MapsOptions(optionsState)
         AboutLACTool(topToastManager, optionsState)
