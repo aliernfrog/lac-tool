@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,7 +25,11 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
     val scope = rememberCoroutineScope()
     Box(Modifier.fillMaxSize()) {
         Actions(mapsEditState)
-        LACToolFAB(icon = Icons.Default.Done, Modifier.align(Alignment.BottomEnd)) {
+        LACToolFAB(
+            icon = Icons.Default.Done,
+            modifier = Modifier.align(Alignment.BottomEnd),
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
             scope.launch { mapsEditState.finishEditing(navController) }
         }
     }
