@@ -60,7 +60,7 @@ private fun MapActions(mapsState: MapsState) {
                 onValueChange = { mapsState.mapNameEdit.value = it },
                 singleLine = true
             )
-            MapActionVisibility(visible = isImported && mapsState.getMapNameEdit() != mapsState.chosenMap.value!!.mapName) {
+            MapActionVisibility(visible = isImported && mapsState.getMapNameEdit(false) != mapsState.chosenMap.value!!.mapName) {
                 LACToolButton(
                     title = context.getString(R.string.manageMapsRename),
                     painter = painterResource(id = R.drawable.edit),

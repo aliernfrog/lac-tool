@@ -67,10 +67,10 @@ class MapsState(
     }
 
     suspend fun importChosenMap(context: Context) {
-        var output = mapsFile.findFile("${getMapNameEdit()}.txt")
+        var output = mapsFile.findFile(getMapNameEdit())
         if (output != null && output.exists()) fileAlreadyExists(context)
         else withContext(Dispatchers.IO) {
-            output = mapsFile.createFile("", "${getMapNameEdit()}.txt")
+            output = mapsFile.createFile("", getMapNameEdit())
             if (output != null) FileUtil.copyFile(chosenMap.value!!.filePath, output!!, context)
             getMap(documentFile = output, context = context)
             topToastManager.showToast(context.getString(R.string.info_importedMap), iconDrawableId = R.drawable.download, iconTintColorType = TopToastColorType.PRIMARY)
@@ -79,7 +79,7 @@ class MapsState(
     }
 
     suspend fun exportChosenMap(context: Context) {
-        val output = File("${mapsExportDir}/${getMapNameEdit()}.txt")
+        val output = File("${mapsExportDir}/${getMapNameEdit()}")
         if (output.exists()) fileAlreadyExists(context)
         else withContext(Dispatchers.IO) {
             if (!output.parentFile?.isDirectory!!) output.parentFile?.mkdirs()
@@ -104,8 +104,9 @@ class MapsState(
         }
     }
 
-    fun getMapNameEdit(): String {
-        return mapNameEdit.value.ifBlank { chosenMap.value!!.mapName }
+    fun getMapNameEdit(addTxtSuffix: Boolean = true): String {
+        val suffix = if (addTxtSuffix) ".txt" else ""
+        return mapNameEdit.value.ifBlank { chosenMap.value!!.mapName }+suffix
     }
 
     private fun setChosenMap(map: LacMap?) {
