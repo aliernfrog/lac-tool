@@ -13,7 +13,6 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.data.LacMap
 import com.aliernfrog.lactool.util.FileUtil
-import com.aliernfrog.lactool.util.ZipUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
 import com.lazygeniouz.filecompat.file.DocumentFileCompat
@@ -68,11 +67,11 @@ class MapsState(
     }
 
     suspend fun importChosenMap(context: Context) {
-        var output = mapsFile.findFile(getMapNameEdit())
+        var output = mapsFile.findFile("${getMapNameEdit()}.txt")
         if (output != null && output.exists()) fileAlreadyExists(context)
         else withContext(Dispatchers.IO) {
-            output = mapsFile.createDirectory(getMapNameEdit())
-            if (output != null) ZipUtil.unzipMap(chosenMap.value!!.filePath, output!!, context)
+            output = mapsFile.createFile("", "${getMapNameEdit()}.txt")
+            if (output != null) FileUtil.copyFile(chosenMap.value!!.filePath, output!!, context)
             getMap(documentFile = output, context = context)
             topToastManager.showToast(context.getString(R.string.info_importedMap), iconDrawableId = R.drawable.download, iconTintColorType = TopToastColorType.PRIMARY)
             getImportedMaps()
@@ -80,11 +79,11 @@ class MapsState(
     }
 
     suspend fun exportChosenMap(context: Context) {
-        val output = File("${mapsExportDir}/${getMapNameEdit()}.zip")
+        val output = File("${mapsExportDir}/${getMapNameEdit()}.txt")
         if (output.exists()) fileAlreadyExists(context)
         else withContext(Dispatchers.IO) {
             if (!output.parentFile?.isDirectory!!) output.parentFile?.mkdirs()
-            ZipUtil.zipMap(mapsFile.findFile(chosenMap.value!!.fileName)!!, output.absolutePath, context)
+            FileUtil.copyFile(mapsFile.findFile(chosenMap.value!!.fileName)!!, output.absolutePath, context)
             getMap(file = output, context = context)
             topToastManager.showToast(context.getString(R.string.info_exportedMap), iconDrawableId = R.drawable.share, iconTintColorType = TopToastColorType.PRIMARY)
             getExportedMaps()
