@@ -64,7 +64,10 @@ class MapsState(
         val output = mapsFile.findFile(getMapNameEdit())
         if (output != null && output.exists()) fileAlreadyExists(context)
         else withContext(Dispatchers.IO) {
-            mapsFile.findFile(chosenMap.value!!.fileName)?.renameTo(getMapNameEdit())
+            getChosenMapFiles().forEach { file ->
+                val newName = file.name.replaceFirst(chosenMap.value!!.mapName, getMapNameEdit(false))
+                file.renameTo(newName)
+            }
             getMap(documentFile = mapsFile.findFile(getMapNameEdit()), context = context)
             topToastManager.showToast(context.getString(R.string.info_renamedMap), iconDrawableId = R.drawable.edit, iconTintColorType = TopToastColorType.PRIMARY)
             getImportedMaps()
@@ -104,7 +107,9 @@ class MapsState(
     suspend fun deleteChosenMap(context: Context) {
         withContext(Dispatchers.IO) {
             if (chosenMap.value!!.isFromUri) {
-                mapsFile.findFile(chosenMap.value!!.fileName)?.delete()
+                getChosenMapFiles().forEach { file ->
+                    file.delete()
+                }
                 getImportedMaps()
             } else {
                 File(chosenMap.value!!.filePath).delete()
@@ -118,6 +123,18 @@ class MapsState(
     fun getMapNameEdit(addTxtSuffix: Boolean = true): String {
         val suffix = if (addTxtSuffix) ".txt" else ""
         return mapNameEdit.value.ifBlank { chosenMap.value!!.mapName }+suffix
+    }
+
+    private fun getChosenMapFiles(): List<DocumentFileCompat> {
+        val chosenMapName = chosenMap.value!!.mapName
+        val list = mutableListOf<DocumentFileCompat>()
+        val mapFile = mapsFile.findFile("${chosenMapName}.txt")
+        val thumbnailFile = mapsFile.findFile("${chosenMapName}.jpg")
+        val dataFile = mapsFile.findFile(chosenMapName)
+        if (mapFile != null && mapFile.exists() && mapFile.isFile()) list.add(mapFile)
+        if (thumbnailFile != null && thumbnailFile.exists() && thumbnailFile.isFile()) list.add(thumbnailFile)
+        if (dataFile != null && dataFile.exists() && dataFile.isDirectory()) list.add(dataFile)
+        return list
     }
 
     private fun setChosenMap(map: LacMap?) {
