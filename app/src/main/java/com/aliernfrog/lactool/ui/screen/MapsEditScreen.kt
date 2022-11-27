@@ -45,7 +45,7 @@ private fun Actions(mapsEditState: MapsEditState) {
     val context = LocalContext.current
     val typesExpanded = remember { mutableStateOf(false) }
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
-        AnimatedVisibility(visible = mapsEditState.serverName.value != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.serverName.value != null) {
             LACToolTextField(
                 value = mapsEditState.serverName.value ?: "",
                 onValueChange = { mapsEditState.serverName.value = it },
@@ -55,7 +55,7 @@ private fun Actions(mapsEditState: MapsEditState) {
                 rounded = false
             )
         }
-        AnimatedVisibility(visible = mapsEditState.mapType.value != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapType.value != null) {
             LACToolButtonShapeless(
                 title = context.getString(R.string.mapsEdit_mapType),
                 description = getMapTypes().find { it.index == mapsEditState.mapType.value }?.label ?: "unknown",
@@ -81,6 +81,11 @@ private fun Actions(mapsEditState: MapsEditState) {
         }
         Text(mapsEditState.mapLines?.joinToString("\n") ?: "", Modifier.padding(horizontal = 8.dp))
     }
+}
+
+@Composable
+private fun AnimatedVisibilityColumn(visible: Boolean, content: @Composable () -> Unit) {
+    AnimatedVisibility(visible) { Column { content() } }
 }
 
 @Composable
