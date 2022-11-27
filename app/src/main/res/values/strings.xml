@@ -30,7 +30,6 @@
     <string name="manageMapsRename">Rename this map</string>
     <string name="manageMapsImport">Import this map</string>
     <string name="manageMapsExport">Export this map</string>
-    <string name="manageMapsExportDescription">Export your map and optionally share it</string>
     <string name="manageMapsShare">Share this map</string>
     <string name="manageMapsEdit">Edit this map</string>
     <string name="manageMapsEditDescription">Edit your map\'s options and roles</string>
