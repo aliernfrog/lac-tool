@@ -51,7 +51,6 @@ private fun MapActions(mapsState: MapsState) {
     val mapChosen = mapsState.chosenMap.value != null
     val isImported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsDir) ?: false
     val isExported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsExportDir) ?: false
-    val isZip = mapsState.chosenMap.value?.filePath?.lowercase()?.endsWith(".zip") ?: false
     MapActionVisibility(visible = mapChosen) {
         LACToolColumnRounded(title = context.getString(R.string.manageMapsMapName)) {
             LACToolTextField(
@@ -91,12 +90,12 @@ private fun MapActions(mapsState: MapsState) {
             scope.launch { mapsState.exportChosenMap(context) }
         }
     }
-    MapActionVisibility(visible = mapChosen && isZip) {
+    MapActionVisibility(visible = mapChosen) {
         LACToolButton(
             title = context.getString(R.string.manageMapsShare),
             painter = painterResource(id = R.drawable.share)
         ) {
-            FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "application/zip", context)
+            FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "text/plain", context)
         }
     }
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
