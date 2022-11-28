@@ -45,37 +45,39 @@ private fun Actions(mapsEditState: MapsEditState) {
     val context = LocalContext.current
     val typesExpanded = remember { mutableStateOf(false) }
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
-        AnimatedVisibilityColumn(visible = mapsEditState.serverName.value != null) {
-            LACToolTextField(
-                value = mapsEditState.serverName.value ?: "",
-                onValueChange = { mapsEditState.serverName.value = it },
-                label = { Text(context.getString(R.string.mapsEdit_serverName)) },
-                singleLine = true,
-                containerColor = MaterialTheme.colorScheme.surface,
-                rounded = false
-            )
-        }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapType.value != null) {
-            LACToolButtonShapeless(
-                title = context.getString(R.string.mapsEdit_mapType),
-                description = getMapTypes().find { it.index == mapsEditState.mapType.value }?.label ?: "unknown",
-                expanded = typesExpanded.value
-            ) {
-                typesExpanded.value = !typesExpanded.value
+        LACToolColumnDivider(title = context.getString(R.string.mapsEdit_general)) {
+            AnimatedVisibilityColumn(visible = mapsEditState.serverName.value != null) {
+                LACToolTextField(
+                    value = mapsEditState.serverName.value ?: "",
+                    onValueChange = { mapsEditState.serverName.value = it },
+                    label = { Text(context.getString(R.string.mapsEdit_serverName)) },
+                    singleLine = true,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    rounded = false
+                )
             }
-            AnimatedVisibility(
-                visible = typesExpanded.value,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
-                LACToolColumnRounded {
-                    LACToolRadioButtons(
-                        options = getMapTypes().map { it.label },
-                        initialIndex = mapsEditState.mapType.value ?: 0,
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        optionsRounded = true,
-                        onSelect = { mapsEditState.mapType.value = it }
-                    )
+            AnimatedVisibilityColumn(visible = mapsEditState.mapType.value != null) {
+                LACToolButtonShapeless(
+                    title = context.getString(R.string.mapsEdit_mapType),
+                    description = getMapTypes().find { it.index == mapsEditState.mapType.value }?.label ?: "unknown",
+                    expanded = typesExpanded.value
+                ) {
+                    typesExpanded.value = !typesExpanded.value
+                }
+                AnimatedVisibility(
+                    visible = typesExpanded.value,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    LACToolColumnRounded {
+                        LACToolRadioButtons(
+                            options = getMapTypes().map { it.label },
+                            initialIndex = mapsEditState.mapType.value ?: 0,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            optionsRounded = true,
+                            onSelect = { mapsEditState.mapType.value = it }
+                        )
+                    }
                 }
             }
         }

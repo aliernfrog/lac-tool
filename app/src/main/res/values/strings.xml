@@ -35,6 +35,7 @@
     <string name="manageMapsEditDescription">Edit your map\'s options and roles</string>
     <string name="manageMapsDelete">Delete this map</string>
     <string name="mapsEdit">Edit map</string>
+    <string name="mapsEdit_general">General</string>
     <string name="mapsEdit_serverName">Server name</string>
     <string name="mapsEdit_mapType">Map type</string>
     <string name="mapsEdit_mapType_0">White grid</string>
