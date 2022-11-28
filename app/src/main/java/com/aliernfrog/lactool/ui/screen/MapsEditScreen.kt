@@ -64,11 +64,7 @@ private fun Actions(mapsEditState: MapsEditState) {
                 ) {
                     typesExpanded.value = !typesExpanded.value
                 }
-                AnimatedVisibility(
-                    visible = typesExpanded.value,
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut()
-                ) {
+                AnimatedVisibilityColumn(visible = typesExpanded.value) {
                     LACToolColumnRounded {
                         LACToolRadioButtons(
                             options = getMapTypes().map { it.label },
@@ -87,7 +83,9 @@ private fun Actions(mapsEditState: MapsEditState) {
 
 @Composable
 private fun AnimatedVisibilityColumn(visible: Boolean, content: @Composable () -> Unit) {
-    AnimatedVisibility(visible) { Column { content() } }
+    AnimatedVisibility(visible, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
+        Column { content() }
+    }
 }
 
 @Composable
