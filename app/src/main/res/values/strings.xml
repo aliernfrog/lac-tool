@@ -44,6 +44,7 @@
     <string name="mapsEdit_mapType_3">Sand</string>
     <string name="mapsEdit_mapType_4">Desert</string>
     <string name="mapsEdit_mapType_5">Water</string>
+    <string name="mapsEdit_options">Options</string>
     <string name="options">Options</string>
     <string name="optionsTheme">Theme</string>
     <string name="optionsThemeSystem">Follow system</string>

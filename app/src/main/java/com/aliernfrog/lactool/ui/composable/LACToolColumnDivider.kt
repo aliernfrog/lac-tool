@@ -12,7 +12,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LACToolColumnDivider(title: String, modifier: Modifier = Modifier, bottomDivider: Boolean = true, topDivider: Boolean = false, content: @Composable ColumnScope.() -> Unit) {
+fun LACToolColumnDivider(
+    title: String,
+    modifier: Modifier = Modifier,
+    topDivider: Boolean = false,
+    bottomDivider: Boolean = true,
+    content: @Composable ColumnScope.() -> Unit
+) {
     if (topDivider) Divider(modifier = Modifier.padding(16.dp).alpha(0.7f), thickness = 1.dp, color = MaterialTheme.colorScheme.surfaceVariant)
     Text(text = title, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
     Column(modifier, content = content)
