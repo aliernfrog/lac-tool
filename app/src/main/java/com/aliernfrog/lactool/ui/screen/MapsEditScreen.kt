@@ -73,7 +73,7 @@ private fun GeneralActions(mapsEditState: MapsEditState) {
                 typesExpanded.value = !typesExpanded.value
             }
             AnimatedVisibilityColumn(visible = typesExpanded.value) {
-                LACToolColumnRounded {
+                LACToolColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     LACToolRadioButtons(
                         options = getMapTypes().map { it.label },
                         initialIndex = mapsEditState.mapType.value ?: 0,
