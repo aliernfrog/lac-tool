@@ -91,7 +91,7 @@ private fun GeneralActions(mapsEditState: MapsEditState) {
 private fun OptionsActions(mapsEditState: MapsEditState) {
     AnimatedVisibilityColumn(visible = !mapsEditState.mapOptions.isNullOrEmpty()) {
         LACToolColumnDivider(title = stringResource(R.string.mapsEdit_options)) {
-            mapsEditState.mapOptions!!.forEach { option ->
+            mapsEditState.mapOptions?.forEach { option ->
                 val valueEdit = remember { mutableStateOf(option.value) }
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(
