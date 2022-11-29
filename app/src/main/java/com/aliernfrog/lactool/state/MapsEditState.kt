@@ -6,12 +6,14 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
+import com.aliernfrog.lactool.enum.LACLineType
+import com.aliernfrog.lactool.util.LACUtil
 import com.lazygeniouz.filecompat.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class MapsEditState() {
+class MapsEditState {
     val scrollState = ScrollState(0)
 
     var mapLines: MutableList<String>? = null
@@ -30,10 +32,16 @@ class MapsEditState() {
     }
 
     private fun readMapLines() {
-        if (mapLines == null) return
-        mapLines!!.forEach {
-            if (it.startsWith("Map Name:")) serverName.value = it.removePrefix("Map Name:")
-            else if (it.startsWith("Map Type:")) mapType.value = it.removePrefix("Map Type:").toInt()
+        mapLines?.forEach {
+            try {
+                when (LACUtil.getEditorLineType(it)) {
+                    LACLineType.SERVER_NAME -> serverName.value = LACLineType.SERVER_NAME.getValue(it)
+                    LACLineType.MAP_TYPE -> mapType.value = LACLineType.MAP_TYPE.getValue(it).toInt()
+                    else -> {}
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
