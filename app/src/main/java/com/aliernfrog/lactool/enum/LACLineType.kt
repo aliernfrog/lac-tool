@@ -15,6 +15,12 @@ enum class LACLineType(
         override fun getValue(line: String) = line.removePrefix(startsWith)
     },
 
+    ROLES_LIST {
+        private val startsWith = "Roles List:"
+        override fun matches(line: String) = line.startsWith(startsWith)
+        override fun getValue(line: String) = line.removePrefix(startsWith)
+    },
+
     OPTION_NUMBER {
         override fun matches(line: String): Boolean {
             return OPTION_GENERAL.matches(line) && OPTION_GENERAL.getValue(line).toIntOrNull() != null

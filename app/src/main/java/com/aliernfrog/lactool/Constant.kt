@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.data.Screen
 import com.aliernfrog.lactool.data.Social
@@ -33,6 +34,7 @@ object Link {
 object NavRoutes {
     const val MAPS = "maps"
     const val MAPS_EDIT = "mapsEdit"
+    const val MAPS_ROLES = "mapsRoles"
     const val OPTIONS = "options"
 }
 
@@ -42,6 +44,7 @@ fun getScreens(): List<Screen> {
     return listOf(
         Screen(NavRoutes.MAPS, context.getString(R.string.manageMaps), painterResource(id = R.drawable.map)),
         Screen(NavRoutes.MAPS_EDIT, context.getString(R.string.mapsEdit), null, true),
+        Screen(NavRoutes.MAPS_ROLES, stringResource(R.string.mapsRoles), null, true),
         Screen(NavRoutes.OPTIONS, context.getString(R.string.options), painterResource(id = R.drawable.options))
     )
 }

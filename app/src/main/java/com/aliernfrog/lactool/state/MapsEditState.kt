@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.state
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
@@ -17,11 +18,13 @@ import java.io.File
 
 class MapsEditState {
     val scrollState = ScrollState(0)
+    val rolesLazyListState = LazyListState()
 
     var mapLines: MutableList<String>? = null
     val serverName: MutableState<String?> = mutableStateOf(null)
     val mapType: MutableState<Int?> = mutableStateOf(null)
     var mapOptions: MutableList<LacMapOption>? = null
+    var mapRoles: MutableList<String>? = null
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
@@ -30,6 +33,7 @@ class MapsEditState {
             val inputStream = file?.inputStream() ?: context.contentResolver.openInputStream(documentFile!!.uri)
             mapLines = inputStream?.bufferedReader()?.readText()?.split("\n")?.toMutableList()
             mapOptions = mutableListOf()
+            mapRoles = mutableListOf()
             inputStream?.close()
             readMapLines()
         }
@@ -41,6 +45,7 @@ class MapsEditState {
                 when (val type = LACUtil.getEditorLineType(line)) {
                     LACLineType.SERVER_NAME -> serverName.value = type.getValue(line)
                     LACLineType.MAP_TYPE -> mapType.value = type.getValue(line).toInt()
+                    LACLineType.ROLES_LIST -> mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableList()
                     LACLineType.OPTION_NUMBER -> mapOptions?.add(LacMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, type.getValue(line)))
                     LACLineType.OPTION_BOOLEAN -> mapOptions?.add(LacMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, type.getValue(line)))
                     LACLineType.OPTION_SWITCH -> mapOptions?.add(LacMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, type.getValue(line)))
@@ -58,6 +63,7 @@ class MapsEditState {
         serverName.value = null
         mapType.value = null
         mapOptions = null
+        mapRoles = null
         scrollState.scrollTo(0)
     }
 }

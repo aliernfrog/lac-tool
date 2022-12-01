@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aliernfrog.lactool.NavRoutes
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LacMapType
 import com.aliernfrog.lactool.enum.LACMapOptionType
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
     val scope = rememberCoroutineScope()
     Box(Modifier.fillMaxSize()) {
-        Actions(mapsEditState)
+        Actions(mapsEditState, navController)
         LACToolFAB(
             icon = Icons.Default.Done,
             modifier = Modifier.align(Alignment.BottomEnd),
@@ -45,16 +46,16 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
 }
 
 @Composable
-private fun Actions(mapsEditState: MapsEditState) {
+private fun Actions(mapsEditState: MapsEditState, navController: NavController) {
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
-        GeneralActions(mapsEditState)
+        GeneralActions(mapsEditState, navController)
         OptionsActions(mapsEditState)
         Text(mapsEditState.mapLines?.joinToString("\n") ?: "", Modifier.padding(horizontal = 8.dp))
     }
 }
 
 @Composable
-private fun GeneralActions(mapsEditState: MapsEditState) {
+private fun GeneralActions(mapsEditState: MapsEditState, navController: NavController) {
     val typesExpanded = remember { mutableStateOf(false) }
     LACToolColumnDivider(title = stringResource(R.string.mapsEdit_general)) {
         AnimatedVisibilityColumn(visible = mapsEditState.serverName.value != null) {
@@ -82,6 +83,15 @@ private fun GeneralActions(mapsEditState: MapsEditState) {
                         onSelect = { mapsEditState.mapType.value = it }
                     )
                 }
+            }
+        }
+        AnimatedVisibilityColumn(visible = mapsEditState.mapRoles != null) {
+            LACToolButtonShapeless(
+                title = stringResource(R.string.mapsRoles),
+                description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", mapsEditState.mapRoles?.size.toString()),
+                expanded = false
+            ) {
+                navController.navigate(NavRoutes.MAPS_ROLES)
             }
         }
     }
