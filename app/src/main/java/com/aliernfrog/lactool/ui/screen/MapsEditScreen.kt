@@ -90,7 +90,7 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
                 title = stringResource(R.string.mapsRoles),
                 description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", mapsEditState.mapRoles?.size.toString()),
                 expanded = false,
-                arrowRotation = 270f
+                arrowRotation = 90f
             ) {
                 navController.navigate(NavRoutes.MAPS_ROLES)
             }
