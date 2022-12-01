@@ -89,7 +89,8 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsRoles),
                 description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", mapsEditState.mapRoles?.size.toString()),
-                expanded = false
+                expanded = false,
+                arrowRotation = 270f
             ) {
                 navController.navigate(NavRoutes.MAPS_ROLES)
             }
