@@ -24,6 +24,7 @@ import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
+import com.aliernfrog.lactool.ui.sheet.RoleSheet
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.toptoast.TopToastBase
 import com.aliernfrog.toptoast.TopToastManager
@@ -88,6 +89,11 @@ class MainActivity : ComponentActivity() {
         ) {
             scope.launch { mapsState.deleteChosenMap(context) }
         }
+        RoleSheet(
+            role = mapsState.mapsEditState.roleSheetChosenRole.value,
+            state = mapsState.mapsEditState.roleSheetState,
+            topToastManager = topToastManager
+        )
     }
 
     @Composable

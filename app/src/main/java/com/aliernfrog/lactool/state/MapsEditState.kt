@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
@@ -20,11 +23,15 @@ class MapsEditState {
     val scrollState = ScrollState(0)
     val rolesLazyListState = LazyListState()
 
+    @OptIn(ExperimentalMaterialApi::class)
+    val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
+
     var mapLines: MutableList<String>? = null
     val serverName: MutableState<String?> = mutableStateOf(null)
     val mapType: MutableState<Int?> = mutableStateOf(null)
     var mapOptions: MutableList<LacMapOption>? = null
     var mapRoles: MutableList<String>? = null
+    val roleSheetChosenRole = mutableStateOf("")
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
@@ -65,5 +72,11 @@ class MapsEditState {
         mapOptions = null
         mapRoles = null
         scrollState.scrollTo(0)
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    suspend fun showRoleSheet(role: String) {
+        roleSheetChosenRole.value = role
+        roleSheetState.show()
     }
 }
