@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun BaseScaffold() {
         val context = LocalContext.current
@@ -68,7 +69,7 @@ class MainActivity : ComponentActivity() {
             NavHost(
                 navController = navController,
                 startDestination = NavRoutes.MAPS,
-                modifier = Modifier.fillMaxSize().padding(it)
+                modifier = Modifier.fillMaxSize().padding(it).consumedWindowInsets(it).systemBarsPadding()
             ) {
                 composable(route = NavRoutes.MAPS) { MapsScreenRoot(mapsState, navController) }
                 composable(route = NavRoutes.MAPS_EDIT) { MapsEditScreen(mapsState.mapsEditState, navController) }

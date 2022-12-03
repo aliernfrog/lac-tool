@@ -27,7 +27,8 @@ fun LACToolBaseScaffold(navController: NavController, content: @Composable (Padd
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
         topBar = { TopBar(navController, scrollBehavior, currentScreen) },
-        bottomBar = { BottomBar(navController, screens, currentScreen) }
+        bottomBar = { BottomBar(navController, screens, currentScreen) },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         content(it)
     }
