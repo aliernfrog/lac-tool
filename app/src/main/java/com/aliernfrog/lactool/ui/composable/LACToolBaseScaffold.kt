@@ -79,11 +79,10 @@ private fun BottomBar(navController: NavController, screens: List<Screen>, curre
                         Icon(
                             painter = if (selected) it.iconFilled!! else it.iconOutlined!!,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.size(28.dp)
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     },
-                    label = { Text(it.name, modifier = Modifier.offset(y = 5.dp)) },
+                    label = { Text(it.name) },
                     onClick = {
                         if (it.route != currentScreen?.route) navController.navigate(it.route) { popUpTo(0) }
                     }
