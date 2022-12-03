@@ -94,7 +94,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun SystemBars(darkTheme: Boolean) {
         val controller = rememberSystemUiController()
-        controller.statusBarDarkContentEnabled = !darkTheme
+        controller.systemBarsDarkContentEnabled = !darkTheme
+        controller.isNavigationBarContrastEnforced = false
     }
 
     @Composable
