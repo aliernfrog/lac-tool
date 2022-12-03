@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.LACToolComposableShape
 import com.aliernfrog.lactool.LACToolRoundnessSize
-import com.aliernfrog.lactool.util.GeneralUtil
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -32,7 +31,7 @@ fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetS
         sheetElevation = 0.dp,
         content = {},
         sheetContent = {
-            Column(modifier = Modifier.statusBarsPadding().fillMaxWidth().clip(RoundedCornerShape(topStart = LACToolRoundnessSize, topEnd = LACToolRoundnessSize)).background(MaterialTheme.colorScheme.background), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.statusBarsPadding().fillMaxWidth().clip(RoundedCornerShape(topStart = LACToolRoundnessSize, topEnd = LACToolRoundnessSize)).background(MaterialTheme.colorScheme.background).navigationBarsPadding().imePadding(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(modifier = Modifier
                     .padding(vertical = 8.dp)
                     .background(MaterialTheme.colorScheme.surfaceVariant, shape = LACToolComposableShape)
@@ -42,7 +41,6 @@ fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetS
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = LACToolRoundnessSize, topEnd = LACToolRoundnessSize)).verticalScroll(sheetScrollState)) {
                     if (title != null) Text(text = title, fontSize = 30.sp, modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally))
                     sheetContent()
-                    Spacer(modifier = Modifier.height(GeneralUtil.getNavigationBarHeight()))
                 }
             }
         }
