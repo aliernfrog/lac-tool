@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun BaseScaffold() {
         val context = LocalContext.current
@@ -67,7 +68,7 @@ class MainActivity : ComponentActivity() {
             NavHost(
                 navController = navController,
                 startDestination = NavRoutes.MAPS,
-                modifier = Modifier.fillMaxSize().padding(it)
+                modifier = Modifier.fillMaxSize().padding(it).consumedWindowInsets(it).systemBarsPadding()
             ) {
                 composable(route = NavRoutes.MAPS) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
                 composable(route = NavRoutes.MAPS_EDIT) { MapsEditScreen(mapsState.mapsEditState, navController) }
@@ -99,7 +100,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun SystemBars(darkTheme: Boolean) {
         val controller = rememberSystemUiController()
-        controller.statusBarDarkContentEnabled = !darkTheme
+        controller.systemBarsDarkContentEnabled = !darkTheme
+        controller.isNavigationBarContrastEnforced = false
     }
 
     @Composable
