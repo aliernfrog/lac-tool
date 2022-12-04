@@ -32,6 +32,8 @@ class MapsEditState(_topToastManager: TopToastManager) {
 
     @OptIn(ExperimentalMaterialApi::class)
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
+    @OptIn(ExperimentalMaterialApi::class)
+    val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
 
     var mapLines: MutableList<String>? = null
     val serverName: MutableState<String?> = mutableStateOf(null)
@@ -89,5 +91,10 @@ class MapsEditState(_topToastManager: TopToastManager) {
     fun deleteRole(role: String, context: Context) {
         mapRoles?.remove(role)
         topToastManager.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.trash, iconTintColorType = TopToastColorType.PRIMARY)
+    }
+
+    fun addRole(role: String, context: Context) {
+        mapRoles?.add(role)
+        topToastManager.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
     }
 }

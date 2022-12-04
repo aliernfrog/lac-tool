@@ -22,6 +22,7 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
 import com.aliernfrog.lactool.ui.screen.*
+import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.sheet.RoleSheet
@@ -95,6 +96,10 @@ class MainActivity : ComponentActivity() {
             state = mapsState.mapsEditState.roleSheetState,
             topToastManager = topToastManager,
             onDeleteRole = { mapsState.mapsEditState.deleteRole(it, context) }
+        )
+        AddRoleSheet(
+            state = mapsState.mapsEditState.addRoleSheetState,
+            onRoleAdd = { mapsState.mapsEditState.addRole(it, context) }
         )
     }
 
