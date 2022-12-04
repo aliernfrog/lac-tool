@@ -31,7 +31,7 @@ class MapsState(
     _deleteMapSheetState: ModalBottomSheetState
 ) {
     private val topToastManager = _topToastManager
-    val mapsEditState = MapsEditState()
+    val mapsEditState = MapsEditState(topToastManager)
     val pickMapSheetState = _pickMapSheetState
     val deleteMapSheetState = _deleteMapSheetState
     val scrollState = ScrollState(0)

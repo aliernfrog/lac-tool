@@ -51,6 +51,8 @@
     <string name="mapsRoles_showingCount">Showing %COUNT% roles</string>
     <string name="mapsRoles_copyRoleName">Copy role name</string>
     <string name="mapsRoles_copyRoleRaw">Copy raw role name</string>
+    <string name="mapsRoles_deleteRole">Delete role</string>
+    <string name="mapsRoles_deletedRole">Deleted role: %ROLE%</string>
     <string name="options">Options</string>
     <string name="optionsTheme">Theme</string>
     <string name="optionsThemeSystem">Follow system</string>

@@ -9,17 +9,24 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.navigation.NavController
+import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LacMapOption
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.util.LACUtil
+import com.aliernfrog.lactool.util.extensions.removeHtml
+import com.aliernfrog.toptoast.TopToastColorType
+import com.aliernfrog.toptoast.TopToastManager
 import com.lazygeniouz.filecompat.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class MapsEditState {
+class MapsEditState(_topToastManager: TopToastManager) {
+    private val topToastManager = _topToastManager
     val scrollState = ScrollState(0)
     val rolesLazyListState = LazyListState()
 
@@ -30,7 +37,7 @@ class MapsEditState {
     val serverName: MutableState<String?> = mutableStateOf(null)
     val mapType: MutableState<Int?> = mutableStateOf(null)
     var mapOptions: MutableList<LacMapOption>? = null
-    var mapRoles: MutableList<String>? = null
+    var mapRoles: SnapshotStateList<String>? = null
     val roleSheetChosenRole = mutableStateOf("")
 
     @SuppressLint("Recycle")
@@ -40,7 +47,6 @@ class MapsEditState {
             val inputStream = file?.inputStream() ?: context.contentResolver.openInputStream(documentFile!!.uri)
             mapLines = inputStream?.bufferedReader()?.readText()?.split("\n")?.toMutableList()
             mapOptions = mutableListOf()
-            mapRoles = mutableListOf()
             inputStream?.close()
             readMapLines()
         }
@@ -52,7 +58,7 @@ class MapsEditState {
                 when (val type = LACUtil.getEditorLineType(line)) {
                     LACLineType.SERVER_NAME -> serverName.value = type.getValue(line)
                     LACLineType.MAP_TYPE -> mapType.value = type.getValue(line).toInt()
-                    LACLineType.ROLES_LIST -> mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableList()
+                    LACLineType.ROLES_LIST -> mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableStateList()
                     LACLineType.OPTION_NUMBER -> mapOptions?.add(LacMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, type.getValue(line)))
                     LACLineType.OPTION_BOOLEAN -> mapOptions?.add(LacMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, type.getValue(line)))
                     LACLineType.OPTION_SWITCH -> mapOptions?.add(LacMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, type.getValue(line)))
@@ -78,5 +84,10 @@ class MapsEditState {
     suspend fun showRoleSheet(role: String) {
         roleSheetChosenRole.value = role
         roleSheetState.show()
+    }
+
+    fun deleteRole(role: String, context: Context) {
+        mapRoles?.remove(role)
+        topToastManager.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.trash, iconTintColorType = TopToastColorType.PRIMARY)
     }
 }

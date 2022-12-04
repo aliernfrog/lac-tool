@@ -93,7 +93,8 @@ class MainActivity : ComponentActivity() {
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,
             state = mapsState.mapsEditState.roleSheetState,
-            topToastManager = topToastManager
+            topToastManager = topToastManager,
+            onDeleteRole = { mapsState.mapsEditState.deleteRole(it, context) }
         )
     }
 
