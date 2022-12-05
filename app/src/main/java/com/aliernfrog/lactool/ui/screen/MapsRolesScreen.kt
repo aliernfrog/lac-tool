@@ -1,7 +1,9 @@
 package com.aliernfrog.lactool.ui.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -46,6 +48,9 @@ private fun RolesList(mapsEditState: MapsEditState) {
         }
         items(roles) {
             LACToolMapRole(it) { scope.launch { mapsEditState.showRoleSheet(it) } }
+        }
+        item {
+            Spacer(Modifier.height(70.dp))
         }
     }
 }

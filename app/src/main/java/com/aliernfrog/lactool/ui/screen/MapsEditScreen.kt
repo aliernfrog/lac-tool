@@ -3,7 +3,9 @@ package com.aliernfrog.lactool.ui.screen
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -51,6 +53,7 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
         GeneralActions(mapsEditState, navController)
         OptionsActions(mapsEditState)
+        Spacer(Modifier.height(70.dp))
     }
 }
 
