@@ -5,13 +5,15 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
@@ -20,10 +22,12 @@ import com.aliernfrog.lactool.ui.composable.LACToolModalBottomSheet
 import com.aliernfrog.lactool.ui.composable.LACToolTextField
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
     val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
     val roleName = remember { mutableStateOf("") }
     val roleColor = remember { mutableStateOf("") }
     val roleHtml = buildRoleHtml(roleName.value, roleColor.value)
@@ -32,7 +36,8 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
             value = roleName.value,
             onValueChange = { roleName.value = it },
             label = { Text(stringResource(R.string.mapsRoles_roleName)) },
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            modifier = Modifier.focusRequester(focusRequester)
         )
         LACToolTextField(
             value = roleColor.value,
@@ -56,6 +61,13 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
                 onRoleAdd(roleHtml)
                 scope.launch { state.hide() }
             }
+        }
+    }
+
+    LaunchedEffect(state.targetValue) {
+        if (state.targetValue == ModalBottomSheetValue.Expanded) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
         }
     }
 }
