@@ -30,6 +30,7 @@ class MapsEditState(_topToastManager: TopToastManager) {
     private val topToastManager = _topToastManager
     val scrollState = ScrollState(0)
     val rolesLazyListState = LazyListState()
+    val roleNameIllegalChars = listOf(",",":")
 
     @OptIn(ExperimentalMaterialApi::class)
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
@@ -119,6 +120,8 @@ class MapsEditState(_topToastManager: TopToastManager) {
     }
 
     fun addRole(role: String, context: Context) {
+        if (roleNameIllegalChars.find { role.contains(it) } != null)
+            return topToastManager.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconDrawableId = R.drawable.exclamation, iconTintColorType = TopToastColorType.ERROR)
         mapData.value?.mapRoles?.add(role)
         topToastManager.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
     }

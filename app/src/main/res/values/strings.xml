@@ -58,6 +58,7 @@
     <string name="mapsRoles_roleColor">Role color</string>
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: %ROLE%</string>
+    <string name="mapsRoles_illegalChars">Role can NOT contain: %CHARS%</string>
     <string name="options">Options</string>
     <string name="optionsTheme">Theme</string>
     <string name="optionsThemeSystem">Follow system</string>
