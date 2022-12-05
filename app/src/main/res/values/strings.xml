@@ -13,6 +13,7 @@
     <string name="info_renamedMap">Renamed the map!</string>
     <string name="info_importedMap">Imported the map!</string>
     <string name="info_exportedMap">Exported the map!</string>
+    <string name="info_mapEditsSaved">Saved changes!</string>
     <string name="info_deletedMap">Deleted the map!</string>
     <string name="info_storagePermission">LAC Tool needs storage permission to export and import LAC maps</string>
     <string name="info_allFilesPermission">LAC Tool needs all files access to export and import LAC maps</string>

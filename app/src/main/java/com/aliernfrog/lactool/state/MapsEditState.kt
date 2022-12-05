@@ -100,6 +100,7 @@ class MapsEditState(_topToastManager: TopToastManager) {
             outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
             outputStreamWriter.flush()
             outputStreamWriter.close()
+            topToastManager.showToast(context!!.getString(R.string.info_mapEditsSaved), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
         }
         navController.popBackStack()
         mapData.value = null
