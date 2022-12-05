@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
+import com.aliernfrog.lactool.ui.composable.LACToolSheetBackHandler
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
@@ -76,6 +77,12 @@ class MainActivity : ComponentActivity() {
                 composable(route = NavRoutes.MAPS_ROLES) { MapsRolesScreen(mapsState.mapsEditState) }
                 composable(route = NavRoutes.OPTIONS) { OptionsScreen(config, topToastManager, optionsState) }
             }
+            LACToolSheetBackHandler(
+                pickMapSheetState,
+                deleteMapSheetState,
+                mapsState.mapsEditState.roleSheetState,
+                mapsState.mapsEditState.addRoleSheetState
+            )
         }
         PickMapSheet(
             mapsState = mapsState,
