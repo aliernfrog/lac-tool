@@ -54,6 +54,7 @@
     <string name="mapsRoles_deleteRole">Delete role</string>
     <string name="mapsRoles_deletedRole">Deleted role: %ROLE%</string>
     <string name="mapsRoles_roleName">Role name</string>
+    <string name="mapsRoles_roleColor">Role color</string>
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: %ROLE%</string>
     <string name="options">Options</string>
