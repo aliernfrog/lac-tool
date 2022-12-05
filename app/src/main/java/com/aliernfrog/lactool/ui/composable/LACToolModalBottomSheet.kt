@@ -6,24 +6,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.LACToolComposableShape
 import com.aliernfrog.lactool.LACToolRoundnessSize
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetState, sheetScrollState: ScrollState = rememberScrollState(), sheetContent: @Composable ColumnScope.() -> Unit) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     ModalBottomSheetLayout(
         sheetBackgroundColor = Color.Transparent,
         sheetContentColor = MaterialTheme.colorScheme.onBackground,
@@ -45,4 +46,8 @@ fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetS
             }
         }
     )
+
+    LaunchedEffect(sheetState.targetValue) {
+        if (sheetState.targetValue == ModalBottomSheetValue.Hidden) keyboardController?.hide()
+    }
 }
