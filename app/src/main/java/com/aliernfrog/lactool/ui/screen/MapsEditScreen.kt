@@ -50,7 +50,7 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
         GeneralActions(mapsEditState, navController)
         OptionsActions(mapsEditState)
-        Text(mapsEditState.mapLines?.joinToString("\n") ?: "", Modifier.padding(horizontal = 8.dp))
+        Text(mapsEditState.mapData.value.toString(), Modifier.padding(horizontal = 8.dp))
     }
 }
 
@@ -58,17 +58,17 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
 private fun GeneralActions(mapsEditState: MapsEditState, navController: NavController) {
     val typesExpanded = remember { mutableStateOf(false) }
     LACToolColumnDivider(title = stringResource(R.string.mapsEdit_general)) {
-        AnimatedVisibilityColumn(visible = mapsEditState.serverName.value != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
-                value = mapsEditState.serverName.value ?: "",
-                onValueChange = { mapsEditState.serverName.value = it }
+                value = mapsEditState.mapData.value?.serverName ?: "",
+                onValueChange = { mapsEditState.mapData.value?.serverName = it }
             )
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapType.value != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.mapType != null) {
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsEdit_mapType),
-                description = getMapTypes().find { it.index == mapsEditState.mapType.value }?.label ?: "unknown",
+                description = getMapTypes().find { it.index == mapsEditState.mapData.value?.mapType }?.label ?: "unknown",
                 expanded = typesExpanded.value
             ) {
                 typesExpanded.value = !typesExpanded.value
@@ -77,18 +77,18 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
                 LACToolColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     LACToolRadioButtons(
                         options = getMapTypes().map { it.label },
-                        initialIndex = mapsEditState.mapType.value ?: 0,
+                        initialIndex = mapsEditState.mapData.value?.mapType ?: 0,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         optionsRounded = true,
-                        onSelect = { mapsEditState.mapType.value = it }
+                        onSelect = { mapsEditState.mapData.value?.mapType = it }
                     )
                 }
             }
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapRoles != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.mapRoles != null) {
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsRoles),
-                description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", mapsEditState.mapRoles?.size.toString()),
+                description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", mapsEditState.mapData.value?.mapRoles?.size.toString()),
                 expanded = false,
                 arrowRotation = 90f
             ) {
@@ -100,9 +100,9 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
 
 @Composable
 private fun OptionsActions(mapsEditState: MapsEditState) {
-    AnimatedVisibilityColumn(visible = !mapsEditState.mapOptions.isNullOrEmpty()) {
+    AnimatedVisibilityColumn(visible = !mapsEditState.mapData.value?.mapOptions.isNullOrEmpty()) {
         LACToolColumnDivider(title = stringResource(R.string.mapsEdit_options)) {
-            mapsEditState.mapOptions?.forEach { option ->
+            mapsEditState.mapData.value?.mapOptions?.forEach { option ->
                 val valueEdit = remember { mutableStateOf(option.value) }
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(

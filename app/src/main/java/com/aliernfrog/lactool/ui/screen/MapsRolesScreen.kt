@@ -33,17 +33,18 @@ fun MapsRolesScreen(mapsEditState: MapsEditState) {
 @Composable
 private fun RolesList(mapsEditState: MapsEditState) {
     val scope = rememberCoroutineScope()
+    val roles = mapsEditState.mapData.value?.mapRoles ?: mutableListOf()
     LazyColumn(
         state = mapsEditState.rolesLazyListState,
         modifier = Modifier.fillMaxSize()
     ) {
         item {
             Text(
-                text = stringResource(R.string.mapsRoles_showingCount).replace("%COUNT%", mapsEditState.mapRoles?.size.toString()),
+                text = stringResource(R.string.mapsRoles_showingCount).replace("%COUNT%", roles.size.toString()),
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
-        items(mapsEditState.mapRoles ?: mutableListOf()) {
+        items(roles) {
             LACToolMapRole(it) { scope.launch { mapsEditState.showRoleSheet(it) } }
         }
     }
