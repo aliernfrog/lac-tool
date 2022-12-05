@@ -51,7 +51,6 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
         GeneralActions(mapsEditState, navController)
         OptionsActions(mapsEditState)
-        Text(mapsEditState.mapData.value?.mapLines?.joinToString("\n") ?: "", Modifier.padding(horizontal = 8.dp))
     }
 }
 
@@ -102,7 +101,7 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
 @Composable
 private fun OptionsActions(mapsEditState: MapsEditState) {
     AnimatedVisibilityColumn(visible = !mapsEditState.mapData.value?.mapOptions.isNullOrEmpty()) {
-        LACToolColumnDivider(title = stringResource(R.string.mapsEdit_options)) {
+        LACToolColumnDivider(title = stringResource(R.string.mapsEdit_options), bottomDivider = false) {
             mapsEditState.mapData.value?.mapOptions?.forEach { option ->
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(
