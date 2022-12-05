@@ -30,7 +30,7 @@ class MapsEditState(_topToastManager: TopToastManager) {
     private val topToastManager = _topToastManager
     val scrollState = ScrollState(0)
     val rolesLazyListState = LazyListState()
-    val roleNameIllegalChars = listOf(",",":")
+    private val roleNameIllegalChars = listOf(",",":")
 
     @OptIn(ExperimentalMaterialApi::class)
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
