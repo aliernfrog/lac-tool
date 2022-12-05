@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Box(Modifier.fillMaxSize()) {
         Actions(mapsEditState, navController)
@@ -40,7 +41,7 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
             modifier = Modifier.align(Alignment.BottomEnd),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            scope.launch { mapsEditState.finishEditing(navController) }
+            scope.launch { mapsEditState.finishEditing(navController, true, context) }
         }
     }
 }
@@ -61,14 +62,14 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
         AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
-                value = mapsEditState.mapData.value?.serverName ?: "",
-                onValueChange = { mapsEditState.mapData.value?.serverName = it }
+                value = mapsEditState.mapData.value?.serverName?.value ?: "",
+                onValueChange = { mapsEditState.mapData.value?.serverName?.value = it }
             )
         }
         AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.mapType != null) {
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsEdit_mapType),
-                description = getMapTypes().find { it.index == mapsEditState.mapData.value?.mapType }?.label ?: "unknown",
+                description = getMapTypes().find { it.index == mapsEditState.mapData.value?.mapType?.value }?.label ?: "unknown",
                 expanded = typesExpanded.value
             ) {
                 typesExpanded.value = !typesExpanded.value
@@ -77,10 +78,10 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
                 LACToolColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     LACToolRadioButtons(
                         options = getMapTypes().map { it.label },
-                        initialIndex = mapsEditState.mapData.value?.mapType ?: 0,
+                        initialIndex = mapsEditState.mapData.value?.mapType?.value ?: 0,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         optionsRounded = true,
-                        onSelect = { mapsEditState.mapData.value?.mapType = it }
+                        onSelect = { mapsEditState.mapData.value?.mapType?.value = it }
                     )
                 }
             }
@@ -103,24 +104,23 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
     AnimatedVisibilityColumn(visible = !mapsEditState.mapData.value?.mapOptions.isNullOrEmpty()) {
         LACToolColumnDivider(title = stringResource(R.string.mapsEdit_options)) {
             mapsEditState.mapData.value?.mapOptions?.forEach { option ->
-                val valueEdit = remember { mutableStateOf(option.value) }
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(
                         label = option.label,
-                        value = valueEdit.value,
-                        onValueChange = { valueEdit.value = it },
-                        placeholder = option.value,
+                        value = option.value.value,
+                        onValueChange = { option.value.value = it },
+                        placeholder = option.value.value,
                         numberOnly = true
                     )
                     LACMapOptionType.BOOLEAN -> LACToolSwitch(
                         title = option.label,
-                        checked = valueEdit.value == "true",
-                        onCheckedChange = { valueEdit.value = it.toString() }
+                        checked = option.value.value == "true",
+                        onCheckedChange = { option.value.value = it.toString() }
                     )
                     LACMapOptionType.SWITCH -> LACToolSwitch(
                         title = option.label,
-                        checked = valueEdit.value == "enabled",
-                        onCheckedChange = { valueEdit.value = if (it) "enabled" else "disabled" }
+                        checked = option.value.value == "enabled",
+                        onCheckedChange = { option.value.value = if (it) "enabled" else "disabled" }
                     )
                 }
             }

@@ -7,18 +7,21 @@ enum class LACLineType(
         private val startsWith = "Map Name:"
         override fun matches(line: String) = line.startsWith(startsWith)
         override fun getValue(line: String) = line.removePrefix(startsWith)
+        override fun setValue(value: String, label: String?) = "$startsWith$value"
     },
 
     MAP_TYPE {
         private val startsWith = "Map Type:"
         override fun matches(line: String) = line.startsWith(startsWith)
         override fun getValue(line: String) = line.removePrefix(startsWith)
+        override fun setValue(value: String, label: String?) = "$startsWith$value"
     },
 
     ROLES_LIST {
         private val startsWith = "Roles List:"
         override fun matches(line: String) = line.startsWith(startsWith)
         override fun getValue(line: String) = line.removePrefix(startsWith)
+        override fun setValue(value: String, label: String?) = "$startsWith$value"
     },
 
     OPTION_NUMBER {
@@ -67,6 +70,7 @@ enum class LACLineType(
     OPTION_GENERAL(ignoreWhenFiltering = true) {
         override fun matches(line: String) = line.split(": ").size == 2
         override fun getValue(line: String) = line.split(": ")[1]
+        override fun setValue(value: String, label: String?) = "$label: $value"
         override fun getLabel(line: String) = line.split(": ")[0]
     },
 
@@ -77,5 +81,6 @@ enum class LACLineType(
 
     abstract fun matches(line: String): Boolean
     abstract fun getValue(line: String): String
+    open fun setValue(value: String, label: String? = null): String { return "" }
     open fun getLabel(line: String): String? { return null }
 }

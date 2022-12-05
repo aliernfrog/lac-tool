@@ -36,12 +36,16 @@ class MapsEditState(_topToastManager: TopToastManager) {
     @OptIn(ExperimentalMaterialApi::class)
     val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
 
+    private var mapFile: File? = null
+    private var mapDocumentFile: DocumentFileCompat? = null
     val mapData: MutableState<LACMapData?> = mutableStateOf(null)
     val roleSheetChosenRole = mutableStateOf("")
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
         if (file == null && documentFile == null) return
+        mapFile = file
+        mapDocumentFile = documentFile
         withContext(Dispatchers.IO) {
             val inputStream = file?.inputStream() ?: context.contentResolver.openInputStream(documentFile!!.uri)
             mapData.value = LACMapData()
@@ -57,20 +61,20 @@ class MapsEditState(_topToastManager: TopToastManager) {
             try {
                 when (val type = LACUtil.getEditorLineType(line)) {
                     LACLineType.SERVER_NAME -> {
-                        mapData.value!!.serverName = type.getValue(line)
+                        mapData.value!!.serverName.value = type.getValue(line)
                         mapData.value!!.serverNameLine = index
                     }
                     LACLineType.MAP_TYPE -> {
-                        mapData.value!!.mapType = type.getValue(line).toInt()
+                        mapData.value!!.mapType.value = type.getValue(line).toInt()
                         mapData.value!!.mapTypeLine = index
                     }
                     LACLineType.ROLES_LIST -> {
                         mapData.value!!.mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableStateList()
                         mapData.value!!.mapRolesLine = index
                     }
-                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, type.getValue(line)))
-                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, type.getValue(line)))
-                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, type.getValue(line)))
+                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
                     else -> {}
                 }
             } catch (e: Exception) {
@@ -79,7 +83,24 @@ class MapsEditState(_topToastManager: TopToastManager) {
         }
     }
 
-    suspend fun finishEditing(navController: NavController) {
+    @SuppressLint("Recycle")
+    suspend fun finishEditing(navController: NavController, save: Boolean = false, context: Context? = null) {
+        if (save && context == null) return
+        if (save) withContext(Dispatchers.IO) {
+            if (mapData.value?.serverName != null)
+                mapData.value!!.mapLines!![mapData.value!!.serverNameLine!!] = LACLineType.SERVER_NAME.setValue(mapData.value!!.serverName.value)
+            if (mapData.value?.mapType != null)
+                mapData.value!!.mapLines!![mapData.value!!.mapTypeLine!!] = LACLineType.MAP_TYPE.setValue(mapData.value!!.mapType.value.toString())
+            if (mapData.value?.mapRoles != null)
+                mapData.value!!.mapLines!![mapData.value!!.mapRolesLine!!] = LACLineType.ROLES_LIST.setValue(mapData.value!!.mapRoles!!.joinToString(",").plus(","))
+            mapData.value?.mapOptions?.forEach { option ->
+                mapData.value!!.mapLines!![option.line] = LACLineType.OPTION_GENERAL.setValue(option.value.value, option.label)
+            }
+            val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context!!.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
+            outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
+            outputStreamWriter.flush()
+            outputStreamWriter.close()
+        }
         navController.popBackStack()
         mapData.value = null
         scrollState.scrollTo(0)
