@@ -51,7 +51,7 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
         GeneralActions(mapsEditState, navController)
         OptionsActions(mapsEditState)
-        Text(mapsEditState.mapData.value.toString(), Modifier.padding(horizontal = 8.dp))
+        Text(mapsEditState.mapData.value?.mapLines?.joinToString("\n") ?: "", Modifier.padding(horizontal = 8.dp))
     }
 }
 
