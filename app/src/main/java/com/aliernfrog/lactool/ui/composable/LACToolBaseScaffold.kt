@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,7 +36,6 @@ fun LACToolBaseScaffold(screens: List<Screen>, navController: NavController, con
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopBar(navController: NavController, scrollBehavior: TopAppBarScrollBehavior, currentScreen: Screen?) {
-    val context = LocalContext.current
     LargeTopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
@@ -54,7 +52,7 @@ private fun TopBar(navController: NavController, scrollBehavior: TopAppBarScroll
                 IconButton(onClick = { currentScreen?.onNavigationBack?.invoke() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = context.getString(R.string.action_back),
+                        contentDescription = stringResource(R.string.action_back),
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }

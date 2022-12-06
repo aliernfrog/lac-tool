@@ -11,12 +11,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
@@ -41,11 +45,10 @@ fun PickMapSheet(
     onFilePick: (File) -> Unit,
     onDocumentFilePick: (DocumentFileCompat) -> Unit
 ) {
-    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val hideSheet = { scope.launch { sheetState.hide() } }
-    LACToolModalBottomSheet(title = context.getString(R.string.manageMapsPickMap), sheetState, scrollState) {
+    LACToolModalBottomSheet(title = stringResource(R.string.manageMapsPickMap), sheetState, scrollState) {
         PickFromDeviceButton(topToastManager) { onFilePick(it); hideSheet() }
         Maps(mapsState, showMapThumbnails, { onFilePick(it); hideSheet() }, { onDocumentFilePick(it); hideSheet() })
     }
@@ -62,10 +65,10 @@ private fun PickFromDeviceButton(topToastManager: TopToastManager, onFilePick: (
         if (it.data?.data != null) {
             val convertedPath = UriToFileUtil.getRealFilePath(it.data?.data!!, context)
             if (convertedPath != null) onFilePick(File(convertedPath))
-            else topToastManager.showToast(context.getString(R.string.warning_couldntConvertToPath), iconDrawableId = R.drawable.exclamation, iconTintColorType = TopToastColorType.ERROR)
+            else topToastManager.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Default.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
         }
     }
-    LACToolButtonRounded(title = context.getString(R.string.manageMapsPickMapFromDevice), painter = painterResource(id = R.drawable.device), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
+    LACToolButtonRounded(title = stringResource(R.string.manageMapsPickMapFromDevice), painter = rememberVectorPainter(Icons.Default.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
         val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain").putExtra(Intent.EXTRA_LOCAL_ONLY, true)
         launcher.launch(intent)
     }
@@ -74,9 +77,8 @@ private fun PickFromDeviceButton(topToastManager: TopToastManager, onFilePick: (
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
-    val context = LocalContext.current
     var selectedSegment by remember { mutableStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
-    LACToolSegmentedButtons(options = listOf(context.getString(R.string.manageMapsPickMapYourMaps),context.getString(R.string.manageMapsPickMapExportedMaps))) {
+    LACToolSegmentedButtons(options = listOf(stringResource (R.string.manageMapsPickMapYourMaps), stringResource(R.string.manageMapsPickMapExportedMaps))) {
         selectedSegment = it
     }
     AnimatedContent(targetState = selectedSegment) {
@@ -89,7 +91,6 @@ private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (
 
 @Composable
 private fun MapsList(maps: List<MapsListItem>, showMapThumbnails: Boolean, exportedMaps: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
-    val context = LocalContext.current
     if (maps.isNotEmpty()) {
         maps.forEach { map ->
             LACToolMapButton(map, showMapThumbnail = showMapThumbnails) {
@@ -99,7 +100,7 @@ private fun MapsList(maps: List<MapsListItem>, showMapThumbnails: Boolean, expor
         }
     } else {
         LACToolColumnRounded(color = MaterialTheme.colorScheme.error) {
-            Text(text = context.getString(if (exportedMaps) R.string.manageMapsPickMapNoExportedMaps else R.string.manageMapsPickMapNoImportedMaps), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onError)
+            Text(text = stringResource(if (exportedMaps) R.string.manageMapsPickMapNoExportedMaps else R.string.manageMapsPickMapNoImportedMaps), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onError)
         }
     }
 }

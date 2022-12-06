@@ -2,12 +2,15 @@ package com.aliernfrog.lactool.ui.sheet
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.aliernfrog.lactool.R
@@ -33,23 +36,23 @@ fun RoleSheet(role: String, state: ModalBottomSheetState, topToastManager: TopTo
         LACToolColumnDivider(null, bottomDivider = false) {
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsRoles_copyRoleName),
-                painter = painterResource(R.drawable.copy)
+                painter = rememberVectorPainter(Icons.Filled.ContentCopy)
             ) {
                 clipboardManager.setText(AnnotatedString(role.removeHtml()))
-                topToastManager?.showToast(context.getString(R.string.info_copiedToClipboard), iconDrawableId = R.drawable.copy, iconTintColorType = TopToastColorType.PRIMARY)
+                topToastManager?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Filled.ContentCopy, iconTintColorType = TopToastColorType.PRIMARY)
                 scope.launch { state.hide() }
             }
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsRoles_copyRoleRaw),
-                painter = painterResource(R.drawable.copy)
+                painter = rememberVectorPainter(Icons.Filled.ContentCopy)
             ) {
                 clipboardManager.setText(AnnotatedString(role))
-                topToastManager?.showToast(context.getString(R.string.info_copiedToClipboard), iconDrawableId = R.drawable.copy, iconTintColorType = TopToastColorType.PRIMARY)
+                topToastManager?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Filled.ContentCopy, iconTintColorType = TopToastColorType.PRIMARY)
                 scope.launch { state.hide() }
             }
             LACToolButtonShapeless(
                 title = stringResource(R.string.mapsRoles_deleteRole),
-                painter = painterResource(R.drawable.trash),
+                painter = rememberVectorPainter(Icons.Default.Delete),
                 contentColor = MaterialTheme.colorScheme.error
             ) {
                 onDeleteRole(role)

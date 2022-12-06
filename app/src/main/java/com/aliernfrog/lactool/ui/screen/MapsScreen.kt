@@ -5,14 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsState
@@ -47,13 +50,11 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PickMapFileButton(mapsState: MapsState) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     LACToolButtonRounded(
-        title = context.getString(R.string.manageMapsPickMap),
-        painter = painterResource(id = R.drawable.map),
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
+        title = stringResource(R.string.manageMapsPickMap),
+        painter = rememberVectorPainter(Icons.Default.PinDrop),
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
         scope.launch { mapsState.pickMapSheetState.show() }
     }
@@ -67,7 +68,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     val isImported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsDir) ?: false
     val isExported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsExportDir) ?: false
     MapActionVisibility(visible = mapChosen) {
-        LACToolColumnRounded(title = context.getString(R.string.manageMapsMapName)) {
+        LACToolColumnRounded(title = stringResource(R.string.manageMapsMapName)) {
             LACToolTextField(
                 value = mapsState.mapNameEdit.value,
                 placeholder = { Text(mapsState.chosenMap.value!!.mapName) },
@@ -76,10 +77,9 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             )
             MapActionVisibility(visible = isImported && mapsState.getMapNameEdit(false) != mapsState.chosenMap.value!!.mapName) {
                 LACToolButtonRounded(
-                    title = context.getString(R.string.manageMapsRename),
-                    painter = painterResource(id = R.drawable.edit),
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    title = stringResource(R.string.manageMapsRename),
+                    painter = rememberVectorPainter(Icons.Default.Edit),
+                    containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     scope.launch { mapsState.renameChosenMap(context) }
                 }
@@ -88,45 +88,43 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     }
     MapActionVisibility(visible = mapChosen && !isImported) {
         LACToolButtonRounded(
-            title = context.getString(R.string.manageMapsImport),
-            painter = painterResource(id = R.drawable.download),
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            title = stringResource(R.string.manageMapsImport),
+            painter = rememberVectorPainter(Icons.Default.Download),
+            containerColor = MaterialTheme.colorScheme.primary
         ) {
             scope.launch { mapsState.importChosenMap(context) }
         }
     }
     MapActionVisibility(visible = mapChosen && isImported) {
         LACToolButtonRounded(
-            title = context.getString(R.string.manageMapsExport),
-            painter = painterResource(id = R.drawable.share)
+            title = stringResource(R.string.manageMapsExport),
+            painter = rememberVectorPainter(Icons.Default.Upload)
         ) {
             scope.launch { mapsState.exportChosenMap(context) }
         }
     }
     MapActionVisibility(visible = mapChosen) {
         LACToolButtonRounded(
-            title = context.getString(R.string.manageMapsShare),
-            painter = painterResource(id = R.drawable.share)
+            title = stringResource(R.string.manageMapsShare),
+            painter = rememberVectorPainter(Icons.Default.IosShare)
         ) {
             FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "text/plain", context)
         }
     }
     MapActionVisibility(visible = mapChosen) {
         LACToolButtonRounded(
-            title = context.getString(R.string.manageMapsEdit),
-            description = context.getString(R.string.manageMapsEditDescription),
-            painter = painterResource(id = R.drawable.edit)
+            title = stringResource(R.string.manageMapsEdit),
+            description = stringResource(R.string.manageMapsEditDescription),
+            painter = rememberVectorPainter(Icons.Default.Edit)
         ) {
             scope.launch { mapsState.editChosenMap(context, navController) }
         }
     }
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
         LACToolButtonRounded(
-            title = context.getString(R.string.manageMapsDelete),
-            painter = painterResource(id = R.drawable.trash),
-            containerColor = MaterialTheme.colorScheme.error,
-            contentColor = MaterialTheme.colorScheme.onError
+            title = stringResource(R.string.manageMapsDelete),
+            painter = rememberVectorPainter(Icons.Default.Delete),
+            containerColor = MaterialTheme.colorScheme.error
         ) {
             mapsState.mapDeleteDialogShown.value = true
         }

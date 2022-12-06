@@ -7,6 +7,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PriorityHigh
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Save
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -101,7 +106,7 @@ class MapsEditState(_topToastManager: TopToastManager) {
             outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
             outputStreamWriter.flush()
             outputStreamWriter.close()
-            topToastManager.showToast(context.getString(R.string.info_mapEditsSaved), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastManager.showToast(context.getString(R.string.info_mapEditsSaved), iconImageVector = Icons.Rounded.Save, iconTintColorType = TopToastColorType.PRIMARY)
         }
         finishEditingWithoutSaving(navController)
     }
@@ -122,14 +127,14 @@ class MapsEditState(_topToastManager: TopToastManager) {
 
     fun deleteRole(role: String, context: Context) {
         mapData.value?.mapRoles?.remove(role)
-        topToastManager.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.trash, iconTintColorType = TopToastColorType.PRIMARY)
+        topToastManager.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Default.Delete, iconTintColorType = TopToastColorType.PRIMARY)
     }
 
     fun addRole(role: String, context: Context) {
         if (roleNameIllegalChars.find { role.contains(it) } != null)
-            return topToastManager.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconDrawableId = R.drawable.exclamation, iconTintColorType = TopToastColorType.ERROR)
+            return topToastManager.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconImageVector = Icons.Default.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
         mapData.value?.mapRoles?.add(role)
-        topToastManager.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
+        topToastManager.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Check, iconTintColorType = TopToastColorType.PRIMARY)
     }
 
     suspend fun onNavigationBack(navController: NavController) {
