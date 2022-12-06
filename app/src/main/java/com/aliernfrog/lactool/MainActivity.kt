@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val navController = rememberNavController()
-        val screens = getScreens(navController)
+        val screens = getScreens(navController, mapsState.mapsEditState)
         LACToolBaseScaffold(screens, navController) {
             NavHost(
                 navController = navController,

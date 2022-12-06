@@ -47,6 +47,10 @@
     <string name="mapsEdit_mapType_4">Desert</string>
     <string name="mapsEdit_mapType_5">Water</string>
     <string name="mapsEdit_options">Options</string>
+    <string name="mapsEdit_saveWarning_title">Unsaved changes</string>
+    <string name="mapsEdit_saveWarning_description">You have unsaved changes, are you sure you want to quit?</string>
+    <string name="mapsEdit_saveWarning_keepEditing">Keep editing</string>
+    <string name="mapsEdit_saveWarning_discardChanges">Quit</string>
     <string name="mapsRoles">Edit roles</string>
     <string name="mapsRolesDescription">Currently has %COUNT% roles</string>
     <string name="mapsRoles_showingCount">Showing %COUNT% roles</string>

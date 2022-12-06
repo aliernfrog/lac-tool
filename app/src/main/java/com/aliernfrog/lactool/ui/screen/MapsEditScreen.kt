@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +25,7 @@ import com.aliernfrog.lactool.data.LacMapType
 import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.composable.*
+import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.util.Destination
 import kotlinx.coroutines.launch
 
@@ -38,8 +40,21 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
             modifier = Modifier.align(Alignment.BottomEnd),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            scope.launch { mapsEditState.finishEditing(navController, true, context) }
+            scope.launch { mapsEditState.saveAndFinishEditing(navController, context) }
         }
+    }
+    if (mapsEditState.saveWarningShown.value) SaveWarningDialog(
+        onDismissRequest = { mapsEditState.saveWarningShown.value = false },
+        onKeepEditing = { mapsEditState.saveWarningShown.value = false },
+        onDiscardChanges = {
+            scope.launch {
+                mapsEditState.finishEditingWithoutSaving(navController)
+                mapsEditState.saveWarningShown.value = false
+            }
+        }
+    )
+    BackHandler {
+        scope.launch { mapsEditState.onNavigationBack(navController) }
     }
 }
 

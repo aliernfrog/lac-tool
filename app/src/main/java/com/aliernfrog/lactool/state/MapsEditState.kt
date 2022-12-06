@@ -36,6 +36,7 @@ class MapsEditState(_topToastManager: TopToastManager) {
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
     @OptIn(ExperimentalMaterialApi::class)
     val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
+    var saveWarningShown = mutableStateOf(false)
 
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
@@ -85,9 +86,8 @@ class MapsEditState(_topToastManager: TopToastManager) {
     }
 
     @SuppressLint("Recycle")
-    suspend fun finishEditing(navController: NavController, save: Boolean = false, context: Context? = null) {
-        if (save && context == null) return
-        if (save) withContext(Dispatchers.IO) {
+    suspend fun saveAndFinishEditing(navController: NavController, context: Context) {
+        withContext(Dispatchers.IO) {
             if (mapData.value?.serverName != null)
                 mapData.value!!.mapLines!![mapData.value!!.serverNameLine!!] = LACLineType.SERVER_NAME.setValue(mapData.value!!.serverName.value)
             if (mapData.value?.mapType != null)
@@ -97,14 +97,20 @@ class MapsEditState(_topToastManager: TopToastManager) {
             mapData.value?.mapOptions?.forEach { option ->
                 mapData.value!!.mapLines!![option.line] = LACLineType.OPTION_GENERAL.setValue(option.value.value, option.label)
             }
-            val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context!!.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
+            val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
             outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
             outputStreamWriter.flush()
             outputStreamWriter.close()
-            topToastManager.showToast(context!!.getString(R.string.info_mapEditsSaved), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastManager.showToast(context.getString(R.string.info_mapEditsSaved), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
         }
+        finishEditingWithoutSaving(navController)
+    }
+
+    suspend fun finishEditingWithoutSaving(navController: NavController) {
         navController.popBackStack()
         mapData.value = null
+        mapFile = null
+        mapDocumentFile = null
         scrollState.scrollTo(0)
     }
 
@@ -124,5 +130,10 @@ class MapsEditState(_topToastManager: TopToastManager) {
             return topToastManager.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconDrawableId = R.drawable.exclamation, iconTintColorType = TopToastColorType.ERROR)
         mapData.value?.mapRoles?.add(role)
         topToastManager.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconDrawableId = R.drawable.check, iconTintColorType = TopToastColorType.PRIMARY)
+    }
+
+    suspend fun onNavigationBack(navController: NavController) {
+        if (mapData.value == null) finishEditingWithoutSaving(navController)
+        else saveWarningShown.value = true
     }
 }

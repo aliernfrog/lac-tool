@@ -6,12 +6,15 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.Screen
+import com.aliernfrog.lactool.state.MapsEditState
+import kotlinx.coroutines.launch
 
 object NavigationConstant {
     val INITIAL_DESTINATION = Destination.MAPS.route
@@ -33,8 +36,10 @@ enum class Destination(
 
 @Composable
 fun getScreens(
-    navController: NavController
+    navController: NavController,
+    mapsEditState: MapsEditState
 ): List<Screen> {
+    val scope = rememberCoroutineScope()
     return Destination.values().map { destination ->
         Screen(
             route = destination.route,
@@ -43,7 +48,12 @@ fun getScreens(
             iconOutlined = destination.vectorSelected?.let { rememberVectorPainter(it) },
             isSubScreen = destination.isSubScreen
         ) {
-            navController.navigateUp()
+            when(destination) {
+                Destination.MAPS_EDIT -> {
+                    scope.launch { mapsEditState.onNavigationBack(navController) }
+                }
+                else -> navController.navigateUp()
+            }
         }
     }
 }
