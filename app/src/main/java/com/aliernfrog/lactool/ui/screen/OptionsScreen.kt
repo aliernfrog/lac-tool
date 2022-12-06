@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,7 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.*
+import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.Link
+import com.aliernfrog.lactool.MainActivity
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.state.OptionsState
