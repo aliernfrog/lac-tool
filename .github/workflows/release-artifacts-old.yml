@@ -1,11 +1,10 @@
 name: Release in Artifacts (Old codebase)
 
 on:
-  workflow_dispatch:
+  push:
+    branches: ["old-codebase"]
 
-concurrency:
-  group: "release-artifacts-old"
-  cancel-in-progress: true
+  workflow_dispatch:
 
 jobs:
   build:

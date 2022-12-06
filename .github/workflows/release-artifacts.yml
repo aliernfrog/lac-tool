@@ -6,10 +6,6 @@ on:
 
   workflow_dispatch:
 
-concurrency:
-  group: "release-artifacts"
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
