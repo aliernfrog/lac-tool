@@ -4,6 +4,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
+    <string name="action_pickColor">Pick a color</string>
     <string name="warning_couldntConvertToPath">Could not get path of this file</string>
     <string name="warning_fileDoesntExist">File does not exist</string>
     <string name="warning_missingStoragePermissions">Missing storage permissions</string>

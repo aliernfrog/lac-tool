@@ -65,4 +65,5 @@ dependencies {
     implementation("com.github.aliernfrog:top-toast-compose:0.0.13")
     implementation("com.lazygeniouz:documentfile_compat:0.8")
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("com.godaddy.android.colorpicker:compose-color-picker:0.5.1")
 }
