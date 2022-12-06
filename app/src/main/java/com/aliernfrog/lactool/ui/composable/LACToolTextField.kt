@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.composable
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,9 +22,10 @@ fun LACToolTextField(
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     singleLine: Boolean = false,
-    contentColor: Color = MaterialTheme.colorScheme.onSecondary,
     containerColor: Color = MaterialTheme.colorScheme.secondary,
+    contentColor: Color = contentColorFor(containerColor),
     rounded: Boolean = true,
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(
         textColor = contentColor,
@@ -41,6 +43,7 @@ fun LACToolTextField(
         modifier = modifier.fillMaxWidth().padding(all = 8.dp).clip(if (rounded) LACToolComposableShape else RectangleShape).animateContentSize(),
         label = label,
         placeholder = placeholder,
+        keyboardOptions = keyboardOptions,
         singleLine = singleLine,
         colors = colors
     )

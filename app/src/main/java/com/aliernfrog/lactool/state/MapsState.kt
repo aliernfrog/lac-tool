@@ -13,8 +13,8 @@ import androidx.navigation.NavController
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.NavRoutes
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.data.LacMap
+import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.util.FileUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
@@ -31,7 +31,7 @@ class MapsState(
     _deleteMapSheetState: ModalBottomSheetState
 ) {
     private val topToastManager = _topToastManager
-    val mapsEditState = MapsEditState()
+    val mapsEditState = MapsEditState(topToastManager)
     val pickMapSheetState = _pickMapSheetState
     val deleteMapSheetState = _deleteMapSheetState
     val scrollState = ScrollState(0)

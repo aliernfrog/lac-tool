@@ -16,13 +16,21 @@ import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.LACToolComposableShape
 
 @Composable
-fun LACToolButtonCentered(title: String, modifier: Modifier = Modifier, containerColor: Color = MaterialTheme.colorScheme.secondary, contentColor: Color = MaterialTheme.colorScheme.onSecondary, onClick: () -> Unit) {
+fun LACToolButtonCentered(
+    title: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    containerColor: Color = MaterialTheme.colorScheme.secondary,
+    contentColor: Color = MaterialTheme.colorScheme.onSecondary,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick,
-        modifier = modifier.padding(all = 8.dp).fillMaxWidth(),
+        modifier = modifier.padding(8.dp).fillMaxWidth(),
+        enabled = enabled,
         shape = LACToolComposableShape,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(vertical = 13.dp)
     ) {
         Text(title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
     }

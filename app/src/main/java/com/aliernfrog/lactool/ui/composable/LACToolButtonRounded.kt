@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.LACToolComposableShape
 
 @Composable
-fun LACToolButton(
+fun LACToolButtonRounded(
     title: String,
     description: String? = null,
     painter: Painter? = null,

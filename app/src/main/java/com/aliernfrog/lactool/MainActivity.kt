@@ -21,11 +21,12 @@ import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
-import com.aliernfrog.lactool.ui.screen.MapsEditScreen
-import com.aliernfrog.lactool.ui.screen.MapsScreenRoot
-import com.aliernfrog.lactool.ui.screen.OptionsScreen
+import com.aliernfrog.lactool.ui.composable.LACToolSheetBackHandler
+import com.aliernfrog.lactool.ui.screen.*
+import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
+import com.aliernfrog.lactool.ui.sheet.RoleSheet
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.toptoast.TopToastBase
 import com.aliernfrog.toptoast.TopToastManager
@@ -71,10 +72,17 @@ class MainActivity : ComponentActivity() {
                 startDestination = NavRoutes.MAPS,
                 modifier = Modifier.fillMaxSize().padding(it).consumedWindowInsets(it).systemBarsPadding()
             ) {
-                composable(route = NavRoutes.MAPS) { MapsScreenRoot(mapsState, navController) }
+                composable(route = NavRoutes.MAPS) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
                 composable(route = NavRoutes.MAPS_EDIT) { MapsEditScreen(mapsState.mapsEditState, navController) }
+                composable(route = NavRoutes.MAPS_ROLES) { MapsRolesScreen(mapsState.mapsEditState) }
                 composable(route = NavRoutes.OPTIONS) { OptionsScreen(config, topToastManager, optionsState) }
             }
+            LACToolSheetBackHandler(
+                pickMapSheetState,
+                deleteMapSheetState,
+                mapsState.mapsEditState.roleSheetState,
+                mapsState.mapsEditState.addRoleSheetState
+            )
         }
         PickMapSheet(
             mapsState = mapsState,
@@ -90,6 +98,16 @@ class MainActivity : ComponentActivity() {
         ) {
             scope.launch { mapsState.deleteChosenMap(context) }
         }
+        RoleSheet(
+            role = mapsState.mapsEditState.roleSheetChosenRole.value,
+            state = mapsState.mapsEditState.roleSheetState,
+            topToastManager = topToastManager,
+            onDeleteRole = { mapsState.mapsEditState.deleteRole(it, context) }
+        )
+        AddRoleSheet(
+            state = mapsState.mapsEditState.addRoleSheetState,
+            onRoleAdd = { mapsState.mapsEditState.addRole(it, context) }
+        )
     }
 
     @Composable

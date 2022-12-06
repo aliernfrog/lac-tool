@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.data.Screen
 import com.aliernfrog.lactool.data.Social
@@ -38,6 +39,7 @@ object Link {
 object NavRoutes {
     const val MAPS = "maps"
     const val MAPS_EDIT = "mapsEdit"
+    const val MAPS_ROLES = "mapsRoles"
     const val OPTIONS = "options"
 }
 
@@ -47,6 +49,7 @@ fun getScreens(): List<Screen> {
     return listOf(
         Screen(NavRoutes.MAPS, context.getString(R.string.manageMaps), rememberVectorPainter(Icons.Default.PinDrop), rememberVectorPainter(Icons.Outlined.PinDrop)),
         Screen(NavRoutes.MAPS_EDIT, context.getString(R.string.mapsEdit), null, null, true),
+        Screen(NavRoutes.MAPS_ROLES, stringResource(R.string.mapsRoles), null, null, true),
         Screen(NavRoutes.OPTIONS, context.getString(R.string.options), rememberVectorPainter(Icons.Default.Settings), rememberVectorPainter(Icons.Outlined.Settings))
     )
 }
