@@ -31,6 +31,7 @@ import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
+import com.aliernfrog.lactool.util.getScreens
 import com.aliernfrog.toptoast.TopToastBase
 import com.aliernfrog.toptoast.TopToastManager
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -69,7 +70,8 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val navController = rememberNavController()
-        LACToolBaseScaffold(navController) {
+        val screens = getScreens(navController)
+        LACToolBaseScaffold(screens, navController) {
             NavHost(
                 navController = navController,
                 startDestination = NavigationConstant.INITIAL_DESTINATION,

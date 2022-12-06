@@ -17,12 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.Screen
 import com.aliernfrog.lactool.util.NavigationConstant
-import com.aliernfrog.lactool.util.getScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LACToolBaseScaffold(navController: NavController, content: @Composable (PaddingValues) -> Unit) {
-    val screens = getScreens()
+fun LACToolBaseScaffold(screens: List<Screen>, navController: NavController, content: @Composable (PaddingValues) -> Unit) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentScreen = screens.find { it.route == currentRoute }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -53,7 +51,7 @@ private fun TopBar(navController: NavController, scrollBehavior: TopAppBarScroll
                 enter = slideInHorizontally() + expandHorizontally() + fadeIn(),
                 exit = slideOutHorizontally() + shrinkHorizontally() + fadeOut()
             ) {
-                IconButton(onClick = { navController.navigateUp() }) {
+                IconButton(onClick = { currentScreen?.onNavigationBack?.invoke() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = context.getString(R.string.action_back),

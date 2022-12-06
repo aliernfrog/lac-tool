@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.Screen
 
@@ -31,7 +32,9 @@ enum class Destination(
 }
 
 @Composable
-fun getScreens(): List<Screen> {
+fun getScreens(
+    navController: NavController
+): List<Screen> {
     return Destination.values().map { destination ->
         Screen(
             route = destination.route,
@@ -39,6 +42,8 @@ fun getScreens(): List<Screen> {
             iconFilled = destination.vector?.let { rememberVectorPainter(it) },
             iconOutlined = destination.vectorSelected?.let { rememberVectorPainter(it) },
             isSubScreen = destination.isSubScreen
-        )
+        ) {
+            navController.navigateUp()
+        }
     }
 }
