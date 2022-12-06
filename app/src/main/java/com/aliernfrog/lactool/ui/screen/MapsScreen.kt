@@ -19,7 +19,7 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.composable.LACToolButtonRounded
 import com.aliernfrog.lactool.ui.composable.LACToolColumnRounded
 import com.aliernfrog.lactool.ui.composable.LACToolTextField
-import com.aliernfrog.lactool.util.FileUtil
+import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
 
 @Composable

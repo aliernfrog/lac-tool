@@ -15,7 +15,7 @@ import com.aliernfrog.lactool.ui.composable.LACToolButtonShapeless
 import com.aliernfrog.lactool.ui.composable.LACToolColumnDivider
 import com.aliernfrog.lactool.ui.composable.LACToolMapRole
 import com.aliernfrog.lactool.ui.composable.LACToolModalBottomSheet
-import com.aliernfrog.lactool.util.extensions.removeHtml
+import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
 import kotlinx.coroutines.launch

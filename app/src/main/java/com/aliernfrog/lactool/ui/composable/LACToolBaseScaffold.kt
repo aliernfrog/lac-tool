@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.Screen
-import com.aliernfrog.lactool.getScreens
+import com.aliernfrog.lactool.util.NavigationConstant
+import com.aliernfrog.lactool.util.getScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +44,7 @@ private fun TopBar(navController: NavController, scrollBehavior: TopAppBarScroll
         scrollBehavior = scrollBehavior,
         title = {
             Crossfade(targetState = currentScreen?.name) {
-                Text(text = it ?: context.getString(R.string.manageMaps))
+                Text(text = it ?: stringResource(NavigationConstant.LABEL_FALLBACK_ID))
             }
         },
         navigationIcon = {

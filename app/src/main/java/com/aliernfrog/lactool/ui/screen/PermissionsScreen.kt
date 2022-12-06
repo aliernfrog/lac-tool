@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.LACToolComposableShape
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.util.FileUtil
-import com.aliernfrog.lactool.util.GeneralUtil
+import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 @Composable
 fun PermissionsScreen(uriPath: String?, onSuccess: @Composable () -> Unit) {

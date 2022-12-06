@@ -11,11 +11,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.ConfigKey
-import com.aliernfrog.lactool.NavRoutes
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LacMap
 import com.aliernfrog.lactool.data.MapsListItem
-import com.aliernfrog.lactool.util.FileUtil
+import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
 import com.lazygeniouz.filecompat.file.DocumentFileCompat
@@ -101,7 +101,7 @@ class MapsState(
     suspend fun editChosenMap(context: Context, navController: NavController) {
         if (chosenMap.value!!.isFromUri) mapsEditState.loadMap(null, mapsFile.findFile(chosenMap.value!!.fileName)!!, context)
         else mapsEditState.loadMap(File(chosenMap.value!!.filePath), null, context)
-        navController.navigate(NavRoutes.MAPS_EDIT)
+        navController.navigate(Destination.MAPS_EDIT.route)
     }
 
     suspend fun deleteChosenMap(context: Context) {

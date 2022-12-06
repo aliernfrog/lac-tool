@@ -18,12 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import com.aliernfrog.lactool.PickMapSheetSegments
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
+import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.composable.*
-import com.aliernfrog.lactool.util.UriToFileUtil
+import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
 import com.lazygeniouz.filecompat.file.DocumentFileCompat
@@ -75,14 +75,14 @@ private fun PickFromDeviceButton(topToastManager: TopToastManager, onFilePick: (
 @Composable
 private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
     val context = LocalContext.current
-    var selectedSegment by remember { mutableStateOf(PickMapSheetSegments.IMPORTED) }
+    var selectedSegment by remember { mutableStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     LACToolSegmentedButtons(options = listOf(context.getString(R.string.manageMapsPickMapYourMaps),context.getString(R.string.manageMapsPickMapExportedMaps))) {
         selectedSegment = it
     }
     AnimatedContent(targetState = selectedSegment) {
         Column {
-            val maps = if (it == PickMapSheetSegments.IMPORTED) mapsState.importedMaps else mapsState.exportedMaps
-            MapsList(maps = maps.value, showMapThumbnails, exportedMaps = it == PickMapSheetSegments.EXPORTED, onFilePick, onDocumentFilePick)
+            val maps = if (it == PickMapSheetSegments.IMPORTED.ordinal) mapsState.importedMaps else mapsState.exportedMaps
+            MapsList(maps = maps.value, showMapThumbnails, exportedMaps = it == PickMapSheetSegments.EXPORTED.ordinal, onFilePick, onDocumentFilePick)
         }
     }
 }

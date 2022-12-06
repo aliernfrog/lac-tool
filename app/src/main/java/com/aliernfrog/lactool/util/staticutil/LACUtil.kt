@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.util
+package com.aliernfrog.lactool.util.staticutil
 
 import com.aliernfrog.lactool.enum.LACLineType
 

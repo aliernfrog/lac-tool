@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.util.extensions
+package com.aliernfrog.lactool.util.extension
 
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.core.text.HtmlCompat.fromHtml

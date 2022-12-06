@@ -17,8 +17,8 @@ import com.aliernfrog.lactool.data.LACMapData
 import com.aliernfrog.lactool.data.LacMapOption
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
-import com.aliernfrog.lactool.util.LACUtil
-import com.aliernfrog.lactool.util.extensions.removeHtml
+import com.aliernfrog.lactool.util.staticutil.LACUtil
+import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
 import com.lazygeniouz.filecompat.file.DocumentFileCompat

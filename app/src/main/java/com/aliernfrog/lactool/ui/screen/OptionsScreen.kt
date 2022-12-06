@@ -27,7 +27,7 @@ import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.*
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
-import com.aliernfrog.lactool.util.GeneralUtil
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.TopToastManager
 
 private const val experimentalRequiredClicks = 10

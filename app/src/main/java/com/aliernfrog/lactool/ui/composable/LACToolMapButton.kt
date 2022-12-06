@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.LACToolComposableShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
-import com.aliernfrog.lactool.util.FileUtil
+import com.aliernfrog.lactool.util.staticutil.FileUtil
 
 @Composable
 fun LACToolMapButton(

@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.util
+package com.aliernfrog.lactool.util.staticutil
 
 import android.content.ContentUris
 import android.content.Context

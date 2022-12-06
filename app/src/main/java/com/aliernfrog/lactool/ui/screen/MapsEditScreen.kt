@@ -19,12 +19,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aliernfrog.lactool.NavRoutes
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LacMapType
 import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.composable.*
+import com.aliernfrog.lactool.util.Destination
 import kotlinx.coroutines.launch
 
 @Composable
@@ -90,7 +90,7 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
                 expanded = false,
                 arrowRotation = 90f
             ) {
-                navController.navigate(NavRoutes.MAPS_ROLES)
+                navController.navigate(Destination.MAPS_ROLES.route)
             }
         }
     }

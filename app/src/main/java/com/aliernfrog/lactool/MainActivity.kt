@@ -28,6 +28,9 @@ import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.sheet.RoleSheet
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
+import com.aliernfrog.lactool.ui.theme.Theme
+import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.toptoast.TopToastBase
 import com.aliernfrog.toptoast.TopToastManager
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -69,13 +72,13 @@ class MainActivity : ComponentActivity() {
         LACToolBaseScaffold(navController) {
             NavHost(
                 navController = navController,
-                startDestination = NavRoutes.MAPS,
+                startDestination = NavigationConstant.INITIAL_DESTINATION,
                 modifier = Modifier.fillMaxSize().padding(it).consumedWindowInsets(it).systemBarsPadding()
             ) {
-                composable(route = NavRoutes.MAPS) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
-                composable(route = NavRoutes.MAPS_EDIT) { MapsEditScreen(mapsState.mapsEditState, navController) }
-                composable(route = NavRoutes.MAPS_ROLES) { MapsRolesScreen(mapsState.mapsEditState) }
-                composable(route = NavRoutes.OPTIONS) { OptionsScreen(config, topToastManager, optionsState) }
+                composable(route = Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
+                composable(route = Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
+                composable(route = Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
+                composable(route = Destination.OPTIONS.route) { OptionsScreen(config, topToastManager, optionsState) }
             }
             LACToolSheetBackHandler(
                 pickMapSheetState,
@@ -120,8 +123,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun getDarkThemePreference(): Boolean {
         return when(optionsState.theme.value) {
-            Theme.LIGHT -> false
-            Theme.DARK -> true
+            Theme.LIGHT.int -> false
+            Theme.DARK.int -> true
             else -> isSystemInDarkTheme()
         }
     }
