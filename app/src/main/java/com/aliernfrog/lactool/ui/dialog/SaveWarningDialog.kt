@@ -2,10 +2,7 @@ package com.aliernfrog.lactool.ui.dialog
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
@@ -20,12 +17,24 @@ fun SaveWarningDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            Button(onClick = onKeepEditing) {
+            Button(
+                onClick = onKeepEditing,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
                 Text(stringResource(R.string.mapsEdit_saveWarning_keepEditing))
             }
         },
         dismissButton = {
-            Button(onClick = onDiscardChanges) {
+            Button(
+                onClick = onDiscardChanges,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
                 Text(stringResource(R.string.mapsEdit_saveWarning_discardChanges))
             }
         },
