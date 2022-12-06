@@ -19,17 +19,29 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.composable.LACToolButtonRounded
 import com.aliernfrog.lactool.ui.composable.LACToolColumnRounded
 import com.aliernfrog.lactool.ui.composable.LACToolTextField
+import com.aliernfrog.lactool.ui.dialog.DeleteMapDialog
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
 
 @Composable
 fun MapsScreen(mapsState: MapsState, navController: NavController) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) { mapsState.getMapsFile(context); mapsState.getImportedMaps(); mapsState.getExportedMaps() }
     Column(Modifier.fillMaxSize().verticalScroll(mapsState.scrollState)) {
         PickMapFileButton(mapsState)
         MapActions(mapsState, navController)
     }
+    if (mapsState.mapDeleteDialogShown.value) DeleteMapDialog(
+        mapName = mapsState.lastMapName.value,
+        onDismissRequest = { mapsState.mapDeleteDialogShown.value = false },
+        onConfirmDelete = {
+            scope.launch {
+                mapsState.deleteChosenMap(context)
+                mapsState.mapDeleteDialogShown.value = false
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -47,7 +59,6 @@ private fun PickMapFileButton(mapsState: MapsState) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun MapActions(mapsState: MapsState, navController: NavController) {
     val context = LocalContext.current
@@ -117,7 +128,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             containerColor = MaterialTheme.colorScheme.error,
             contentColor = MaterialTheme.colorScheme.onError
         ) {
-            scope.launch { mapsState.deleteMapSheetState.show() }
+            scope.launch { mapsState.mapDeleteDialogShown.value = true }
         }
     }
 }

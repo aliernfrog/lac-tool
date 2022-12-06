@@ -11,7 +11,6 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
@@ -24,7 +23,6 @@ import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
 import com.aliernfrog.lactool.ui.composable.LACToolSheetBackHandler
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
-import com.aliernfrog.lactool.ui.sheet.DeleteMapSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.sheet.RoleSheet
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
@@ -35,7 +33,6 @@ import com.aliernfrog.lactool.util.getScreens
 import com.aliernfrog.toptoast.TopToastBase
 import com.aliernfrog.toptoast.TopToastManager
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
@@ -43,7 +40,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var topToastManager: TopToastManager
     private lateinit var optionsState: OptionsState
     private lateinit var pickMapSheetState: ModalBottomSheetState
-    private lateinit var deleteMapSheetState: ModalBottomSheetState
     private lateinit var mapsState: MapsState
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +49,7 @@ class MainActivity : ComponentActivity() {
         topToastManager = TopToastManager()
         optionsState = OptionsState(config)
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-        deleteMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
-        mapsState = MapsState(topToastManager, config, pickMapSheetState, deleteMapSheetState)
+        mapsState = MapsState(topToastManager, config, pickMapSheetState)
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, optionsState.materialYou.value) {
@@ -68,7 +63,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun BaseScaffold() {
         val context = LocalContext.current
-        val scope = rememberCoroutineScope()
         val navController = rememberNavController()
         val screens = getScreens(navController, mapsState.mapsEditState)
         LACToolBaseScaffold(screens, navController) {
@@ -84,7 +78,6 @@ class MainActivity : ComponentActivity() {
             }
             LACToolSheetBackHandler(
                 pickMapSheetState,
-                deleteMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState
             )
@@ -97,12 +90,6 @@ class MainActivity : ComponentActivity() {
             onFilePick = { mapsState.getMap(file = it, context = context) },
             onDocumentFilePick = { mapsState.getMap(documentFile = it, context = context) }
         )
-        DeleteMapSheet(
-            mapName = mapsState.lastMapName.value,
-            sheetState = deleteMapSheetState
-        ) {
-            scope.launch { mapsState.deleteChosenMap(context) }
-        }
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,
             state = mapsState.mapsEditState.roleSheetState,

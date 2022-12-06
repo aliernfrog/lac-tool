@@ -27,19 +27,18 @@ import java.io.File
 class MapsState(
     _topToastManager: TopToastManager,
     config: SharedPreferences,
-    _pickMapSheetState: ModalBottomSheetState,
-    _deleteMapSheetState: ModalBottomSheetState
+    _pickMapSheetState: ModalBottomSheetState
 ) {
     private val topToastManager = _topToastManager
     val mapsEditState = MapsEditState(topToastManager)
     val pickMapSheetState = _pickMapSheetState
-    val deleteMapSheetState = _deleteMapSheetState
     val scrollState = ScrollState(0)
     val mapsDir = config.getString(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)!!
     val mapsExportDir = config.getString(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)!!
     private lateinit var mapsFile: DocumentFileCompat
     private val exportedMapsFile = File(mapsExportDir)
 
+    val mapDeleteDialogShown = mutableStateOf(false)
     val importedMaps = mutableStateOf(emptyList<MapsListItem>())
     val exportedMaps = mutableStateOf(emptyList<MapsListItem>())
     val chosenMap: MutableState<LacMap?> = mutableStateOf(null)
