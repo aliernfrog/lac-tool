@@ -128,7 +128,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             containerColor = MaterialTheme.colorScheme.error,
             contentColor = MaterialTheme.colorScheme.onError
         ) {
-            scope.launch { mapsState.mapDeleteDialogShown.value = true }
+            mapsState.mapDeleteDialogShown.value = true
         }
     }
 }
