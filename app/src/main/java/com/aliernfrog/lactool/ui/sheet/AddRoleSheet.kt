@@ -100,6 +100,8 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
         if (state.isVisible) {
             focusRequester.requestFocus()
             keyboardController?.show()
+        } else {
+            focusRequester.freeFocus()
         }
     }
 }

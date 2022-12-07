@@ -47,7 +47,7 @@ fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetS
         }
     )
 
-    LaunchedEffect(sheetState.targetValue) {
-        if (sheetState.targetValue == ModalBottomSheetValue.Hidden) keyboardController?.hide()
+    LaunchedEffect(sheetState.isVisible) {
+        if (!sheetState.isVisible) keyboardController?.hide()
     }
 }
