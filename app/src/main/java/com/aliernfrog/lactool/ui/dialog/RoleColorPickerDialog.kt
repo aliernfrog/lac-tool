@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -18,31 +19,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.composable.LACToolDialog
+import com.aliernfrog.lactool.ui.composable.LACToolTextField
+import com.aliernfrog.lactool.util.extension.toHex
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
 @Composable
-fun ColorPickerDialog(
+fun RoleColorPickerDialog(
     onDismissRequest: () -> Unit,
     onColorPick: (Color) -> Unit,
-    initialColor: Color = Color.White
+    onColorClear: () -> Unit,
+    initialColorHex: String = "#ffffff"
 ) {
     val configuration = LocalConfiguration.current
-    val color = remember { mutableStateOf(initialColor) }
+    val color = remember { mutableStateOf(GeneralUtil.parseColor(initialColorHex)) }
+    val hexEdit = remember { mutableStateOf(color.value.toHex()) }
     LACToolDialog(
         onDismissRequest = onDismissRequest,
         title = stringResource(R.string.action_pickColor),
         icon = rememberVectorPainter(Icons.Filled.Palette)
     ) {
         HarmonyColorPicker(
-            modifier = Modifier.height((configuration.screenHeightDp/2).dp),
+            modifier = Modifier.height((configuration.screenHeightDp/2.5).dp),
             harmonyMode = ColorHarmonyMode.NONE,
-            onColorChanged = { color.value = it.toColor() },
-            color = color.value
+            color = color.value,
+            onColorChanged = {
+                color.value = it.toColor()
+                hexEdit.value = it.toColor().toHex()
+            }
+        )
+        LACToolTextField(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            value = hexEdit.value,
+            onValueChange = {
+                hexEdit.value = it
+                color.value = GeneralUtil.parseColor(it)
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
         ) {
             Button(
                 onClick = onDismissRequest,
@@ -51,17 +68,21 @@ fun ColorPickerDialog(
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
-            Spacer(Modifier.width(8.dp))
             Button(
-                onClick = { onColorPick(color.value) },
+                onClick = onColorClear,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary
                 )
             ) {
-                Text("Done")
+                Text(stringResource(R.string.action_clear))
+            }
+            Button(
+                onClick = { onColorPick(color.value) }
+            ) {
+                Text(stringResource(R.string.action_done))
             }
         }
     }

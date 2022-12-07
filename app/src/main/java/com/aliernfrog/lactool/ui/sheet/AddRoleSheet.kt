@@ -2,30 +2,26 @@ package com.aliernfrog.lactool.ui.sheet
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.composable.LACToolButtonCentered
+import com.aliernfrog.lactool.ui.composable.LACToolColorButton
 import com.aliernfrog.lactool.ui.composable.LACToolModalBottomSheet
 import com.aliernfrog.lactool.ui.composable.LACToolTextField
-import com.aliernfrog.lactool.ui.dialog.ColorPickerDialog
+import com.aliernfrog.lactool.ui.dialog.RoleColorPickerDialog
+import com.aliernfrog.lactool.util.extension.toHex
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -43,30 +39,17 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
             value = roleName.value,
             onValueChange = { roleName.value = it },
             label = { Text(stringResource(R.string.mapsRoles_roleName)) },
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            singleLine = true,
+            rounded = false,
+            containerColor = MaterialTheme.colorScheme.surface,
             modifier = Modifier.focusRequester(focusRequester)
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            LACToolTextField(
-                value = roleColor.value,
-                onValueChange = { roleColor.value = it },
-                modifier = Modifier.weight(1f),
-                label = { Text(stringResource(R.string.mapsRoles_roleColor)) },
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-            IconButton(
-                onClick = { colorPickerVisible.value = true },
-                modifier = Modifier.padding(end = 8.dp).size(40.dp),
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Outlined.Palette),
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+        LACToolColorButton(
+            label = stringResource(R.string.mapsRoles_roleColor),
+            description = roleColor.value,
+            color = GeneralUtil.parseColor(roleColor.value)
+        ) {
+            colorPickerVisible.value = true
         }
         AnimatedVisibility(visible = roleHtml.isNotBlank()) {
             Text(
@@ -87,13 +70,17 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
         }
     }
 
-    if (colorPickerVisible.value) ColorPickerDialog(
+    if (colorPickerVisible.value) RoleColorPickerDialog(
         onDismissRequest = { colorPickerVisible.value = false },
         onColorPick = {
-            roleColor.value = "#${it.value.toString(16).slice(2..7)}"
+            roleColor.value = it.toHex()
             colorPickerVisible.value = false
         },
-        initialColor = Color(android.graphics.Color.parseColor(if (roleColor.value.startsWith("#")) roleColor.value else "#ffffff"))
+        onColorClear = {
+            roleColor.value = ""
+            colorPickerVisible.value = false
+        },
+        initialColorHex = roleColor.value
     )
 
     LaunchedEffect(state.isVisible) {

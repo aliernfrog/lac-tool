@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 
 @Suppress("DEPRECATION")
@@ -25,6 +26,14 @@ class GeneralUtil {
         fun checkStoragePermissions(context: Context): Boolean {
             return if (Build.VERSION.SDK_INT >= 30) Environment.isExternalStorageManager()
             else ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun parseColor(string: String, fallback: Color = Color.White): Color {
+            return try {
+                Color(android.graphics.Color.parseColor(string))
+            } catch (_: Exception) {
+                fallback
+            }
         }
     }
 }
