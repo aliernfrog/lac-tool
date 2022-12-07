@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.*
@@ -97,8 +96,8 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
         initialColor = Color(android.graphics.Color.parseColor(if (roleColor.value.startsWith("#")) roleColor.value else "#ffffff"))
     )
 
-    LaunchedEffect(state.targetValue) {
-        if (state.targetValue == ModalBottomSheetValue.Expanded) {
+    LaunchedEffect(state.isVisible) {
+        if (state.isVisible) {
             focusRequester.requestFocus()
             keyboardController?.show()
         }
