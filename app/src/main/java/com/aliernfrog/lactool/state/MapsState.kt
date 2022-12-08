@@ -121,7 +121,7 @@ class MapsState(
 
     fun getMapNameEdit(addTxtSuffix: Boolean = true): String {
         val suffix = if (addTxtSuffix) ".txt" else ""
-        return mapNameEdit.value.ifBlank { chosenMap.value!!.mapName }+suffix
+        return mapNameEdit.value.ifBlank { chosenMap.value?.mapName }+suffix
     }
 
     private fun getChosenMapFiles(): List<DocumentFileCompat> {

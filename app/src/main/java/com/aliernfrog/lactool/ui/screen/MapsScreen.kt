@@ -3,24 +3,28 @@ package com.aliernfrog.lactool.ui.screen
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.TextFields
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.composable.LACToolButtonRounded
-import com.aliernfrog.lactool.ui.composable.LACToolColumnRounded
 import com.aliernfrog.lactool.ui.composable.LACToolTextField
 import com.aliernfrog.lactool.ui.dialog.DeleteMapDialog
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -67,23 +71,28 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     val mapChosen = mapsState.chosenMap.value != null
     val isImported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsDir) ?: false
     val isExported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsExportDir) ?: false
+    val mapNameUpdated = mapsState.getMapNameEdit(false) != mapsState.chosenMap.value?.mapName
     MapActionVisibility(visible = mapChosen) {
-        LACToolColumnRounded(title = stringResource(R.string.manageMapsMapName)) {
+        Column {
             LACToolTextField(
                 value = mapsState.mapNameEdit.value,
-                placeholder = { Text(mapsState.chosenMap.value!!.mapName) },
                 onValueChange = { mapsState.mapNameEdit.value = it },
-                singleLine = true
-            )
-            MapActionVisibility(visible = isImported && mapsState.getMapNameEdit(false) != mapsState.chosenMap.value!!.mapName) {
-                LACToolButtonRounded(
-                    title = stringResource(R.string.manageMapsRename),
-                    painter = rememberVectorPainter(Icons.Default.Edit),
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {
+                label = { Text(stringResource(R.string.manageMapsMapName)) },
+                placeholder = { Text(mapsState.chosenMap.value!!.mapName) },
+                leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
+                singleLine = true,
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                doneIcon = rememberVectorPainter(Icons.Default.Edit),
+                doneIconShown = isImported && mapNameUpdated,
+                onDone = {
                     scope.launch { mapsState.renameChosenMap(context) }
                 }
-            }
+            )
+            Divider(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.surfaceVariant
+            )
         }
     }
     MapActionVisibility(visible = mapChosen && !isImported) {

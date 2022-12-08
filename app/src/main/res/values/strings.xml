@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">LAC Tool</string>
     <string name="action_back">Back</string>
+    <string name="action_done">Done</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
