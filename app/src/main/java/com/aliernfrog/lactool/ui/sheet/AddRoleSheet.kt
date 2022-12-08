@@ -5,6 +5,9 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -12,6 +15,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,14 +39,18 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
             value = roleName.value,
             onValueChange = { roleName.value = it },
             label = { Text(stringResource(R.string.mapsRoles_roleName)) },
+            leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            singleLine = true,
             modifier = Modifier.focusRequester(focusRequester)
         )
         LACToolTextField(
             value = roleColor.value,
             onValueChange = { roleColor.value = it },
             label = { Text(stringResource(R.string.mapsRoles_roleColor)) },
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            leadingIcon = rememberVectorPainter(Icons.Rounded.Palette),
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            singleLine = true
         )
         AnimatedVisibility(visible = roleHtml.isNotBlank()) {
             Text(
