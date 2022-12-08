@@ -4,7 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -51,7 +51,7 @@ private fun TopBar(navController: NavController, scrollBehavior: TopAppBarScroll
             ) {
                 IconButton(onClick = { currentScreen?.onNavigationBack?.invoke() }) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.Rounded.ArrowBack,
                         contentDescription = stringResource(R.string.action_back),
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )

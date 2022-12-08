@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +57,7 @@ private fun PickMapFileButton(mapsState: MapsState) {
     val scope = rememberCoroutineScope()
     LACToolButtonRounded(
         title = stringResource(R.string.manageMapsPickMap),
-        painter = rememberVectorPainter(Icons.Default.PinDrop),
+        painter = rememberVectorPainter(Icons.Rounded.PinDrop),
         containerColor = MaterialTheme.colorScheme.primary
     ) {
         scope.launch { mapsState.pickMapSheetState.show() }
@@ -82,7 +82,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
                 leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
                 singleLine = true,
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                doneIcon = rememberVectorPainter(Icons.Default.Edit),
+                doneIcon = rememberVectorPainter(Icons.Rounded.Edit),
                 doneIconShown = isImported && mapNameUpdated,
                 onDone = {
                     scope.launch { mapsState.renameChosenMap(context) }
@@ -98,7 +98,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     MapActionVisibility(visible = mapChosen && !isImported) {
         LACToolButtonRounded(
             title = stringResource(R.string.manageMapsImport),
-            painter = rememberVectorPainter(Icons.Default.Download),
+            painter = rememberVectorPainter(Icons.Rounded.Download),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             scope.launch { mapsState.importChosenMap(context) }
@@ -107,7 +107,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     MapActionVisibility(visible = mapChosen && isImported) {
         LACToolButtonRounded(
             title = stringResource(R.string.manageMapsExport),
-            painter = rememberVectorPainter(Icons.Default.Upload)
+            painter = rememberVectorPainter(Icons.Rounded.Upload)
         ) {
             scope.launch { mapsState.exportChosenMap(context) }
         }
@@ -115,7 +115,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     MapActionVisibility(visible = mapChosen) {
         LACToolButtonRounded(
             title = stringResource(R.string.manageMapsShare),
-            painter = rememberVectorPainter(Icons.Default.IosShare)
+            painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
             FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "text/plain", context)
         }
@@ -124,7 +124,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         LACToolButtonRounded(
             title = stringResource(R.string.manageMapsEdit),
             description = stringResource(R.string.manageMapsEditDescription),
-            painter = rememberVectorPainter(Icons.Default.Edit)
+            painter = rememberVectorPainter(Icons.Rounded.Edit)
         ) {
             scope.launch { mapsState.editChosenMap(context, navController) }
         }
@@ -132,7 +132,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
         LACToolButtonRounded(
             title = stringResource(R.string.manageMapsDelete),
-            painter = rememberVectorPainter(Icons.Default.Delete),
+            painter = rememberVectorPainter(Icons.Rounded.Delete),
             containerColor = MaterialTheme.colorScheme.error
         ) {
             mapsState.mapDeleteDialogShown.value = true

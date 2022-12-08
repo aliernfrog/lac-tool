@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +36,7 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
     Box(Modifier.fillMaxSize()) {
         Actions(mapsEditState, navController)
         LACToolFAB(
-            icon = Icons.Default.Done,
+            icon = Icons.Rounded.Done,
             modifier = Modifier.align(Alignment.BottomEnd),
             containerColor = MaterialTheme.colorScheme.primary
         ) {

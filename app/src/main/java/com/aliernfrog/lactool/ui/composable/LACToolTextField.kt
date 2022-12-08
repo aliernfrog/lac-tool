@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +32,7 @@ fun LACToolTextField(
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: Painter? = null,
     doneIconShown: Boolean = false,
-    doneIcon: Painter = rememberVectorPainter(Icons.Default.Done),
+    doneIcon: Painter = rememberVectorPainter(Icons.Rounded.Done),
     onDone: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     singleLine: Boolean = false,

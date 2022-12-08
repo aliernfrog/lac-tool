@@ -8,7 +8,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
@@ -70,7 +70,7 @@ class MapsState(
                 file.renameTo(newName)
             }
             getMap(documentFile = mapsFile.findFile(getMapNameEdit()), context = context)
-            topToastManager.showToast(context.getString(R.string.info_renamedMap), iconImageVector = Icons.Default.Edit, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastManager.showToast(context.getString(R.string.info_renamedMap), iconImageVector = Icons.Rounded.Edit, iconTintColorType = TopToastColorType.PRIMARY)
             getImportedMaps()
         }
     }
@@ -82,7 +82,7 @@ class MapsState(
             output = mapsFile.createFile("", getMapNameEdit())
             if (output != null) FileUtil.copyFile(chosenMap.value!!.filePath, output!!, context)
             getMap(documentFile = output, context = context)
-            topToastManager.showToast(context.getString(R.string.info_importedMap), iconImageVector = Icons.Default.Download, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastManager.showToast(context.getString(R.string.info_importedMap), iconImageVector = Icons.Rounded.Download, iconTintColorType = TopToastColorType.PRIMARY)
             getImportedMaps()
         }
     }
@@ -94,7 +94,7 @@ class MapsState(
             if (!output.parentFile?.isDirectory!!) output.parentFile?.mkdirs()
             FileUtil.copyFile(mapsFile.findFile(chosenMap.value!!.fileName)!!, output.absolutePath, context)
             getMap(file = output, context = context)
-            topToastManager.showToast(context.getString(R.string.info_exportedMap), iconImageVector = Icons.Default.Upload, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastManager.showToast(context.getString(R.string.info_exportedMap), iconImageVector = Icons.Rounded.Upload, iconTintColorType = TopToastColorType.PRIMARY)
             getExportedMaps()
         }
     }
@@ -115,7 +115,7 @@ class MapsState(
                 getExportedMaps()
             }
             getMap(context = context)
-            topToastManager.showToast(context.getString(R.string.info_deletedMap), iconImageVector = Icons.Default.Delete, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastManager.showToast(context.getString(R.string.info_deletedMap), iconImageVector = Icons.Rounded.Delete, iconTintColorType = TopToastColorType.PRIMARY)
         }
     }
 
@@ -145,11 +145,11 @@ class MapsState(
     }
 
     private fun fileAlreadyExists(context: Context) {
-        topToastManager.showToast(context.getString(R.string.warning_mapAlreadyExists), iconImageVector = Icons.Default.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
+        topToastManager.showToast(context.getString(R.string.warning_mapAlreadyExists), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
     }
 
     private fun fileDoesntExist(context: Context) {
-        topToastManager.showToast(context.getString(R.string.warning_fileDoesntExist), iconImageVector = Icons.Default.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
+        topToastManager.showToast(context.getString(R.string.warning_fileDoesntExist), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
     }
 
     fun getMapsFile(context: Context): DocumentFileCompat {
