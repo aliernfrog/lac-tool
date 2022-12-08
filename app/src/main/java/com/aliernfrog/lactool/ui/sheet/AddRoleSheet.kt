@@ -55,7 +55,7 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
         AnimatedVisibility(visible = roleHtml.isNotBlank()) {
             Text(
                 text = roleHtml,
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(horizontal = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
@@ -72,12 +72,10 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
     }
 
     LaunchedEffect(state.isVisible) {
-        if (state.isVisible) {
+        if (state.isVisible) try {
             focusRequester.requestFocus()
             keyboardController?.show()
-        } else {
-            focusRequester.freeFocus()
-        }
+        } catch (_: Exception) {}
     }
 }
 
