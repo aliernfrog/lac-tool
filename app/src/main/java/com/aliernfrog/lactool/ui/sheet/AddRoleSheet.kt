@@ -1,7 +1,7 @@
 package com.aliernfrog.lactool.ui.sheet
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -52,10 +52,14 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
             singleLine = true
         )
-        AnimatedVisibility(visible = roleHtml.isNotBlank()) {
+        AnimatedVisibility(
+            visible = roleHtml.isNotBlank(),
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
             Text(
                 text = roleHtml,
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
