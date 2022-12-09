@@ -8,7 +8,7 @@ import android.provider.DocumentsContract
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
-import com.lazygeniouz.filecompat.file.DocumentFileCompat
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import java.io.File
 
 class FileUtil {

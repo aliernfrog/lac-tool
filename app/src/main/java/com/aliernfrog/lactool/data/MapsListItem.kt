@@ -1,6 +1,6 @@
 package com.aliernfrog.lactool.data
 
-import com.lazygeniouz.filecompat.file.DocumentFileCompat
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import java.io.File
 
 data class MapsListItem(

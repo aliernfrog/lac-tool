@@ -26,7 +26,7 @@ import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.staticutil.LACUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
-import com.lazygeniouz.filecompat.file.DocumentFileCompat
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

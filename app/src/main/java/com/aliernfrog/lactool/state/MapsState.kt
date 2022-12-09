@@ -20,7 +20,7 @@ import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
-import com.lazygeniouz.filecompat.file.DocumentFileCompat
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

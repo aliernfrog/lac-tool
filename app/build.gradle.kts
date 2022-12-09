@@ -63,6 +63,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
     implementation("com.github.aliernfrog:top-toast-compose:0.0.15")
-    implementation("com.lazygeniouz:documentfile_compat:0.8")
+    implementation("com.lazygeniouz:dfc:0.91")
     implementation("io.coil-kt:coil-compose:2.2.2")
 }

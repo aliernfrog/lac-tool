@@ -30,7 +30,7 @@ import com.aliernfrog.lactool.ui.composable.*
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.TopToastColorType
 import com.aliernfrog.toptoast.TopToastManager
-import com.lazygeniouz.filecompat.file.DocumentFileCompat
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.launch
 import java.io.File
 
