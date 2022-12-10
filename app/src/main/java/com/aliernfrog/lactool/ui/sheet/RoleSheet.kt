@@ -19,13 +19,12 @@ import com.aliernfrog.lactool.ui.composable.LACToolColumnDivider
 import com.aliernfrog.lactool.ui.composable.LACToolMapRole
 import com.aliernfrog.lactool.ui.composable.LACToolModalBottomSheet
 import com.aliernfrog.lactool.util.extension.removeHtml
-import com.aliernfrog.toptoast.TopToastColorType
-import com.aliernfrog.toptoast.TopToastManager
+import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoleSheet(role: String, state: ModalBottomSheetState, topToastManager: TopToastManager? = null, onDeleteRole: (String) -> Unit) {
+fun RoleSheet(role: String, state: ModalBottomSheetState, topToastState: TopToastState? = null, onDeleteRole: (String) -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
@@ -39,7 +38,7 @@ fun RoleSheet(role: String, state: ModalBottomSheetState, topToastManager: TopTo
                 painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
             ) {
                 clipboardManager.setText(AnnotatedString(role.removeHtml()))
-                topToastManager?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy, iconTintColorType = TopToastColorType.PRIMARY)
+                topToastState?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy)
                 scope.launch { state.hide() }
             }
             LACToolButtonShapeless(
@@ -47,7 +46,7 @@ fun RoleSheet(role: String, state: ModalBottomSheetState, topToastManager: TopTo
                 painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
             ) {
                 clipboardManager.setText(AnnotatedString(role))
-                topToastManager?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy, iconTintColorType = TopToastColorType.PRIMARY)
+                topToastState?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy)
                 scope.launch { state.hide() }
             }
             LACToolButtonShapeless(

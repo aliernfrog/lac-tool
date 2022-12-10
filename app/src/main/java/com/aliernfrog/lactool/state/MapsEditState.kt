@@ -24,15 +24,15 @@ import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.staticutil.LACUtil
-import com.aliernfrog.toptoast.TopToastColorType
-import com.aliernfrog.toptoast.TopToastManager
+import com.aliernfrog.toptoast.enum.TopToastColor
+import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class MapsEditState(_topToastManager: TopToastManager) {
-    private val topToastManager = _topToastManager
+class MapsEditState(_topToastState: TopToastState) {
+    private val topToastState = _topToastState
     val scrollState = ScrollState(0)
     val rolesLazyListState = LazyListState()
     private val roleNameIllegalChars = listOf(",",":")
@@ -106,7 +106,7 @@ class MapsEditState(_topToastManager: TopToastManager) {
             outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
             outputStreamWriter.flush()
             outputStreamWriter.close()
-            topToastManager.showToast(context.getString(R.string.info_mapEditsSaved), iconImageVector = Icons.Rounded.Save, iconTintColorType = TopToastColorType.PRIMARY)
+            topToastState.showToast(context.getString(R.string.info_mapEditsSaved), iconImageVector = Icons.Rounded.Save)
         }
         finishEditingWithoutSaving(navController)
     }
@@ -127,14 +127,14 @@ class MapsEditState(_topToastManager: TopToastManager) {
 
     fun deleteRole(role: String, context: Context) {
         mapData.value?.mapRoles?.remove(role)
-        topToastManager.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Delete, iconTintColorType = TopToastColorType.PRIMARY)
+        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Delete)
     }
 
     fun addRole(role: String, context: Context) {
         if (roleNameIllegalChars.find { role.contains(it) } != null)
-            return topToastManager.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
+            return topToastState.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
         mapData.value?.mapRoles?.add(role)
-        topToastManager.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Check, iconTintColorType = TopToastColorType.PRIMARY)
+        topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Check)
     }
 
     suspend fun onNavigationBack(navController: NavController) {

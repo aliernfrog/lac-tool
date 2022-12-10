@@ -30,14 +30,14 @@ import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.getScreens
-import com.aliernfrog.toptoast.TopToastBase
-import com.aliernfrog.toptoast.TopToastManager
+import com.aliernfrog.toptoast.component.TopToastHost
+import com.aliernfrog.toptoast.state.TopToastState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
-    private lateinit var topToastManager: TopToastManager
+    private lateinit var topToastState: TopToastState
     private lateinit var optionsState: OptionsState
     private lateinit var pickMapSheetState: ModalBottomSheetState
     private lateinit var mapsState: MapsState
@@ -46,14 +46,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
-        topToastManager = TopToastManager()
+        topToastState = TopToastState()
         optionsState = OptionsState(config)
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-        mapsState = MapsState(topToastManager, config, pickMapSheetState)
+        mapsState = MapsState(topToastState, config, pickMapSheetState)
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, optionsState.materialYou.value) {
-                TopToastBase(backgroundColor = MaterialTheme.colorScheme.background, manager = topToastManager) { BaseScaffold() }
+                TopToastHost(
+                    state = topToastState,
+                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+                ) { BaseScaffold() }
                 SystemBars(darkTheme)
             }
         }
@@ -74,7 +77,7 @@ class MainActivity : ComponentActivity() {
                 composable(route = Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
                 composable(route = Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(route = Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
-                composable(route = Destination.OPTIONS.route) { OptionsScreen(config, topToastManager, optionsState) }
+                composable(route = Destination.OPTIONS.route) { OptionsScreen(config, topToastState, optionsState) }
             }
             LACToolSheetBackHandler(
                 pickMapSheetState,
@@ -84,7 +87,7 @@ class MainActivity : ComponentActivity() {
         }
         PickMapSheet(
             mapsState = mapsState,
-            topToastManager = topToastManager,
+            topToastState = topToastState,
             sheetState = pickMapSheetState,
             showMapThumbnails = optionsState.showMapThumbnailsInList.value,
             onFilePick = { mapsState.getMap(file = it, context = context) },
@@ -93,7 +96,7 @@ class MainActivity : ComponentActivity() {
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,
             state = mapsState.mapsEditState.roleSheetState,
-            topToastManager = topToastManager,
+            topToastState = topToastState,
             onDeleteRole = { mapsState.mapsEditState.deleteRole(it, context) }
         )
         AddRoleSheet(

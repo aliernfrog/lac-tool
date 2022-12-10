@@ -28,16 +28,16 @@ import com.aliernfrog.lactool.state.OptionsState
 import com.aliernfrog.lactool.ui.composable.*
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.toptoast.TopToastManager
+import com.aliernfrog.toptoast.state.TopToastState
 
 private const val experimentalRequiredClicks = 10
 
 @Composable
-fun OptionsScreen(config: SharedPreferences, topToastManager: TopToastManager, optionsState: OptionsState) {
+fun OptionsScreen(config: SharedPreferences, topToastState: TopToastState, optionsState: OptionsState) {
     Column(Modifier.fillMaxSize().verticalScroll(optionsState.scrollState)) {
         ThemeOptions(optionsState)
         MapsOptions(optionsState)
-        AboutLACTool(topToastManager, optionsState)
+        AboutLACTool(topToastState, optionsState)
         if (optionsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalOptions(config, optionsState)
     }
 }
@@ -80,13 +80,13 @@ private fun MapsOptions(optionsState: OptionsState) {
 }
 
 @Composable
-private fun AboutLACTool(topToastManager: TopToastManager, optionsState: OptionsState) {
+private fun AboutLACTool(topToastState: TopToastState, optionsState: OptionsState) {
     val context = LocalContext.current
     val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
     LACToolColumnDivider(title = context.getString(R.string.optionsAbout), bottomDivider = false) {
         LACToolButtonShapeless(title = context.getString(R.string.optionsAboutVersion), description = version) {
             optionsState.aboutClickCount.value++
-            if (optionsState.aboutClickCount.value == experimentalRequiredClicks) topToastManager.showToast(context.getString(R.string.optionsExperimentalEnabled))
+            if (optionsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(context.getString(R.string.optionsExperimentalEnabled))
         }
         Links(optionsState)
     }

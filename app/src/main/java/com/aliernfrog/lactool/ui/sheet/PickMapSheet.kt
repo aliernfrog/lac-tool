@@ -28,8 +28,8 @@ import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.composable.*
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
-import com.aliernfrog.toptoast.TopToastColorType
-import com.aliernfrog.toptoast.TopToastManager
+import com.aliernfrog.toptoast.enum.TopToastColor
+import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.launch
 import java.io.File
@@ -38,7 +38,7 @@ import java.io.File
 @Composable
 fun PickMapSheet(
     mapsState: MapsState,
-    topToastManager: TopToastManager,
+    topToastState: TopToastState,
     sheetState: ModalBottomSheetState,
     scrollState: ScrollState = rememberScrollState(),
     showMapThumbnails: Boolean = true,
@@ -49,7 +49,7 @@ fun PickMapSheet(
     val scope = rememberCoroutineScope()
     val hideSheet = { scope.launch { sheetState.hide() } }
     LACToolModalBottomSheet(title = stringResource(R.string.manageMapsPickMap), sheetState, scrollState) {
-        PickFromDeviceButton(topToastManager) { onFilePick(it); hideSheet() }
+        PickFromDeviceButton(topToastState) { onFilePick(it); hideSheet() }
         Maps(mapsState, showMapThumbnails, { onFilePick(it); hideSheet() }, { onDocumentFilePick(it); hideSheet() })
     }
     LaunchedEffect(sheetState.isVisible) {
@@ -59,13 +59,13 @@ fun PickMapSheet(
 }
 
 @Composable
-private fun PickFromDeviceButton(topToastManager: TopToastManager, onFilePick: (File) -> Unit) {
+private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File) -> Unit) {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.data?.data != null) {
             val convertedPath = UriToFileUtil.getRealFilePath(it.data?.data!!, context)
             if (convertedPath != null) onFilePick(File(convertedPath))
-            else topToastManager.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColorType = TopToastColorType.ERROR)
+            else topToastState.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
         }
     }
     LACToolButtonRounded(title = stringResource(R.string.manageMapsPickMapFromDevice), painter = rememberVectorPainter(Icons.Rounded.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
