@@ -1,10 +1,10 @@
 package com.aliernfrog.lactool.util
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PinDrop
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.PinDrop
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,10 +28,10 @@ enum class Destination(
     val vectorSelected: ImageVector? = null,
     val isSubScreen: Boolean = false
 ) {
-    MAPS("maps", R.string.manageMaps, Icons.Default.PinDrop, Icons.Outlined.PinDrop),
+    MAPS("maps", R.string.manageMaps, Icons.Rounded.PinDrop, Icons.Outlined.PinDrop),
     MAPS_EDIT("mapsEdit", R.string.mapsEdit, isSubScreen = true),
     MAPS_ROLES("mapsRoles", R.string.mapsRoles, isSubScreen = true),
-    OPTIONS("options", R.string.options, Icons.Default.Settings, Icons.Outlined.Settings)
+    OPTIONS("options", R.string.options, Icons.Rounded.Settings, Icons.Outlined.Settings)
 }
 
 @Composable
