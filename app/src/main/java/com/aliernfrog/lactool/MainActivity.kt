@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
+import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
 import com.aliernfrog.lactool.ui.screen.*
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var optionsState: OptionsState
     private lateinit var pickMapSheetState: ModalBottomSheetState
     private lateinit var mapsState: MapsState
+    private lateinit var wallpapersState: WallpapersState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,7 @@ class MainActivity : ComponentActivity() {
         optionsState = OptionsState(config)
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         mapsState = MapsState(topToastState, config, pickMapSheetState)
+        wallpapersState = WallpapersState(config)
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, optionsState.materialYou.value) {
@@ -77,6 +80,7 @@ class MainActivity : ComponentActivity() {
                 composable(route = Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
                 composable(route = Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(route = Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
+                composable(route = Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(route = Destination.OPTIONS.route) { OptionsScreen(config, topToastState, optionsState) }
             }
             SheetBackHandler(

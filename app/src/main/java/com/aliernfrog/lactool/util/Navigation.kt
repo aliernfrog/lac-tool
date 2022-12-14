@@ -1,8 +1,10 @@
 package com.aliernfrog.lactool.util
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
@@ -31,6 +33,7 @@ enum class Destination(
     MAPS("maps", R.string.manageMaps, Icons.Default.PinDrop, Icons.Outlined.PinDrop),
     MAPS_EDIT("mapsEdit", R.string.mapsEdit, isSubScreen = true),
     MAPS_ROLES("mapsRoles", R.string.mapsRoles, isSubScreen = true),
+    WALLPAPERS("wallpapers", R.string.wallpapers, Icons.Default.Photo, Icons.Outlined.Photo),
     OPTIONS("options", R.string.options, Icons.Default.Settings, Icons.Outlined.Settings)
 }
 
