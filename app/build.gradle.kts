@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 33
         versionCode = 200
         versionName = "2.0.0"
