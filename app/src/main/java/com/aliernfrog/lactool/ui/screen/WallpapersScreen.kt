@@ -3,7 +3,10 @@ package com.aliernfrog.lactool.ui.screen
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -13,8 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.WallpapersListItem
@@ -31,7 +36,8 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
         state = wallpapersState.lazyListState
     ) {
         item {
-            PickImageButton()
+            PickImageButton(wallpapersState)
+            ChosenWallpaper(wallpapersState)
         }
         items(wallpapersState.importedWallpapers.value) {
             Wallpaper(it)
@@ -40,10 +46,13 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
 }
 
 @Composable
-private fun PickImageButton() {
+private fun PickImageButton(wallpapersState: WallpapersState) {
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {}
+        onResult = { uri ->
+            if (uri != null) wallpapersState.setChosenWallpaper(uri, context)
+        }
     )
     ButtonRounded(
         title = stringResource(R.string.wallpapers_pickImage),
@@ -53,6 +62,20 @@ private fun PickImageButton() {
         launcher.launch(
             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
         )
+    }
+}
+
+@Composable
+private fun ChosenWallpaper(wallpapersState: WallpapersState) {
+    AnimatedVisibility(visible = wallpapersState.chosenWallpaper.value != null) {
+        ColumnRounded {
+            AsyncImage(
+                model = wallpapersState.chosenWallpaper.value?.painterModel,
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }
 

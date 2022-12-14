@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         optionsState = OptionsState(config)
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         mapsState = MapsState(topToastState, config, pickMapSheetState)
-        wallpapersState = WallpapersState(config)
+        wallpapersState = WallpapersState(topToastState, config)
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, optionsState.materialYou.value) {
