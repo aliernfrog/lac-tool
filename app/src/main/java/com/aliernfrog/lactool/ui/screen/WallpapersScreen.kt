@@ -1,9 +1,7 @@
 package com.aliernfrog.lactool.ui.screen
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,11 +39,10 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
     }
 }
 
-@SuppressLint("InlinedApi")
 @Composable
 private fun PickImageButton() {
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
+        contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {}
     )
     ButtonRounded(
@@ -53,8 +50,9 @@ private fun PickImageButton() {
         painter = rememberVectorPainter(Icons.Rounded.Image),
         containerColor = MaterialTheme.colorScheme.primary
     ) {
-        val intent = Intent(MediaStore.ACTION_PICK_IMAGES).setType("image/*")
-        launcher.launch(intent)
+        launcher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 }
 
