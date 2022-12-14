@@ -25,7 +25,7 @@ import com.aliernfrog.lactool.MainActivity
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.state.OptionsState
-import com.aliernfrog.lactool.ui.composable.*
+import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.state.TopToastState
@@ -37,7 +37,7 @@ fun OptionsScreen(config: SharedPreferences, topToastState: TopToastState, optio
     Column(Modifier.fillMaxSize().verticalScroll(optionsState.scrollState)) {
         ThemeOptions(optionsState)
         MapsOptions(optionsState)
-        AboutLACTool(topToastState, optionsState)
+        AboutApp(topToastState, optionsState)
         if (optionsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalOptions(config, optionsState)
     }
 }
@@ -46,15 +46,15 @@ fun OptionsScreen(config: SharedPreferences, topToastState: TopToastState, optio
 private fun ThemeOptions(optionsState: OptionsState) {
     val context = LocalContext.current
     val themeOptions = listOf(context.getString(R.string.optionsThemeSystem),context.getString(R.string.optionsThemeLight),context.getString(R.string.optionsThemeDark))
-    LACToolColumnDivider(title = context.getString(R.string.optionsTheme), modifier = Modifier.animateContentSize()) {
-        LACToolRadioButtons(
+    ColumnDivider(title = context.getString(R.string.optionsTheme), modifier = Modifier.animateContentSize()) {
+        RadioButtons(
             options = themeOptions,
             initialIndex = optionsState.theme.value
         ) {
             optionsState.setTheme(it)
         }
         if (optionsState.forceShowMaterialYouOption.value || supportsMaterialYou) {
-            LACToolSwitch(
+            Switch(
                 title = context.getString(R.string.optionsThemeMaterialYou),
                 description = context.getString(R.string.optionsThemeMaterialYouDescription),
                 checked = optionsState.materialYou.value
@@ -68,8 +68,8 @@ private fun ThemeOptions(optionsState: OptionsState) {
 @Composable
 private fun MapsOptions(optionsState: OptionsState) {
     val context = LocalContext.current
-    LACToolColumnDivider(title = context.getString(R.string.optionsMaps)) {
-        LACToolSwitch(
+    ColumnDivider(title = context.getString(R.string.optionsMaps)) {
+        Switch(
             title = context.getString(R.string.optionsMapsShowMapThumbnailsList),
             description = context.getString(R.string.optionsMapsShowMapThumbnailsListDescription),
             checked = optionsState.showMapThumbnailsInList.value
@@ -80,11 +80,11 @@ private fun MapsOptions(optionsState: OptionsState) {
 }
 
 @Composable
-private fun AboutLACTool(topToastState: TopToastState, optionsState: OptionsState) {
+private fun AboutApp(topToastState: TopToastState, optionsState: OptionsState) {
     val context = LocalContext.current
     val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
-    LACToolColumnDivider(title = context.getString(R.string.optionsAbout), bottomDivider = false) {
-        LACToolButtonShapeless(title = context.getString(R.string.optionsAboutVersion), description = version) {
+    ColumnDivider(title = context.getString(R.string.optionsAbout), bottomDivider = false) {
+        ButtonShapeless(title = context.getString(R.string.optionsAboutVersion), description = version) {
             optionsState.aboutClickCount.value++
             if (optionsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(context.getString(R.string.optionsExperimentalEnabled))
         }
@@ -96,7 +96,7 @@ private fun AboutLACTool(topToastState: TopToastState, optionsState: OptionsStat
 private fun Links(optionsState: OptionsState) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-    LACToolButtonShapeless(title = context.getString(R.string.optionsAboutLinks), description = context.getString(R.string.optionsAboutLinksDescription), expanded = optionsState.linksExpanded.value) {
+    ButtonShapeless(title = context.getString(R.string.optionsAboutLinks), description = context.getString(R.string.optionsAboutLinksDescription), expanded = optionsState.linksExpanded.value) {
         optionsState.linksExpanded.value = !optionsState.linksExpanded.value
     }
     AnimatedVisibility(
@@ -104,14 +104,14 @@ private fun Links(optionsState: OptionsState) {
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
     ) {
-        LACToolColumnRounded(Modifier.padding(horizontal = 8.dp)) {
+        ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
             Link.socials.forEach {
                 val icon = when(it.url.split("/")[2]) {
                     "discord.gg" -> painterResource(id = R.drawable.discord)
                     "github.com" -> painterResource(id = R.drawable.github)
                     else -> null
                 }
-                LACToolButtonShapeless(title = it.name, painter = icon, rounded = true, contentColor = MaterialTheme.colorScheme.onSurfaceVariant) { uriHandler.openUri(it.url) }
+                ButtonShapeless(title = it.name, painter = icon, rounded = true, contentColor = MaterialTheme.colorScheme.onSurfaceVariant) { uriHandler.openUri(it.url) }
             }
         }
     }
@@ -125,9 +125,9 @@ private fun ExperimentalOptions(config: SharedPreferences, optionsState: Options
         PrefEditItem(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR),
         PrefEditItem(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)
     )
-    LACToolColumnDivider(title = context.getString(R.string.optionsExperimental), bottomDivider = false, topDivider = true) {
+    ColumnDivider(title = context.getString(R.string.optionsExperimental), bottomDivider = false, topDivider = true) {
         Text(context.getString(R.string.optionsExperimentalDescription), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
-        LACToolSwitch(
+        Switch(
             title = context.getString(R.string.optionsExperimentalShowMaterialYouOption),
             checked = optionsState.forceShowMaterialYouOption.value,
             onCheckedChange = {
@@ -136,7 +136,7 @@ private fun ExperimentalOptions(config: SharedPreferences, optionsState: Options
         )
         prefEdits.forEach { prefEdit ->
             val value = remember { mutableStateOf(config.getString(prefEdit.key, prefEdit.default)!!) }
-            LACToolTextField(label = { Text(text = "Prefs: ${prefEdit.key}") }, value = value.value, modifier = Modifier.padding(horizontal = 8.dp),
+            TextField(label = { Text(text = "Prefs: ${prefEdit.key}") }, value = value.value, modifier = Modifier.padding(horizontal = 8.dp),
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 containerColor = MaterialTheme.colorScheme.surface,
                 rounded = false,
@@ -147,7 +147,7 @@ private fun ExperimentalOptions(config: SharedPreferences, optionsState: Options
                 }
             )
         }
-        LACToolButtonShapeless(title = context.getString(R.string.optionsExperimentalResetPrefs), contentColor = MaterialTheme.colorScheme.error) {
+        ButtonShapeless(title = context.getString(R.string.optionsExperimentalResetPrefs), contentColor = MaterialTheme.colorScheme.error) {
             prefEdits.forEach {
                 configEditor.remove(it.key)
                 configEditor.apply()

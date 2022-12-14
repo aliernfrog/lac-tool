@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,12 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 
 @Composable
-fun LACToolMapButton(
+fun MapButton(
     map: MapsListItem,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -36,7 +36,7 @@ fun LACToolMapButton(
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(LACToolComposableShape).background(containerColor).clickable { onClick() }) {
+    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComposableShape).background(containerColor).clickable { onClick() }) {
         if (showMapThumbnail) AsyncImage(
             model = map.thumbnailPainterModel,
             contentDescription = null,

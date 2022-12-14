@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -10,10 +10,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 
 @Composable
-fun LACToolButtonRounded(
+fun ButtonRounded(
     title: String,
     description: String? = null,
     painter: Painter? = null,
@@ -26,7 +26,7 @@ fun LACToolButtonRounded(
         onClick = onClick,
         modifier = Modifier.padding(8.dp).fillMaxWidth(),
         enabled = enabled,
-        shape = LACToolComposableShape,
+        shape = AppComposableShape,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
         contentPadding = PaddingValues(8.dp)
     ) {

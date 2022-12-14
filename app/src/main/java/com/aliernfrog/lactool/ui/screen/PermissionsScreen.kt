@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -115,7 +115,7 @@ private fun ErrorColumn(visible: Boolean = true, title: String, content: @Compos
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
     ) {
-        Column(Modifier.fillMaxWidth().padding(8.dp).clip(LACToolComposableShape).clickable { onClick() }.background(MaterialTheme.colorScheme.error).padding(vertical = 8.dp, horizontal = 16.dp)) {
+        Column(Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape).clickable { onClick() }.background(MaterialTheme.colorScheme.error).padding(vertical = 8.dp, horizontal = 16.dp)) {
             Text(text = title, color = MaterialTheme.colorScheme.onError, fontSize = 25.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 10.dp))
             content()
             Text(text = context.getString(R.string.info_permissionsHint), color = MaterialTheme.colorScheme.onError, fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 10.dp))

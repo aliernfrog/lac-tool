@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Box
@@ -20,11 +20,11 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LACToolTextField(
+fun TextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -50,10 +50,10 @@ fun LACToolTextField(
     )
 ) {
     Box(contentAlignment = Alignment.CenterEnd) {
-        TextField(
+        androidx.compose.material3.TextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.fillMaxWidth().padding(all = 8.dp).clip(if (rounded) LACToolComposableShape else RectangleShape).animateContentSize(),
+            modifier = modifier.fillMaxWidth().padding(all = 8.dp).clip(if (rounded) AppComposableShape else RectangleShape).animateContentSize(),
             label = label,
             placeholder = placeholder,
             leadingIcon = leadingIcon?.let { { Icon(it, null) } },

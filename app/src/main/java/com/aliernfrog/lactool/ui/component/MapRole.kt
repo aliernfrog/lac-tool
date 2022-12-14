@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import android.graphics.Typeface
 import android.text.Spanned
@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 
 @Composable
-fun LACToolMapRole(role: String, showRaw: Boolean = false, onClick: () -> Unit) {
-    Column(Modifier.fillMaxWidth().padding(8.dp).clip(LACToolComposableShape).background(MaterialTheme.colorScheme.surfaceVariant).clickable {
+fun MapRole(role: String, showRaw: Boolean = false, onClick: () -> Unit) {
+    Column(Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape).background(MaterialTheme.colorScheme.surfaceVariant).clickable {
         onClick()
     }.padding(8.dp)) {
         Text(

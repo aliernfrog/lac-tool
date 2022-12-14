@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.composable.LACToolButtonCentered
-import com.aliernfrog.lactool.ui.composable.LACToolModalBottomSheet
-import com.aliernfrog.lactool.ui.composable.LACToolTextField
+import com.aliernfrog.lactool.ui.component.ButtonCentered
+import com.aliernfrog.lactool.ui.component.ModalBottomSheet
+import com.aliernfrog.lactool.ui.component.TextField
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -34,8 +34,8 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
     val roleName = remember { mutableStateOf("") }
     val roleColor = remember { mutableStateOf("") }
     val roleHtml = buildRoleHtml(roleName.value, roleColor.value)
-    LACToolModalBottomSheet(sheetState = state) {
-        LACToolTextField(
+    ModalBottomSheet(sheetState = state) {
+        TextField(
             value = roleName.value,
             onValueChange = { roleName.value = it },
             label = { Text(stringResource(R.string.mapsRoles_roleName)) },
@@ -44,7 +44,7 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
             singleLine = true,
             modifier = Modifier.focusRequester(focusRequester)
         )
-        LACToolTextField(
+        TextField(
             value = roleColor.value,
             onValueChange = { roleColor.value = it },
             label = { Text(stringResource(R.string.mapsRoles_roleColor)) },
@@ -64,7 +64,7 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
             )
         }
         Crossfade(targetState = roleName.value.isNotBlank()) {
-            LACToolButtonCentered(
+            ButtonCentered(
                 title = stringResource(R.string.mapsRoles_addRole),
                 enabled = it,
                 containerColor = MaterialTheme.colorScheme.primary

@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -19,7 +19,7 @@ import com.aliernfrog.lactool.util.NavigationConstant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LACToolBaseScaffold(screens: List<Screen>, navController: NavController, content: @Composable (PaddingValues) -> Unit) {
+fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @Composable (PaddingValues) -> Unit) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentScreen = screens.find { it.route == currentRoute }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())

@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsEditState
-import com.aliernfrog.lactool.ui.composable.LACToolFAB
-import com.aliernfrog.lactool.ui.composable.LACToolMapRole
+import com.aliernfrog.lactool.ui.component.FloatingActionButton
+import com.aliernfrog.lactool.ui.component.MapRole
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,7 +43,7 @@ private fun RolesList(mapsEditState: MapsEditState) {
             )
         }
         items(roles) {
-            LACToolMapRole(it) { scope.launch { mapsEditState.showRoleSheet(it) } }
+            MapRole(it) { scope.launch { mapsEditState.showRoleSheet(it) } }
         }
         item {
             Spacer(Modifier.height(70.dp))
@@ -55,7 +55,7 @@ private fun RolesList(mapsEditState: MapsEditState) {
 @Composable
 private fun AddRoleFAB(mapsEditState: MapsEditState, modifier: Modifier) {
     val scope = rememberCoroutineScope()
-    LACToolFAB(
+    FloatingActionButton(
         icon = Icons.Rounded.Add,
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.primary

@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LACToolFAB(
+fun FloatingActionButton(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.secondary,

@@ -5,8 +5,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.data.Social
 
-val LACToolRoundnessSize = 30.dp
-val LACToolComposableShape = RoundedCornerShape(LACToolRoundnessSize)
+val AppRoundnessSize = 30.dp
+val AppComposableShape = RoundedCornerShape(AppRoundnessSize)
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"

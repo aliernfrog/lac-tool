@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LACToolColumnDivider(
+fun ColumnDivider(
     title: String?,
     modifier: Modifier = Modifier,
     topDivider: Boolean = false,

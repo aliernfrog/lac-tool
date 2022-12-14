@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -24,10 +24,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 
 @Composable
-fun LACToolButtonShapeless(
+fun ButtonShapeless(
     title: String,
     description: String? = null,
     painter: Painter? = null,
@@ -39,7 +39,7 @@ fun LACToolButtonShapeless(
 ) {
     val animatedRotation = animateFloatAsState(arrowRotation)
     Row(Modifier.fillMaxWidth().heightIn(44.dp)
-        .clip(if (rounded) LACToolComposableShape else RectangleShape)
+        .clip(if (rounded) AppComposableShape else RectangleShape)
         .clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = rememberRipple(color = contentColor),

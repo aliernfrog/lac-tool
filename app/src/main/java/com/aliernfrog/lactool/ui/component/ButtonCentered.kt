@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,10 +13,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 
 @Composable
-fun LACToolButtonCentered(
+fun ButtonCentered(
     title: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -28,7 +28,7 @@ fun LACToolButtonCentered(
         onClick = onClick,
         modifier = modifier.padding(8.dp).fillMaxWidth(),
         enabled = enabled,
-        shape = LACToolComposableShape,
+        shape = AppComposableShape,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
         contentPadding = PaddingValues(vertical = 13.dp)
     ) {

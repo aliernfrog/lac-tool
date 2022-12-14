@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -15,11 +15,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 
 @Composable
-fun LACToolColumnRounded(modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceVariant, title: String? = null, titleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant, onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
-    var columnModifier = modifier.fillMaxWidth().padding(8.dp).clip(LACToolComposableShape)
+fun ColumnRounded(modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceVariant, title: String? = null, titleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant, onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
+    var columnModifier = modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape)
     if (onClick != null) columnModifier = columnModifier.clickable { onClick() }
     Column(columnModifier.background(color).animateContentSize().padding(8.dp)) {
         if (title != null) Text(text = title, fontWeight = FontWeight.Bold, color = titleColor, modifier = Modifier.padding(horizontal = 8.dp))

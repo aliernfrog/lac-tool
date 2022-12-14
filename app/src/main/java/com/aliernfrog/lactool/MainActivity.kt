@@ -19,8 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.state.OptionsState
-import com.aliernfrog.lactool.ui.composable.LACToolBaseScaffold
-import com.aliernfrog.lactool.ui.composable.LACToolSheetBackHandler
+import com.aliernfrog.lactool.ui.component.BaseScaffold
+import com.aliernfrog.lactool.ui.component.SheetBackHandler
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         val navController = rememberNavController()
         val screens = getScreens(navController, mapsState.mapsEditState)
-        LACToolBaseScaffold(screens, navController) {
+        BaseScaffold(screens, navController) {
             NavHost(
                 navController = navController,
                 startDestination = NavigationConstant.INITIAL_DESTINATION,
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 composable(route = Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
                 composable(route = Destination.OPTIONS.route) { OptionsScreen(config, topToastState, optionsState) }
             }
-            LACToolSheetBackHandler(
+            SheetBackHandler(
                 pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState

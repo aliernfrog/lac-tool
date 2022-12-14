@@ -26,7 +26,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.state.MapsState
-import com.aliernfrog.lactool.ui.composable.*
+import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
@@ -48,7 +48,7 @@ fun PickMapSheet(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val hideSheet = { scope.launch { sheetState.hide() } }
-    LACToolModalBottomSheet(title = stringResource(R.string.manageMapsPickMap), sheetState, scrollState) {
+    ModalBottomSheet(title = stringResource(R.string.manageMapsPickMap), sheetState, scrollState) {
         PickFromDeviceButton(topToastState) { onFilePick(it); hideSheet() }
         Maps(mapsState, showMapThumbnails, { onFilePick(it); hideSheet() }, { onDocumentFilePick(it); hideSheet() })
     }
@@ -68,7 +68,7 @@ private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File
             else topToastState.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
         }
     }
-    LACToolButtonRounded(title = stringResource(R.string.manageMapsPickMapFromDevice), painter = rememberVectorPainter(Icons.Rounded.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
+    ButtonRounded(title = stringResource(R.string.manageMapsPickMapFromDevice), painter = rememberVectorPainter(Icons.Rounded.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
         val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain").putExtra(Intent.EXTRA_LOCAL_ONLY, true)
         launcher.launch(intent)
     }
@@ -78,7 +78,7 @@ private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File
 @Composable
 private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
     var selectedSegment by remember { mutableStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
-    LACToolSegmentedButtons(options = listOf(stringResource (R.string.manageMapsPickMapYourMaps), stringResource(R.string.manageMapsPickMapExportedMaps))) {
+    SegmentedButtons(options = listOf(stringResource (R.string.manageMapsPickMapYourMaps), stringResource(R.string.manageMapsPickMapExportedMaps))) {
         selectedSegment = it
     }
     AnimatedContent(targetState = selectedSegment) {
@@ -93,13 +93,13 @@ private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (
 private fun MapsList(maps: List<MapsListItem>, showMapThumbnails: Boolean, exportedMaps: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
     if (maps.isNotEmpty()) {
         maps.forEach { map ->
-            LACToolMapButton(map, showMapThumbnail = showMapThumbnails) {
+            MapButton(map, showMapThumbnail = showMapThumbnails) {
                 if (map.documentFile != null) onDocumentFilePick(map.documentFile)
                 else if (map.file != null) onFilePick(map.file)
             }
         }
     } else {
-        LACToolColumnRounded(color = MaterialTheme.colorScheme.error) {
+        ColumnRounded(color = MaterialTheme.colorScheme.error) {
             Text(text = stringResource(if (exportedMaps) R.string.manageMapsPickMapNoExportedMaps else R.string.manageMapsPickMapNoImportedMaps), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onError)
         }
     }

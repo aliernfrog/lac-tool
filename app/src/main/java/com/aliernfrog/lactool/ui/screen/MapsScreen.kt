@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsState
-import com.aliernfrog.lactool.ui.composable.LACToolButtonRounded
-import com.aliernfrog.lactool.ui.composable.LACToolTextField
+import com.aliernfrog.lactool.ui.component.ButtonRounded
+import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.dialog.DeleteMapDialog
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
@@ -55,7 +55,7 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
 @Composable
 private fun PickMapFileButton(mapsState: MapsState) {
     val scope = rememberCoroutineScope()
-    LACToolButtonRounded(
+    ButtonRounded(
         title = stringResource(R.string.manageMapsPickMap),
         painter = rememberVectorPainter(Icons.Rounded.PinDrop),
         containerColor = MaterialTheme.colorScheme.primary
@@ -74,7 +74,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     val mapNameUpdated = mapsState.getMapNameEdit(false) != mapsState.chosenMap.value?.mapName
     MapActionVisibility(visible = mapChosen) {
         Column {
-            LACToolTextField(
+            TextField(
                 value = mapsState.mapNameEdit.value,
                 onValueChange = { mapsState.mapNameEdit.value = it },
                 label = { Text(stringResource(R.string.manageMapsMapName)) },
@@ -96,7 +96,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         }
     }
     MapActionVisibility(visible = mapChosen && !isImported) {
-        LACToolButtonRounded(
+        ButtonRounded(
             title = stringResource(R.string.manageMapsImport),
             painter = rememberVectorPainter(Icons.Rounded.Download),
             containerColor = MaterialTheme.colorScheme.primary
@@ -105,7 +105,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         }
     }
     MapActionVisibility(visible = mapChosen && isImported) {
-        LACToolButtonRounded(
+        ButtonRounded(
             title = stringResource(R.string.manageMapsExport),
             painter = rememberVectorPainter(Icons.Rounded.Upload)
         ) {
@@ -113,7 +113,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         }
     }
     MapActionVisibility(visible = mapChosen) {
-        LACToolButtonRounded(
+        ButtonRounded(
             title = stringResource(R.string.manageMapsShare),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
@@ -121,7 +121,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         }
     }
     MapActionVisibility(visible = mapChosen) {
-        LACToolButtonRounded(
+        ButtonRounded(
             title = stringResource(R.string.manageMapsEdit),
             description = stringResource(R.string.manageMapsEditDescription),
             painter = rememberVectorPainter(Icons.Rounded.Edit)
@@ -130,7 +130,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         }
     }
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
-        LACToolButtonRounded(
+        ButtonRounded(
             title = stringResource(R.string.manageMapsDelete),
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             containerColor = MaterialTheme.colorScheme.error

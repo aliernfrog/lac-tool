@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.composable
+package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -18,12 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.LACToolComposableShape
-import com.aliernfrog.lactool.LACToolRoundnessSize
+import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppRoundnessSize
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetState, sheetScrollState: ScrollState = rememberScrollState(), sheetContent: @Composable ColumnScope.() -> Unit) {
+fun ModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetState, sheetScrollState: ScrollState = rememberScrollState(), sheetContent: @Composable ColumnScope.() -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     ModalBottomSheetLayout(
         sheetBackgroundColor = Color.Transparent,
@@ -32,14 +32,14 @@ fun LACToolModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetS
         sheetElevation = 0.dp,
         content = {},
         sheetContent = {
-            Column(modifier = Modifier.statusBarsPadding().fillMaxWidth().clip(RoundedCornerShape(topStart = LACToolRoundnessSize, topEnd = LACToolRoundnessSize)).background(MaterialTheme.colorScheme.background).navigationBarsPadding().imePadding(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.statusBarsPadding().fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).background(MaterialTheme.colorScheme.background).navigationBarsPadding().imePadding(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(modifier = Modifier
                     .padding(vertical = 8.dp)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, shape = LACToolComposableShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant, shape = AppComposableShape)
                     .size(30.dp, 5.dp)
                     .align(Alignment.CenterHorizontally)
                 )
-                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = LACToolRoundnessSize, topEnd = LACToolRoundnessSize)).verticalScroll(sheetScrollState)) {
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).verticalScroll(sheetScrollState)) {
                     if (title != null) Text(text = title, fontSize = 30.sp, modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally))
                     sheetContent()
                 }

@@ -14,10 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.composable.LACToolButtonShapeless
-import com.aliernfrog.lactool.ui.composable.LACToolColumnDivider
-import com.aliernfrog.lactool.ui.composable.LACToolMapRole
-import com.aliernfrog.lactool.ui.composable.LACToolModalBottomSheet
+import com.aliernfrog.lactool.ui.component.ButtonShapeless
+import com.aliernfrog.lactool.ui.component.ColumnDivider
+import com.aliernfrog.lactool.ui.component.MapRole
+import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -28,12 +28,12 @@ fun RoleSheet(role: String, state: ModalBottomSheetState, topToastState: TopToas
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
-    LACToolModalBottomSheet(sheetState = state) {
-        LACToolColumnDivider(null) {
-            LACToolMapRole(role, true) {}
+    ModalBottomSheet(sheetState = state) {
+        ColumnDivider(null) {
+            MapRole(role, true) {}
         }
-        LACToolColumnDivider(null, bottomDivider = false) {
-            LACToolButtonShapeless(
+        ColumnDivider(null, bottomDivider = false) {
+            ButtonShapeless(
                 title = stringResource(R.string.mapsRoles_copyRoleName),
                 painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
             ) {
@@ -41,7 +41,7 @@ fun RoleSheet(role: String, state: ModalBottomSheetState, topToastState: TopToas
                 topToastState?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy)
                 scope.launch { state.hide() }
             }
-            LACToolButtonShapeless(
+            ButtonShapeless(
                 title = stringResource(R.string.mapsRoles_copyRoleRaw),
                 painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
             ) {
@@ -49,7 +49,7 @@ fun RoleSheet(role: String, state: ModalBottomSheetState, topToastState: TopToas
                 topToastState?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy)
                 scope.launch { state.hide() }
             }
-            LACToolButtonShapeless(
+            ButtonShapeless(
                 title = stringResource(R.string.mapsRoles_deleteRole),
                 painter = rememberVectorPainter(Icons.Rounded.Delete),
                 contentColor = MaterialTheme.colorScheme.error
