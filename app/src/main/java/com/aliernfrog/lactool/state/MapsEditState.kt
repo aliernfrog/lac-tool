@@ -19,7 +19,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapData
-import com.aliernfrog.lactool.data.LacMapOption
+import com.aliernfrog.lactool.data.LACMapOption
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.util.extension.removeHtml
@@ -79,9 +79,9 @@ class MapsEditState(_topToastState: TopToastState) {
                         mapData.value!!.mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableStateList()
                         mapData.value!!.mapRolesLine = index
                     }
-                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions?.add(LacMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions?.add(LACMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions?.add(LACMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions?.add(LACMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
                     else -> {}
                 }
             } catch (e: Exception) {

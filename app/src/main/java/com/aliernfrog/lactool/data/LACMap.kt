@@ -1,6 +1,6 @@
 package com.aliernfrog.lactool.data
 
-data class LacMap(
+data class LACMap(
     val mapName: String,
     val fileName: String,
     val filePath: String,

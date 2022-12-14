@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LacMapType
+import com.aliernfrog.lactool.data.LACMapType
 import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.composable.*
@@ -162,14 +162,14 @@ private fun AnimatedVisibilityColumn(visible: Boolean, content: @Composable () -
 }
 
 @Composable
-private fun getMapTypes(): List<LacMapType> {
+private fun getMapTypes(): List<LACMapType> {
     val context = LocalContext.current
     return listOf(
-        LacMapType(0, context.getString(R.string.mapsEdit_mapType_0)),
-        LacMapType(1, context.getString(R.string.mapsEdit_mapType_1)),
-        LacMapType(2, context.getString(R.string.mapsEdit_mapType_2)),
-        LacMapType(3, context.getString(R.string.mapsEdit_mapType_3)),
-        LacMapType(4, context.getString(R.string.mapsEdit_mapType_4)),
-        LacMapType(5, context.getString(R.string.mapsEdit_mapType_5))
+        LACMapType(0, context.getString(R.string.mapsEdit_mapType_0)),
+        LACMapType(1, context.getString(R.string.mapsEdit_mapType_1)),
+        LACMapType(2, context.getString(R.string.mapsEdit_mapType_2)),
+        LACMapType(3, context.getString(R.string.mapsEdit_mapType_3)),
+        LACMapType(4, context.getString(R.string.mapsEdit_mapType_4)),
+        LACMapType(5, context.getString(R.string.mapsEdit_mapType_5))
     )
 }

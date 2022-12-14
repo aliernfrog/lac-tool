@@ -9,7 +9,7 @@ data class LACMapData(
     var serverNameLine: Int? = null,
     var mapType: MutableState<Int> = mutableStateOf(0),
     var mapTypeLine: Int? = null,
-    var mapOptions: MutableList<LacMapOption>? = null,
+    var mapOptions: MutableList<LACMapOption>? = null,
     var mapRoles: MutableList<String>? = null,
     var mapRolesLine: Int? = null
 )

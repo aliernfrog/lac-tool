@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LacMap
+import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -43,18 +43,18 @@ class MapsState(
     val mapDeleteDialogShown = mutableStateOf(false)
     val importedMaps = mutableStateOf(emptyList<MapsListItem>())
     val exportedMaps = mutableStateOf(emptyList<MapsListItem>())
-    val chosenMap: MutableState<LacMap?> = mutableStateOf(null)
+    val chosenMap: MutableState<LACMap?> = mutableStateOf(null)
     val mapNameEdit = mutableStateOf("")
     val lastMapName = mutableStateOf("")
 
     fun getMap(file: File? = null, documentFile: DocumentFileCompat? = null, context: Context) {
         if (file != null) {
             val mapName = file.nameWithoutExtension
-            if (file.exists()) setChosenMap(LacMap(mapName = mapName, fileName = file.name, filePath = file.absolutePath, isFromUri = false))
+            if (file.exists()) setChosenMap(LACMap(mapName = mapName, fileName = file.name, filePath = file.absolutePath, isFromUri = false))
             else fileDoesntExist(context)
         } else if (documentFile != null) {
             val mapName = FileUtil.removeExtension(documentFile.name)
-            if (documentFile.exists()) setChosenMap(LacMap(mapName = mapName, fileName = documentFile.name, filePath = "$mapsDir/${documentFile.name}", isFromUri = true))
+            if (documentFile.exists()) setChosenMap(LACMap(mapName = mapName, fileName = documentFile.name, filePath = "$mapsDir/${documentFile.name}", isFromUri = true))
             else fileDoesntExist(context)
         } else {
             setChosenMap(null)
@@ -136,7 +136,7 @@ class MapsState(
         return list
     }
 
-    private fun setChosenMap(map: LacMap?) {
+    private fun setChosenMap(map: LACMap?) {
         chosenMap.value = map
         if (map != null) {
             mapNameEdit.value = map.mapName
