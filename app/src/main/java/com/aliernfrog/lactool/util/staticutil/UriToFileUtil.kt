@@ -140,7 +140,7 @@ class UriToFileUtil {
                         else -> null
                     }
                     val selection = "_id=?"
-                    val selectionArgs = arrayOf(split[1])
+                    val selectionArgs = try { arrayOf(split[1]) } catch (_: Exception) { null }
                     if (contentUri != null) return getDataColumn(context, contentUri, selection, selectionArgs)
                 }
             } else if (uri.scheme.equals("content")) {
