@@ -16,32 +16,36 @@ Only for local files, at least for now
 class UriToFileUtil {
     companion object {
         fun getRealFilePath(uri: Uri, context: Context): String? {
-            var docId: String? = null
-            try { docId = DocumentsContract.getDocumentId(uri) } catch (_: Exception) {}
-            if (docId != null && docId.startsWith("msf")) {
-                //was selected from download provider
-                val fileName = getFileNameFromContentResolver(uri, context)
-                val file = File("${Environment.getExternalStorageDirectory()}/Download/$fileName")
-                if (file.exists()) {
-                    return file.absolutePath
+            try {
+                var docId: String? = null
+                try { docId = DocumentsContract.getDocumentId(uri) } catch (_: Exception) {}
+                if (docId != null && docId.startsWith("msf")) {
+                    //was selected from download provider
+                    val fileName = getFileNameFromContentResolver(uri, context)
+                    val file = File("${Environment.getExternalStorageDirectory()}/Download/$fileName")
+                    if (file.exists()) {
+                        return file.absolutePath
+                    } else {
+                        try {
+                            var fd: Int?
+                            context.contentResolver.openFileDescriptor(uri, "r").use { fd = it?.fd }
+                            val pid = android.os.Process.myPid()
+                            val mediaFile = File("/proc/$pid/fd/$fd")
+                            if (mediaFile.exists()) return mediaFile.absolutePath
+                        } catch (e: Exception) {
+                            return e.toString()
+                        }
+                    }
                 } else {
-                    try {
-                        var fd: Int?
-                        context.contentResolver.openFileDescriptor(uri, "r").use { fd = it?.fd }
-                        val pid = android.os.Process.myPid()
-                        val mediaFile = File("/proc/$pid/fd/$fd")
-                        if (mediaFile.exists()) return mediaFile.absolutePath
-                    } catch (e: Exception) {
-                        return e.toString()
+                    //local file was selected
+                    val returnedPath = getRealPathFromUriApi19(uri, context)
+                    if (returnedPath != null) {
+                        val file = File(returnedPath)
+                        if (file.exists()) return returnedPath
                     }
                 }
-            } else {
-                //local file was selected
-                val returnedPath = getRealPathFromUriApi19(uri, context)
-                if (returnedPath != null) {
-                    val file = File(returnedPath)
-                    if (file.exists()) return returnedPath
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
             return null
         }
