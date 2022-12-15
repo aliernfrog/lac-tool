@@ -1,11 +1,13 @@
 package com.aliernfrog.lactool.util.staticutil
 
+import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import java.io.File
 
 /*
@@ -16,34 +18,39 @@ Only for local files, at least for now
 class UriToFileUtil {
     companion object {
         fun getRealFilePath(uri: Uri, context: Context): String? {
-            var docId: String? = null
-            try { docId = DocumentsContract.getDocumentId(uri) } catch (_: Exception) {}
-            if (docId != null && docId.startsWith("msf")) {
-                //was selected from download provider
-                val fileName = getFileNameFromContentResolver(uri, context)
-                val file = File("${Environment.getExternalStorageDirectory()}/Download/$fileName")
-                if (file.exists()) {
-                    return file.absolutePath
+            try {
+                var docId: String? = null
+                try { docId = DocumentsContract.getDocumentId(uri) } catch (_: Exception) {}
+                if (docId != null && docId.startsWith("msf")) {
+                    //was selected from download provider
+                    val fileName = getFileNameFromContentResolver(uri, context)
+                    val file = File("${Environment.getExternalStorageDirectory()}/Download/$fileName")
+                    if (file.exists()) {
+                        return file.absolutePath
+                    } else {
+                        try {
+                            var fd: Int?
+                            context.contentResolver.openFileDescriptor(uri, "r").use { fd = it?.fd }
+                            val pid = android.os.Process.myPid()
+                            val mediaFile = File("/proc/$pid/fd/$fd")
+                            if (mediaFile.exists()) return mediaFile.absolutePath
+                        } catch (e: Exception) {
+                            return e.toString()
+                        }
+                    }
                 } else {
-                    try {
-                        var fd: Int?
-                        context.contentResolver.openFileDescriptor(uri, "r").use { fd = it?.fd }
-                        val pid = android.os.Process.myPid()
-                        val mediaFile = File("/proc/$pid/fd/$fd")
-                        if (mediaFile.exists()) return mediaFile.absolutePath
-                    } catch (e: Exception) {
-                        return e.toString()
+                    //local file was selected
+                    val returnedPath = getRealPathFromUriApi19(uri, context)
+                    if (returnedPath != null) {
+                        val file = File(returnedPath)
+                        if (file.exists()) return returnedPath
                     }
                 }
-            } else {
-                //local file was selected
-                val returnedPath = getRealPathFromUriApi19(uri, context)
-                if (returnedPath != null) {
-                    val file = File(returnedPath)
-                    if (file.exists()) return returnedPath
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            return null
+            val downloaded = downloadFile(uri, context)
+            return downloaded?.absolutePath
         }
 
         private fun getFileNameFromContentResolver(uri: Uri, context: Context): String? {
@@ -140,7 +147,7 @@ class UriToFileUtil {
                         else -> null
                     }
                     val selection = "_id=?"
-                    val selectionArgs = arrayOf(split[1])
+                    val selectionArgs = try { arrayOf(split[1]) } catch (_: Exception) { null }
                     if (contentUri != null) return getDataColumn(context, contentUri, selection, selectionArgs)
                 }
             } else if (uri.scheme.equals("content")) {
@@ -150,6 +157,38 @@ class UriToFileUtil {
                 return uri.path
             }
             return null
+        }
+
+        private fun downloadFile(uri: Uri, context: Context): File? {
+            return try {
+                val fileName = getFileName(uri, context)
+                val outputPath = "${context.cacheDir.absolutePath}/$fileName"
+                val input = context.contentResolver.openInputStream(uri)
+                val output = File(outputPath).outputStream()
+                input?.copyTo(output)
+                input?.close()
+                output.close()
+                File(outputPath)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        @SuppressLint("Range")
+        private fun getFileName(uri: Uri, context: Context): String {
+            var fileName: String? = null
+            if (uri.scheme != null && uri.scheme == "content") {
+                val cursor = context.contentResolver.query(uri, null, null, null, null)
+                if (cursor?.moveToFirst() == true) fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                cursor?.close()
+            }
+            if (fileName == null) {
+                fileName = uri.path
+                val cut = fileName!!.lastIndexOf("/")
+                if (cut != -1) fileName = fileName.substring(cut + 1)
+            }
+            return fileName
         }
     }
 }
