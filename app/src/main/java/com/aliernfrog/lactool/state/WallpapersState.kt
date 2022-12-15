@@ -8,15 +8,19 @@ import android.provider.DocumentsContract
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.WallpapersListItem
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
+import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class WallpapersState(
     _topToastState: TopToastState,
@@ -28,19 +32,33 @@ class WallpapersState(
     private lateinit var wallpapersFile: DocumentFileCompat
 
     val importedWallpapers = mutableStateOf(emptyList<WallpapersListItem>())
-    val chosenWallpaperUri = mutableStateOf<Uri?>(null)
+    val chosenWallpaper = mutableStateOf<WallpapersListItem?>(null)
+
+    suspend fun setChosenWallpaper(uri: Uri, context: Context) {
+        withContext(Dispatchers.IO) {
+            val path = UriToFileUtil.getRealFilePath(uri, context)
+            if (path == null) {
+                topToastState.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+                return@withContext
+            }
+            val file = File(path)
+            chosenWallpaper.value = WallpapersListItem(
+                name = file.nameWithoutExtension,
+                fileName = file.name,
+                painterModel = file.absolutePath
+            )
+        }
+    }
 
     suspend fun importChosenWallpaper(context: Context) {
         withContext(Dispatchers.IO) {
-            val checkFile = wallpapersFile.findFile("wallpaper.jpg")
-            if (checkFile != null && checkFile.exists()) checkFile.delete()
-            val outputFile = wallpapersFile.createFile("", "wallpaper.jpg")
-            val inputStream = context.contentResolver.openInputStream(chosenWallpaperUri.value!!)!!
+            val outputFile = wallpapersFile.createFile("", chosenWallpaper.value!!.fileName)
+            val inputStream = File(chosenWallpaper.value!!.painterModel).inputStream()
             val outputStream = context.contentResolver.openOutputStream(outputFile!!.uri)!!
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
-            chosenWallpaperUri.value = null
+            chosenWallpaper.value = null
             getImportedWallpapers()
             topToastState.showToast(context.getString(R.string.wallpapers_chosen_imported), iconImageVector = Icons.Rounded.Download)
         }

@@ -52,10 +52,12 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
 
 @Composable
 private fun PickImageButton(wallpapersState: WallpapersState) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            if (uri != null) wallpapersState.chosenWallpaperUri.value = uri
+            if (uri != null) scope.launch { wallpapersState.setChosenWallpaper(uri, context) }
         }
     )
     ButtonRounded(
@@ -74,13 +76,13 @@ private fun ChosenWallpaper(wallpapersState: WallpapersState) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AnimatedVisibility(
-        visible = wallpapersState.chosenWallpaperUri.value != null,
+        visible = wallpapersState.chosenWallpaper.value != null,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
     ) {
         ColumnRounded(title = stringResource(R.string.wallpapers_chosenWallpaper)) {
             AsyncImage(
-                model = wallpapersState.chosenWallpaperUri.value,
+                model = wallpapersState.chosenWallpaper.value?.painterModel,
                 contentDescription = null,
                 modifier = Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape),
                 contentScale = ContentScale.Crop
