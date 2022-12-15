@@ -1,11 +1,13 @@
 package com.aliernfrog.lactool.util.staticutil
 
+import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import java.io.File
 
 /*
@@ -47,7 +49,8 @@ class UriToFileUtil {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            return null
+            val downloaded = downloadFile(uri, context)
+            return downloaded?.absolutePath
         }
 
         private fun getFileNameFromContentResolver(uri: Uri, context: Context): String? {
@@ -154,6 +157,38 @@ class UriToFileUtil {
                 return uri.path
             }
             return null
+        }
+
+        private fun downloadFile(uri: Uri, context: Context): File? {
+            return try {
+                val fileName = getFileName(uri, context)
+                val outputPath = "${context.cacheDir.absolutePath}/$fileName"
+                val input = context.contentResolver.openInputStream(uri)
+                val output = File(outputPath).outputStream()
+                input?.copyTo(output)
+                input?.close()
+                output.close()
+                File(outputPath)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        @SuppressLint("Range")
+        private fun getFileName(uri: Uri, context: Context): String {
+            var fileName: String? = null
+            if (uri.scheme != null && uri.scheme == "content") {
+                val cursor = context.contentResolver.query(uri, null, null, null, null)
+                if (cursor?.moveToFirst() == true) fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                cursor?.close()
+            }
+            if (fileName == null) {
+                fileName = uri.path
+                val cut = fileName!!.lastIndexOf("/")
+                if (cut != -1) fileName = fileName.substring(cut + 1)
+            }
+            return fileName
         }
     }
 }

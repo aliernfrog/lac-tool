@@ -31,7 +31,9 @@ import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -61,15 +63,20 @@ fun PickMapSheet(
 @Composable
 private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File) -> Unit) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.data?.data != null) {
-            val convertedPath = UriToFileUtil.getRealFilePath(it.data?.data!!, context)
-            if (convertedPath != null) onFilePick(File(convertedPath))
-            else topToastState.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+            scope.launch {
+                withContext(Dispatchers.IO) {
+                    val convertedPath = UriToFileUtil.getRealFilePath(it.data?.data!!, context)
+                    if (convertedPath != null) onFilePick(File(convertedPath))
+                    else topToastState.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+                }
+            }
         }
     }
     ButtonRounded(title = stringResource(R.string.manageMapsPickMapFromDevice), painter = rememberVectorPainter(Icons.Rounded.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain").putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
         launcher.launch(intent)
     }
 }
