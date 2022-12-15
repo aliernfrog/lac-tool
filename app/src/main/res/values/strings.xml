@@ -65,6 +65,9 @@
     <string name="mapsRoles_illegalChars">Role can NOT contain: %CHARS%</string>
     <string name="wallpapers">Wallpapers</string>
     <string name="wallpapers_pickImage">Pick an image</string>
+    <string name="wallpapers_chosenWallpaper">Chosen wallpaper</string>
+    <string name="wallpapers_chosen_import">Import this wallpaper</string>
+    <string name="wallpapers_chosen_imported">Imported the wallpaper!</string>
     <string name="options">Options</string>
     <string name="optionsTheme">Theme</string>
     <string name="optionsThemeSystem">Follow system</string>

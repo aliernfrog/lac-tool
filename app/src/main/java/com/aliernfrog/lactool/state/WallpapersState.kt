@@ -6,8 +6,11 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.WallpapersListItem
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.state.TopToastState
@@ -26,6 +29,22 @@ class WallpapersState(
 
     val importedWallpapers = mutableStateOf(emptyList<WallpapersListItem>())
     val chosenWallpaperUri = mutableStateOf<Uri?>(null)
+
+    suspend fun importChosenWallpaper(context: Context) {
+        withContext(Dispatchers.IO) {
+            val checkFile = wallpapersFile.findFile("wallpaper.jpg")
+            if (checkFile != null && checkFile.exists()) checkFile.delete()
+            val outputFile = wallpapersFile.createFile("", "wallpaper.jpg")
+            val inputStream = context.contentResolver.openInputStream(chosenWallpaperUri.value!!)!!
+            val outputStream = context.contentResolver.openOutputStream(outputFile!!.uri)!!
+            inputStream.copyTo(outputStream)
+            inputStream.close()
+            outputStream.close()
+            chosenWallpaperUri.value = null
+            getImportedWallpapers()
+            topToastState.showToast(context.getString(R.string.wallpapers_chosen_imported), iconImageVector = Icons.Rounded.Download)
+        }
+    }
 
     fun getWallpapersFile(context: Context): DocumentFileCompat {
         if (::wallpapersFile.isInitialized) return wallpapersFile
