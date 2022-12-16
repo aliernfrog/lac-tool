@@ -11,6 +11,7 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
@@ -26,6 +27,7 @@ import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.sheet.RoleSheet
+import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.Destination
@@ -34,6 +36,7 @@ import com.aliernfrog.lactool.util.getScreens
 import com.aliernfrog.toptoast.component.TopToastHost
 import com.aliernfrog.toptoast.state.TopToastState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
@@ -69,6 +72,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun BaseScaffold() {
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
         val navController = rememberNavController()
         val screens = getScreens(navController, mapsState.mapsEditState)
         BaseScaffold(screens, navController) {
@@ -86,7 +90,8 @@ class MainActivity : ComponentActivity() {
             SheetBackHandler(
                 pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
-                mapsState.mapsEditState.addRoleSheetState
+                mapsState.mapsEditState.addRoleSheetState,
+                wallpapersState.wallpaperSheetState
             )
         }
         PickMapSheet(
@@ -106,6 +111,13 @@ class MainActivity : ComponentActivity() {
         AddRoleSheet(
             state = mapsState.mapsEditState.addRoleSheetState,
             onRoleAdd = { mapsState.mapsEditState.addRole(it, context) }
+        )
+        WallpaperSheet(
+            wallpaper = wallpapersState.wallpaperSheetWallpaper.value,
+            wallpapersPath = wallpapersState.wallpapersDir,
+            state = wallpapersState.wallpaperSheetState,
+            topToastState = topToastState,
+            onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it, context) } }
         )
     }
 

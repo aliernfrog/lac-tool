@@ -6,7 +6,11 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.runtime.mutableStateOf
@@ -31,10 +35,14 @@ class WallpapersState(
     val wallpapersDir = config.getString(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR)!!
     private lateinit var wallpapersFile: DocumentFileCompat
 
-    val importedWallpapers = mutableStateOf(emptyList<WallpapersListItem>())
-    val chosenWallpaper = mutableStateOf<WallpapersListItem?>(null)
+    @OptIn(ExperimentalMaterialApi::class)
+    val wallpaperSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-    suspend fun setChosenWallpaper(uri: Uri, context: Context) {
+    val importedWallpapers = mutableStateOf(emptyList<WallpapersListItem>())
+    val pickedWallpaper = mutableStateOf<WallpapersListItem?>(null)
+    val wallpaperSheetWallpaper = mutableStateOf<WallpapersListItem?>(null)
+
+    suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
             val path = UriToFileUtil.getRealFilePath(uri, context)
             if (path == null) {
@@ -42,7 +50,7 @@ class WallpapersState(
                 return@withContext
             }
             val file = File(path)
-            chosenWallpaper.value = WallpapersListItem(
+            pickedWallpaper.value = WallpapersListItem(
                 name = file.nameWithoutExtension,
                 fileName = file.name,
                 painterModel = file.absolutePath
@@ -50,17 +58,25 @@ class WallpapersState(
         }
     }
 
-    suspend fun importChosenWallpaper(context: Context) {
+    suspend fun importPickedWallpaper(context: Context) {
         withContext(Dispatchers.IO) {
-            val outputFile = wallpapersFile.createFile("", chosenWallpaper.value!!.fileName)
-            val inputStream = File(chosenWallpaper.value!!.painterModel).inputStream()
+            val outputFile = wallpapersFile.createFile("", pickedWallpaper.value!!.fileName)
+            val inputStream = File(pickedWallpaper.value!!.painterModel).inputStream()
             val outputStream = context.contentResolver.openOutputStream(outputFile!!.uri)!!
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
-            chosenWallpaper.value = null
+            pickedWallpaper.value = null
             getImportedWallpapers()
             topToastState.showToast(context.getString(R.string.wallpapers_chosen_imported), iconImageVector = Icons.Rounded.Download)
+        }
+    }
+
+    suspend fun deleteImportedWallpaper(wallpaper: WallpapersListItem, context: Context) {
+        withContext(Dispatchers.IO) {
+            wallpapersFile.findFile(wallpaper.fileName)?.delete()
+            getImportedWallpapers()
+            topToastState.showToast(context.getString(R.string.wallpapers_deleted), iconImageVector = Icons.Rounded.Delete, iconTintColor = TopToastColor.ERROR)
         }
     }
 
@@ -81,5 +97,11 @@ class WallpapersState(
             }
             importedWallpapers.value = wallpapers
         }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    suspend fun showWallpaperSheet(wallpaper: WallpapersListItem) {
+        wallpaperSheetWallpaper.value = wallpaper
+        wallpaperSheetState.show()
     }
 }

@@ -26,15 +26,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.WallpapersListItem
 import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
+import com.aliernfrog.lactool.ui.component.ImageButton
 import kotlinx.coroutines.launch
 
 @Composable
 fun WallpapersScreen(wallpapersState: WallpapersState) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) { wallpapersState.getWallpapersFile(context); wallpapersState.getImportedWallpapers() }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -45,7 +46,13 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
             ChosenWallpaper(wallpapersState)
         }
         items(wallpapersState.importedWallpapers.value) {
-            Wallpaper(it)
+            ImageButton(
+                model = it.painterModel,
+                title = it.name,
+                description = stringResource(R.string.wallpapers_list_clickToViewActions)
+            ) {
+                scope.launch { wallpapersState.showWallpaperSheet(it) }
+            }
         }
     }
 }
@@ -57,7 +64,7 @@ private fun PickImageButton(wallpapersState: WallpapersState) {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            if (uri != null) scope.launch { wallpapersState.setChosenWallpaper(uri, context) }
+            if (uri != null) scope.launch { wallpapersState.setPickedWallpaper(uri, context) }
         }
     )
     ButtonRounded(
@@ -76,13 +83,13 @@ private fun ChosenWallpaper(wallpapersState: WallpapersState) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AnimatedVisibility(
-        visible = wallpapersState.chosenWallpaper.value != null,
+        visible = wallpapersState.pickedWallpaper.value != null,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
     ) {
         ColumnRounded(title = stringResource(R.string.wallpapers_chosenWallpaper)) {
             AsyncImage(
-                model = wallpapersState.chosenWallpaper.value?.painterModel,
+                model = wallpapersState.pickedWallpaper.value?.painterModel,
                 contentDescription = null,
                 modifier = Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape),
                 contentScale = ContentScale.Crop
@@ -92,20 +99,8 @@ private fun ChosenWallpaper(wallpapersState: WallpapersState) {
                 painter = rememberVectorPainter(Icons.Rounded.Download),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                scope.launch { wallpapersState.importChosenWallpaper(context) }
+                scope.launch { wallpapersState.importPickedWallpaper(context) }
             }
         }
-    }
-}
-
-@Composable
-private fun Wallpaper(wallpaper: WallpapersListItem) {
-    ColumnRounded {
-        AsyncImage(
-            model = wallpaper.painterModel,
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape),
-            contentScale = ContentScale.Crop
-        )
     }
 }
