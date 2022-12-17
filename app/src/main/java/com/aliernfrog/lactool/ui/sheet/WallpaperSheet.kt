@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
@@ -43,7 +44,12 @@ fun WallpaperSheet(
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
     ModalBottomSheet(sheetState = state) {
-        Text(text = wallpaper?.name.toString(), modifier = Modifier.padding(horizontal = 8.dp), color = MaterialTheme.colorScheme.onSurface)
+        Text(
+            text = wallpaper?.fileName.toString(),
+            modifier = Modifier.padding(top = 8.dp).padding(horizontal = 8.dp),
+            color = MaterialTheme.colorScheme.onSurface,
+            fontFamily = FontFamily.Monospace
+        )
         AsyncImage(
             model = wallpaper?.painterModel,
             contentDescription = null,
