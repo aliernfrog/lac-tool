@@ -10,8 +10,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -27,6 +26,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.WallpapersListItem
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ModalBottomSheet
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -43,6 +43,7 @@ fun WallpaperSheet(
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
+    var deleteConfirmationShown by remember { mutableStateOf(false) }
     ModalBottomSheet(sheetState = state) {
         Text(
             text = wallpaper?.fileName.toString(),
@@ -75,8 +76,16 @@ fun WallpaperSheet(
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             contentColor = MaterialTheme.colorScheme.error
         ) {
+            if (wallpaper != null) deleteConfirmationShown = true
+        }
+    }
+    if (deleteConfirmationShown) DeleteConfirmationDialog(
+        name = wallpaper?.name.toString(),
+        onDismissRequest = { deleteConfirmationShown = false },
+        onConfirmDelete = {
+            deleteConfirmationShown = false
             if (wallpaper != null) onDeleteRequest(wallpaper)
             scope.launch { state.hide() }
         }
-    }
+    )
 }

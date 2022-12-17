@@ -26,7 +26,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.TextField
-import com.aliernfrog.lactool.ui.dialog.DeleteMapDialog
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
 
@@ -39,8 +39,8 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
         PickMapFileButton(mapsState)
         MapActions(mapsState, navController)
     }
-    if (mapsState.mapDeleteDialogShown.value) DeleteMapDialog(
-        mapName = mapsState.lastMapName.value,
+    if (mapsState.mapDeleteDialogShown.value) DeleteConfirmationDialog(
+        name = mapsState.lastMapName.value,
         onDismissRequest = { mapsState.mapDeleteDialogShown.value = false },
         onConfirmDelete = {
             scope.launch {

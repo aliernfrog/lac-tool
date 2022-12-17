@@ -9,8 +9,8 @@ import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
 
 @Composable
-fun DeleteMapDialog(
-    mapName: String,
+fun DeleteConfirmationDialog(
+    name: String,
     onDismissRequest: () -> Unit,
     onConfirmDelete: () -> Unit
 ) {
@@ -41,7 +41,7 @@ fun DeleteMapDialog(
         text = {
             Text(
                 stringResource(R.string.info_deleteQuestion)
-                .replace("%NAME%", mapName)
+                    .replace("%NAME%", name)
             )
         }
     )
