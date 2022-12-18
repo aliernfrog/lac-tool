@@ -39,7 +39,7 @@ fun ModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetState, s
                     .size(30.dp, 5.dp)
                     .align(Alignment.CenterHorizontally)
                 )
-                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).navigationBarsPadding().verticalScroll(sheetScrollState)) {
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).verticalScroll(sheetScrollState).navigationBarsPadding()) {
                     if (title != null) Text(text = title, fontSize = 30.sp, modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally))
                     sheetContent()
                 }
