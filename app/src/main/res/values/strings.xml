@@ -8,7 +8,7 @@
     <string name="warning_couldntConvertToPath">Could not get path of this file</string>
     <string name="warning_fileDoesntExist">File does not exist</string>
     <string name="warning_missingStoragePermissions">Missing storage permissions</string>
-    <string name="warning_missingUriPermissions">Missing LAC maps access</string>
+    <string name="warning_missingUriPermissions">Missing LAC data access</string>
     <string name="warning_mapAlreadyExists">A map with this name already exists, choose another name</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
     <string name="info_renamedMap">Renamed the map!</string>
