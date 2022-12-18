@@ -96,7 +96,7 @@ private fun PermissionsSetUp(
             visible = !uriPermissions,
             title = stringResource(R.string.warning_missingUriPermissions),
             content = {
-                Text(text = stringResource(R.string.info_mapsFolderPermission), color = MaterialTheme.colorScheme.onError)
+                Text(text = stringResource(R.string.info_uriPermission), color = MaterialTheme.colorScheme.onError)
                 Spacer(Modifier.height(8.dp))
                 Text(uriPath.replaceFirst(Environment.getExternalStorageDirectory().toString(), context.getString(R.string.internalStorage)), fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = MaterialTheme.colorScheme.onError)
             }
