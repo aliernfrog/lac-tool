@@ -60,7 +60,7 @@ class WallpapersState(
 
     suspend fun importPickedWallpaper(context: Context) {
         withContext(Dispatchers.IO) {
-            val outputFile = wallpapersFile.createFile("", pickedWallpaper.value!!.fileName)
+            val outputFile = wallpapersFile.createFile("", pickedWallpaper.value!!.name+".jpg")
             val inputStream = File(pickedWallpaper.value!!.painterModel).inputStream()
             val outputStream = context.contentResolver.openOutputStream(outputFile!!.uri)!!
             inputStream.copyTo(outputStream)
