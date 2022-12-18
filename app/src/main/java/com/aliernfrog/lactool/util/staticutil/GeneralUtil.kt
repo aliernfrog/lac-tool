@@ -26,5 +26,9 @@ class GeneralUtil {
             return if (Build.VERSION.SDK_INT >= 30) Environment.isExternalStorageManager()
             else ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
         }
+
+        fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
+            return "file://$wallpapersPath/$fileName"
+        }
     }
 }

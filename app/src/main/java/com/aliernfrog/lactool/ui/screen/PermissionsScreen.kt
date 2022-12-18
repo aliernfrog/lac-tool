@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -72,7 +73,7 @@ private fun PermissionsSetUp(
         visible = !storagePermissions,
         title = context.getString(R.string.warning_missingStoragePermissions),
         content = {
-            Text(text = if (allFilesAccess) context.getString(R.string.info_allFilesPermission) else context.getString(R.string.info_storagePermission), color = MaterialTheme.colorScheme.onError)
+            Text(text = stringResource(R.string.info_storagePermission), color = MaterialTheme.colorScheme.onError)
         }
     ) {
         if (allFilesAccess) {
@@ -93,9 +94,9 @@ private fun PermissionsSetUp(
         })
         ErrorColumn(
             visible = !uriPermissions,
-            title = context.getString(R.string.warning_missingUriPermissions),
+            title = stringResource(R.string.warning_missingUriPermissions),
             content = {
-                Text(text = context.getString(R.string.info_mapsFolderPermission), color = MaterialTheme.colorScheme.onError)
+                Text(text = stringResource(R.string.info_uriPermission), color = MaterialTheme.colorScheme.onError)
                 Spacer(Modifier.height(8.dp))
                 Text(uriPath.replaceFirst(Environment.getExternalStorageDirectory().toString(), context.getString(R.string.internalStorage)), fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = MaterialTheme.colorScheme.onError)
             }
@@ -109,7 +110,6 @@ private fun PermissionsSetUp(
 
 @Composable
 private fun ErrorColumn(visible: Boolean = true, title: String, content: @Composable () -> Unit, onClick: () -> Unit) {
-    val context = LocalContext.current
     AnimatedVisibility(
         visible = visible,
         enter = expandVertically() + fadeIn(),
@@ -118,7 +118,7 @@ private fun ErrorColumn(visible: Boolean = true, title: String, content: @Compos
         Column(Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape).clickable { onClick() }.background(MaterialTheme.colorScheme.error).padding(vertical = 8.dp, horizontal = 16.dp)) {
             Text(text = title, color = MaterialTheme.colorScheme.onError, fontSize = 25.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 10.dp))
             content()
-            Text(text = context.getString(R.string.info_permissionsHint), color = MaterialTheme.colorScheme.onError, fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 10.dp))
+            Text(text = stringResource(R.string.info_permissionsHint), color = MaterialTheme.colorScheme.onError, fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 10.dp))
         }
     }
 }
