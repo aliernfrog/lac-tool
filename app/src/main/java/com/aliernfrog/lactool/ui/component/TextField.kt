@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
