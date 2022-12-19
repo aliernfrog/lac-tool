@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.WallpapersListItem
+import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
@@ -34,11 +34,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WallpaperSheet(
-    wallpaper: WallpapersListItem?,
+    wallpaper: ImageFile?,
     wallpapersPath: String,
     state: ModalBottomSheetState,
     topToastState: TopToastState? = null,
-    onDeleteRequest: (WallpapersListItem) -> Unit
+    onDeleteRequest: (ImageFile) -> Unit
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current

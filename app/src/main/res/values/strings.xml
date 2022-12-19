@@ -73,6 +73,7 @@
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
     <string name="wallpapers_delete">Delete wallpaper</string>
     <string name="wallpapers_deleted">Deleted the wallpaper!</string>
+    <string name="screenshots">Screenshots</string>
     <string name="settings">Settings</string>
     <string name="settings_appearance">Appearance</string>
     <string name="settings_appearance_theme">Theme</string>
