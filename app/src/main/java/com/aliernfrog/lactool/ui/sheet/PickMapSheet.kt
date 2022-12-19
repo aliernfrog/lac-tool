@@ -50,7 +50,7 @@ fun PickMapSheet(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val hideSheet = { scope.launch { sheetState.hide() } }
-    ModalBottomSheet(title = stringResource(R.string.manageMapsPickMap), sheetState, scrollState) {
+    ModalBottomSheet(title = stringResource(R.string.maps_pickMap), sheetState, scrollState) {
         PickFromDeviceButton(topToastState) { onFilePick(it); hideSheet() }
         Maps(mapsState, showMapThumbnails, { onFilePick(it); hideSheet() }, { onDocumentFilePick(it); hideSheet() })
     }
@@ -75,7 +75,7 @@ private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File
             }
         }
     }
-    ButtonRounded(title = stringResource(R.string.manageMapsPickMapFromDevice), painter = rememberVectorPainter(Icons.Rounded.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
+    ButtonRounded(title = stringResource(R.string.maps_pickMap_device), painter = rememberVectorPainter(Icons.Rounded.Folder), containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary) {
         val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
         launcher.launch(intent)
     }
@@ -85,7 +85,7 @@ private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File
 @Composable
 private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
     var selectedSegment by remember { mutableStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
-    SegmentedButtons(options = listOf(stringResource (R.string.manageMapsPickMapYourMaps), stringResource(R.string.manageMapsPickMapExportedMaps))) {
+    SegmentedButtons(options = listOf(stringResource (R.string.maps_pickMap_imported), stringResource(R.string.maps_pickMap_exported))) {
         selectedSegment = it
     }
     AnimatedContent(targetState = selectedSegment) {
@@ -107,7 +107,7 @@ private fun MapsList(maps: List<MapsListItem>, showMapThumbnails: Boolean, expor
         }
     } else {
         ColumnRounded(color = MaterialTheme.colorScheme.error) {
-            Text(text = stringResource(if (exportedMaps) R.string.manageMapsPickMapNoExportedMaps else R.string.manageMapsPickMapNoImportedMaps), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onError)
+            Text(text = stringResource(if (exportedMaps) R.string.maps_pickMap_noExportedMaps else R.string.maps_pickMap_noImportedMaps), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onError)
         }
     }
 }

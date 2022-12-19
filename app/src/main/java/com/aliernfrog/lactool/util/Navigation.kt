@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 object NavigationConstant {
     val INITIAL_DESTINATION = Destination.MAPS.route
-    const val LABEL_FALLBACK_ID = R.string.manageMaps
+    const val LABEL_FALLBACK_ID = R.string.maps
 }
 
 enum class Destination(
@@ -30,7 +30,7 @@ enum class Destination(
     val vectorSelected: ImageVector? = null,
     val isSubScreen: Boolean = false
 ) {
-    MAPS("maps", R.string.manageMaps, Icons.Default.PinDrop, Icons.Outlined.PinDrop),
+    MAPS("maps", R.string.maps, Icons.Default.PinDrop, Icons.Outlined.PinDrop),
     MAPS_EDIT("mapsEdit", R.string.mapsEdit, isSubScreen = true),
     MAPS_ROLES("mapsRoles", R.string.mapsRoles, isSubScreen = true),
     WALLPAPERS("wallpapers", R.string.wallpapers, Icons.Default.Photo, Icons.Outlined.Photo),

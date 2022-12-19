@@ -106,7 +106,7 @@ class MapsEditState(_topToastState: TopToastState) {
             outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
             outputStreamWriter.flush()
             outputStreamWriter.close()
-            topToastState.showToast(context.getString(R.string.info_mapEditsSaved), iconImageVector = Icons.Rounded.Save)
+            topToastState.showToast(context.getString(R.string.maps_edit_saved), iconImageVector = Icons.Rounded.Save)
         }
         finishEditingWithoutSaving(navController)
     }

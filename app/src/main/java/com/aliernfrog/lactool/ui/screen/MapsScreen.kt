@@ -56,7 +56,7 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
 private fun PickMapFileButton(mapsState: MapsState) {
     val scope = rememberCoroutineScope()
     ButtonRounded(
-        title = stringResource(R.string.manageMapsPickMap),
+        title = stringResource(R.string.maps_pickMap),
         painter = rememberVectorPainter(Icons.Rounded.PinDrop),
         containerColor = MaterialTheme.colorScheme.primary
     ) {
@@ -77,7 +77,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             TextField(
                 value = mapsState.mapNameEdit.value,
                 onValueChange = { mapsState.mapNameEdit.value = it },
-                label = { Text(stringResource(R.string.manageMapsMapName)) },
+                label = { Text(stringResource(R.string.maps_mapName)) },
                 placeholder = { Text(mapsState.chosenMap.value!!.mapName) },
                 leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
                 singleLine = true,
@@ -97,7 +97,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     }
     MapActionVisibility(visible = mapChosen && !isImported) {
         ButtonRounded(
-            title = stringResource(R.string.manageMapsImport),
+            title = stringResource(R.string.maps_import),
             painter = rememberVectorPainter(Icons.Rounded.Download),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
@@ -106,7 +106,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     }
     MapActionVisibility(visible = mapChosen && isImported) {
         ButtonRounded(
-            title = stringResource(R.string.manageMapsExport),
+            title = stringResource(R.string.maps_export),
             painter = rememberVectorPainter(Icons.Rounded.Upload)
         ) {
             scope.launch { mapsState.exportChosenMap(context) }
@@ -114,7 +114,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     }
     MapActionVisibility(visible = mapChosen) {
         ButtonRounded(
-            title = stringResource(R.string.manageMapsShare),
+            title = stringResource(R.string.maps_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
             FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "text/plain", context)
@@ -122,8 +122,8 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     }
     MapActionVisibility(visible = mapChosen) {
         ButtonRounded(
-            title = stringResource(R.string.manageMapsEdit),
-            description = stringResource(R.string.manageMapsEditDescription),
+            title = stringResource(R.string.maps_edit),
+            description = stringResource(R.string.maps_edit_description),
             painter = rememberVectorPainter(Icons.Rounded.Edit)
         ) {
             scope.launch { mapsState.editChosenMap(context, navController) }
@@ -131,7 +131,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     }
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
         ButtonRounded(
-            title = stringResource(R.string.manageMapsDelete),
+            title = stringResource(R.string.maps_delete),
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             containerColor = MaterialTheme.colorScheme.error
         ) {

@@ -70,7 +70,7 @@ class MapsState(
                 file.renameTo(newName)
             }
             getMap(documentFile = mapsFile.findFile(getMapNameEdit()), context = context)
-            topToastState.showToast(context.getString(R.string.info_renamedMap), iconImageVector = Icons.Rounded.Edit)
+            topToastState.showToast(context.getString(R.string.maps_rename_done), iconImageVector = Icons.Rounded.Edit)
             getImportedMaps()
         }
     }
@@ -82,7 +82,7 @@ class MapsState(
             output = mapsFile.createFile("", getMapNameEdit())
             if (output != null) FileUtil.copyFile(chosenMap.value!!.filePath, output!!, context)
             getMap(documentFile = output, context = context)
-            topToastState.showToast(context.getString(R.string.info_importedMap), iconImageVector = Icons.Rounded.Download)
+            topToastState.showToast(context.getString(R.string.maps_import_done), iconImageVector = Icons.Rounded.Download)
             getImportedMaps()
         }
     }
@@ -94,7 +94,7 @@ class MapsState(
             if (!output.parentFile?.isDirectory!!) output.parentFile?.mkdirs()
             FileUtil.copyFile(mapsFile.findFile(chosenMap.value!!.fileName)!!, output.absolutePath, context)
             getMap(file = output, context = context)
-            topToastState.showToast(context.getString(R.string.info_exportedMap), iconImageVector = Icons.Rounded.Upload)
+            topToastState.showToast(context.getString(R.string.maps_export_done), iconImageVector = Icons.Rounded.Upload)
             getExportedMaps()
         }
     }
@@ -115,7 +115,7 @@ class MapsState(
                 getExportedMaps()
             }
             getMap(context = context)
-            topToastState.showToast(context.getString(R.string.info_deletedMap), iconImageVector = Icons.Rounded.Delete)
+            topToastState.showToast(context.getString(R.string.maps_delete_done), iconImageVector = Icons.Rounded.Delete)
         }
     }
 
@@ -145,7 +145,7 @@ class MapsState(
     }
 
     private fun fileAlreadyExists(context: Context) {
-        topToastState.showToast(context.getString(R.string.warning_mapAlreadyExists), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+        topToastState.showToast(context.getString(R.string.maps_alreadyExists), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
     }
 
     private fun fileDoesntExist(context: Context) {
