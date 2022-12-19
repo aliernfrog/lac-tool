@@ -74,7 +74,9 @@
     <string name="wallpapers_delete">Delete wallpaper</string>
     <string name="wallpapers_deleted">Deleted the wallpaper!</string>
     <string name="options">Options</string>
-    <string name="optionsTheme">Theme</string>
+    <string name="options_appearance">Appearance</string>
+    <string name="options_theme">Theme</string>
+    <string name="options_theme_description">Dark mode preference</string>
     <string name="optionsThemeSystem">Follow system</string>
     <string name="optionsThemeLight">Light</string>
     <string name="optionsThemeDark">Dark</string>

@@ -14,6 +14,7 @@ class OptionsState(_config: SharedPreferences) {
     val materialYou = mutableStateOf(config.getBoolean(ConfigKey.KEY_APP_MATERIAL_YOU, true))
     val showMapThumbnailsInList = mutableStateOf(config.getBoolean(ConfigKey.KEY_SHOW_MAP_THUMBNAILS_LIST, true))
 
+    val themeOptionsExpanded = mutableStateOf(false)
     val linksExpanded = mutableStateOf(false)
     val aboutClickCount = mutableStateOf(0)
     val forceShowMaterialYouOption = mutableStateOf(false)

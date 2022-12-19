@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.Link
@@ -35,7 +36,7 @@ private const val experimentalRequiredClicks = 10
 @Composable
 fun OptionsScreen(config: SharedPreferences, topToastState: TopToastState, optionsState: OptionsState) {
     Column(Modifier.fillMaxSize().verticalScroll(optionsState.scrollState)) {
-        ThemeOptions(optionsState)
+        AppearanceOptions(optionsState)
         MapsOptions(optionsState)
         AboutApp(topToastState, optionsState)
         if (optionsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalOptions(config, optionsState)
@@ -43,35 +44,51 @@ fun OptionsScreen(config: SharedPreferences, topToastState: TopToastState, optio
 }
 
 @Composable
-private fun ThemeOptions(optionsState: OptionsState) {
-    val context = LocalContext.current
-    val themeOptions = listOf(context.getString(R.string.optionsThemeSystem),context.getString(R.string.optionsThemeLight),context.getString(R.string.optionsThemeDark))
-    ColumnDivider(title = context.getString(R.string.optionsTheme), modifier = Modifier.animateContentSize()) {
-        RadioButtons(
-            options = themeOptions,
-            initialIndex = optionsState.theme.value
+private fun AppearanceOptions(optionsState: OptionsState) {
+    val themeOptions = listOf(
+        stringResource(R.string.optionsThemeSystem),
+        stringResource(R.string.optionsThemeLight),
+        stringResource(R.string.optionsThemeDark)
+    )
+    ColumnDivider(title = stringResource(R.string.options_appearance)) {
+        ButtonShapeless(
+            title = stringResource(R.string.options_theme),
+            description = stringResource(R.string.options_theme_description),
+            expanded = optionsState.themeOptionsExpanded.value
         ) {
-            optionsState.setTheme(it)
+            optionsState.themeOptionsExpanded.value = !optionsState.themeOptionsExpanded.value
         }
-        if (optionsState.forceShowMaterialYouOption.value || supportsMaterialYou) {
-            Switch(
-                title = context.getString(R.string.optionsThemeMaterialYou),
-                description = context.getString(R.string.optionsThemeMaterialYouDescription),
-                checked = optionsState.materialYou.value
-            ) {
-                optionsState.setMaterialYou(it)
+        AnimatedVisibility(
+            visible = optionsState.themeOptionsExpanded.value,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
+            ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
+                RadioButtons(
+                    options = themeOptions,
+                    initialIndex = optionsState.theme.value,
+                    optionsRounded = true
+                ) {
+                    optionsState.setTheme(it)
+                }
             }
+        }
+        if (optionsState.forceShowMaterialYouOption.value || supportsMaterialYou) Switch(
+            title = stringResource(R.string.optionsThemeMaterialYou),
+            description = stringResource(R.string.optionsThemeMaterialYouDescription),
+            checked = optionsState.materialYou.value
+        ) {
+            optionsState.setMaterialYou(it)
         }
     }
 }
 
 @Composable
 private fun MapsOptions(optionsState: OptionsState) {
-    val context = LocalContext.current
-    ColumnDivider(title = context.getString(R.string.optionsMaps)) {
+    ColumnDivider(title = stringResource(R.string.optionsMaps)) {
         Switch(
-            title = context.getString(R.string.optionsMapsShowMapThumbnailsList),
-            description = context.getString(R.string.optionsMapsShowMapThumbnailsListDescription),
+            title = stringResource(R.string.optionsMapsShowMapThumbnailsList),
+            description = stringResource(R.string.optionsMapsShowMapThumbnailsListDescription),
             checked = optionsState.showMapThumbnailsInList.value
         ) {
             optionsState.setShowMapThumbnailsInList(it)
@@ -83,8 +100,8 @@ private fun MapsOptions(optionsState: OptionsState) {
 private fun AboutApp(topToastState: TopToastState, optionsState: OptionsState) {
     val context = LocalContext.current
     val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
-    ColumnDivider(title = context.getString(R.string.optionsAbout), bottomDivider = false) {
-        ButtonShapeless(title = context.getString(R.string.optionsAboutVersion), description = version) {
+    ColumnDivider(title = stringResource(R.string.optionsAbout), bottomDivider = false) {
+        ButtonShapeless(title = stringResource(R.string.optionsAboutVersion), description = version) {
             optionsState.aboutClickCount.value++
             if (optionsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(context.getString(R.string.optionsExperimentalEnabled))
         }
@@ -94,9 +111,8 @@ private fun AboutApp(topToastState: TopToastState, optionsState: OptionsState) {
 
 @Composable
 private fun Links(optionsState: OptionsState) {
-    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-    ButtonShapeless(title = context.getString(R.string.optionsAboutLinks), description = context.getString(R.string.optionsAboutLinksDescription), expanded = optionsState.linksExpanded.value) {
+    ButtonShapeless(title = stringResource(R.string.optionsAboutLinks), description = stringResource(R.string.optionsAboutLinksDescription), expanded = optionsState.linksExpanded.value) {
         optionsState.linksExpanded.value = !optionsState.linksExpanded.value
     }
     AnimatedVisibility(
@@ -125,10 +141,10 @@ private fun ExperimentalOptions(config: SharedPreferences, optionsState: Options
         PrefEditItem(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR),
         PrefEditItem(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)
     )
-    ColumnDivider(title = context.getString(R.string.optionsExperimental), bottomDivider = false, topDivider = true) {
-        Text(context.getString(R.string.optionsExperimentalDescription), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
+    ColumnDivider(title = stringResource(R.string.optionsExperimental), bottomDivider = false, topDivider = true) {
+        Text(stringResource(R.string.optionsExperimentalDescription), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
         Switch(
-            title = context.getString(R.string.optionsExperimentalShowMaterialYouOption),
+            title = stringResource(R.string.optionsExperimentalShowMaterialYouOption),
             checked = optionsState.forceShowMaterialYouOption.value,
             onCheckedChange = {
                 optionsState.forceShowMaterialYouOption.value = it
@@ -136,7 +152,10 @@ private fun ExperimentalOptions(config: SharedPreferences, optionsState: Options
         )
         prefEdits.forEach { prefEdit ->
             val value = remember { mutableStateOf(config.getString(prefEdit.key, prefEdit.default)!!) }
-            TextField(label = { Text(text = "Prefs: ${prefEdit.key}") }, value = value.value, modifier = Modifier.padding(horizontal = 8.dp),
+            TextField(
+                label = { Text(text = "Prefs: ${prefEdit.key}") },
+                value = value.value,
+                modifier = Modifier.padding(horizontal = 8.dp),
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 containerColor = MaterialTheme.colorScheme.surface,
                 rounded = false,
@@ -147,7 +166,7 @@ private fun ExperimentalOptions(config: SharedPreferences, optionsState: Options
                 }
             )
         }
-        ButtonShapeless(title = context.getString(R.string.optionsExperimentalResetPrefs), contentColor = MaterialTheme.colorScheme.error) {
+        ButtonShapeless(title = stringResource(R.string.optionsExperimentalResetPrefs), contentColor = MaterialTheme.colorScheme.error) {
             prefEdits.forEach {
                 configEditor.remove(it.key)
                 configEditor.apply()
