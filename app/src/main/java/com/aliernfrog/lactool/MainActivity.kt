@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
-import com.aliernfrog.lactool.state.OptionsState
+import com.aliernfrog.lactool.state.SettingsState
 import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
     private lateinit var topToastState: TopToastState
-    private lateinit var optionsState: OptionsState
+    private lateinit var settingsState: SettingsState
     private lateinit var pickMapSheetState: ModalBottomSheetState
     private lateinit var mapsState: MapsState
     private lateinit var wallpapersState: WallpapersState
@@ -52,13 +52,13 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState()
-        optionsState = OptionsState(config)
+        settingsState = SettingsState(config)
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         mapsState = MapsState(topToastState, config, pickMapSheetState)
         wallpapersState = WallpapersState(topToastState, config)
         setContent {
             val darkTheme = getDarkThemePreference()
-            LACToolTheme(darkTheme, optionsState.materialYou.value) {
+            LACToolTheme(darkTheme, settingsState.materialYou.value) {
                 TopToastHost(
                     state = topToastState,
                     modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                 composable(route = Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(route = Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
                 composable(route = Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
-                composable(route = Destination.OPTIONS.route) { OptionsScreen(config, topToastState, optionsState) }
+                composable(route = Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
             }
             SheetBackHandler(
                 pickMapSheetState,
@@ -98,7 +98,7 @@ class MainActivity : ComponentActivity() {
             mapsState = mapsState,
             topToastState = topToastState,
             sheetState = pickMapSheetState,
-            showMapThumbnails = optionsState.showMapThumbnailsInList.value,
+            showMapThumbnails = settingsState.showMapThumbnailsInList.value,
             onFilePick = { mapsState.getMap(file = it, context = context) },
             onDocumentFilePick = { mapsState.getMap(documentFile = it, context = context) }
         )
@@ -130,7 +130,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun getDarkThemePreference(): Boolean {
-        return when(optionsState.theme.value) {
+        return when(settingsState.theme.value) {
             Theme.LIGHT.int -> false
             Theme.DARK.int -> true
             else -> isSystemInDarkTheme()

@@ -34,7 +34,7 @@ enum class Destination(
     MAPS_EDIT("mapsEdit", R.string.mapsEdit, isSubScreen = true),
     MAPS_ROLES("mapsRoles", R.string.mapsRoles, isSubScreen = true),
     WALLPAPERS("wallpapers", R.string.wallpapers, Icons.Default.Photo, Icons.Outlined.Photo),
-    OPTIONS("options", R.string.options, Icons.Default.Settings, Icons.Outlined.Settings)
+    SETTINGS("settings", R.string.settings, Icons.Default.Settings, Icons.Outlined.Settings)
 }
 
 @Composable
