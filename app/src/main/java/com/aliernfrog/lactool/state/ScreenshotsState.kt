@@ -5,20 +5,44 @@ import android.content.SharedPreferences
 import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.toptoast.enum.TopToastColor
+import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ScreenshotsState(config: SharedPreferences) {
+class ScreenshotsState(
+    _topToastState: TopToastState,
+    config: SharedPreferences
+) {
+    private val topToastState = _topToastState
     val lazyListState = LazyListState()
     val screenshotsDir = config.getString(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)!!
     private lateinit var screenshotsFile: DocumentFileCompat
+
+    @OptIn(ExperimentalMaterialApi::class)
+    val screenshotSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     
     val importedScreenshots = mutableStateOf(emptyList<ImageFile>())
+    val screenshotSheetScreeenshot = mutableStateOf<ImageFile?>(null)
+
+    suspend fun deleteImportedScreenshot(screenshot: ImageFile, context: Context) {
+        withContext(Dispatchers.IO) {
+            screenshotsFile.findFile(screenshot.fileName)?.delete()
+            getImportedScreenshots()
+            topToastState.showToast(context.getString(R.string.screenshots_deleted), iconImageVector = Icons.Rounded.Delete, iconTintColor = TopToastColor.ERROR)
+        }
+    }
 
     fun getScreenshotsFile(context: Context): DocumentFileCompat {
         if (::screenshotsFile.isInitialized) return screenshotsFile
@@ -37,5 +61,11 @@ class ScreenshotsState(config: SharedPreferences) {
             }
             importedScreenshots.value = screenshots
         }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    suspend fun showScreenshotSheet(screenshot: ImageFile) {
+        screenshotSheetScreeenshot.value = screenshot
+        screenshotSheetState.show()
     }
 }

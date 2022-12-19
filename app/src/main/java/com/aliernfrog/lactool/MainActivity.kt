@@ -25,10 +25,7 @@ import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
 import com.aliernfrog.lactool.ui.screen.*
-import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
-import com.aliernfrog.lactool.ui.sheet.PickMapSheet
-import com.aliernfrog.lactool.ui.sheet.RoleSheet
-import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
+import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.Destination
@@ -58,7 +55,7 @@ class MainActivity : ComponentActivity() {
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         mapsState = MapsState(topToastState, config, pickMapSheetState)
         wallpapersState = WallpapersState(topToastState, config)
-        screenshotsState = ScreenshotsState(config)
+        screenshotsState = ScreenshotsState(topToastState, config)
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, settingsState.materialYou.value) {
@@ -95,7 +92,8 @@ class MainActivity : ComponentActivity() {
                 pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState,
-                wallpapersState.wallpaperSheetState
+                wallpapersState.wallpaperSheetState,
+                screenshotsState.screenshotSheetState
             )
         }
         PickMapSheet(
@@ -122,6 +120,12 @@ class MainActivity : ComponentActivity() {
             state = wallpapersState.wallpaperSheetState,
             topToastState = topToastState,
             onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it, context) } }
+        )
+        ScreenshotsSheet(
+            screenshot = screenshotsState.screenshotSheetScreeenshot.value,
+            screenshotsDir = screenshotsState.screenshotsDir,
+            state = screenshotsState.screenshotSheetState,
+            onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it, context) } }
         )
     }
 
