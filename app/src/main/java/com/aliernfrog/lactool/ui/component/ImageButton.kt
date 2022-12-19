@@ -24,6 +24,7 @@ fun ImageButton(
     model: Any?,
     title: String,
     description: String? = null,
+    showDetails: Boolean = true,
     onClick: () -> Unit
 ) {
     Box(Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape).clickable { onClick() }) {
@@ -33,7 +34,7 @@ fun ImageButton(
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.Crop
         )
-        Column(
+        if (showDetails) Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f))

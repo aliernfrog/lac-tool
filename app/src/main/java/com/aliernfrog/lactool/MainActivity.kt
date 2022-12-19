@@ -19,15 +19,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.MapsState
+import com.aliernfrog.lactool.state.ScreenshotsState
 import com.aliernfrog.lactool.state.SettingsState
 import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
 import com.aliernfrog.lactool.ui.screen.*
-import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
-import com.aliernfrog.lactool.ui.sheet.PickMapSheet
-import com.aliernfrog.lactool.ui.sheet.RoleSheet
-import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
+import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.Destination
@@ -46,6 +44,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var pickMapSheetState: ModalBottomSheetState
     private lateinit var mapsState: MapsState
     private lateinit var wallpapersState: WallpapersState
+    private lateinit var screenshotsState: ScreenshotsState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +55,7 @@ class MainActivity : ComponentActivity() {
         pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         mapsState = MapsState(topToastState, config, pickMapSheetState)
         wallpapersState = WallpapersState(topToastState, config)
+        screenshotsState = ScreenshotsState(topToastState, config)
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, settingsState.materialYou.value) {
@@ -81,17 +81,19 @@ class MainActivity : ComponentActivity() {
                 startDestination = NavigationConstant.INITIAL_DESTINATION,
                 modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it).systemBarsPadding()
             ) {
-                composable(route = Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState = mapsState, navController = navController) } }
-                composable(route = Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
-                composable(route = Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
-                composable(route = Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
-                composable(route = Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
+                composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
+                composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
+                composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
+                composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
+                composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
+                composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
             }
             SheetBackHandler(
                 pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState,
-                wallpapersState.wallpaperSheetState
+                wallpapersState.wallpaperSheetState,
+                screenshotsState.screenshotSheetState
             )
         }
         PickMapSheet(
@@ -118,6 +120,12 @@ class MainActivity : ComponentActivity() {
             state = wallpapersState.wallpaperSheetState,
             topToastState = topToastState,
             onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it, context) } }
+        )
+        ScreenshotsSheet(
+            screenshot = screenshotsState.screenshotSheetScreeenshot.value,
+            screenshotsDir = screenshotsState.screenshotsDir,
+            state = screenshotsState.screenshotSheetState,
+            onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it, context) } }
         )
     }
 

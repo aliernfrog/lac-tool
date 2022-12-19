@@ -16,7 +16,7 @@ import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.WallpapersListItem
+import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -38,9 +38,9 @@ class WallpapersState(
     @OptIn(ExperimentalMaterialApi::class)
     val wallpaperSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-    val importedWallpapers = mutableStateOf(emptyList<WallpapersListItem>())
-    val pickedWallpaper = mutableStateOf<WallpapersListItem?>(null)
-    val wallpaperSheetWallpaper = mutableStateOf<WallpapersListItem?>(null)
+    val importedWallpapers = mutableStateOf(emptyList<ImageFile>())
+    val pickedWallpaper = mutableStateOf<ImageFile?>(null)
+    val wallpaperSheetWallpaper = mutableStateOf<ImageFile?>(null)
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
@@ -50,7 +50,7 @@ class WallpapersState(
                 return@withContext
             }
             val file = File(path)
-            pickedWallpaper.value = WallpapersListItem(
+            pickedWallpaper.value = ImageFile(
                 name = file.nameWithoutExtension,
                 fileName = file.name,
                 painterModel = file.absolutePath
@@ -72,7 +72,7 @@ class WallpapersState(
         }
     }
 
-    suspend fun deleteImportedWallpaper(wallpaper: WallpapersListItem, context: Context) {
+    suspend fun deleteImportedWallpaper(wallpaper: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
             wallpapersFile.findFile(wallpaper.fileName)?.delete()
             getImportedWallpapers()
@@ -93,14 +93,14 @@ class WallpapersState(
             val files = wallpapersFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".jpg") }.sortedBy { it.name.lowercase() }
             val wallpapers = files.map {
                 val nameWithoutExtension = FileUtil.removeExtension(it.name)
-                WallpapersListItem(nameWithoutExtension, it.name, wallpapersFile.findFile(it.name)?.uri.toString())
+                ImageFile(nameWithoutExtension, it.name, wallpapersFile.findFile(it.name)?.uri.toString())
             }
             importedWallpapers.value = wallpapers
         }
     }
 
     @OptIn(ExperimentalMaterialApi::class)
-    suspend fun showWallpaperSheet(wallpaper: WallpapersListItem) {
+    suspend fun showWallpaperSheet(wallpaper: ImageFile) {
         wallpaperSheetWallpaper.value = wallpaper
         wallpaperSheetState.show()
     }
