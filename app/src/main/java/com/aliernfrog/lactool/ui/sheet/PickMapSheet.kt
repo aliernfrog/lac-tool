@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.enum.PickMapSheetSegments
@@ -106,8 +105,9 @@ private fun MapsList(maps: List<MapsListItem>, showMapThumbnails: Boolean, expor
             }
         }
     } else {
-        ColumnRounded(color = MaterialTheme.colorScheme.error) {
-            Text(text = stringResource(if (exportedMaps) R.string.maps_pickMap_noExportedMaps else R.string.maps_pickMap_noImportedMaps), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onError)
-        }
+        ErrorWithIcon(
+            error = stringResource(if (exportedMaps) R.string.maps_pickMap_noExportedMaps else R.string.maps_pickMap_noImportedMaps),
+            painter = rememberVectorPainter(Icons.Rounded.LocationOff)
+        )
     }
 }

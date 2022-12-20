@@ -4,13 +4,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
+import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.ImageButton
 import kotlinx.coroutines.launch
 
@@ -44,6 +44,11 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
         item {
             PickImageButton(wallpapersState)
             ChosenWallpaper(wallpapersState)
+            ErrorWithIcon(
+                error = stringResource(R.string.wallpapers_noWallpapers),
+                painter = rememberVectorPainter(Icons.Rounded.HideImage),
+                visible = wallpapersState.importedWallpapers.value.isEmpty()
+            )
         }
         items(wallpapersState.importedWallpapers.value) {
             ImageButton(
