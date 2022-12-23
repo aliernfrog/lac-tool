@@ -57,7 +57,7 @@ class ScreenshotsState(
             val files = screenshotsFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".jpg") }.sortedBy { it.lastModified }
             val screenshots = files.map {
                 val nameWithoutExtension = FileUtil.removeExtension(it.name)
-                ImageFile(nameWithoutExtension, it.name, screenshotsFile.findFile(it.name)?.uri.toString())
+                ImageFile(nameWithoutExtension, it.name, screenshotsFile.findFile(it.name))
             }
             importedScreenshots.value = screenshots
         }

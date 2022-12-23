@@ -93,7 +93,7 @@ class WallpapersState(
             val files = wallpapersFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".jpg") }.sortedBy { it.name.lowercase() }
             val wallpapers = files.map {
                 val nameWithoutExtension = FileUtil.removeExtension(it.name)
-                ImageFile(nameWithoutExtension, it.name, wallpapersFile.findFile(it.name)?.uri.toString())
+                ImageFile(nameWithoutExtension, it.name, wallpapersFile.findFile(it.name))
             }
             importedWallpapers.value = wallpapers
         }
