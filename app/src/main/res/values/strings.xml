@@ -72,6 +72,7 @@
     <string name="wallpapers_list_clickToViewActions">Click to view full image and actions</string>
     <string name="wallpapers_copyImportUrl">Copy import URL</string>
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
+    <string name="wallpapers_share">Share wallpaper</string>
     <string name="wallpapers_delete">Delete wallpaper</string>
     <string name="wallpapers_deleted">Deleted the wallpaper!</string>
     <string name="screenshots">Screenshots</string>

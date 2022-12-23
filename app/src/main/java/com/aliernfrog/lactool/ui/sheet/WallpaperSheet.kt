@@ -7,6 +7,7 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -70,6 +72,12 @@ fun WallpaperSheet(
             clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper?.fileName.toString(), wallpapersPath)))
             topToastState?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy)
             scope.launch { state.hide() }
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.wallpapers_share),
+            painter = rememberVectorPainter(Icons.Rounded.IosShare)
+        ) {
+            if (wallpaper != null) FileUtil.shareFile("$wallpapersPath/${wallpaper.fileName}", "image/*", context)
         }
         ButtonShapeless(
             title = stringResource(R.string.wallpapers_delete),
