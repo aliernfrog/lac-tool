@@ -61,6 +61,7 @@ class FileUtil {
                 else -> throw IllegalArgumentException()
             }
             val targetFile = File("${context.cacheDir.absolutePath}/shared/$fileName")
+            targetFile.parentFile?.mkdirs()
             if (targetFile.isFile) targetFile.delete()
             val output = targetFile.outputStream()
             inputStream?.copyTo(output)
