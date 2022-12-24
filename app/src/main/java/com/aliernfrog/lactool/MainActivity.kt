@@ -119,12 +119,13 @@ class MainActivity : ComponentActivity() {
             wallpapersPath = wallpapersState.wallpapersDir,
             state = wallpapersState.wallpaperSheetState,
             topToastState = topToastState,
+            onShareRequest = { scope.launch { wallpapersState.shareImportedWallpaper(it, context) } },
             onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it, context) } }
         )
         ScreenshotsSheet(
             screenshot = screenshotsState.screenshotSheetScreeenshot.value,
-            screenshotsDir = screenshotsState.screenshotsDir,
             state = screenshotsState.screenshotSheetState,
+            onShareRequest = { scope.launch { screenshotsState.shareImportedScreenshot(it, context) } },
             onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it, context) } }
         )
     }

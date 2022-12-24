@@ -50,11 +50,11 @@ class MapsState(
     fun getMap(file: File? = null, documentFile: DocumentFileCompat? = null, context: Context) {
         if (file != null) {
             val mapName = file.nameWithoutExtension
-            if (file.exists()) setChosenMap(LACMap(mapName = mapName, fileName = file.name, filePath = file.absolutePath, isFromUri = false))
+            if (file.exists()) setChosenMap(LACMap(mapName = mapName, fileName = file.name, filePath = file.absolutePath))
             else fileDoesntExist(context)
         } else if (documentFile != null) {
             val mapName = FileUtil.removeExtension(documentFile.name)
-            if (documentFile.exists()) setChosenMap(LACMap(mapName = mapName, fileName = documentFile.name, filePath = "$mapsDir/${documentFile.name}", isFromUri = true))
+            if (documentFile.exists()) setChosenMap(LACMap(mapName = mapName, fileName = documentFile.name, filePath = "$mapsDir/${documentFile.name}", documentFile = documentFile))
             else fileDoesntExist(context)
         } else {
             setChosenMap(null)
@@ -100,14 +100,14 @@ class MapsState(
     }
 
     suspend fun editChosenMap(context: Context, navController: NavController) {
-        if (chosenMap.value!!.isFromUri) mapsEditState.loadMap(null, mapsFile.findFile(chosenMap.value!!.fileName)!!, context)
+        if (chosenMap.value!!.documentFile != null) mapsEditState.loadMap(null, mapsFile.findFile(chosenMap.value!!.fileName)!!, context)
         else mapsEditState.loadMap(File(chosenMap.value!!.filePath), null, context)
         navController.navigate(Destination.MAPS_EDIT.route)
     }
 
     suspend fun deleteChosenMap(context: Context) {
         withContext(Dispatchers.IO) {
-            if (chosenMap.value!!.isFromUri) {
+            if (chosenMap.value!!.documentFile != null) {
                 getChosenMapFiles().forEach { it.delete() }
                 getImportedMaps()
             } else {

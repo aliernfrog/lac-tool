@@ -28,7 +28,6 @@ import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
-import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -40,6 +39,7 @@ fun WallpaperSheet(
     wallpapersPath: String,
     state: ModalBottomSheetState,
     topToastState: TopToastState? = null,
+    onShareRequest: (ImageFile) -> Unit,
     onDeleteRequest: (ImageFile) -> Unit
 ) {
     val context = LocalContext.current
@@ -77,7 +77,7 @@ fun WallpaperSheet(
             title = stringResource(R.string.wallpapers_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
-            if (wallpaper != null) FileUtil.shareFile("$wallpapersPath/${wallpaper.fileName}", "image/*", context)
+            if (wallpaper != null) onShareRequest(wallpaper)
         }
         ButtonShapeless(
             title = stringResource(R.string.wallpapers_delete),

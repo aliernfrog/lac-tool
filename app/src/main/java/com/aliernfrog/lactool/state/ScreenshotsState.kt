@@ -44,6 +44,12 @@ class ScreenshotsState(
         }
     }
 
+    suspend fun shareImportedScreenshot(screenshot: ImageFile, context: Context) {
+        withContext(Dispatchers.IO) {
+            FileUtil.shareFile(screenshotsFile.findFile(screenshot.fileName)!!, context)
+        }
+    }
+
     fun getScreenshotsFile(context: Context): DocumentFileCompat {
         if (::screenshotsFile.isInitialized) return screenshotsFile
         val treeId = screenshotsDir.replace("${Environment.getExternalStorageDirectory()}/", "primary:")

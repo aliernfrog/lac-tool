@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -25,18 +24,16 @@ import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
-import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ScreenshotsSheet(
     screenshot: ImageFile?,
-    screenshotsDir: String,
     state: ModalBottomSheetState,
+    onShareRequest: (ImageFile) -> Unit,
     onDeleteRequest: (ImageFile) -> Unit
 ) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var deleteConfirmationShown by remember { mutableStateOf(false) }
     ModalBottomSheet(sheetState = state) {
@@ -61,7 +58,7 @@ fun ScreenshotsSheet(
             title = stringResource(R.string.screenshots_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
-            if (screenshot != null) FileUtil.shareFile("$screenshotsDir/${screenshot.fileName}", "image/*", context)
+            if (screenshot != null) onShareRequest(screenshot)
         }
         ButtonShapeless(
             title = stringResource(R.string.screenshots_delete),

@@ -39,11 +39,34 @@ class FileUtil {
             output.close()
         }
 
-        fun shareFile(filePath: String, type: String, context: Context, title: String = context.getString(R.string.action_share)) {
-            val file = File(filePath)
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-            val intent = Intent(Intent.ACTION_SEND).setType(type).putExtra(Intent.EXTRA_STREAM, uri)
+        fun shareFile(file: Any, context: Context, title: String = context.getString(R.string.action_share)) {
+            val sharedFile = moveToSharedCache(file, context)
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", sharedFile)
+            val intent = Intent(Intent.ACTION_SEND)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .setDataAndType(uri, context.contentResolver.getType(uri))
+                .putExtra(Intent.EXTRA_STREAM, uri)
             context.startActivity(Intent.createChooser(intent, title))
+        }
+
+        private fun moveToSharedCache(file: Any, context: Context): File {
+            val fileName = when (file) {
+                is DocumentFileCompat -> file.name
+                is File -> file.name
+                else -> throw IllegalArgumentException()
+            }
+            val inputStream = when(file) {
+                is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
+                is File -> file.inputStream()
+                else -> throw IllegalArgumentException()
+            }
+            val targetFile = File("${context.cacheDir.absolutePath}/shared/$fileName")
+            if (targetFile.isFile) targetFile.delete()
+            val output = targetFile.outputStream()
+            inputStream?.copyTo(output)
+            inputStream?.close()
+            output.close()
+            return File(targetFile.absolutePath)
         }
 
         fun checkUriPermission(path: String, context: Context): Boolean {

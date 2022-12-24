@@ -26,6 +26,7 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.util.extension.resolveFile
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
 
@@ -116,7 +117,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             title = stringResource(R.string.maps_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
-            FileUtil.shareFile(mapsState.chosenMap.value!!.filePath, "text/plain", context)
+            scope.launch { FileUtil.shareFile(mapsState.chosenMap.value!!.resolveFile(), context) }
         }
     }
     MapActionVisibility(visible = mapChosen) {

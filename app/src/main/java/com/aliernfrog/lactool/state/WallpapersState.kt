@@ -72,6 +72,12 @@ class WallpapersState(
         }
     }
 
+    suspend fun shareImportedWallpaper(wallpaper: ImageFile, context: Context) {
+        withContext(Dispatchers.IO) {
+            FileUtil.shareFile(wallpapersFile.findFile(wallpaper.fileName)!!, context)
+        }
+    }
+
     suspend fun deleteImportedWallpaper(wallpaper: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
             wallpapersFile.findFile(wallpaper.fileName)?.delete()
