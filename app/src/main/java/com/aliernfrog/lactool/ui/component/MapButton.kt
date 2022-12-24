@@ -26,9 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.aliernfrog.lactool.LACToolComposableShape
+import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.data.MapsListItem
-import com.aliernfrog.lactool.tool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.FileUtil
 
 @Composable
 fun MapButton(
@@ -39,7 +39,7 @@ fun MapButton(
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(LACToolComposableShape).background(containerColor).clickable(
+    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComposableShape).background(containerColor).clickable(
         interactionSource = remember { MutableInteractionSource() },
         indication = rememberRipple(color = contentColor),
         onClick = onClick
