@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -42,7 +41,6 @@ fun WallpaperSheet(
     onShareRequest: (ImageFile) -> Unit,
     onDeleteRequest: (ImageFile) -> Unit
 ) {
-    val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
     var deleteConfirmationShown by remember { mutableStateOf(false) }
@@ -70,7 +68,7 @@ fun WallpaperSheet(
             painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
         ) {
             clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper?.fileName.toString(), wallpapersPath)))
-            topToastState?.showToast(context.getString(R.string.info_copiedToClipboard), iconImageVector = Icons.Rounded.ContentCopy)
+            topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
             scope.launch { state.hide() }
         }
         ButtonShapeless(

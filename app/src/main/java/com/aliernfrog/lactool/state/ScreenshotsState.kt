@@ -36,11 +36,11 @@ class ScreenshotsState(
     val importedScreenshots = mutableStateOf(emptyList<ImageFile>())
     val screenshotSheetScreeenshot = mutableStateOf<ImageFile?>(null)
 
-    suspend fun deleteImportedScreenshot(screenshot: ImageFile, context: Context) {
+    suspend fun deleteImportedScreenshot(screenshot: ImageFile) {
         withContext(Dispatchers.IO) {
             screenshotsFile.findFile(screenshot.fileName)?.delete()
             getImportedScreenshots()
-            topToastState.showToast(context.getString(R.string.screenshots_deleted), iconImageVector = Icons.Rounded.Delete, iconTintColor = TopToastColor.ERROR)
+            topToastState.showToast(R.string.screenshots_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
     }
 

@@ -47,54 +47,54 @@ class MapsState(
     val mapNameEdit = mutableStateOf("")
     val lastMapName = mutableStateOf("")
 
-    fun getMap(file: File? = null, documentFile: DocumentFileCompat? = null, context: Context) {
+    fun getMap(file: File? = null, documentFile: DocumentFileCompat? = null) {
         if (file != null) {
             val mapName = file.nameWithoutExtension
             if (file.exists()) setChosenMap(LACMap(mapName = mapName, fileName = file.name, filePath = file.absolutePath))
-            else fileDoesntExist(context)
+            else fileDoesntExist()
         } else if (documentFile != null) {
             val mapName = FileUtil.removeExtension(documentFile.name)
             if (documentFile.exists()) setChosenMap(LACMap(mapName = mapName, fileName = documentFile.name, filePath = "$mapsDir/${documentFile.name}", documentFile = documentFile))
-            else fileDoesntExist(context)
+            else fileDoesntExist()
         } else {
             setChosenMap(null)
         }
     }
 
-    suspend fun renameChosenMap(context: Context) {
+    suspend fun renameChosenMap() {
         val output = mapsFile.findFile(getMapNameEdit())
-        if (output != null && output.exists()) fileAlreadyExists(context)
+        if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             getChosenMapFiles().forEach { file ->
                 val newName = file.name.replaceFirst(chosenMap.value!!.mapName, getMapNameEdit(false))
                 file.renameTo(newName)
             }
-            getMap(documentFile = mapsFile.findFile(getMapNameEdit()), context = context)
-            topToastState.showToast(context.getString(R.string.maps_rename_done), iconImageVector = Icons.Rounded.Edit)
+            getMap(documentFile = mapsFile.findFile(getMapNameEdit()))
+            topToastState.showToast(R.string.maps_rename_done, Icons.Rounded.Edit)
             getImportedMaps()
         }
     }
 
     suspend fun importChosenMap(context: Context) {
         var output = mapsFile.findFile(getMapNameEdit())
-        if (output != null && output.exists()) fileAlreadyExists(context)
+        if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             output = mapsFile.createFile("", getMapNameEdit())
             if (output != null) FileUtil.copyFile(chosenMap.value!!.filePath, output!!, context)
-            getMap(documentFile = output, context = context)
-            topToastState.showToast(context.getString(R.string.maps_import_done), iconImageVector = Icons.Rounded.Download)
+            getMap(documentFile = output)
+            topToastState.showToast(R.string.maps_import_done, Icons.Rounded.Download)
             getImportedMaps()
         }
     }
 
     suspend fun exportChosenMap(context: Context) {
         val output = File("${mapsExportDir}/${getMapNameEdit()}")
-        if (output.exists()) fileAlreadyExists(context)
+        if (output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             if (!output.parentFile?.isDirectory!!) output.parentFile?.mkdirs()
             FileUtil.copyFile(mapsFile.findFile(chosenMap.value!!.fileName)!!, output.absolutePath, context)
-            getMap(file = output, context = context)
-            topToastState.showToast(context.getString(R.string.maps_export_done), iconImageVector = Icons.Rounded.Upload)
+            getMap(file = output)
+            topToastState.showToast(R.string.maps_export_done, Icons.Rounded.Upload)
             getExportedMaps()
         }
     }
@@ -105,7 +105,7 @@ class MapsState(
         navController.navigate(Destination.MAPS_EDIT.route)
     }
 
-    suspend fun deleteChosenMap(context: Context) {
+    suspend fun deleteChosenMap() {
         withContext(Dispatchers.IO) {
             if (chosenMap.value!!.documentFile != null) {
                 getChosenMapFiles().forEach { it.delete() }
@@ -114,8 +114,8 @@ class MapsState(
                 File(chosenMap.value!!.filePath).delete()
                 getExportedMaps()
             }
-            getMap(context = context)
-            topToastState.showToast(context.getString(R.string.maps_delete_done), iconImageVector = Icons.Rounded.Delete)
+            getMap()
+            topToastState.showToast(R.string.maps_delete_done, Icons.Rounded.Delete)
         }
     }
 
@@ -144,12 +144,12 @@ class MapsState(
         }
     }
 
-    private fun fileAlreadyExists(context: Context) {
-        topToastState.showToast(context.getString(R.string.maps_alreadyExists), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+    private fun fileAlreadyExists() {
+        topToastState.showToast(R.string.maps_alreadyExists, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
     }
 
-    private fun fileDoesntExist(context: Context) {
-        topToastState.showToast(context.getString(R.string.warning_fileDoesntExist), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+    private fun fileDoesntExist() {
+        topToastState.showToast(R.string.warning_fileDoesntExist, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
     }
 
     fun getMapsFile(context: Context): DocumentFileCompat {

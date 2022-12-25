@@ -101,8 +101,8 @@ class MainActivity : ComponentActivity() {
             topToastState = topToastState,
             sheetState = pickMapSheetState,
             showMapThumbnails = settingsState.showMapThumbnailsInList.value,
-            onFilePick = { mapsState.getMap(file = it, context = context) },
-            onDocumentFilePick = { mapsState.getMap(documentFile = it, context = context) }
+            onFilePick = { mapsState.getMap(file = it) },
+            onDocumentFilePick = { mapsState.getMap(documentFile = it) }
         )
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,
@@ -120,13 +120,13 @@ class MainActivity : ComponentActivity() {
             state = wallpapersState.wallpaperSheetState,
             topToastState = topToastState,
             onShareRequest = { scope.launch { wallpapersState.shareImportedWallpaper(it, context) } },
-            onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it, context) } }
+            onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it) } }
         )
         ScreenshotsSheet(
             screenshot = screenshotsState.screenshotSheetScreeenshot.value,
             state = screenshotsState.screenshotSheetState,
             onShareRequest = { scope.launch { screenshotsState.shareImportedScreenshot(it, context) } },
-            onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it, context) } }
+            onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it) } }
         )
     }
 

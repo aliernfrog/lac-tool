@@ -44,7 +44,7 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
         onDismissRequest = { mapsState.mapDeleteDialogShown.value = false },
         onConfirmDelete = {
             scope.launch {
-                mapsState.deleteChosenMap(context)
+                mapsState.deleteChosenMap()
                 mapsState.mapDeleteDialogShown.value = false
             }
         }
@@ -85,7 +85,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
                 doneIcon = rememberVectorPainter(Icons.Rounded.Edit),
                 doneIconShown = isImported && mapNameUpdated,
                 onDone = {
-                    scope.launch { mapsState.renameChosenMap(context) }
+                    scope.launch { mapsState.renameChosenMap() }
                 }
             )
             Divider(

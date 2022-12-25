@@ -106,7 +106,7 @@ class MapsEditState(_topToastState: TopToastState) {
             outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
             outputStreamWriter.flush()
             outputStreamWriter.close()
-            topToastState.showToast(context.getString(R.string.maps_edit_saved), iconImageVector = Icons.Rounded.Save)
+            topToastState.showToast(R.string.maps_edit_saved, Icons.Rounded.Save)
         }
         finishEditingWithoutSaving(navController)
     }
@@ -127,14 +127,14 @@ class MapsEditState(_topToastState: TopToastState) {
 
     fun deleteRole(role: String, context: Context) {
         mapData.value?.mapRoles?.remove(role)
-        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Delete)
+        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Delete)
     }
 
     fun addRole(role: String, context: Context) {
         if (roleNameIllegalChars.find { role.contains(it) } != null)
-            return topToastState.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+            return topToastState.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
         mapData.value?.mapRoles?.add(role)
-        topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), iconImageVector = Icons.Rounded.Check)
+        topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Check)
     }
 
     suspend fun onNavigationBack(navController: NavController) {

@@ -46,7 +46,7 @@ class WallpapersState(
         withContext(Dispatchers.IO) {
             val path = UriToFileUtil.getRealFilePath(uri, context)
             if (path == null) {
-                topToastState.showToast(context.getString(R.string.warning_couldntConvertToPath), iconImageVector = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+                topToastState.showToast(R.string.warning_couldntConvertToPath, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
             }
             val file = File(path)
@@ -68,7 +68,7 @@ class WallpapersState(
             outputStream.close()
             pickedWallpaper.value = null
             getImportedWallpapers()
-            topToastState.showToast(context.getString(R.string.wallpapers_chosen_imported), iconImageVector = Icons.Rounded.Download)
+            topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
         }
     }
 
@@ -78,11 +78,11 @@ class WallpapersState(
         }
     }
 
-    suspend fun deleteImportedWallpaper(wallpaper: ImageFile, context: Context) {
+    suspend fun deleteImportedWallpaper(wallpaper: ImageFile) {
         withContext(Dispatchers.IO) {
             wallpapersFile.findFile(wallpaper.fileName)?.delete()
             getImportedWallpapers()
-            topToastState.showToast(context.getString(R.string.wallpapers_deleted), iconImageVector = Icons.Rounded.Delete, iconTintColor = TopToastColor.ERROR)
+            topToastState.showToast(R.string.wallpapers_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
     }
 
