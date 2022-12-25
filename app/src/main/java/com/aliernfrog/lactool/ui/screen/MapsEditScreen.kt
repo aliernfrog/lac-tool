@@ -163,13 +163,12 @@ private fun AnimatedVisibilityColumn(visible: Boolean, content: @Composable () -
 
 @Composable
 private fun getMapTypes(): List<LACMapType> {
-    val context = LocalContext.current
     return listOf(
-        LACMapType(0, context.getString(R.string.mapsEdit_mapType_0)),
-        LACMapType(1, context.getString(R.string.mapsEdit_mapType_1)),
-        LACMapType(2, context.getString(R.string.mapsEdit_mapType_2)),
-        LACMapType(3, context.getString(R.string.mapsEdit_mapType_3)),
-        LACMapType(4, context.getString(R.string.mapsEdit_mapType_4)),
-        LACMapType(5, context.getString(R.string.mapsEdit_mapType_5))
+        LACMapType(0, stringResource(R.string.mapsEdit_mapType_0)),
+        LACMapType(1, stringResource(R.string.mapsEdit_mapType_1)),
+        LACMapType(2, stringResource(R.string.mapsEdit_mapType_2)),
+        LACMapType(3, stringResource(R.string.mapsEdit_mapType_3)),
+        LACMapType(4, stringResource(R.string.mapsEdit_mapType_4)),
+        LACMapType(5, stringResource(R.string.mapsEdit_mapType_5))
     )
 }
