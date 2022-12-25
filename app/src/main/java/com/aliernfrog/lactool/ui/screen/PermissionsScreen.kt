@@ -12,12 +12,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -31,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
@@ -122,11 +120,9 @@ private fun ErrorColumn(visible: Boolean = true, title: String, content: @Compos
                 .fillMaxWidth()
                 .padding(8.dp)
                 .clip(AppComposableShape)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = MaterialTheme.colorScheme.onError),
-                    onClick = onClick
-                )
+                .clickableWithColor(MaterialTheme.colorScheme.onError) {
+                    onClick()
+                }
                 .background(MaterialTheme.colorScheme.error)
                 .padding(vertical = 8.dp, horizontal = 16.dp)
         ) {

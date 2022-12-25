@@ -1,17 +1,13 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PinDrop
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.data.MapsListItem
+import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 
 @Composable
@@ -39,11 +36,9 @@ fun MapButton(
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComposableShape).background(containerColor).clickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = rememberRipple(color = contentColor),
-        onClick = onClick
-    )) {
+    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComposableShape).background(containerColor).clickableWithColor(contentColor) {
+        onClick()
+    }) {
         if (showMapThumbnail) AsyncImage(
             model = map.thumbnailPainterModel,
             contentDescription = null,
