@@ -12,5 +12,6 @@ data class LACMapData(
     var mapTypeLine: Int? = null,
     var mapOptions: MutableList<LACMapOption> = mutableStateListOf(),
     var mapRoles: MutableList<String>? = null,
-    var mapRolesLine: Int? = null
+    var mapRolesLine: Int? = null,
+    var replacableObjects: MutableList<LACMapObject> = mutableStateListOf()
 )

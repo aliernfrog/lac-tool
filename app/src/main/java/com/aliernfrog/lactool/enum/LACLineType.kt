@@ -67,6 +67,15 @@ enum class LACLineType(
         }
     },
 
+    OBJECT {
+        override fun matches(line: String): Boolean {
+            val split = line.split(":")
+            return split.size >= 3 && (split.firstOrNull()?.contains("_Editor") == true)
+        }
+
+        override fun getValue(line: String) = line
+    },
+
     OPTION_GENERAL(ignoreWhenFiltering = true) {
         override fun matches(line: String) = line.split(": ").size == 2
         override fun getValue(line: String) = line.split(": ")[1]

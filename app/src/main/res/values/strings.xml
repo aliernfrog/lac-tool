@@ -47,6 +47,10 @@
     <string name="mapsEdit_mapType_4">Desert</string>
     <string name="mapsEdit_mapType_5">Water</string>
     <string name="mapsEdit_options">Options</string>
+    <string name="mapsEdit_misc">Miscellaneous</string>
+    <string name="mapsEdit_misc_replaceOldObjects">Replace old objects</string>
+    <string name="mapsEdit_misc_replaceOldObjects_description">Replaces old objects which no longer exist, such as red sofa</string>
+    <string name="mapsEdit_replacedOldObjects">Replaced %n old objects with newer ones</string>
     <string name="mapsEdit_saveWarning_title">Unsaved changes</string>
     <string name="mapsEdit_saveWarning_description">You have unsaved changes, are you sure you want to quit?</string>
     <string name="mapsEdit_saveWarning_keepEditing">Keep editing</string>

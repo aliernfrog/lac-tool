@@ -8,10 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +16,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapData
+import com.aliernfrog.lactool.data.LACMapObject
 import com.aliernfrog.lactool.data.LACMapOption
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
@@ -82,12 +80,33 @@ class MapsEditState(_topToastState: TopToastState) {
                     LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
                     LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
                     LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OBJECT -> {
+                        val objectReplacement = LACUtil.findReplacementForObject(line)
+                        if (objectReplacement != null) mapData.value!!.replacableObjects.add(LACMapObject(
+                            line = line,
+                            lineNumber = index,
+                            canReplaceWith = objectReplacement
+                        ))
+                    }
                     else -> {}
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun replaceOldObjects(context: Context) {
+        val replaceCount = (mapData.value?.replacableObjects?.size ?: 0).toString()
+        mapData.value?.replacableObjects?.forEach { mapObject ->
+            val split = mapObject.line.split(":").toMutableList()
+            val replacement = mapObject.canReplaceWith!!
+            split[0] = replacement.replaceObjectName
+            if (replacement.replaceScale != null) split[3] = replacement.replaceScale
+            if (replacement.replaceColor != null) split.add(replacement.replaceColor)
+            mapData.value!!.mapLines!![mapObject.lineNumber] = split.joinToString(":")
+        }
+        topToastState.showToast(context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replaceCount), Icons.Rounded.Done)
     }
 
     @SuppressLint("Recycle")

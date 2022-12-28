@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.FindReplace
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -63,6 +65,7 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
     Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
         GeneralActions(mapsEditState, navController)
         OptionsActions(mapsEditState)
+        MiscActions(mapsEditState)
         Spacer(Modifier.height(70.dp))
     }
 }
@@ -135,6 +138,22 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
                         onCheckedChange = { option.value.value = if (it) "enabled" else "disabled" }
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MiscActions(mapsEditState: MapsEditState) {
+    val context = LocalContext.current
+    ColumnDivider(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.replacableObjects?.isEmpty() != true) {
+            ButtonShapeless(
+                title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
+                description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
+                painter = rememberVectorPainter(Icons.Rounded.FindReplace)
+            ) {
+                mapsEditState.replaceOldObjects(context)
             }
         }
     }
