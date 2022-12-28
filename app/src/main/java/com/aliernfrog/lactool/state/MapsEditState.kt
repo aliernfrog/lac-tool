@@ -93,11 +93,11 @@ class MapsEditState(_topToastState: TopToastState) {
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(navController: NavController, context: Context) {
         withContext(Dispatchers.IO) {
-            if (mapData.value?.serverName != null)
+            if (mapData.value?.serverNameLine != null)
                 mapData.value!!.mapLines!![mapData.value!!.serverNameLine!!] = LACLineType.SERVER_NAME.setValue(mapData.value!!.serverName.value)
-            if (mapData.value?.mapType != null)
+            if (mapData.value?.mapTypeLine != null)
                 mapData.value!!.mapLines!![mapData.value!!.mapTypeLine!!] = LACLineType.MAP_TYPE.setValue(mapData.value!!.mapType.value.toString())
-            if (mapData.value?.mapRoles != null)
+            if (mapData.value?.mapRolesLine != null)
                 mapData.value!!.mapLines!![mapData.value!!.mapRolesLine!!] = LACLineType.ROLES_LIST.setValue(mapData.value!!.mapRoles!!.joinToString(",").plus(","))
             mapData.value?.mapOptions?.forEach { option ->
                 mapData.value!!.mapLines!![option.line] = LACLineType.OPTION_GENERAL.setValue(option.value.value, option.label)
