@@ -35,14 +35,22 @@ fun ButtonShapeless(
     onClick: () -> Unit
 ) {
     val animatedRotation = animateFloatAsState(arrowRotation)
-    Row(Modifier.fillMaxWidth().heightIn(44.dp)
-        .clip(if (rounded) AppComposableShape else RectangleShape)
-        .clickableWithColor(contentColor) { onClick() }
-        .padding(horizontal = 16.dp, vertical = 4.dp),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(44.dp)
+            .clip(if (rounded) AppComposableShape else RectangleShape)
+            .clickableWithColor(contentColor) { onClick() }
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (painter != null) Icon(painter, title, Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp), tint = contentColor)
-        Column(Modifier.fillMaxWidth().padding(vertical = 4.dp).weight(1f)) {
+        if (painter != null) Icon(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp).padding(1.dp),
+            tint = contentColor
+        )
+        Column(Modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 8.dp).weight(1f)) {
             Text(text = title, color = contentColor, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             if (description != null) Text(text = description, color = contentColor, fontSize = 14.sp, lineHeight = 18.sp)
         }
