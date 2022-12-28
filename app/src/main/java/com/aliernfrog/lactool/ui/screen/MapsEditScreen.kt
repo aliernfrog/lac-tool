@@ -70,7 +70,7 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
 @Composable
 private fun GeneralActions(mapsEditState: MapsEditState, navController: NavController) {
     val typesExpanded = remember { mutableStateOf(false) }
-    ColumnDivider(title = stringResource(R.string.mapsEdit_general)) {
+    ColumnDivider(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
         AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
@@ -114,7 +114,7 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
 @Composable
 private fun OptionsActions(mapsEditState: MapsEditState) {
     AnimatedVisibilityColumn(visible = !mapsEditState.mapData.value?.mapOptions.isNullOrEmpty()) {
-        ColumnDivider(title = stringResource(R.string.mapsEdit_options), bottomDivider = false) {
+        ColumnDivider(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
             mapsEditState.mapData.value?.mapOptions?.forEach { option ->
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(

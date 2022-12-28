@@ -68,7 +68,7 @@ class MapsEditState(_topToastState: TopToastState) {
             try {
                 when (val type = LACUtil.getEditorLineType(line)) {
                     LACLineType.SERVER_NAME -> {
-                        mapData.value!!.serverName.value = type.getValue(line)
+                        mapData.value!!.serverName= mutableStateOf(type.getValue(line))
                         mapData.value!!.serverNameLine = index
                     }
                     LACLineType.MAP_TYPE -> {
@@ -79,9 +79,9 @@ class MapsEditState(_topToastState: TopToastState) {
                         mapData.value!!.mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableStateList()
                         mapData.value!!.mapRolesLine = index
                     }
-                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions?.add(LACMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions?.add(LACMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions?.add(LACMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
+                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
                     else -> {}
                 }
             } catch (e: Exception) {
@@ -94,7 +94,7 @@ class MapsEditState(_topToastState: TopToastState) {
     suspend fun saveAndFinishEditing(navController: NavController, context: Context) {
         withContext(Dispatchers.IO) {
             if (mapData.value?.serverNameLine != null)
-                mapData.value!!.mapLines!![mapData.value!!.serverNameLine!!] = LACLineType.SERVER_NAME.setValue(mapData.value!!.serverName.value)
+                mapData.value!!.mapLines!![mapData.value!!.serverNameLine!!] = LACLineType.SERVER_NAME.setValue(mapData.value!!.serverName!!.value)
             if (mapData.value?.mapTypeLine != null)
                 mapData.value!!.mapLines!![mapData.value!!.mapTypeLine!!] = LACLineType.MAP_TYPE.setValue(mapData.value!!.mapType.value.toString())
             if (mapData.value?.mapRolesLine != null)
