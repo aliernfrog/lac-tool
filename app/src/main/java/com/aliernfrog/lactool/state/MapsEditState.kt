@@ -101,6 +101,7 @@ class MapsEditState(_topToastState: TopToastState) {
         mapData.value?.replacableObjects?.forEach { mapObject ->
             val split = mapObject.line.split(":").toMutableList()
             val replacement = mapObject.canReplaceWith!!
+            if (split.size < 4) split.add(3, "1.0,1.0,1.0")
             split[0] = replacement.replaceObjectName
             if (replacement.replaceScale != null) split[3] = replacement.replaceScale
             if (replacement.replaceColor != null) split.add(replacement.replaceColor)
