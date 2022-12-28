@@ -30,7 +30,7 @@ fun Switch(
     ) {
         Column(Modifier.fillMaxWidth().weight(1f)) {
             Text(text = title, color = contentColor, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            if (description != null) Text(text = description, color = contentColor, fontSize = 14.sp)
+            if (description != null) Text(text = description, color = contentColor, fontSize = 14.sp, lineHeight = 18.sp)
         }
         Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
