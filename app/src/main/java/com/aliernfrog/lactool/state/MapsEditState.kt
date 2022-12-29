@@ -107,6 +107,7 @@ class MapsEditState(_topToastState: TopToastState) {
             if (replacement.replaceColor != null) split.add(replacement.replaceColor)
             mapData.value!!.mapLines!![mapObject.lineNumber] = split.joinToString(":")
         }
+        mapData.value?.replacableObjects?.clear()
         topToastState.showToast(context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replaceCount), Icons.Rounded.Done)
     }
 
