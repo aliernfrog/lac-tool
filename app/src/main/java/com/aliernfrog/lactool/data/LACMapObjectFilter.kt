@@ -1,10 +1,11 @@
 package com.aliernfrog.lactool.data
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 
 data class LACMapObjectFilter(
-    val query: MutableState<String>,
-    val caseSensitive: MutableState<Boolean>,
-    val exactMatch: MutableState<Boolean>,
+    val query: MutableState<String> = mutableStateOf(""),
+    val caseSensitive: MutableState<Boolean> = mutableStateOf(true),
+    val exactMatch: MutableState<Boolean> = mutableStateOf(true),
     val labelStringId: Int? = null
 )

@@ -45,12 +45,8 @@ class MapsEditState(_topToastState: TopToastState) {
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
     val mapData: MutableState<LACMapData?> = mutableStateOf(null)
+    val objectFilter = mutableStateOf(LACMapObjectFilter())
     val roleSheetChosenRole = mutableStateOf("")
-    var objectFilter = mutableStateOf(LACMapObjectFilter(
-        query = mutableStateOf(""),
-        caseSensitive = mutableStateOf(true),
-        exactMatch = mutableStateOf(true)
-    ))
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
@@ -163,6 +159,7 @@ class MapsEditState(_topToastState: TopToastState) {
     suspend fun finishEditingWithoutSaving(navController: NavController) {
         navController.popBackStack()
         mapData.value = null
+        objectFilter.value = LACMapObjectFilter()
         mapFile = null
         mapDocumentFile = null
         scrollState.scrollTo(0)
