@@ -73,7 +73,7 @@ enum class LACLineType(
             return split.size >= 3 && (split.firstOrNull()?.contains("_Editor") == true)
         }
 
-        override fun getValue(line: String) = line
+        override fun getValue(line: String) = line.split(":").firstOrNull().toString()
     },
 
     OPTION_GENERAL(ignoreWhenFiltering = true) {
