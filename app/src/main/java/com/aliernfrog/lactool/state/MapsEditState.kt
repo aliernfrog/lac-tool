@@ -132,6 +132,7 @@ class MapsEditState(_topToastState: TopToastState) {
         mapData.value?.mapLines = mapData.value?.mapLines?.filter {
             !LACUtil.lineMatchesObjectFilter(it, objectFilter.value)
         }?.toMutableStateList()
+        objectFilter.value = LACMapObjectFilter()
         topToastState.showToast(context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", matches.toString()), Icons.Rounded.Delete)
     }
 
