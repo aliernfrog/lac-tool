@@ -2,10 +2,8 @@ package com.aliernfrog.lactool.ui.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -189,9 +187,9 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
         singleLine = true
     )
-    Row(
-        modifier = Modifier.padding(horizontal = 8.dp).horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ScrollableRow(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        gradientColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
         LACMapObjectFilters.defaultFilters.forEach { suggestion ->
             SuggestionChip(
