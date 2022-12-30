@@ -7,6 +7,7 @@ import android.provider.DocumentsContract
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.MutableState
@@ -28,12 +29,11 @@ import java.io.File
 @OptIn(ExperimentalMaterialApi::class)
 class MapsState(
     _topToastState: TopToastState,
-    config: SharedPreferences,
-    _pickMapSheetState: ModalBottomSheetState
+    config: SharedPreferences
 ) {
     private val topToastState = _topToastState
     val mapsEditState = MapsEditState(topToastState)
-    val pickMapSheetState = _pickMapSheetState
+    val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scrollState = ScrollState(0)
     val mapsDir = config.getString(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)!!
     val mapsExportDir = config.getString(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)!!

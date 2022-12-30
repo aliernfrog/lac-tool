@@ -7,8 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,7 +39,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
     private lateinit var topToastState: TopToastState
     private lateinit var settingsState: SettingsState
-    private lateinit var pickMapSheetState: ModalBottomSheetState
     private lateinit var mapsState: MapsState
     private lateinit var wallpapersState: WallpapersState
     private lateinit var screenshotsState: ScreenshotsState
@@ -52,8 +49,7 @@ class MainActivity : ComponentActivity() {
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState()
         settingsState = SettingsState(config)
-        pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-        mapsState = MapsState(topToastState, config, pickMapSheetState)
+        mapsState = MapsState(topToastState, config)
         wallpapersState = WallpapersState(topToastState, config)
         screenshotsState = ScreenshotsState(topToastState, config)
         setContent {
@@ -89,7 +85,7 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
             }
             SheetBackHandler(
-                pickMapSheetState,
+                mapsState.pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState,
                 wallpapersState.wallpaperSheetState,
@@ -99,7 +95,7 @@ class MainActivity : ComponentActivity() {
         PickMapSheet(
             mapsState = mapsState,
             topToastState = topToastState,
-            sheetState = pickMapSheetState,
+            sheetState = mapsState.pickMapSheetState,
             showMapThumbnails = settingsState.showMapThumbnailsInList.value,
             onFilePick = { mapsState.getMap(file = it) },
             onDocumentFilePick = { mapsState.getMap(documentFile = it) }
