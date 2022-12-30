@@ -22,6 +22,7 @@ class LACUtil {
             val objectName = type.getValue(line)
             val filterQuery = filter.query.value
             val ignoreCase = !filter.caseSensitive.value
+            if (filterQuery.isBlank()) return false
             return if (filter.exactMatch.value) {
                 objectName.equals(filterQuery, ignoreCase)
             } else {
