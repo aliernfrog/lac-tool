@@ -2,18 +2,19 @@ package com.aliernfrog.lactool.ui.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FindReplace
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -22,6 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.LACMapObjectFilters
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapType
 import com.aliernfrog.lactool.enum.LACMapOptionType
@@ -146,6 +149,7 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
 @Composable
 private fun MiscActions(mapsEditState: MapsEditState) {
     val context = LocalContext.current
+    var filterObjectsExpanded by remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
         AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.replacableObjects?.isEmpty() != true) {
             ButtonShapeless(
@@ -155,6 +159,73 @@ private fun MiscActions(mapsEditState: MapsEditState) {
             ) {
                 mapsEditState.replaceOldObjects(context)
             }
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.mapsEdit_filterObjects),
+            description = stringResource(R.string.mapsEdit_filterObjects_description),
+            painter = rememberVectorPainter(Icons.Rounded.FilterAlt),
+            expanded = filterObjectsExpanded
+        ) {
+            filterObjectsExpanded = !filterObjectsExpanded
+        }
+        AnimatedVisibilityColumn(visible = filterObjectsExpanded) {
+            ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
+                FilterObjects(mapsEditState)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FilterObjects(mapsEditState: MapsEditState) {
+    val context = LocalContext.current
+    val matches = mapsEditState.getObjectFilterMatches().size
+    TextField(
+        value = mapsEditState.objectFilter.value.query.value,
+        onValueChange = { mapsEditState.objectFilter.value.query.value = it },
+        label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
+        singleLine = true
+    )
+    ScrollableRow(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        gradientColor = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        LACMapObjectFilters.defaultFilters.forEach { suggestion ->
+            SuggestionChip(
+                onClick = { mapsEditState.setObjectFilterFromSuggestion(suggestion) },
+                label = { Text(stringResource(suggestion.labelStringId!!)) },
+                shape = AppComposableShape,
+                interactionSource = remember { MutableInteractionSource() }
+            )
+        }
+    }
+    Switch(
+        title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
+        checked = mapsEditState.objectFilter.value.caseSensitive.value,
+        rounded = true
+    ) {
+        mapsEditState.objectFilter.value.caseSensitive.value = it
+    }
+    Switch(
+        title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
+        description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
+        checked = mapsEditState.objectFilter.value.exactMatch.value,
+        rounded = true,
+    ) {
+        mapsEditState.objectFilter.value.exactMatch.value = it
+    }
+    Text(
+        text = stringResource(R.string.mapsEdit_filterObjects_matches).replace("%n", matches.toString()),
+        modifier = Modifier.padding(8.dp)
+    )
+    Crossfade(targetState = matches > 0) {
+        ButtonCentered(
+            title = stringResource(R.string.mapsEdit_filterObjects_removeMatches),
+            enabled = it,
+            containerColor = MaterialTheme.colorScheme.error
+        ) {
+            mapsEditState.removeObjectFilterMatches(context)
         }
     }
 }

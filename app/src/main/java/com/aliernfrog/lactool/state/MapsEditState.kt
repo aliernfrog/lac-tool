@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapData
 import com.aliernfrog.lactool.data.LACMapObject
+import com.aliernfrog.lactool.data.LACMapObjectFilter
 import com.aliernfrog.lactool.data.LACMapOption
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
@@ -44,6 +45,7 @@ class MapsEditState(_topToastState: TopToastState) {
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
     val mapData: MutableState<LACMapData?> = mutableStateOf(null)
+    val objectFilter = mutableStateOf(LACMapObjectFilter())
     val roleSheetChosenRole = mutableStateOf("")
 
     @SuppressLint("Recycle")
@@ -111,6 +113,29 @@ class MapsEditState(_topToastState: TopToastState) {
         topToastState.showToast(context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replaceCount), Icons.Rounded.Done)
     }
 
+    fun setObjectFilterFromSuggestion(filter: LACMapObjectFilter) {
+        objectFilter.value = LACMapObjectFilter(
+            query = mutableStateOf(filter.query.value),
+            caseSensitive = mutableStateOf(filter.caseSensitive.value),
+            exactMatch = mutableStateOf(filter.exactMatch.value)
+        )
+    }
+
+    fun getObjectFilterMatches(): List<String> {
+        return mapData.value?.mapLines?.filter { line ->
+            LACUtil.lineMatchesObjectFilter(line, objectFilter.value)
+        } ?: emptyList()
+    }
+
+    fun removeObjectFilterMatches(context: Context) {
+        val matches = getObjectFilterMatches().size
+        mapData.value?.mapLines = mapData.value?.mapLines?.filter {
+            !LACUtil.lineMatchesObjectFilter(it, objectFilter.value)
+        }?.toMutableStateList()
+        objectFilter.value = LACMapObjectFilter()
+        topToastState.showToast(context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", matches.toString()), Icons.Rounded.Delete)
+    }
+
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(navController: NavController, context: Context) {
         withContext(Dispatchers.IO) {
@@ -135,6 +160,7 @@ class MapsEditState(_topToastState: TopToastState) {
     suspend fun finishEditingWithoutSaving(navController: NavController) {
         navController.popBackStack()
         mapData.value = null
+        objectFilter.value = LACMapObjectFilter()
         mapFile = null
         mapDocumentFile = null
         scrollState.scrollTo(0)
