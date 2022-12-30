@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -169,7 +171,14 @@ private fun MiscActions(mapsEditState: MapsEditState) {
             filterObjectsExpanded = !filterObjectsExpanded
         }
         AnimatedVisibilityColumn(visible = filterObjectsExpanded) {
-            ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .clip(AppComposableShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .animateContentSize()
+                    .padding(vertical = 8.dp)
+            ) {
                 FilterObjects(mapsEditState)
             }
         }
@@ -185,10 +194,11 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
         value = mapsEditState.objectFilter.value.query.value,
         onValueChange = { mapsEditState.objectFilter.value.query.value = it },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
-        singleLine = true
+        singleLine = true,
+        modifier = Modifier.padding(horizontal = 8.dp)
     )
     ScrollableRow(
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         gradientColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
         LACMapObjectFilters.defaultFilters.forEach { suggestion ->
@@ -202,28 +212,27 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
     }
     Switch(
         title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
-        checked = mapsEditState.objectFilter.value.caseSensitive.value,
-        rounded = true
+        checked = mapsEditState.objectFilter.value.caseSensitive.value
     ) {
         mapsEditState.objectFilter.value.caseSensitive.value = it
     }
     Switch(
         title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
         description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
-        checked = mapsEditState.objectFilter.value.exactMatch.value,
-        rounded = true,
+        checked = mapsEditState.objectFilter.value.exactMatch.value
     ) {
         mapsEditState.objectFilter.value.exactMatch.value = it
     }
     Text(
         text = stringResource(R.string.mapsEdit_filterObjects_matches).replace("%n", matches.toString()),
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     )
     Crossfade(targetState = matches > 0) {
         ButtonCentered(
             title = stringResource(R.string.mapsEdit_filterObjects_removeMatches),
             enabled = it,
-            containerColor = MaterialTheme.colorScheme.error
+            containerColor = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             mapsEditState.removeObjectFilterMatches(context)
         }
