@@ -67,7 +67,7 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
                     containerColor = MaterialTheme.colorScheme.secondary,
                     expanded = expanded,
                     expandable = {
-                        MapActions(map, index, mapsMergeState)
+                        MapActions(map, (index+1), mapsMergeState)
                     }
                 ) {
                     mapsMergeState.optionsExpandedFor.value = if (expanded) null
