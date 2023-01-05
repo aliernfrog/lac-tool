@@ -25,11 +25,11 @@ class MapsMergeState(
         when (file) {
             is DocumentFileCompat -> {
                 val mapName = FileUtil.removeExtension(file.name)
-                chosenMaps.add(LACMap(name = mapName, fileName = file.name, documentFile = file, thumbnailPainterModel = file.uri.toString()))
+                chosenMaps.add(LACMap(name = mapName, fileName = file.name, documentFile = file, thumbnailPainterModel = file.uri.toString().replace("txt", "jpg")))
             }
             is File -> {
                 val mapName = file.nameWithoutExtension
-                chosenMaps.add(LACMap(name = mapName, fileName = file.name, file = file, thumbnailPainterModel = file.absolutePath))
+                chosenMaps.add(LACMap(name = mapName, fileName = file.name, file = file))
             }
             else -> throw IllegalArgumentException()
         }
