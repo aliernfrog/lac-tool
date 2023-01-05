@@ -34,7 +34,7 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState) {
 @Composable
 private fun MapsList(mapsMergeState: MapsMergeState) {
     val baseMap = mapsMergeState.chosenMaps.firstOrNull() ?: LACMap("-", "-")
-    val hasMapsToMerge = mapsMergeState.chosenMaps.size > 1
+    val mapsToMerge = mapsMergeState.chosenMaps.toList().drop(1)
     AnimatedVisibility(baseMap.fileName != "-") {
         MapButton(
             map = baseMap,
@@ -42,11 +42,11 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
             expandable = { Text("TODO finish this", Modifier.padding(8.dp)) }
         ) {}
     }
-    AnimatedVisibility(hasMapsToMerge) {
+    AnimatedVisibility(mapsToMerge.isNotEmpty()) {
         ColumnRounded(
             title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
-            mapsMergeState.chosenMaps.forEach { map ->
+            mapsToMerge.forEach { map ->
                 var expanded by remember { mutableStateOf(false) }
                 MapButton(
                     map = map,
