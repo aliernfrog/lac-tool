@@ -32,6 +32,7 @@ class MapsState(
 ) {
     private val topToastState = _topToastState
     val mapsEditState = MapsEditState(topToastState)
+    val mapsMergeState = MapsMergeState(topToastState)
     val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scrollState = ScrollState(0)
     val mapsDir = config.getString(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)!!
