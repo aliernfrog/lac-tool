@@ -2,7 +2,9 @@ name: Release in Artifacts
 
 on:
   push:
-    branches: ["compose"]
+    branches-ignore:
+      - 'main'
+      - 'old-codebase'
 
   workflow_dispatch:
 
