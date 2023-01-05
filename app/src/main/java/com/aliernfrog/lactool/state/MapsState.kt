@@ -16,7 +16,6 @@ import androidx.navigation.NavController
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
-import com.aliernfrog.lactool.data.MapsListItem
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -41,8 +40,8 @@ class MapsState(
     private val exportedMapsFile = File(mapsExportDir)
 
     val mapDeleteDialogShown = mutableStateOf(false)
-    val importedMaps = mutableStateOf(emptyList<MapsListItem>())
-    val exportedMaps = mutableStateOf(emptyList<MapsListItem>())
+    val importedMaps = mutableStateOf(emptyList<LACMap>())
+    val exportedMaps = mutableStateOf(emptyList<LACMap>())
     val chosenMap: MutableState<LACMap?> = mutableStateOf(null)
     val mapNameEdit = mutableStateOf("")
     val lastMapName = mutableStateOf("")
@@ -50,11 +49,11 @@ class MapsState(
     fun getMap(file: File? = null, documentFile: DocumentFileCompat? = null) {
         if (file != null) {
             val mapName = file.nameWithoutExtension
-            if (file.exists()) setChosenMap(LACMap(mapName = mapName, fileName = file.name, filePath = file.absolutePath))
+            if (file.exists()) setChosenMap(LACMap(name = mapName, fileName = file.name, file = file))
             else fileDoesntExist()
         } else if (documentFile != null) {
             val mapName = FileUtil.removeExtension(documentFile.name)
-            if (documentFile.exists()) setChosenMap(LACMap(mapName = mapName, fileName = documentFile.name, filePath = "$mapsDir/${documentFile.name}", documentFile = documentFile))
+            if (documentFile.exists()) setChosenMap(LACMap(name = mapName, fileName = documentFile.name, documentFile = documentFile))
             else fileDoesntExist()
         } else {
             setChosenMap(null)
@@ -66,7 +65,7 @@ class MapsState(
         if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             getChosenMapFiles().forEach { file ->
-                val newName = file.name.replaceFirst(chosenMap.value!!.mapName, getMapNameEdit(false))
+                val newName = file.name.replaceFirst(chosenMap.value!!.name, getMapNameEdit(false))
                 file.renameTo(newName)
             }
             getMap(documentFile = mapsFile.findFile(getMapNameEdit()))
@@ -80,7 +79,7 @@ class MapsState(
         if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             output = mapsFile.createFile("", getMapNameEdit())
-            if (output != null) FileUtil.copyFile(chosenMap.value!!.filePath, output!!, context)
+            if (output != null) FileUtil.copyFile(chosenMap.value!!.file!!.absolutePath, output!!, context)
             getMap(documentFile = output)
             topToastState.showToast(R.string.maps_import_done, Icons.Rounded.Download)
             getImportedMaps()
@@ -101,7 +100,7 @@ class MapsState(
 
     suspend fun editChosenMap(context: Context, navController: NavController) {
         if (chosenMap.value!!.documentFile != null) mapsEditState.loadMap(null, mapsFile.findFile(chosenMap.value!!.fileName)!!, context)
-        else mapsEditState.loadMap(File(chosenMap.value!!.filePath), null, context)
+        else mapsEditState.loadMap(chosenMap.value!!.file!!, null, context)
         navController.navigate(Destination.MAPS_EDIT.route)
     }
 
@@ -111,7 +110,7 @@ class MapsState(
                 getChosenMapFiles().forEach { it.delete() }
                 getImportedMaps()
             } else {
-                File(chosenMap.value!!.filePath).delete()
+                chosenMap.value?.file?.delete()
                 getExportedMaps()
             }
             getMap()
@@ -119,13 +118,19 @@ class MapsState(
         }
     }
 
+    fun getChosenMapPath(): String? {
+        return if (chosenMap.value?.file != null) chosenMap.value!!.file!!.absolutePath
+        else if (chosenMap.value?.documentFile != null) "$mapsDir/${chosenMap.value!!.name}"
+        else null
+    }
+
     fun getMapNameEdit(addTxtSuffix: Boolean = true): String {
         val suffix = if (addTxtSuffix) ".txt" else ""
-        return mapNameEdit.value.ifBlank { chosenMap.value?.mapName }+suffix
+        return mapNameEdit.value.ifBlank { chosenMap.value?.name }+suffix
     }
 
     private fun getChosenMapFiles(): List<DocumentFileCompat> {
-        val chosenMapName = chosenMap.value!!.mapName
+        val chosenMapName = chosenMap.value?.name.toString()
         val list = mutableListOf<DocumentFileCompat>()
         val mapFile = mapsFile.findFile("${chosenMapName}.txt")
         val thumbnailFile = mapsFile.findFile("${chosenMapName}.jpg")
@@ -139,8 +144,8 @@ class MapsState(
     private fun setChosenMap(map: LACMap?) {
         chosenMap.value = map
         if (map != null) {
-            mapNameEdit.value = map.mapName
-            lastMapName.value = map.mapName
+            mapNameEdit.value = map.name
+            lastMapName.value = map.name
         }
     }
 
@@ -165,7 +170,7 @@ class MapsState(
             val files = mapsFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".txt") }.sortedBy { it.name.lowercase() }
             val maps = files.map {
                 val nameWithoutExtension = FileUtil.removeExtension(it.name)
-                MapsListItem(nameWithoutExtension, it.name, it.lastModified, null, it, mapsFile.findFile("${nameWithoutExtension}.jpg")?.uri.toString())
+                LACMap(nameWithoutExtension, it.name, it.lastModified, null, it, mapsFile.findFile("${nameWithoutExtension}.jpg")?.uri.toString())
             }
             importedMaps.value = maps
         }
@@ -174,7 +179,7 @@ class MapsState(
     suspend fun getExportedMaps() {
         withContext(Dispatchers.IO) {
             val files = exportedMapsFile.listFiles()?.filter { it.isFile && it.name.lowercase().endsWith(".txt") }?.sortedBy { it.name.lowercase() }
-            val maps = files?.map { MapsListItem(it.nameWithoutExtension, it.name, it.lastModified(), it, null) }
+            val maps = files?.map { LACMap(it.nameWithoutExtension, it.name, it.lastModified(), it, null) }
             if (maps != null) exportedMaps.value = maps
         }
     }

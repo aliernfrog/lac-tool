@@ -69,16 +69,16 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val mapChosen = mapsState.chosenMap.value != null
-    val isImported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsDir) ?: false
-    val isExported = mapsState.chosenMap.value?.filePath?.startsWith(mapsState.mapsExportDir) ?: false
-    val mapNameUpdated = mapsState.getMapNameEdit(false) != mapsState.chosenMap.value?.mapName
+    val isImported = mapsState.getChosenMapPath()?.startsWith(mapsState.mapsDir) ?: false
+    val isExported = mapsState.getChosenMapPath()?.startsWith(mapsState.mapsExportDir) ?: false
+    val mapNameUpdated = mapsState.getMapNameEdit(false) != mapsState.chosenMap.value?.name
     MapActionVisibility(visible = mapChosen) {
         Column {
             TextField(
                 value = mapsState.mapNameEdit.value,
                 onValueChange = { mapsState.mapNameEdit.value = it },
                 label = { Text(stringResource(R.string.maps_mapName)) },
-                placeholder = { Text(mapsState.chosenMap.value!!.mapName) },
+                placeholder = { Text(mapsState.chosenMap.value!!.name) },
                 leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
                 singleLine = true,
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,

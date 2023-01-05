@@ -23,13 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.AppComposableShape
-import com.aliernfrog.lactool.data.MapsListItem
+import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 
 @Composable
 fun MapButton(
-    map: MapsListItem,
+    map: LACMap,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     showMapThumbnail: Boolean = true,
@@ -64,7 +64,7 @@ fun MapButton(
             )
             Column {
                 Text(text = map.name, color = contentColor, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Text(text = FileUtil.lastModifiedFromLong(map.lastModified, context), modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
+                Text(text = FileUtil.lastModifiedFromLong(map.lastModified!!, context), modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
             }
         }
     }

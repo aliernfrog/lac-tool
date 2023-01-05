@@ -1,10 +1,13 @@
 package com.aliernfrog.lactool.data
 
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import java.io.File
 
 data class LACMap(
-    val mapName: String,
+    val name: String,
     val fileName: String,
-    val filePath: String,
-    val documentFile: DocumentFileCompat? = null
+    val lastModified: Long? = null,
+    val file: File? = null,
+    val documentFile: DocumentFileCompat? = null,
+    val thumbnailPainterModel: Any? = null
 )

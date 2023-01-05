@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.MapsListItem
+import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.component.*
@@ -96,7 +96,7 @@ private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (
 }
 
 @Composable
-private fun MapsList(maps: List<MapsListItem>, showMapThumbnails: Boolean, exportedMaps: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
+private fun MapsList(maps: List<LACMap>, showMapThumbnails: Boolean, exportedMaps: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
     if (maps.isNotEmpty()) {
         maps.forEach { map ->
             MapButton(map, showMapThumbnail = showMapThumbnails) {
