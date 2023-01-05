@@ -5,6 +5,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.state.TopToastState
@@ -20,6 +21,7 @@ class MapsMergeState(
     val scrollState = ScrollState(0)
 
     val chosenMaps = mutableStateListOf<LACMap>()
+    val optionsExpandedFor = mutableStateOf<LACMap?>(null)
 
     fun addMap(file: Any) {
         when (file) {

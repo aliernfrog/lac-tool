@@ -61,7 +61,7 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
             title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
             mapsToMerge.forEach { map ->
-                var expanded by remember { mutableStateOf(false) }
+                val expanded = mapsMergeState.optionsExpandedFor.value == map
                 MapButton(
                     map = map,
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -70,7 +70,8 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
                         MapActions(map, mapsMergeState, isBase = false)
                     }
                 ) {
-                    expanded = !expanded
+                    mapsMergeState.optionsExpandedFor.value = if (expanded) null
+                    else map
                 }
             }
         }
