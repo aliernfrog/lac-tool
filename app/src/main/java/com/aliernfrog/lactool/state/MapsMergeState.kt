@@ -21,7 +21,7 @@ class MapsMergeState(
     val scrollState = ScrollState(0)
 
     val chosenMaps = mutableStateListOf<LACMap>()
-    val optionsExpandedFor = mutableStateOf<LACMap?>(null)
+    val optionsExpandedFor = mutableStateOf<Int?>(null)
 
     fun addMap(file: Any) {
         when (file) {

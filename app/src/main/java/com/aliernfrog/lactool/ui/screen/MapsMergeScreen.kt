@@ -49,8 +49,8 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
                 )
                 MapActions(
                     map = baseMap,
+                    mapIndex = 0,
                     mapsMergeState = mapsMergeState,
-                    isBase = true,
                     containersColor = MaterialTheme.colorScheme.secondary
                 )
             }
@@ -60,18 +60,18 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
         ColumnRounded(
             title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
-            mapsToMerge.forEach { map ->
-                val expanded = mapsMergeState.optionsExpandedFor.value == map
+            mapsToMerge.forEachIndexed { index, map ->
+                val expanded = mapsMergeState.optionsExpandedFor.value == index
                 MapButton(
                     map = map,
                     containerColor = MaterialTheme.colorScheme.secondary,
                     expanded = expanded,
                     expandable = {
-                        MapActions(map, mapsMergeState, isBase = false)
+                        MapActions(map, index, mapsMergeState)
                     }
                 ) {
                     mapsMergeState.optionsExpandedFor.value = if (expanded) null
-                    else map
+                    else index
                 }
             }
         }
@@ -94,9 +94,10 @@ private fun PickMapButton(mapsMergeState: MapsMergeState) {
 @Composable
 private fun MapActions(
     map: LACMap,
+    mapIndex: Int,
     mapsMergeState: MapsMergeState,
-    isBase: Boolean,
-    containersColor: Color = MaterialTheme.colorScheme.surfaceVariant
+    containersColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    isBase: Boolean = mapIndex == 0
 ) {
     if (!isBase) ButtonRounded(
         title = stringResource(R.string.mapsMerge_map_makeBase),
