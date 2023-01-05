@@ -81,7 +81,7 @@ fun MapButton(
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut()
             ) {
-                Column(Modifier.padding(horizontal = 8.dp)) {
+                Column(Modifier.padding(bottom = 8.dp, start = 8.dp, end = 8.dp)) {
                     expandable()
                 }
             }

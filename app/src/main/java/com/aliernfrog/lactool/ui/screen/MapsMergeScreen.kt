@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ import com.aliernfrog.lactool.state.MapsMergeState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.MapButton
+import com.aliernfrog.lactool.util.extension.swap
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,7 +41,19 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
         MapButton(
             map = baseMap,
             expanded = true,
-            expandable = { Text("TODO finish this", Modifier.padding(8.dp)) }
+            expandable = {
+                Text(
+                    text = stringResource(R.string.mapsMerge_base_description),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                MapActions(
+                    map = baseMap,
+                    mapsMergeState = mapsMergeState,
+                    isBase = true,
+                    containersColor = MaterialTheme.colorScheme.secondary
+                )
+            }
         ) {}
     }
     AnimatedVisibility(mapsToMerge.isNotEmpty()) {
@@ -53,15 +67,10 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
                     containerColor = MaterialTheme.colorScheme.secondary,
                     expanded = expanded,
                     expandable = {
-                        Text(
-                            text = "TODO finish this",
-                            color = MaterialTheme.colorScheme.onSecondary,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                        MapActions(map, mapsMergeState, isBase = false)
                     }
                 ) {
                     expanded = !expanded
-                    //TODO
                 }
             }
         }
@@ -78,5 +87,26 @@ private fun PickMapButton(mapsMergeState: MapsMergeState) {
         containerColor = MaterialTheme.colorScheme.primary
     ) {
         scope.launch { mapsMergeState.pickMapSheetState.show() }
+    }
+}
+
+@Composable
+private fun MapActions(
+    map: LACMap,
+    mapsMergeState: MapsMergeState,
+    isBase: Boolean,
+    containersColor: Color = MaterialTheme.colorScheme.surfaceVariant
+) {
+    if (!isBase) ButtonRounded(
+        title = stringResource(R.string.mapsMerge_map_makeBase),
+        containerColor = containersColor
+    ) {
+        mapsMergeState.chosenMaps.swap(0, mapsMergeState.chosenMaps.indexOf(map))
+    }
+    ButtonRounded(
+        title = stringResource(R.string.mapsMerge_map_remove),
+        containerColor = containersColor
+    ) {
+        mapsMergeState.chosenMaps.remove(map)
     }
 }
