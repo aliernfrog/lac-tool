@@ -25,6 +25,7 @@ class MapsMergeState(
         when (file) {
             is DocumentFileCompat -> {
                 val mapName = FileUtil.removeExtension(file.name)
+                // TODO current method to get thumbnail uri from map uri is too genius, a less genius one can be used instead
                 chosenMaps.add(LACMap(name = mapName, fileName = file.name, documentFile = file, thumbnailPainterModel = file.uri.toString().replace("txt", "jpg")))
             }
             is File -> {
