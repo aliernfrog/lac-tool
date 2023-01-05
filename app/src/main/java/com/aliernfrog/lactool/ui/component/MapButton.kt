@@ -34,6 +34,7 @@ fun MapButton(
     map: LACMap,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = contentColorFor(containerColor),
+    mapContainerColor: Color = containerColor,
     showMapThumbnail: Boolean = true,
     expanded: Boolean? = null,
     expandable: @Composable () -> Unit = {},
@@ -44,7 +45,7 @@ fun MapButton(
         color = contentColor,
         onClick = onClick
     )) {
-        Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
+        Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).clip(AppComposableShape).background(mapContainerColor)) {
             if (showMapThumbnail) AsyncImage(
                 model = map.thumbnailPainterModel,
                 contentDescription = null,
