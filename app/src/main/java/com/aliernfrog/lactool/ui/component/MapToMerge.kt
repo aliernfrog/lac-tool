@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -56,37 +57,65 @@ fun MapToMerge(
         Crossfade(targetState = expanded) {
             val headerContainerColor = if (it) expandedHeaderContainerColor else containerColor
             val headerContentColor = if (it) expandedHeaderContentColor else contentColor
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(headerContainerColor)
                     .clickableWithColor(headerContentColor, onClick)
                     .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Outlined.PinDrop),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp),
-                    tint = headerContentColor
-                )
-                Text(
-                    text = mapToMerge.map.name,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = rememberVectorPainter(Icons.Outlined.PinDrop),
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp),
+                        tint = headerContentColor
+                    )
+                    Text(
+                        text = mapToMerge.map.name,
+                        color = headerContentColor,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+                    if (showExpandedIndicator) Image(
+                        imageVector = Icons.Rounded.KeyboardArrowUp,
+                        contentDescription = null,
+                        modifier = Modifier.padding(8.dp).rotate(animatedRotation.value),
+                        colorFilter = ColorFilter.tint(headerContentColor)
+                    )
+                }
+                if (isBaseMap) Text(
+                    text = stringResource(R.string.mapsMerge_base_description),
                     color = headerContentColor,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth().weight(1f)
-                )
-                if (showExpandedIndicator) Image(
-                    imageVector = Icons.Rounded.KeyboardArrowUp,
-                    contentDescription = null,
-                    modifier = Modifier.padding(8.dp).rotate(animatedRotation.value),
-                    colorFilter = ColorFilter.tint(headerContentColor)
+                    fontSize = 15.sp,
+                    lineHeight = 17.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp).alpha(0.85f)
                 )
             }
         }
         AnimatedVisibility(visible = expanded) {
             Column {
+                Switch(
+                    title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
+                    checked = mapToMerge.mergeSpawnpoints.value,
+                    onCheckedChange = { mapToMerge.mergeSpawnpoints.value = it },
+                    contentColor = contentColor
+                )
+                Switch(
+                    title = stringResource(R.string.mapsMerge_map_includeRacingCheckpoints),
+                    checked = mapToMerge.mergeRacingCheckpoints.value,
+                    onCheckedChange = { mapToMerge.mergeRacingCheckpoints.value = it },
+                    contentColor = contentColor
+                )
+                Switch(
+                    title = stringResource(R.string.mapsMerge_map_includeTDMSpawnpoints),
+                    checked = mapToMerge.mergeTDMSpawnpoints.value,
+                    onCheckedChange = { mapToMerge.mergeTDMSpawnpoints.value = it },
+                    contentColor = contentColor
+                )
                 if (!isBaseMap) ButtonShapeless(
                     title = stringResource(R.string.mapsMerge_map_makeBase),
                     painter = rememberVectorPainter(Icons.Rounded.Home),

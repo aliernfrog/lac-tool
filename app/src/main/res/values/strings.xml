@@ -83,6 +83,9 @@
     <string name="mapsMerge_addMap">Add a map to merge</string>
     <string name="mapsMerge_mapsToMerge">Maps to merge</string>
     <string name="mapsMerge_base_description">This is the base map. Other maps will be added on top of this map and options of this map will be used</string>
+    <string name="mapsMerge_map_includeSpawnpoints">Include spawnpoints</string>
+    <string name="mapsMerge_map_includeRacingCheckpoints">Include racing checkpoints</string>
+    <string name="mapsMerge_map_includeTDMSpawnpoints">Include team death-match spawnpoints</string>
     <string name="mapsMerge_map_makeBase">Make this map base</string>
     <string name="mapsMerge_map_madeBase">Made %MAP% base</string>
     <string name="mapsMerge_map_remove">Remove this map</string>
