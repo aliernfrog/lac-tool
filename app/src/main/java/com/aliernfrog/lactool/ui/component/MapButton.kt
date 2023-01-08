@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.component
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,7 +7,6 @@ import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,57 +31,40 @@ import com.aliernfrog.lactool.util.staticutil.FileUtil
 fun MapButton(
     map: LACMap,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentColor: Color = contentColorFor(containerColor),
-    mapContainerColor: Color = containerColor,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     showMapThumbnail: Boolean = true,
-    expanded: Boolean? = null,
-    expandable: @Composable () -> Unit = {},
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    Column(Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape).background(containerColor).clickableWithColor(
-        color = contentColor,
-        onClick = onClick
-    )) {
-        Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).clip(AppComposableShape).background(mapContainerColor)) {
-            if (showMapThumbnail) AsyncImage(
-                model = map.thumbnailPainterModel,
+    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComposableShape).background(containerColor).clickableWithColor(contentColor) {
+        onClick()
+    }) {
+        if (showMapThumbnail) AsyncImage(
+            model = map.thumbnailPainterModel,
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = ColorPainter(containerColor),
+            error = ColorPainter(containerColor),
+            fallback = ColorPainter(containerColor),
+            contentScale = ContentScale.Crop,
+            alpha = 0.5f
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(Brush.horizontalGradient(listOf(containerColor,Color.Transparent)))
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = rememberVectorPainter(Icons.Outlined.PinDrop),
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = ColorPainter(containerColor),
-                error = ColorPainter(containerColor),
-                fallback = ColorPainter(containerColor),
-                contentScale = ContentScale.Crop,
-                alpha = 0.5f
+                modifier = Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp),
+                tint = contentColor
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(Brush.horizontalGradient(listOf(containerColor,Color.Transparent)))
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Outlined.PinDrop),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp),
-                    tint = contentColor
-                )
-                Column {
-                    Text(text = map.name, color = contentColor, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    if (map.lastModified != null) Text(text = FileUtil.lastModifiedFromLong(map.lastModified, context), modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
-                }
-            }
-        }
-        if (expanded != null) {
-            AnimatedVisibility(
-                visible = expanded == true,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
-                Column(Modifier.padding(bottom = 8.dp, start = 8.dp, end = 8.dp)) {
-                    expandable()
-                }
+            Column {
+                Text(text = map.name, color = contentColor, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(text = FileUtil.lastModifiedFromLong(map.lastModified!!, context), modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
             }
         }
     }

@@ -3,25 +3,23 @@ package com.aliernfrog.lactool.ui.screen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
+import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.state.MapsMergeState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
-import com.aliernfrog.lactool.ui.component.MapButton
+import com.aliernfrog.lactool.ui.component.MapToMerge
 import com.aliernfrog.lactool.util.extension.swap
 import kotlinx.coroutines.launch
 
@@ -35,44 +33,26 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState) {
 
 @Composable
 private fun MapsList(mapsMergeState: MapsMergeState) {
-    val baseMap = mapsMergeState.chosenMaps.firstOrNull() ?: LACMap("-", "-")
+    val baseMap = mapsMergeState.chosenMaps.firstOrNull()
     val mapsToMerge = mapsMergeState.chosenMaps.toList().drop(1)
-    AnimatedVisibility(baseMap.fileName != "-") {
-        MapButton(
-            map = baseMap,
-            expanded = true,
-            expandable = {
-                Text(
-                    text = stringResource(R.string.mapsMerge_base_description),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                MapActions(
-                    map = baseMap,
-                    mapIndex = 0,
-                    mapsMergeState = mapsMergeState,
-                    containersColor = MaterialTheme.colorScheme.secondary
-                )
-            }
-        ) {}
+    AnimatedVisibility(baseMap != null) {
+        MapButtonWithActions(
+            mapsMergeState = mapsMergeState,
+            mapToMerge = baseMap ?: LACMapToMerge(LACMap("-", "-")),
+            mapIndex = 0
+        )
     }
     AnimatedVisibility(mapsToMerge.isNotEmpty()) {
         ColumnRounded(
             title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
             mapsToMerge.forEachIndexed { index, map ->
-                val expanded = mapsMergeState.optionsExpandedFor.value == index
-                MapButton(
-                    map = map,
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    expanded = expanded,
-                    expandable = {
-                        MapActions(map, (index+1), mapsMergeState)
-                    }
-                ) {
-                    mapsMergeState.optionsExpandedFor.value = if (expanded) null
-                    else index
-                }
+                MapButtonWithActions(
+                    mapsMergeState = mapsMergeState,
+                    mapToMerge = map,
+                    mapIndex = index+1,
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             }
         }
     }
@@ -92,23 +72,25 @@ private fun PickMapButton(mapsMergeState: MapsMergeState) {
 }
 
 @Composable
-private fun MapActions(
-    map: LACMap,
-    mapIndex: Int,
+private fun MapButtonWithActions(
     mapsMergeState: MapsMergeState,
-    containersColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    isBase: Boolean = mapIndex == 0
+    mapToMerge: LACMapToMerge,
+    mapIndex: Int,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
-    if (!isBase) ButtonRounded(
-        title = stringResource(R.string.mapsMerge_map_makeBase),
-        containerColor = containersColor
-    ) {
-        mapsMergeState.chosenMaps.swap(0, mapsMergeState.chosenMaps.indexOf(map))
-    }
-    ButtonRounded(
-        title = stringResource(R.string.mapsMerge_map_remove),
-        containerColor = containersColor
-    ) {
-        mapsMergeState.chosenMaps.remove(map)
-    }
+    val isBase = mapIndex == 0
+    val expanded = mapsMergeState.optionsExpandedFor.value == mapIndex
+    MapToMerge(
+        mapToMerge = mapToMerge,
+        isBaseMap = isBase,
+        expanded = expanded || isBase,
+        showExpandedIndicator = !isBase,
+        containerColor = containerColor,
+        onMakeBase = { mapsMergeState.chosenMaps.swap(0, mapIndex) },
+        onRemove = { mapsMergeState.chosenMaps.removeAt(mapIndex) },
+        onClick = {
+            mapsMergeState.optionsExpandedFor.value = if (expanded) 0
+            else mapIndex
+        }
+    )
 }
