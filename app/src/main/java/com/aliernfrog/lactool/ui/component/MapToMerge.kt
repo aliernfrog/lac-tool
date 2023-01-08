@@ -38,7 +38,7 @@ fun MapToMerge(
     showExpandedIndicator: Boolean = true,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = contentColorFor(containerColor),
-    expandedHeaderContainerColor: Color = contentColor.copy(0.2f),
+    expandedHeaderContainerColor: Color = contentColor.copy(0.4f),
     expandedHeaderContentColor: Color = contentColorFor(expandedHeaderContainerColor),
     onMakeBase: () -> Unit,
     onRemove: () -> Unit,
