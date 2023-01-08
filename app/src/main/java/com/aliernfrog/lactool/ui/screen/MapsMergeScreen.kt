@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
@@ -20,7 +21,6 @@ import com.aliernfrog.lactool.state.MapsMergeState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.MapToMerge
-import com.aliernfrog.lactool.util.extension.swap
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,6 +78,7 @@ private fun MapButtonWithActions(
     mapIndex: Int,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
+    val context = LocalContext.current
     val isBase = mapIndex == 0
     val expanded = mapsMergeState.optionsExpandedFor.value == mapIndex
     MapToMerge(
@@ -86,8 +87,8 @@ private fun MapButtonWithActions(
         expanded = expanded || isBase,
         showExpandedIndicator = !isBase,
         containerColor = containerColor,
-        onMakeBase = { mapsMergeState.chosenMaps.swap(0, mapIndex) },
-        onRemove = { mapsMergeState.chosenMaps.removeAt(mapIndex) },
+        onMakeBase = { mapsMergeState.makeMapBase(mapIndex, mapToMerge.map.name, context) },
+        onRemove = { mapsMergeState.removeMap(mapIndex, mapToMerge.map.name, context) },
         onClick = {
             mapsMergeState.optionsExpandedFor.value = if (expanded) 0
             else mapIndex

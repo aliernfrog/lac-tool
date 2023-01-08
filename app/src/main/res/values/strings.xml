@@ -84,7 +84,9 @@
     <string name="mapsMerge_mapsToMerge">Maps to merge</string>
     <string name="mapsMerge_base_description">This is the base map. Other maps will be added on top of this map and options of this map will be used</string>
     <string name="mapsMerge_map_makeBase">Make this map base</string>
+    <string name="mapsMerge_map_madeBase">Made %MAP% base</string>
     <string name="mapsMerge_map_remove">Remove this map</string>
+    <string name="mapsMerge_map_removed">Removed %MAP%</string>
     <string name="wallpapers">Wallpapers</string>
     <string name="wallpapers_pickImage">Pick an image</string>
     <string name="wallpapers_noWallpapers">No wallpapers found</string>
