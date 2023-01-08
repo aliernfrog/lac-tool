@@ -7,27 +7,38 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.PriorityHigh
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.util.extension.swap
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.LACUtil
+import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @OptIn(ExperimentalMaterialApi::class)
 class MapsMergeState(
-    _topToastState: TopToastState
+    _topToastState: TopToastState,
+    _mapsState: MapsState
 ) {
     private val topToastState = _topToastState
+    private val mapsState = _mapsState
     val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scrollState = ScrollState(0)
 
     val chosenMaps = mutableStateListOf<LACMapToMerge>()
     val optionsExpandedFor = mutableStateOf(0)
+    var mergeMapDialogShown by mutableStateOf(false)
+    var isMerging by mutableStateOf(false)
 
     fun addMap(file: Any) {
         when (file) {
@@ -63,5 +74,31 @@ class MapsMergeState(
             text = context.getString(R.string.mapsMerge_map_removed).replace("%MAP%", mapName),
             icon = Icons.Rounded.Done
         )
+    }
+
+    suspend fun mergeMaps(mapName: String, context: Context) {
+        if (chosenMaps.size < 2) return topToastState.showToast(R.string.mapsMerge_noEnoughMaps, icon = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+        val mapsFile = mapsState.getMapsFile(context)
+        isMerging = true
+        withContext(Dispatchers.IO) {
+            val newMapLines = mutableListOf<String>()
+            Thread.sleep(2000) // Can't live without seeing progress indicator
+            chosenMaps.forEachIndexed { index, mapToMerge ->
+                val isBaseMap = index == 0
+                val filtered = LACUtil.filterMapToMergeContent(mapToMerge, isBaseMap, context)
+                newMapLines.addAll(filtered)
+            }
+            val newFile = mapsFile.createFile("", "$mapName.txt")
+            val outputStream = context.contentResolver.openOutputStream(newFile!!.uri)!!
+            val outputStreamWriter = outputStream.writer(Charsets.UTF_8)
+            outputStreamWriter.write(newMapLines.joinToString("\n"))
+            outputStreamWriter.flush()
+            outputStreamWriter.close()
+            outputStream.close()
+            mergeMapDialogShown = false
+            isMerging = false
+            chosenMaps.clear()
+            topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("%MAP%", mapName), icon = Icons.Rounded.Done)
+        }
     }
 }

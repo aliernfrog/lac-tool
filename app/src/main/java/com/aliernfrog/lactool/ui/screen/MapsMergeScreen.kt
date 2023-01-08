@@ -1,19 +1,25 @@
 package com.aliernfrog.lactool.ui.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
+import androidx.compose.material.icons.rounded.Build
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.data.LACMapToMerge
@@ -21,14 +27,47 @@ import com.aliernfrog.lactool.state.MapsMergeState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.MapToMerge
+import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MapsMergeScreen(mapsMergeState: MapsMergeState) {
-    Column(Modifier.fillMaxSize().verticalScroll(mapsMergeState.scrollState)) {
-        PickMapButton(mapsMergeState)
-        MapsList(mapsMergeState)
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    Box {
+        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeState.scrollState)) {
+            PickMapButton(mapsMergeState)
+            MapsList(mapsMergeState)
+            Spacer(Modifier.height(70.dp))
+        }
+        AnimatedVisibility(
+            visible = mapsMergeState.chosenMaps.size >= 2,
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut(),
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            ExtendedFloatingActionButton(
+                onClick = { mapsMergeState.mergeMapDialogShown = true },
+                modifier = Modifier.padding(8.dp),
+                shape = RoundedCornerShape(20.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Build,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(stringResource(R.string.mapsMerge_merge))
+            }
+        }
     }
+    if (mapsMergeState.mergeMapDialogShown) MergeMapDialog(
+        isMerging = mapsMergeState.isMerging,
+        onDismissRequest = { mapsMergeState.mergeMapDialogShown = false },
+        onConfirm = { scope.launch { mapsMergeState.mergeMaps(it, context) } }
+    )
 }
 
 @Composable
