@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.data.LACMapToMerge
@@ -76,7 +77,7 @@ class MapsMergeState(
         )
     }
 
-    suspend fun mergeMaps(mapName: String, context: Context) {
+    suspend fun mergeMaps(mapName: String, navController: NavController, context: Context) {
         if (chosenMaps.size < 2) return topToastState.showToast(R.string.mapsMerge_noEnoughMaps, icon = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
         val mapsFile = mapsState.getMapsFile(context)
         isMerging = true
@@ -97,6 +98,8 @@ class MapsMergeState(
             outputStream.close()
             mergeMapDialogShown = false
             isMerging = false
+            mapsState.getMap(documentFile = newFile)
+            navController.popBackStack()
             chosenMaps.clear()
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("%MAP%", mapName), icon = Icons.Rounded.Done)
         }

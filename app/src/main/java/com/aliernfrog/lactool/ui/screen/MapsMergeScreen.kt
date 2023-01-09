@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.data.LACMapToMerge
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MapsMergeScreen(mapsMergeState: MapsMergeState) {
+fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Box {
@@ -66,7 +67,7 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState) {
     if (mapsMergeState.mergeMapDialogShown) MergeMapDialog(
         isMerging = mapsMergeState.isMerging,
         onDismissRequest = { mapsMergeState.mergeMapDialogShown = false },
-        onConfirm = { scope.launch { mapsMergeState.mergeMaps(it, context) } }
+        onConfirm = { scope.launch { mapsMergeState.mergeMaps(it, navController, context) } }
     )
 }
 
