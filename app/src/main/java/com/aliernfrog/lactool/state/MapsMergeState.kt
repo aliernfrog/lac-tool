@@ -98,10 +98,10 @@ class MapsMergeState(
             outputStream.close()
             mergeMapDialogShown = false
             isMerging = false
-            mapsState.getMap(documentFile = newFile)
-            navController.popBackStack()
             chosenMaps.clear()
+            mapsState.getMap(documentFile = newFile)
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("%MAP%", mapName), icon = Icons.Rounded.Done)
         }
+        navController.popBackStack()
     }
 }
