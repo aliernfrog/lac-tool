@@ -43,7 +43,7 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController
             Spacer(Modifier.height(70.dp))
         }
         AnimatedVisibility(
-            visible = mapsMergeState.chosenMaps.size >= 2,
+            visible = mapsMergeState.chosenMaps.size >= 2 && !mapsMergeState.mergeMapDialogShown,
             enter = scaleIn() + fadeIn(),
             exit = scaleOut() + fadeOut(),
             modifier = Modifier.align(Alignment.BottomEnd)
