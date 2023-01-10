@@ -78,8 +78,11 @@ class MapsMergeState(
     }
 
     suspend fun mergeMaps(mapName: String, navController: NavController, context: Context) {
-        if (chosenMaps.size < 2) return topToastState.showToast(R.string.mapsMerge_noEnoughMaps, icon = Icons.Rounded.PriorityHigh, iconTintColor = TopToastColor.ERROR)
+        if (chosenMaps.size < 2) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
         val mapsFile = mapsState.getMapsFile(context)
+        val newFileName = "$mapName.txt"
+        val output = mapsFile.findFile(newFileName)
+        if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)
         isMerging = true
         withContext(Dispatchers.IO) {
             val newMapLines = mutableListOf<String>()
@@ -89,7 +92,7 @@ class MapsMergeState(
                 val filtered = LACUtil.filterMapToMergeContent(mapToMerge, isBaseMap, context)
                 newMapLines.addAll(filtered)
             }
-            val newFile = mapsFile.createFile("", "$mapName.txt")
+            val newFile = mapsFile.createFile("", newFileName)
             val outputStream = context.contentResolver.openOutputStream(newFile!!.uri)!!
             val outputStreamWriter = outputStream.writer(Charsets.UTF_8)
             outputStreamWriter.write(newMapLines.joinToString("\n"))
@@ -103,5 +106,15 @@ class MapsMergeState(
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("%MAP%", mapName), icon = Icons.Rounded.Done)
         }
         navController.popBackStack()
+    }
+
+    /**
+     * Cancels merging and hides merge map dialog
+     * @param reason Text to show in toast
+     */
+    private fun cancelMerging(reason: Any) {
+        topToastState.showToast(reason, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
+        mergeMapDialogShown = false
+        isMerging = false
     }
 }
