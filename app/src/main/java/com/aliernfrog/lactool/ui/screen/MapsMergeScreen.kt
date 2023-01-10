@@ -133,8 +133,10 @@ private fun MapButtonWithActions(
         onMakeBase = { mapsMergeState.makeMapBase(mapIndex, mapToMerge.map.name, context) },
         onRemove = { mapsMergeState.removeMap(mapIndex, mapToMerge.map.name, context) },
         onClick = {
-            mapsMergeState.optionsExpandedFor.value = if (expanded) 0
-            else mapIndex
+            if (!isBase) {
+                mapsMergeState.optionsExpandedFor.value = if (expanded) 0
+                else mapIndex
+            }
         }
     )
 }
