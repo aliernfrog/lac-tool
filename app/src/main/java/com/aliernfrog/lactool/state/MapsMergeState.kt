@@ -108,6 +108,12 @@ class MapsMergeState(
         navController.popBackStack()
     }
 
+    suspend fun loadMaps(context: Context) {
+        mapsState.getMapsFile(context)
+        mapsState.getImportedMaps()
+        mapsState.getExportedMaps()
+    }
+
     /**
      * Cancels merging and hides merge map dialog
      * @param reason Text to show in toast

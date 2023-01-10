@@ -69,6 +69,9 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController
         onDismissRequest = { mapsMergeState.mergeMapDialogShown = false },
         onConfirm = { scope.launch { mapsMergeState.mergeMaps(it, navController, context) } }
     )
+    LaunchedEffect(Unit) {
+        mapsMergeState.loadMaps(context)
+    }
 }
 
 @Composable
