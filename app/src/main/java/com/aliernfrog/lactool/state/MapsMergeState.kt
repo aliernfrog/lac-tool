@@ -42,17 +42,22 @@ class MapsMergeState(
     var isMerging by mutableStateOf(false)
 
     fun addMap(file: Any) {
+        val isAddingBaseMap = chosenMaps.isEmpty()
         when (file) {
             is DocumentFileCompat -> {
                 val mapName = FileUtil.removeExtension(file.name)
                 chosenMaps.add(LACMapToMerge(
-                    map = LACMap(name = mapName, fileName = file.name, documentFile = file)
+                    map = LACMap(name = mapName, fileName = file.name, documentFile = file),
+                    mergeRacingCheckpoints = mutableStateOf(isAddingBaseMap),
+                    mergeTDMSpawnpoints = mutableStateOf(isAddingBaseMap)
                 ))
             }
             is File -> {
                 val mapName = file.nameWithoutExtension
                 chosenMaps.add(LACMapToMerge(
-                    map = LACMap(name = mapName, fileName = file.name, file = file)
+                    map = LACMap(name = mapName, fileName = file.name, file = file),
+                    mergeRacingCheckpoints = mutableStateOf(isAddingBaseMap),
+                    mergeTDMSpawnpoints = mutableStateOf(isAddingBaseMap)
                 ))
             }
             else -> throw IllegalArgumentException()
