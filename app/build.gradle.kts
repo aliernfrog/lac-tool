@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.4.0-alpha04"
+val composeVersion = "1.4.0-alpha03"
 val composeCompilerVersion = "1.3.2"
 
 android {
