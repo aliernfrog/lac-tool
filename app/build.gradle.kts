@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.4.0-alpha03"
+val composeVersion = "1.4.0-alpha04"
 val composeCompilerVersion = "1.3.2"
 
 android {
@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha03")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha04")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
