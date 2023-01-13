@@ -76,6 +76,18 @@ enum class LACLineType(
         override fun getValue(line: String) = line.split(":").firstOrNull().toString()
     },
 
+    VEHICLE {
+        override fun matches(line: String) = line.startsWith("Vehicle_")
+
+        override fun getValue(line: String) = line
+    },
+
+    DOWNLOADABLE_MATERIAL {
+        override fun matches(line: String) = line.startsWith("Downloadable_Content_Material")
+
+        override fun getValue(line: String) = line
+    },
+
     OPTION_GENERAL(ignoreWhenFiltering = true) {
         override fun matches(line: String) = line.split(": ").size == 2
         override fun getValue(line: String) = line.split(": ")[1]

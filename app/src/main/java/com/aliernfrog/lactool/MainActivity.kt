@@ -80,12 +80,14 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
                 composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
+                composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
                 composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
             }
             SheetBackHandler(
                 mapsState.pickMapSheetState,
+                mapsState.mapsMergeState.pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState,
                 wallpapersState.wallpaperSheetState,
@@ -99,6 +101,14 @@ class MainActivity : ComponentActivity() {
             showMapThumbnails = settingsState.showMapThumbnailsInList.value,
             onFilePick = { mapsState.getMap(file = it) },
             onDocumentFilePick = { mapsState.getMap(documentFile = it) }
+        )
+        PickMapSheet(
+            mapsState = mapsState,
+            topToastState = topToastState,
+            sheetState = mapsState.mapsMergeState.pickMapSheetState,
+            showMapThumbnails = settingsState.showMapThumbnailsInList.value,
+            onFilePick = { mapsState.mapsMergeState.addMap(it) },
+            onDocumentFilePick = { mapsState.mapsMergeState.addMap(it) }
         )
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,

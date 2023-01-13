@@ -26,6 +26,7 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.resolveFile
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
@@ -38,6 +39,12 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
     Column(Modifier.fillMaxSize().verticalScroll(mapsState.scrollState)) {
         PickMapFileButton(mapsState)
         MapActions(mapsState, navController)
+        Divider(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.surfaceVariant
+        )
+        OtherActions(navController)
     }
     if (mapsState.mapDeleteDialogShown.value) DeleteConfirmationDialog(
         name = mapsState.lastMapName.value,
@@ -137,6 +144,16 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
         ) {
             mapsState.mapDeleteDialogShown.value = true
         }
+    }
+}
+
+@Composable
+private fun OtherActions(navController: NavController) {
+    ButtonRounded(
+        title = stringResource(R.string.mapsMerge),
+        painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt)
+    ) {
+        navController.navigate(Destination.MAPS_MERGE.route)
     }
 }
 
