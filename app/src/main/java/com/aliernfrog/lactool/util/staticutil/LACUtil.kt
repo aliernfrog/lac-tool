@@ -71,7 +71,7 @@ class LACUtil {
         private fun mergeLACObject(mapToMerge: LACMapToMerge, line: String): String {
             val split = line.split(":").toMutableList()
             val oldPosition = GeneralUtil.parseAsXYZ(split[1])!!
-            val positionToAdd = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value) ?: XYZ(0, 0, 0)
+            val positionToAdd = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value) ?: XYZ(0.toDouble(), 0.toDouble(), 0.toDouble())
             split[1] = oldPosition.add(positionToAdd).joinToString()
             return split.joinToString(":")
         }
