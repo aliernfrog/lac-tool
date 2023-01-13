@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.aliernfrog.lactool.data.LACMapObjectFilter
 import com.aliernfrog.lactool.data.LACMapToMerge
+import com.aliernfrog.lactool.data.XYZ
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACOldObject
 import com.aliernfrog.lactool.util.extension.add
@@ -70,7 +71,7 @@ class LACUtil {
         private fun mergeLACObject(mapToMerge: LACMapToMerge, line: String): String {
             val split = line.split(":").toMutableList()
             val oldPosition = GeneralUtil.parseAsXYZ(split[1])!!
-            val positionToAdd = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value)!!
+            val positionToAdd = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value) ?: XYZ(0, 0, 0)
             split[1] = oldPosition.add(positionToAdd).joinToString()
             return split.joinToString(":")
         }
