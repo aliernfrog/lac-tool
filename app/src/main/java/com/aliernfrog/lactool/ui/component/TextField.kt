@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,8 @@ fun TextField(
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: Painter? = null,
+    supportingText: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
     doneIconShown: Boolean = false,
     doneIcon: Painter = rememberVectorPainter(Icons.Rounded.Done),
     onDone: (() -> Unit)? = null,
@@ -49,14 +52,24 @@ fun TextField(
         placeholderColor = contentColor.copy(0.7f)
     )
 ) {
-    Box(contentAlignment = Alignment.CenterEnd) {
+    Box(
+        modifier = Modifier
+            .padding(all = 8.dp)
+            .clip(if (rounded) AppComposableShape else RectangleShape)
+            .background(containerColor)
+            .padding(bottom = if (supportingText != null) 4.dp else 0.dp)
+            .animateContentSize(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
         androidx.compose.material3.TextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.fillMaxWidth().padding(all = 8.dp).clip(if (rounded) AppComposableShape else RectangleShape).animateContentSize(),
+            modifier = modifier.fillMaxWidth(),
             label = label,
             placeholder = placeholder,
             leadingIcon = leadingIcon?.let { { Icon(it, null) } },
+            supportingText = supportingText,
+            isError = isError,
             keyboardOptions = keyboardOptions,
             singleLine = singleLine,
             colors = colors

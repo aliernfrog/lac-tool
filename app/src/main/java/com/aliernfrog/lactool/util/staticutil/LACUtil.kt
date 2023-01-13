@@ -6,6 +6,8 @@ import com.aliernfrog.lactool.data.LACMapObjectFilter
 import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACOldObject
+import com.aliernfrog.lactool.util.extension.add
+import com.aliernfrog.lactool.util.extension.joinToString
 
 class LACUtil {
     companion object {
@@ -43,22 +45,34 @@ class LACUtil {
                 when (val type = getEditorLineType(line)) {
                     LACLineType.OBJECT -> {
                         val name = type.getValue(line)
+                        val lineToAdd = if (isBaseMap) line else mergeLACObject(mapToMerge, line)
                         if (name == "Spawn_Point_Editor") {
-                            if (mapToMerge.mergeSpawnpoints.value) filtered.add(line)
+                            if (mapToMerge.mergeSpawnpoints.value) filtered.add(lineToAdd)
                         } else if (name.startsWith("Checkpoint_Editor")) {
-                            if (mapToMerge.mergeRacingCheckpoints.value) filtered.add(line)
+                            if (mapToMerge.mergeRacingCheckpoints.value) filtered.add(lineToAdd)
                         } else if (name.startsWith("Team_")) {
-                            if (mapToMerge.mergeTDMSpawnpoints.value) filtered.add(line)
+                            if (mapToMerge.mergeTDMSpawnpoints.value) filtered.add(lineToAdd)
                         } else {
-                            filtered.add(line)
+                            filtered.add(lineToAdd)
                         }
                     }
-                    LACLineType.VEHICLE -> filtered.add(line)
+                    LACLineType.VEHICLE -> {
+                        val lineToAdd = if (isBaseMap) line else mergeLACObject(mapToMerge, line)
+                        filtered.add(lineToAdd)
+                    }
                     LACLineType.DOWNLOADABLE_MATERIAL -> filtered.add(line)
                     else -> if (isBaseMap) filtered.add(line)
                 }
             }
             return filtered
+        }
+
+        private fun mergeLACObject(mapToMerge: LACMapToMerge, line: String): String {
+            val split = line.split(":").toMutableList()
+            val oldPosition = GeneralUtil.parseAsXYZ(split[1])!!
+            val positionToAdd = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value)!!
+            split[1] = oldPosition.add(positionToAdd).joinToString()
+            return split.joinToString(":")
         }
     }
 }

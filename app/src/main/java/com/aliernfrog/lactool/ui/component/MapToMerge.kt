@@ -7,12 +7,16 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,12 +28,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.AppComposableShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.util.extension.clickableWithColor
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 @Composable
 fun MapToMerge(
@@ -46,6 +52,7 @@ fun MapToMerge(
     onClick: () -> Unit
 ) {
     val animatedRotation = animateFloatAsState(if (expanded) 0f else 180f)
+    val isCoordsValid = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value) != null
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -98,6 +105,19 @@ fun MapToMerge(
         }
         AnimatedVisibility(visible = expanded) {
             Column {
+                if (!isBaseMap) TextField(
+                    label = { Text(stringResource(R.string.mapsMerge_map_position)) },
+                    supportingText = { Text(stringResource(
+                        if (isCoordsValid) R.string.mapsMerge_map_position_description
+                        else R.string.mapsMerge_map_position_invalid
+                    )) },
+                    isError = !isCoordsValid,
+                    value = mapToMerge.mergePosition.value,
+                    onValueChange = { mapToMerge.mergePosition.value = it },
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true
+                )
                 Switch(
                     title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
                     checked = mapToMerge.mergeSpawnpoints.value,
