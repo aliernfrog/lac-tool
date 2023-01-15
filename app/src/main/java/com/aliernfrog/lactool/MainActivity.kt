@@ -55,10 +55,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val darkTheme = getDarkThemePreference()
             LACToolTheme(darkTheme, settingsState.materialYou.value) {
-                TopToastHost(
-                    state = topToastState,
-                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
-                ) { BaseScaffold() }
+                BaseScaffold()
+                TopToastHost(topToastState)
                 SystemBars(darkTheme)
             }
         }

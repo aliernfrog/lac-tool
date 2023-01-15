@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -24,7 +25,7 @@ fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @
     val currentScreen = screens.find { it.route == currentRoute }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface).nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
         topBar = { TopBar(navController, scrollBehavior, currentScreen) },
         bottomBar = { BottomBar(navController, screens, currentScreen) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
