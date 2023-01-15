@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.extension.clickableWithColor
-import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.extension.getDetails
 
 @Composable
 fun MapButton(
@@ -36,6 +36,7 @@ fun MapButton(
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val mapDetails = map.getDetails(context)
     Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComponentShape).background(containerColor).clickableWithColor(contentColor) {
         onClick()
     }) {
@@ -64,7 +65,7 @@ fun MapButton(
             )
             Column {
                 Text(text = map.name, color = contentColor, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Text(text = FileUtil.lastModifiedFromLong(map.lastModified!!, context), modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
+                if (mapDetails != null) Text(text = mapDetails, modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
             }
         }
     }

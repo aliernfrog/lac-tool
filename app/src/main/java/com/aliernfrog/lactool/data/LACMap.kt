@@ -6,6 +6,7 @@ import java.io.File
 data class LACMap(
     val name: String,
     val fileName: String,
+    val fileSize: Long? = null,
     val lastModified: Long? = null,
     val file: File? = null,
     val documentFile: DocumentFileCompat? = null,
