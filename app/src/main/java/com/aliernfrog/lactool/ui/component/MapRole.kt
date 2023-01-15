@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
 fun MapRole(role: String, showRaw: Boolean = false, onClick: () -> Unit) {
-    Column(Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape).background(MaterialTheme.colorScheme.surfaceVariant).clickable {
+    Column(Modifier.fillMaxWidth().padding(8.dp).clip(AppComponentShape).background(MaterialTheme.colorScheme.surfaceVariant).clickable {
         onClick()
     }.padding(8.dp)) {
         Text(

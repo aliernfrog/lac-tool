@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
 fun ButtonCentered(
@@ -28,7 +28,7 @@ fun ButtonCentered(
         onClick = onClick,
         modifier = modifier.padding(8.dp).fillMaxWidth(),
         enabled = enabled,
-        shape = AppComposableShape,
+        shape = AppComponentShape,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
         contentPadding = PaddingValues(vertical = 13.dp)
     ) {

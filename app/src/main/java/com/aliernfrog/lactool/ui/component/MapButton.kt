@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -36,7 +36,7 @@ fun MapButton(
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComposableShape).background(containerColor).clickableWithColor(contentColor) {
+    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComponentShape).background(containerColor).clickableWithColor(contentColor) {
         onClick()
     }) {
         if (showMapThumbnail) AsyncImage(

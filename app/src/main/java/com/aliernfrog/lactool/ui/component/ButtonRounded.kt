@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
 fun ButtonRounded(
@@ -26,7 +26,7 @@ fun ButtonRounded(
         onClick = onClick,
         modifier = Modifier.padding(8.dp).fillMaxWidth(),
         enabled = enabled,
-        shape = AppComposableShape,
+        shape = AppComponentShape,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
         contentPadding = PaddingValues(8.dp)
     ) {

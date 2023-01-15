@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
@@ -98,7 +98,7 @@ private fun ChosenWallpaper(wallpapersState: WallpapersState) {
             AsyncImage(
                 model = wallpapersState.pickedWallpaper.value?.painterModel,
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth().padding(8.dp).clip(AppComposableShape),
+                modifier = Modifier.fillMaxWidth().padding(8.dp).clip(AppComponentShape),
                 contentScale = ContentScale.Crop
             )
             ButtonRounded(

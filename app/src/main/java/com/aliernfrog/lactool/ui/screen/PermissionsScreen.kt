@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -119,7 +119,7 @@ private fun ErrorColumn(visible: Boolean = true, title: String, content: @Compos
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clip(AppComposableShape)
+                .clip(AppComponentShape)
                 .clickableWithColor(MaterialTheme.colorScheme.onError) {
                     onClick()
                 }

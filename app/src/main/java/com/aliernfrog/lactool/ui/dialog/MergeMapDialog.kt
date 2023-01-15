@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -70,7 +70,7 @@ fun MergeMapDialog(
             OutlinedTextField(
                 value = mapName,
                 onValueChange = { mapName = it },
-                shape = AppComposableShape,
+                shape = AppComponentShape,
                 singleLine = true,
                 enabled = canDismiss,
                 modifier = Modifier.focusRequester(focusRequester)

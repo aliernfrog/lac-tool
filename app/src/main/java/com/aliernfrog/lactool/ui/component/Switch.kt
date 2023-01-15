@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
 fun Switch(
@@ -31,7 +31,7 @@ fun Switch(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(if (rounded) AppComposableShape else RectangleShape)
+            .clip(if (rounded) AppComponentShape else RectangleShape)
             .clickable { onCheckedChange(!checked) }
             .padding(horizontal = 16.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically

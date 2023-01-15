@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
 fun RadioButtons(
@@ -35,7 +35,7 @@ fun RadioButtons(
         val onSelected = { onOptionSelect(index); onSelect(index) }
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().clip(if (optionsRounded) AppComposableShape else RectangleShape).clickable { onSelected() }.padding(horizontal = 2.dp)
+            modifier = Modifier.fillMaxWidth().clip(if (optionsRounded) AppComponentShape else RectangleShape).clickable { onSelected() }.padding(horizontal = 2.dp)
         ) {
             RadioButton(
                 selected = selected,

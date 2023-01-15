@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.LACMapObjectFilters
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapType
@@ -174,7 +174,7 @@ private fun MiscActions(mapsEditState: MapsEditState) {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clip(AppComposableShape)
+                    .clip(AppComponentShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .animateContentSize()
                     .padding(vertical = 8.dp)
@@ -205,7 +205,7 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
             SuggestionChip(
                 onClick = { mapsEditState.setObjectFilterFromSuggestion(suggestion) },
                 label = { Text(stringResource(suggestion.labelStringId!!)) },
-                shape = AppComposableShape,
+                shape = AppComponentShape,
                 interactionSource = remember { MutableInteractionSource() }
             )
         }

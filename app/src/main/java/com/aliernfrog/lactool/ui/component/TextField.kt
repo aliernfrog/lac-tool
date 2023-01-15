@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +55,7 @@ fun TextField(
     Box(
         modifier = Modifier
             .padding(all = 8.dp)
-            .clip(if (rounded) AppComposableShape else RectangleShape)
+            .clip(if (rounded) AppComponentShape else RectangleShape)
             .background(containerColor)
             .padding(bottom = if (supportingText != null) 4.dp else 0.dp)
             .animateContentSize(),

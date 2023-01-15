@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.util.extension.clickableWithColor
@@ -57,7 +57,7 @@ fun MapToMerge(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clip(AppComposableShape)
+            .clip(AppComponentShape)
             .background(containerColor)
             .animateContentSize()
     ) {

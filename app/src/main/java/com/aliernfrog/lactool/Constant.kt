@@ -8,7 +8,7 @@ import com.aliernfrog.lactool.data.LACMapObjectFilter
 import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 30.dp
-val AppComposableShape = RoundedCornerShape(AppRoundnessSize)
+val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"

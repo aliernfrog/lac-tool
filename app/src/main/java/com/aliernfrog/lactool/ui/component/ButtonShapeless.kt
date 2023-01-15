@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComposableShape
+import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 
 @Composable
@@ -39,7 +39,7 @@ fun ButtonShapeless(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(44.dp)
-            .clip(if (rounded) AppComposableShape else RectangleShape)
+            .clip(if (rounded) AppComponentShape else RectangleShape)
             .clickableWithColor(contentColor) { onClick() }
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
