@@ -174,8 +174,8 @@ private fun ExperimentalSettings(config: SharedPreferences, settingsState: Setti
         ButtonShapeless(title = stringResource(R.string.settings_experimental_resetPrefs), contentColor = MaterialTheme.colorScheme.error) {
             prefEdits.forEach {
                 configEditor.remove(it.key)
-                configEditor.apply()
             }
+            configEditor.apply()
             restartApp(context)
         }
     }
