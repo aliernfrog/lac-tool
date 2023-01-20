@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.AppComponentShape
-import com.aliernfrog.lactool.LACMapObjectFilters
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapType
 import com.aliernfrog.lactool.enum.LACMapOptionType
@@ -201,10 +201,10 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
         modifier = Modifier.padding(horizontal = 16.dp),
         gradientColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        LACMapObjectFilters.defaultFilters.forEach { suggestion ->
+        DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             SuggestionChip(
                 onClick = { mapsEditState.setObjectFilterFromSuggestion(suggestion) },
-                label = { Text(stringResource(suggestion.labelStringId!!)) },
+                label = { Text(suggestion.filterName) },
                 shape = AppComponentShape,
                 interactionSource = remember { MutableInteractionSource() }
             )

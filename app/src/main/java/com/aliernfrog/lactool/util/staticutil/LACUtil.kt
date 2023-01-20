@@ -2,7 +2,7 @@ package com.aliernfrog.lactool.util.staticutil
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.aliernfrog.lactool.data.LACMapObjectFilter
+import com.aliernfrog.lactool.data.LACMapMutableObjectFilter
 import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.data.XYZ
 import com.aliernfrog.lactool.enum.LACLineType
@@ -22,7 +22,7 @@ class LACUtil {
             return LACOldObject.values().find { it.objectName == objectName }
         }
 
-        fun lineMatchesObjectFilter(line: String, filter: LACMapObjectFilter): Boolean {
+        fun lineMatchesObjectFilter(line: String, filter: LACMapMutableObjectFilter): Boolean {
             val type = getEditorLineType(line)
             if (type != LACLineType.OBJECT) return false
             val objectName = type.getValue(line)

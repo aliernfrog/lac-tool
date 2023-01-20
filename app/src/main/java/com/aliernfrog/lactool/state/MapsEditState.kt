@@ -14,10 +14,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMapData
 import com.aliernfrog.lactool.data.LACMapObject
-import com.aliernfrog.lactool.data.LACMapObjectFilter
+import com.aliernfrog.lactool.data.LACMapMutableObjectFilter
 import com.aliernfrog.lactool.data.LACMapOption
 import com.aliernfrog.lactool.enum.LACLineType
 import com.aliernfrog.lactool.enum.LACMapOptionType
@@ -45,7 +46,7 @@ class MapsEditState(_topToastState: TopToastState) {
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
     val mapData: MutableState<LACMapData?> = mutableStateOf(null)
-    val objectFilter = mutableStateOf(LACMapObjectFilter())
+    val objectFilter = mutableStateOf(LACMapMutableObjectFilter())
     val roleSheetChosenRole = mutableStateOf("")
 
     @SuppressLint("Recycle")
@@ -114,10 +115,10 @@ class MapsEditState(_topToastState: TopToastState) {
     }
 
     fun setObjectFilterFromSuggestion(filter: LACMapObjectFilter) {
-        objectFilter.value = LACMapObjectFilter(
-            query = mutableStateOf(filter.query.value),
-            caseSensitive = mutableStateOf(filter.caseSensitive.value),
-            exactMatch = mutableStateOf(filter.exactMatch.value)
+        objectFilter.value = LACMapMutableObjectFilter(
+            query = mutableStateOf(filter.query),
+            caseSensitive = mutableStateOf(filter.caseSensitive),
+            exactMatch = mutableStateOf(filter.exactMatch)
         )
     }
 
@@ -132,7 +133,7 @@ class MapsEditState(_topToastState: TopToastState) {
         mapData.value?.mapLines = mapData.value?.mapLines?.filter {
             !LACUtil.lineMatchesObjectFilter(it, objectFilter.value)
         }?.toMutableStateList()
-        objectFilter.value = LACMapObjectFilter()
+        objectFilter.value = LACMapMutableObjectFilter()
         topToastState.showToast(context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", matches.toString()), Icons.Rounded.Delete)
     }
 
@@ -160,7 +161,7 @@ class MapsEditState(_topToastState: TopToastState) {
     suspend fun finishEditingWithoutSaving(navController: NavController) {
         navController.popBackStack()
         mapData.value = null
-        objectFilter.value = LACMapObjectFilter()
+        objectFilter.value = LACMapMutableObjectFilter()
         mapFile = null
         mapDocumentFile = null
         scrollState.scrollTo(0)
