@@ -22,6 +22,7 @@ import com.aliernfrog.lactool.state.SettingsState
 import com.aliernfrog.lactool.state.WallpapersState
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
+import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
@@ -132,6 +133,7 @@ class MainActivity : ComponentActivity() {
             onShareRequest = { scope.launch { screenshotsState.shareImportedScreenshot(it, context) } },
             onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it) } }
         )
+        AlphaWarningDialog(config)
     }
 
     @Composable

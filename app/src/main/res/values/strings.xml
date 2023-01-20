@@ -2,9 +2,11 @@
     <string name="app_name">LAC Tool</string>
     <string name="action_back">Back</string>
     <string name="action_done">Done</string>
+    <string name="action_ok">Okay</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
+    <string name="warning_alphaVersion">This version of LAC Tool is an alpha and things may be broken or missing. You can report issues in GitHub.</string>
     <string name="warning_couldntConvertToPath">Could not get path of this file</string>
     <string name="warning_fileDoesntExist">File does not exist</string>
     <string name="warning_missingStoragePermissions">Missing storage permissions</string>
