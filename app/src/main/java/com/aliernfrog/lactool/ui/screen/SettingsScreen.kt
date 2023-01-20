@@ -152,6 +152,9 @@ private fun ExperimentalSettings(config: SharedPreferences, settingsState: Setti
                 settingsState.forceShowMaterialYouOption.value = it
             }
         )
+        ButtonShapeless(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
+            configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
+        }
         prefEdits.forEach { prefEdit ->
             val value = remember { mutableStateOf(config.getString(prefEdit.key, prefEdit.default)!!) }
             TextField(
