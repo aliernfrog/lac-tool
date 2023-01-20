@@ -135,7 +135,7 @@
     <string name="settings_about_links">Related links</string>
     <string name="settings_about_links_description">Click to view related links</string>
     <string name="settings_experimental">Experimental settings</string>
-    <string name="setings_experimental_enabled">Experimental settings enabled!</string>
+    <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
     <string name="settings_experimental_forceShowMaterialYouOption">Force show Material You option</string>
     <string name="settings_experimental_resetAckedAlpha">Reset acknowledged alpha version</string>

@@ -103,7 +103,7 @@ private fun AboutApp(topToastState: TopToastState, settingsState: SettingsState)
     ColumnDivider(title = stringResource(R.string.settings_about), bottomDivider = false) {
         ButtonShapeless(title = stringResource(R.string.settings_about_version), description = version) {
             settingsState.aboutClickCount.value++
-            if (settingsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(R.string.setings_experimental_enabled)
+            if (settingsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(R.string.settings_experimental_enabled)
         }
         Links(settingsState)
     }
