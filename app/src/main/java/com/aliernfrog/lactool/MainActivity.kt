@@ -16,13 +16,11 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.aliernfrog.lactool.state.MapsState
-import com.aliernfrog.lactool.state.ScreenshotsState
-import com.aliernfrog.lactool.state.SettingsState
-import com.aliernfrog.lactool.state.WallpapersState
+import com.aliernfrog.lactool.state.*
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
 import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
+import com.aliernfrog.lactool.ui.dialog.UpdateDialog
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
@@ -40,6 +38,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
     private lateinit var topToastState: TopToastState
     private lateinit var settingsState: SettingsState
+    private lateinit var updateState: UpdateState
     private lateinit var mapsState: MapsState
     private lateinit var wallpapersState: WallpapersState
     private lateinit var screenshotsState: ScreenshotsState
@@ -50,6 +49,7 @@ class MainActivity : ComponentActivity() {
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState()
         settingsState = SettingsState(config)
+        updateState = UpdateState(topToastState, config, applicationContext)
         mapsState = MapsState(topToastState, config)
         wallpapersState = WallpapersState(topToastState, config)
         screenshotsState = ScreenshotsState(topToastState, config)
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
-                composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
+                composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, updateState, settingsState) }
             }
             SheetBackHandler(
                 mapsState.pickMapSheetState,
@@ -133,6 +133,7 @@ class MainActivity : ComponentActivity() {
             onShareRequest = { scope.launch { screenshotsState.shareImportedScreenshot(it, context) } },
             onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it) } }
         )
+        UpdateDialog(updateState)
         AlphaWarningDialog(config)
     }
 
