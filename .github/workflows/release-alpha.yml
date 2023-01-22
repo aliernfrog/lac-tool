@@ -3,7 +3,7 @@ name: Release alpha
 on:
   push:
     tags:
-      - "v**-alpha"
+      - "v**-alpha**"
 
 jobs:
   build:
