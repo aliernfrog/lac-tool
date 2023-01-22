@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -26,20 +27,22 @@ import com.aliernfrog.lactool.MainActivity
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.state.SettingsState
+import com.aliernfrog.lactool.state.UpdateState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.state.TopToastState
+import kotlinx.coroutines.launch
 
 private const val experimentalRequiredClicks = 10
 
 @Composable
-fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, settingsState: SettingsState) {
+fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, updateState: UpdateState, settingsState: SettingsState) {
     Column(Modifier.fillMaxSize().verticalScroll(settingsState.scrollState)) {
         AppearanceOptions(settingsState)
         MapsOptions(settingsState)
-        AboutApp(topToastState, settingsState)
-        if (settingsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalSettings(config, settingsState)
+        AboutApp(topToastState, updateState, settingsState)
+        if (settingsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalSettings(config, updateState, settingsState)
     }
 }
 
@@ -97,13 +100,20 @@ private fun MapsOptions(settingsState: SettingsState) {
 }
 
 @Composable
-private fun AboutApp(topToastState: TopToastState, settingsState: SettingsState) {
+private fun AboutApp(topToastState: TopToastState, updateState: UpdateState, settingsState: SettingsState) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
     ColumnDivider(title = stringResource(R.string.settings_about), bottomDivider = false) {
         ButtonShapeless(title = stringResource(R.string.settings_about_version), description = version) {
             settingsState.aboutClickCount.value++
             if (settingsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(R.string.settings_experimental_enabled)
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_about_checkUpdates),
+            description = stringResource(R.string.settings_about_checkUpdates_description)
+        ) {
+            scope.launch { updateState.checkUpdates(manuallyTriggered = true) }
         }
         Links(settingsState)
     }
@@ -134,8 +144,9 @@ private fun Links(settingsState: SettingsState) {
 }
 
 @Composable
-private fun ExperimentalSettings(config: SharedPreferences, settingsState: SettingsState) {
+private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateState, settingsState: SettingsState) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val configEditor = config.edit()
     val prefEdits = listOf(
         PrefEditItem(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL),
@@ -153,6 +164,9 @@ private fun ExperimentalSettings(config: SharedPreferences, settingsState: Setti
                 settingsState.forceShowMaterialYouOption.value = it
             }
         )
+        ButtonShapeless(title = stringResource(R.string.settings_experimental_checkUpdateIgnoreVersion)) {
+            scope.launch { updateState.checkUpdates(manuallyTriggered = true, ignoreVersion = true) }
+        }
         ButtonShapeless(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
             configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
         }

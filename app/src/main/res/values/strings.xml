@@ -133,14 +133,19 @@
     <string name="settings_maps_showMapThumbnailsInList_description">Know which map you are on</string>
     <string name="settings_about">About</string>
     <string name="settings_about_version">LAC Tool version</string>
+    <string name="settings_about_checkUpdates">Check for updates</string>
+    <string name="settings_about_checkUpdates_description">Click to check for LAC Tool updates</string>
     <string name="settings_about_links">Related links</string>
     <string name="settings_about_links_description">Click to view related links</string>
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
     <string name="settings_experimental_forceShowMaterialYouOption">Force show Material You option</string>
+    <string name="settings_experimental_checkUpdateIgnoreVersion">Ignore version and check updates</string>
     <string name="settings_experimental_resetAckedAlpha">Reset acknowledged alpha version</string>
     <string name="settings_experimental_resetPrefs">Reset prefs</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
+    <string name="updates_noUpdates">No updates available</string>
+    <string name="updates_error">Something went wrong while checking for updates</string>
     <string name="updates_update">Update</string>
 </resources>

@@ -3,6 +3,8 @@ package com.aliernfrog.lactool.state
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +12,7 @@ import androidx.compose.runtime.setValue
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -34,12 +37,11 @@ class UpdateState(
 
     init {
         if (autoUpdatesEnabled) runBlocking {
-            checkUpdates(context)
+            checkUpdates()
         }
     }
 
     suspend fun checkUpdates(
-        context: Context,
         manuallyTriggered: Boolean = false,
         ignoreVersion: Boolean = false
     ) {
@@ -51,22 +53,32 @@ class UpdateState(
                 val latestBody = json.getString("body")
                 val latestIsPreRelease = json.getBoolean("preRelease")
                 val latestDownload = json.getString("downloadUrl")
-                val isUpToDate = !ignoreVersion && latestVersionCode == currentVersionCode
+                val isUpToDate = !ignoreVersion && latestVersionCode <= currentVersionCode
                 if (!isUpToDate) {
                     newVersionName = latestVersionName
                     newVersionBody = latestBody
                     newVersionIsPreRelease = latestIsPreRelease
                     newVersionDownload = latestDownload
                     if (!manuallyTriggered) topToastState.showToast(
-                        text = context.getString(R.string.updates_updateAvailable),
+                        text = R.string.updates_updateAvailable,
                         icon = Icons.Rounded.Update,
                         stayMs = 20000,
                         onToastClick = { updateDialogShown = true }
                     ) else updateDialogShown = true
+                } else {
+                    if (manuallyTriggered) topToastState.showToast(
+                        text = R.string.updates_noUpdates,
+                        icon = Icons.Rounded.Info,
+                        iconTintColor = TopToastColor.ON_SURFACE
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                if (manuallyTriggered) TODO()
+                if (manuallyTriggered) topToastState.showToast(
+                    text = R.string.updates_error,
+                    icon = Icons.Rounded.PriorityHigh,
+                    iconTintColor = TopToastColor.ERROR
+                )
             }
         }
     }

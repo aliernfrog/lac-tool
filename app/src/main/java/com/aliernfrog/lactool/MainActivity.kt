@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
-                composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, settingsState) }
+                composable(Destination.SETTINGS.route) { SettingsScreen(config, topToastState, updateState, settingsState) }
             }
             SheetBackHandler(
                 mapsState.pickMapSheetState,
