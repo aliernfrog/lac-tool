@@ -4,6 +4,7 @@
     <string name="action_done">Done</string>
     <string name="action_ok">Okay</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_dismiss">Dismiss</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="warning_alphaVersion">This version of LAC Tool is an alpha and things may be broken or missing. You can report issues in GitHub.</string>
@@ -140,4 +141,6 @@
     <string name="settings_experimental_forceShowMaterialYouOption">Force show Material You option</string>
     <string name="settings_experimental_resetAckedAlpha">Reset acknowledged alpha version</string>
     <string name="settings_experimental_resetPrefs">Reset prefs</string>
+    <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
+    <string name="updates_update">Update</string>
 </resources>
