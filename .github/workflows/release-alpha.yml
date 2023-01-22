@@ -3,9 +3,7 @@ name: Release alpha
 on:
   push:
     tags:
-      - "v*-alpha"
-      - "!v*"
-      - "!*-old"
+      - "v**-alpha"
 
 jobs:
   build:

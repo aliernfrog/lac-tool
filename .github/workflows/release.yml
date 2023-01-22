@@ -3,9 +3,8 @@ name: Release in Releases
 on:
   push:
     tags:
-      - "v*"
-      - "!*-old"
-      - "!*-alpha"
+      - "v**"
+      - "!**-**"
 
 jobs:
   build:
