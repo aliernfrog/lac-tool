@@ -135,6 +135,8 @@
     <string name="settings_about_version">LAC Tool version</string>
     <string name="settings_about_checkUpdates">Check for updates</string>
     <string name="settings_about_checkUpdates_description">Click to check for LAC Tool updates</string>
+    <string name="settings_about_autoCheckUpdates">Check for updates automatically</string>
+    <string name="settings_about_autoCheckUpdates_description">Check for LAC Tool updates automatically on launch</string>
     <string name="settings_about_links">Related links</string>
     <string name="settings_about_links_description">Click to view related links</string>
     <string name="settings_experimental">Experimental settings</string>

@@ -115,6 +115,13 @@ private fun AboutApp(topToastState: TopToastState, updateState: UpdateState, set
         ) {
             scope.launch { updateState.checkUpdates(manuallyTriggered = true) }
         }
+        Switch(
+            title = stringResource(R.string.settings_about_autoCheckUpdates),
+            description = stringResource(R.string.settings_about_autoCheckUpdates_description),
+            checked = settingsState.autoCheckUpdates.value
+        ) {
+            settingsState.setAutoCheckUpdates(it)
+        }
         Links(settingsState)
     }
 }
