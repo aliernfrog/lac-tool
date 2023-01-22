@@ -33,13 +33,16 @@ fun Switch(
             .fillMaxWidth()
             .clip(if (rounded) AppComponentShape else RectangleShape)
             .clickable { onCheckedChange(!checked) }
-            .padding(horizontal = 16.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(Modifier.fillMaxWidth().weight(1f)) {
+        Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp).weight(1f)) {
             Text(text = title, color = contentColor, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             if (description != null) Text(text = description, color = contentColor, fontSize = 14.sp, lineHeight = 18.sp)
         }
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
     }
 }
