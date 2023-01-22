@@ -5,6 +5,7 @@ on:
     tags:
       - "v*"
       - "!*-old"
+      - "!*-alpha"
 
 jobs:
   build:
