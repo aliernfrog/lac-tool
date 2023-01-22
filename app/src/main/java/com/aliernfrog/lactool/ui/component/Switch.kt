@@ -42,7 +42,8 @@ fun Switch(
         }
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
     }
 }
