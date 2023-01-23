@@ -107,7 +107,7 @@ class MapsEditState(_topToastState: TopToastState) {
         }
     }
 
-    private fun updateMapEditorState() {
+    fun updateMapEditorState() {
         mapEditor = mapEditor
     }
 

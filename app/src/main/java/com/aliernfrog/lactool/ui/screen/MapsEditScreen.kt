@@ -129,19 +129,28 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
                     LACMapOptionType.NUMBER -> TextField(
                         label = option.label,
                         value = option.value,
-                        onValueChange = { option.value = it },
+                        onValueChange = {
+                            option.value = it 
+                            mapsEditState.updateMapEditorState()
+                        },
                         placeholder = option.value,
                         numberOnly = true
                     )
                     LACMapOptionType.BOOLEAN -> Switch(
                         title = option.label,
                         checked = option.value == "true",
-                        onCheckedChange = { option.value = it.toString() }
+                        onCheckedChange = {
+                            option.value = it.toString()
+                            mapsEditState.updateMapEditorState()
+                        }
                     )
                     LACMapOptionType.SWITCH -> Switch(
                         title = option.label,
                         checked = option.value == "enabled",
-                        onCheckedChange = { option.value = if (it) "enabled" else "disabled" }
+                        onCheckedChange = {
+                            option.value = if (it) "enabled" else "disabled"
+                            mapsEditState.updateMapEditorState()
+                        }
                     )
                 }
             }
