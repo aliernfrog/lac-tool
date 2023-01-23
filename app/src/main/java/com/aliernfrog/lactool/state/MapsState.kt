@@ -62,25 +62,28 @@ class MapsState(
     }
 
     suspend fun renameChosenMap() {
+        val newName = getMapNameEdit(false)
+        val currentName = chosenMap.value?.name ?: return
         val output = mapsFile.findFile(getMapNameEdit())
         if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             getChosenMapFiles().forEach { file ->
-                val newName = file.name.replaceFirst(chosenMap.value!!.name, getMapNameEdit(false))
-                file.renameTo(newName)
+                val newFileName = file.name.replaceFirst(currentName, newName)
+                file.renameTo(newFileName)
             }
-            getMap(documentFile = mapsFile.findFile(getMapNameEdit()))
+            getMap(documentFile = mapsFile.findFile(newName))
             topToastState.showToast(R.string.maps_rename_done, Icons.Rounded.Edit)
             getImportedMaps()
         }
     }
 
     suspend fun importChosenMap(context: Context) {
-        var output = mapsFile.findFile(getMapNameEdit())
-        if (output != null && output.exists()) fileAlreadyExists()
+        val mapPath = chosenMap.value?.file?.absolutePath ?: return
+        var output = mapsFile.findFile(getMapNameEdit()) ?: return
+        if (output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
-            output = mapsFile.createFile("", getMapNameEdit())
-            if (output != null) FileUtil.copyFile(chosenMap.value!!.file!!.absolutePath, output!!, context)
+            output = mapsFile.createFile("", getMapNameEdit()) ?: return@withContext
+            FileUtil.copyFile(mapPath, output, context)
             getMap(documentFile = output)
             topToastState.showToast(R.string.maps_import_done, Icons.Rounded.Download)
             getImportedMaps()
@@ -88,11 +91,12 @@ class MapsState(
     }
 
     suspend fun exportChosenMap(context: Context) {
+        val mapFile = chosenMap.value?.documentFile ?: return
         val output = File("${mapsExportDir}/${getMapNameEdit()}")
         if (output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
-            if (!output.parentFile?.isDirectory!!) output.parentFile?.mkdirs()
-            FileUtil.copyFile(mapsFile.findFile(chosenMap.value!!.fileName)!!, output.absolutePath, context)
+            if (output.parentFile?.isDirectory != true) output.parentFile?.mkdirs()
+            FileUtil.copyFile(mapFile, output.absolutePath, context)
             getMap(file = output)
             topToastState.showToast(R.string.maps_export_done, Icons.Rounded.Upload)
             getExportedMaps()
@@ -100,18 +104,21 @@ class MapsState(
     }
 
     suspend fun editChosenMap(context: Context, navController: NavController) {
-        if (chosenMap.value!!.documentFile != null) mapsEditState.loadMap(null, mapsFile.findFile(chosenMap.value!!.fileName)!!, context)
-        else mapsEditState.loadMap(chosenMap.value!!.file!!, null, context)
+        val map = chosenMap.value ?: return
+        if (map.documentFile != null) mapsEditState.loadMap(null, map.documentFile, context)
+        else if (map.file != null) mapsEditState.loadMap(map.file, null, context)
+        else return
         navController.navigate(Destination.MAPS_EDIT.route)
     }
 
     suspend fun deleteChosenMap() {
+        val map = chosenMap.value ?: return
         withContext(Dispatchers.IO) {
-            if (chosenMap.value!!.documentFile != null) {
+            if (map.documentFile != null) {
                 getChosenMapFiles().forEach { it.delete() }
                 getImportedMaps()
             } else {
-                chosenMap.value?.file?.delete()
+                map.file?.delete()
                 getExportedMaps()
             }
             getMap()
@@ -120,8 +127,9 @@ class MapsState(
     }
 
     fun getChosenMapPath(): String? {
-        return if (chosenMap.value?.file != null) chosenMap.value!!.file!!.absolutePath
-        else if (chosenMap.value?.documentFile != null) "$mapsDir/${chosenMap.value!!.name}"
+        val map = chosenMap.value ?: return null
+        return if (map.file != null) map.file.absolutePath
+        else if (map.documentFile != null) "$mapsDir/${map.documentFile.name}"
         else null
     }
 
@@ -131,7 +139,7 @@ class MapsState(
     }
 
     private fun getChosenMapFiles(): List<DocumentFileCompat> {
-        val chosenMapName = chosenMap.value?.name.toString()
+        val chosenMapName = chosenMap.value?.name ?: return listOf()
         val list = mutableListOf<DocumentFileCompat>()
         val mapFile = mapsFile.findFile("${chosenMapName}.txt")
         val thumbnailFile = mapsFile.findFile("${chosenMapName}.jpg")

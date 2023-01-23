@@ -59,10 +59,11 @@ class WallpapersState(
     }
 
     suspend fun importPickedWallpaper(context: Context) {
+        val wallpaper = pickedWallpaper.value ?: return
         withContext(Dispatchers.IO) {
-            val outputFile = wallpapersFile.createFile("", pickedWallpaper.value!!.name+".jpg")
-            val inputStream = File(pickedWallpaper.value!!.painterModel).inputStream()
-            val outputStream = context.contentResolver.openOutputStream(outputFile!!.uri)!!
+            val outputFile = wallpapersFile.createFile("", wallpaper.name+".jpg") ?: return@withContext
+            val inputStream = File(wallpaper.painterModel).inputStream()
+            val outputStream = context.contentResolver.openOutputStream(outputFile.uri)!!
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
@@ -74,7 +75,7 @@ class WallpapersState(
 
     suspend fun shareImportedWallpaper(wallpaper: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
-            FileUtil.shareFile(wallpapersFile.findFile(wallpaper.fileName)!!, context)
+            FileUtil.shareFile(wallpaper.file ?: return@withContext, context)
         }
     }
 

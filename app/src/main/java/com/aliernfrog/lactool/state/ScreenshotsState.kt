@@ -46,7 +46,7 @@ class ScreenshotsState(
 
     suspend fun shareImportedScreenshot(screenshot: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
-            FileUtil.shareFile(screenshotsFile.findFile(screenshot.fileName)!!, context)
+            FileUtil.shareFile(screenshot.file ?: return@withContext, context)
         }
     }
 
