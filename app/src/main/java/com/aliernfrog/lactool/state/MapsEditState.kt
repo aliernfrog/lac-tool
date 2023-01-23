@@ -27,7 +27,6 @@ class MapsEditState(_topToastState: TopToastState) {
     private val topToastState = _topToastState
     val scrollState = ScrollState(0)
     val rolesLazyListState = LazyListState()
-    private val roleNameIllegalChars = listOf(",",":")
 
     @OptIn(ExperimentalMaterialApi::class)
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
@@ -97,8 +96,8 @@ class MapsEditState(_topToastState: TopToastState) {
             role = role,
             onIllegalChar = {
                 topToastState.showToast(
-                    text = context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }),
-                    icon = Icons.Rounded,
+                    text = context.getString(R.string.mapsRoles_illegalChars).replace("%CHAR%", it),
+                    icon = Icons.Rounded.PriorityHigh,
                     iconTintColor = TopToastColor.ERROR
                 )
             }
