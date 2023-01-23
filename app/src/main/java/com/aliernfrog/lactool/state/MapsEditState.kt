@@ -9,21 +9,13 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapObjectFilter
+import com.aliernfrog.laclib.editor.LACMapEditor
+import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMapData
-import com.aliernfrog.lactool.data.LACMapObject
-import com.aliernfrog.lactool.data.LACMapMutableObjectFilter
-import com.aliernfrog.lactool.data.LACMapOption
-import com.aliernfrog.lactool.enum.LACLineType
-import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.util.extension.removeHtml
-import com.aliernfrog.lactool.util.staticutil.LACUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -45,112 +37,87 @@ class MapsEditState(_topToastState: TopToastState) {
 
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
-    val mapData: MutableState<LACMapData?> = mutableStateOf(null)
-    val objectFilter = mutableStateOf(LACMapMutableObjectFilter())
+    var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
+    var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
     val roleSheetChosenRole = mutableStateOf("")
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
-        if (file == null && documentFile == null) return
+        if (file == null && documentFile == null) throw IllegalArgumentException()
         mapFile = file
         mapDocumentFile = documentFile
         withContext(Dispatchers.IO) {
             val inputStream = file?.inputStream() ?: context.contentResolver.openInputStream(documentFile!!.uri)
-            mapData.value = LACMapData()
-            mapData.value?.mapLines = inputStream?.bufferedReader()?.readText()?.split("\n")?.toMutableList()
-            mapData.value?.mapOptions = mutableStateListOf()
-            inputStream?.close()
-            readMapLines()
+            val content = inputStream?.bufferedReader()?.readText() ?: return@withContext
+            mapEditor = LACMapEditor(content)
+            inputStream.close()
         }
     }
 
-    private fun readMapLines() {
-        mapData.value!!.mapLines?.forEachIndexed { index, line ->
-            try {
-                when (val type = LACUtil.getEditorLineType(line)) {
-                    LACLineType.SERVER_NAME -> {
-                        mapData.value!!.serverName= mutableStateOf(type.getValue(line))
-                        mapData.value!!.serverNameLine = index
-                    }
-                    LACLineType.MAP_TYPE -> {
-                        mapData.value!!.mapType.value = type.getValue(line).toInt()
-                        mapData.value!!.mapTypeLine = index
-                    }
-                    LACLineType.ROLES_LIST -> {
-                        mapData.value!!.mapRoles = type.getValue(line).removeSuffix(",").split(",").toMutableStateList()
-                        mapData.value!!.mapRolesLine = index
-                    }
-                    LACLineType.OPTION_NUMBER -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.NUMBER, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OPTION_BOOLEAN -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.BOOLEAN, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OPTION_SWITCH -> mapData.value!!.mapOptions.add(LACMapOption(LACMapOptionType.SWITCH, type.getLabel(line)!!, mutableStateOf(type.getValue(line)), index))
-                    LACLineType.OBJECT -> {
-                        val objectReplacement = LACUtil.findReplacementForObject(line)
-                        if (objectReplacement != null) mapData.value!!.replacableObjects.add(LACMapObject(
-                            line = line,
-                            lineNumber = index,
-                            canReplaceWith = objectReplacement
-                        ))
-                    }
-                    else -> {}
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+    fun setServerName(serverName: String) {
+        mapEditor?.serverName = serverName
+        updateMapEditorState()
+    }
+
+    fun setMapType(mapType: LACMapType) {
+        mapEditor?.mapType = mapType
+        updateMapEditorState()
     }
 
     fun replaceOldObjects(context: Context) {
-        val replaceCount = (mapData.value?.replacableObjects?.size ?: 0).toString()
-        mapData.value?.replacableObjects?.forEach { mapObject ->
-            val split = mapObject.line.split(":").toMutableList()
-            val replacement = mapObject.canReplaceWith!!
-            if (split.size < 4) split.add(3, "1.0,1.0,1.0")
-            split[0] = replacement.replaceObjectName
-            if (replacement.replaceScale != null) split[3] = replacement.replaceScale
-            if (replacement.replaceColor != null) split.add(replacement.replaceColor)
-            mapData.value!!.mapLines!![mapObject.lineNumber] = split.joinToString(":")
-        }
-        mapData.value?.replacableObjects?.clear()
-        topToastState.showToast(context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replaceCount), Icons.Rounded.Done)
-    }
-
-    fun setObjectFilterFromSuggestion(filter: LACMapObjectFilter) {
-        objectFilter.value = LACMapMutableObjectFilter(
-            query = mutableStateOf(filter.query),
-            caseSensitive = mutableStateOf(filter.caseSensitive),
-            exactMatch = mutableStateOf(filter.exactMatch)
+        val replacedObjects = mapEditor?.replaceOldObjects() ?: 0
+        updateMapEditorState()
+        topToastState.showToast(
+            text = context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replacedObjects.toString()),
+            icon = Icons.Rounded.Done
         )
     }
 
     fun getObjectFilterMatches(): List<String> {
-        return mapData.value?.mapLines?.filter { line ->
-            LACUtil.lineMatchesObjectFilter(line, objectFilter.value)
-        } ?: emptyList()
+        return mapEditor?.getObjectsMatchingFilter(objectFilter) ?: listOf()
     }
 
     fun removeObjectFilterMatches(context: Context) {
-        val matches = getObjectFilterMatches().size
-        mapData.value?.mapLines = mapData.value?.mapLines?.filter {
-            !LACUtil.lineMatchesObjectFilter(it, objectFilter.value)
-        }?.toMutableStateList()
-        objectFilter.value = LACMapMutableObjectFilter()
-        topToastState.showToast(context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", matches.toString()), Icons.Rounded.Delete)
+        val removedObjects = mapEditor?.removeObjectsMatchingFilter(objectFilter)
+        objectFilter = LACMapObjectFilter()
+        topToastState.showToast(
+            text = context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", removedObjects.toString()),
+            icon = Icons.Rounded.Delete
+        )
+    }
+
+    fun deleteRole(role: String, context: Context) {
+        mapEditor?.deleteRole(role)
+        updateMapEditorState()
+        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Delete)
+    }
+
+    fun addRole(role: String, context: Context) {
+        mapEditor?.addRole(
+            role = role,
+            onIllegalChar = {
+                topToastState.showToast(
+                    text = context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }),
+                    icon = Icons.Rounded,
+                    iconTintColor = TopToastColor.ERROR
+                )
+            }
+        ) {
+            updateMapEditorState()
+            topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Check)
+        }
+    }
+
+    private fun updateMapEditorState() {
+        mapEditor = mapEditor
     }
 
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(navController: NavController, context: Context) {
         withContext(Dispatchers.IO) {
-            if (mapData.value?.serverNameLine != null)
-                mapData.value!!.mapLines!![mapData.value!!.serverNameLine!!] = LACLineType.SERVER_NAME.setValue(mapData.value!!.serverName!!.value)
-            if (mapData.value?.mapTypeLine != null)
-                mapData.value!!.mapLines!![mapData.value!!.mapTypeLine!!] = LACLineType.MAP_TYPE.setValue(mapData.value!!.mapType.value.toString())
-            if (mapData.value?.mapRolesLine != null)
-                mapData.value!!.mapLines!![mapData.value!!.mapRolesLine!!] = LACLineType.ROLES_LIST.setValue(mapData.value!!.mapRoles!!.joinToString(",").plus(","))
-            mapData.value?.mapOptions?.forEach { option ->
-                mapData.value!!.mapLines!![option.line] = LACLineType.OPTION_GENERAL.setValue(option.value.value, option.label)
-            }
+            val newContent = mapEditor?.applyChanges() ?: return@withContext
             val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
-            outputStreamWriter.write(mapData.value!!.mapLines!!.joinToString("\n"))
+            outputStreamWriter.write(newContent)
             outputStreamWriter.flush()
             outputStreamWriter.close()
             topToastState.showToast(R.string.maps_edit_saved, Icons.Rounded.Save)
@@ -160,8 +127,8 @@ class MapsEditState(_topToastState: TopToastState) {
 
     suspend fun finishEditingWithoutSaving(navController: NavController) {
         navController.popBackStack()
-        mapData.value = null
-        objectFilter.value = LACMapMutableObjectFilter()
+        mapEditor = null
+        objectFilter = LACMapObjectFilter()
         mapFile = null
         mapDocumentFile = null
         scrollState.scrollTo(0)
@@ -173,20 +140,8 @@ class MapsEditState(_topToastState: TopToastState) {
         roleSheetState.show()
     }
 
-    fun deleteRole(role: String, context: Context) {
-        mapData.value?.mapRoles?.remove(role)
-        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Delete)
-    }
-
-    fun addRole(role: String, context: Context) {
-        if (roleNameIllegalChars.find { role.contains(it) } != null)
-            return topToastState.showToast(context.getString(R.string.mapsRoles_illegalChars).replace("%CHARS%", roleNameIllegalChars.joinToString(", ") { "\"$it\"" }), Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
-        mapData.value?.mapRoles?.add(role)
-        topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Check)
-    }
-
     suspend fun onNavigationBack(navController: NavController) {
-        if (mapData.value == null) finishEditingWithoutSaving(navController)
+        if (mapEditor == null) finishEditingWithoutSaving(navController)
         else saveWarningShown.value = true
     }
 }
