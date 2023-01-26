@@ -14,9 +14,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
 
@@ -36,7 +34,7 @@ class UpdateState(
     var updateDialogShown by mutableStateOf(false)
 
     init {
-        if (autoUpdatesEnabled) runBlocking {
+        if (autoUpdatesEnabled) CoroutineScope(Dispatchers.Main).launch {
             checkUpdates()
         }
     }
