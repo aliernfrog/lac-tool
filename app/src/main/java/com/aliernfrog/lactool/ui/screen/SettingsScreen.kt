@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -105,15 +106,19 @@ private fun AboutApp(topToastState: TopToastState, updateState: UpdateState, set
     val scope = rememberCoroutineScope()
     val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
     ColumnDivider(title = stringResource(R.string.settings_about), bottomDivider = false) {
-        ButtonShapeless(title = stringResource(R.string.settings_about_version), description = version) {
+        ButtonWithComponent(
+            title = stringResource(R.string.settings_about_version),
+            description = version,
+            component = {
+                Button(
+                    onClick = { scope.launch { updateState.checkUpdates(manuallyTriggered = true) } }
+                ) {
+                    Text(stringResource(R.string.settings_about_checkUpdates))
+                }
+            }
+        ) {
             settingsState.aboutClickCount.value++
             if (settingsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(R.string.settings_experimental_enabled)
-        }
-        ButtonShapeless(
-            title = stringResource(R.string.settings_about_checkUpdates),
-            description = stringResource(R.string.settings_about_checkUpdates_description)
-        ) {
-            scope.launch { updateState.checkUpdates(manuallyTriggered = true) }
         }
         Switch(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
