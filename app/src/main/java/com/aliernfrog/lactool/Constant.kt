@@ -2,9 +2,7 @@ package com.aliernfrog.lactool
 
 import android.os.Environment
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.data.LACMapObjectFilter
 import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 28.dp
@@ -33,28 +31,5 @@ object Link {
     val socials = listOf(
         Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
         Social("LAC Tool GitHub", "https://github.com/aliernfrog/lac-tool")
-    )
-}
-
-object LACMapObjectFilters {
-    val defaultFilters = listOf(
-        LACMapObjectFilter(
-            query = mutableStateOf("Trigger_Box_Editor"),
-            caseSensitive = mutableStateOf(true),
-            exactMatch = mutableStateOf(true),
-            labelStringId = R.string.mapsEdit_filterObjects_defaultFilters_triggerBox
-        ),
-        LACMapObjectFilter(
-            query = mutableStateOf("Team_"),
-            caseSensitive = mutableStateOf(true),
-            exactMatch = mutableStateOf(false),
-            labelStringId = R.string.mapsEdit_filterObjects_defaultFilters_tdm
-        ),
-        LACMapObjectFilter(
-            query = mutableStateOf("Checkpoint_Editor"),
-            caseSensitive = mutableStateOf(true),
-            exactMatch = mutableStateOf(false),
-            labelStringId = R.string.mapsEdit_filterObjects_defaultFilters_racing
-        )
     )
 }

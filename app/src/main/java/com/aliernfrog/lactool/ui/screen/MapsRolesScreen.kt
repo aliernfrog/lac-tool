@@ -31,7 +31,7 @@ fun MapsRolesScreen(mapsEditState: MapsEditState) {
 @Composable
 private fun RolesList(mapsEditState: MapsEditState) {
     val scope = rememberCoroutineScope()
-    val roles = mapsEditState.mapData.value?.mapRoles ?: mutableListOf()
+    val roles = mapsEditState.mapEditor?.mapRoles ?: mutableListOf()
     LazyColumn(
         state = mapsEditState.rolesLazyListState,
         modifier = Modifier.fillMaxSize()

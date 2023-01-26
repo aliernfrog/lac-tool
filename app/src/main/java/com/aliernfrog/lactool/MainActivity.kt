@@ -106,8 +106,8 @@ class MainActivity : ComponentActivity() {
             topToastState = topToastState,
             sheetState = mapsState.mapsMergeState.pickMapSheetState,
             showMapThumbnails = settingsState.showMapThumbnailsInList.value,
-            onFilePick = { mapsState.mapsMergeState.addMap(it) },
-            onDocumentFilePick = { mapsState.mapsMergeState.addMap(it) }
+            onFilePick = { scope.launch { mapsState.mapsMergeState.addMap(it, context) } },
+            onDocumentFilePick = { scope.launch { mapsState.mapsMergeState.addMap(it, context) } }
         )
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,

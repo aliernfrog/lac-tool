@@ -25,15 +25,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.enum.LACMapOptionType
+import com.aliernfrog.laclib.enum.LACMapType
+import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.AppComponentShape
-import com.aliernfrog.lactool.LACMapObjectFilters
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMapType
-import com.aliernfrog.lactool.enum.LACMapOptionType
 import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.extension.getName
 import kotlinx.coroutines.launch
 
 @Composable
@@ -79,17 +80,17 @@ private fun Actions(mapsEditState: MapsEditState, navController: NavController) 
 private fun GeneralActions(mapsEditState: MapsEditState, navController: NavController) {
     val typesExpanded = remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
-        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.serverName != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
-                value = mapsEditState.mapData.value?.serverName?.value ?: "",
-                onValueChange = { mapsEditState.mapData.value?.serverName?.value = it }
+                value = mapsEditState.mapEditor?.serverName ?: "",
+                onValueChange = { mapsEditState.setServerName(it) }
             )
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.mapType != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.mapType != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsEdit_mapType),
-                description = getMapTypes().find { it.index == mapsEditState.mapData.value?.mapType?.value }?.label ?: "unknown",
+                description = mapsEditState.mapEditor?.mapType?.getName() ?: "",
                 expanded = typesExpanded.value
             ) {
                 typesExpanded.value = !typesExpanded.value
@@ -97,19 +98,19 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
             AnimatedVisibilityColumn(visible = typesExpanded.value) {
                 ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     RadioButtons(
-                        options = getMapTypes().map { it.label },
-                        initialIndex = mapsEditState.mapData.value?.mapType?.value ?: 0,
+                        options = LACMapType.values().map { it.getName() },
+                        initialIndex = (mapsEditState.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         optionsRounded = true,
-                        onSelect = { mapsEditState.mapData.value?.mapType?.value = it }
+                        onSelect = { mapsEditState.setMapType(LACMapType.values()[it]) }
                     )
                 }
             }
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.mapRoles != null) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.mapRoles != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsRoles),
-                description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", mapsEditState.mapData.value?.mapRoles?.size.toString()),
+                description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", (mapsEditState.mapEditor?.mapRoles?.size ?: 0).toString()),
                 expanded = false,
                 arrowRotation = 90f
             ) {
@@ -121,26 +122,35 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
 
 @Composable
 private fun OptionsActions(mapsEditState: MapsEditState) {
-    AnimatedVisibilityColumn(visible = !mapsEditState.mapData.value?.mapOptions.isNullOrEmpty()) {
+    AnimatedVisibilityColumn(visible = !mapsEditState.mapEditor?.mapOptions.isNullOrEmpty()) {
         ColumnDivider(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
-            mapsEditState.mapData.value?.mapOptions?.forEach { option ->
+            mapsEditState.mapEditor?.mapOptions?.forEach { option ->
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(
                         label = option.label,
-                        value = option.value.value,
-                        onValueChange = { option.value.value = it },
-                        placeholder = option.value.value,
+                        value = option.value,
+                        onValueChange = {
+                            option.value = it 
+                            mapsEditState.updateMapEditorState()
+                        },
+                        placeholder = option.value,
                         numberOnly = true
                     )
                     LACMapOptionType.BOOLEAN -> Switch(
                         title = option.label,
-                        checked = option.value.value == "true",
-                        onCheckedChange = { option.value.value = it.toString() }
+                        checked = option.value == "true",
+                        onCheckedChange = {
+                            option.value = it.toString()
+                            mapsEditState.updateMapEditorState()
+                        }
                     )
                     LACMapOptionType.SWITCH -> Switch(
                         title = option.label,
-                        checked = option.value.value == "enabled",
-                        onCheckedChange = { option.value.value = if (it) "enabled" else "disabled" }
+                        checked = option.value == "enabled",
+                        onCheckedChange = {
+                            option.value = if (it) "enabled" else "disabled"
+                            mapsEditState.updateMapEditorState()
+                        }
                     )
                 }
             }
@@ -153,7 +163,7 @@ private fun MiscActions(mapsEditState: MapsEditState) {
     val context = LocalContext.current
     var filterObjectsExpanded by remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
-        AnimatedVisibilityColumn(visible = mapsEditState.mapData.value?.replacableObjects?.isEmpty() != true) {
+        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.replacableObjects?.isEmpty() != true) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                 description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
@@ -191,8 +201,8 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
     val context = LocalContext.current
     val matches = mapsEditState.getObjectFilterMatches().size
     TextField(
-        value = mapsEditState.objectFilter.value.query.value,
-        onValueChange = { mapsEditState.objectFilter.value.query.value = it },
+        value = mapsEditState.objectFilter.query,
+        onValueChange = { mapsEditState.objectFilter = mapsEditState.objectFilter.copy(query = it) },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
         singleLine = true,
         modifier = Modifier.padding(horizontal = 8.dp)
@@ -201,10 +211,10 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
         modifier = Modifier.padding(horizontal = 16.dp),
         gradientColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        LACMapObjectFilters.defaultFilters.forEach { suggestion ->
+        DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             SuggestionChip(
-                onClick = { mapsEditState.setObjectFilterFromSuggestion(suggestion) },
-                label = { Text(stringResource(suggestion.labelStringId!!)) },
+                onClick = { mapsEditState.objectFilter = suggestion },
+                label = { Text(suggestion.filterName ?: "-") },
                 shape = AppComponentShape,
                 interactionSource = remember { MutableInteractionSource() }
             )
@@ -212,16 +222,16 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
     }
     Switch(
         title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
-        checked = mapsEditState.objectFilter.value.caseSensitive.value
+        checked = mapsEditState.objectFilter.caseSensitive
     ) {
-        mapsEditState.objectFilter.value.caseSensitive.value = it
+        mapsEditState.objectFilter = mapsEditState.objectFilter.copy(caseSensitive = it)
     }
     Switch(
         title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
         description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
-        checked = mapsEditState.objectFilter.value.exactMatch.value
+        checked = mapsEditState.objectFilter.exactMatch
     ) {
-        mapsEditState.objectFilter.value.exactMatch.value = it
+        mapsEditState.objectFilter = mapsEditState.objectFilter.copy(exactMatch = it)
     }
     Text(
         text = stringResource(R.string.mapsEdit_filterObjects_matches).replace("%n", matches.toString()),
@@ -258,16 +268,4 @@ private fun AnimatedVisibilityColumn(visible: Boolean, content: @Composable () -
     AnimatedVisibility(visible, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
         Column { content() }
     }
-}
-
-@Composable
-private fun getMapTypes(): List<LACMapType> {
-    return listOf(
-        LACMapType(0, stringResource(R.string.mapsEdit_mapType_0)),
-        LACMapType(1, stringResource(R.string.mapsEdit_mapType_1)),
-        LACMapType(2, stringResource(R.string.mapsEdit_mapType_2)),
-        LACMapType(3, stringResource(R.string.mapsEdit_mapType_3)),
-        LACMapType(4, stringResource(R.string.mapsEdit_mapType_4)),
-        LACMapType(5, stringResource(R.string.mapsEdit_mapType_5))
-    )
 }

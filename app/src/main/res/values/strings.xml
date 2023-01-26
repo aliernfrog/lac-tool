@@ -81,7 +81,7 @@
     <string name="mapsRoles_roleColor">Role color</string>
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: %ROLE%</string>
-    <string name="mapsRoles_illegalChars">Role can NOT contain: %CHARS%</string>
+    <string name="mapsRoles_illegalChars">Role can NOT contain: "%CHAR%"</string>
     <string name="mapsMerge">Merge maps</string>
     <string name="mapsMerge_addMap">Add a map to merge</string>
     <string name="mapsMerge_mapsToMerge">Maps to merge</string>

@@ -21,9 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMap
-import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.state.MapsMergeState
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ColumnRounded
@@ -43,7 +42,7 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController
             Spacer(Modifier.height(70.dp))
         }
         AnimatedVisibility(
-            visible = mapsMergeState.chosenMaps.size >= 2 && !mapsMergeState.mergeMapDialogShown,
+            visible = mapsMergeState.hasEnoughMaps() && !mapsMergeState.mergeMapDialogShown,
             enter = scaleIn() + fadeIn(),
             exit = scaleOut() + fadeOut(),
             modifier = Modifier.align(Alignment.BottomEnd)
@@ -76,12 +75,12 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController
 
 @Composable
 private fun MapsList(mapsMergeState: MapsMergeState) {
-    val baseMap = mapsMergeState.chosenMaps.firstOrNull()
-    val mapsToMerge = mapsMergeState.chosenMaps.toList().drop(1)
+    val baseMap = mapsMergeState.mapMerger.mapsToMerge.firstOrNull()
+    val mapsToMerge = mapsMergeState.mapMerger.mapsToMerge.toList().drop(1)
     AnimatedVisibility(baseMap != null) {
         MapButtonWithActions(
             mapsMergeState = mapsMergeState,
-            mapToMerge = baseMap ?: LACMapToMerge(LACMap("-", "-")),
+            mapToMerge = baseMap ?: LACMapToMerge("-", "-"),
             mapIndex = 0
         )
     }
@@ -130,8 +129,9 @@ private fun MapButtonWithActions(
         expanded = expanded || isBase,
         showExpandedIndicator = !isBase,
         containerColor = containerColor,
-        onMakeBase = { mapsMergeState.makeMapBase(mapIndex, mapToMerge.map.name, context) },
-        onRemove = { mapsMergeState.removeMap(mapIndex, mapToMerge.map.name, context) },
+        onUpdateState = { mapsMergeState.updateMergerState() },
+        onMakeBase = { mapsMergeState.makeMapBase(mapIndex, mapToMerge.mapName, context) },
+        onRemove = { mapsMergeState.removeMap(mapIndex, mapToMerge.mapName, context) },
         onClick = {
             if (!isBase) {
                 mapsMergeState.optionsExpandedFor.value = if (expanded) 0

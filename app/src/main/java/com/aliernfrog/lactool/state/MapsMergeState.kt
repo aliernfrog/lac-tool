@@ -8,17 +8,12 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.map.LACMapMerger
+import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMap
-import com.aliernfrog.lactool.data.LACMapToMerge
-import com.aliernfrog.lactool.util.extension.swap
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.LACUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -36,77 +31,81 @@ class MapsMergeState(
     val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scrollState = ScrollState(0)
 
-    val chosenMaps = mutableStateListOf<LACMapToMerge>()
+    var mapMerger by mutableStateOf(LACMapMerger(), neverEqualPolicy())
     val optionsExpandedFor = mutableStateOf(0)
     var mergeMapDialogShown by mutableStateOf(false)
     var isMerging by mutableStateOf(false)
 
-    fun addMap(file: Any) {
-        val isAddingBaseMap = chosenMaps.isEmpty()
-        when (file) {
-            is DocumentFileCompat -> {
-                val mapName = FileUtil.removeExtension(file.name)
-                chosenMaps.add(LACMapToMerge(
-                    map = LACMap(name = mapName, fileName = file.name, documentFile = file),
-                    mergeRacingCheckpoints = mutableStateOf(isAddingBaseMap),
-                    mergeTDMSpawnpoints = mutableStateOf(isAddingBaseMap)
-                ))
+    suspend fun addMap(file: Any, context: Context) {
+        withContext(Dispatchers.IO) {
+            val mapName = when (file) {
+                is DocumentFileCompat -> FileUtil.removeExtension(file.name)
+                is File -> file.nameWithoutExtension
+                else -> throw IllegalArgumentException()
             }
-            is File -> {
-                val mapName = file.nameWithoutExtension
-                chosenMaps.add(LACMapToMerge(
-                    map = LACMap(name = mapName, fileName = file.name, file = file),
-                    mergeRacingCheckpoints = mutableStateOf(isAddingBaseMap),
-                    mergeTDMSpawnpoints = mutableStateOf(isAddingBaseMap)
-                ))
-            }
-            else -> throw IllegalArgumentException()
+            val inputStream = when (file) {
+                is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
+                is File -> file.inputStream()
+                else -> throw IllegalArgumentException()
+            } ?: return@withContext
+            val content = inputStream.bufferedReader().readText()
+            inputStream.close()
+            mapMerger.addMap(mapName, content)
+            updateMergerState()
         }
     }
 
     fun makeMapBase(index: Int, mapName: String, context: Context) {
-        chosenMaps.swap(0, index)
+        mapMerger.makeMapBase(index)
         optionsExpandedFor.value = 0
         topToastState.showToast(
             text = context.getString(R.string.mapsMerge_map_madeBase).replace("%MAP%", mapName),
             icon = Icons.Rounded.Done
         )
+        updateMergerState()
     }
 
     fun removeMap(index: Int, mapName: String, context: Context) {
-        chosenMaps.removeAt(index)
+        mapMerger.mapsToMerge.removeAt(index)
         optionsExpandedFor.value = 0
         topToastState.showToast(
             text = context.getString(R.string.mapsMerge_map_removed).replace("%MAP%", mapName),
             icon = Icons.Rounded.Done
         )
+        updateMergerState()
+    }
+
+    fun hasEnoughMaps(): Boolean {
+        return mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
+    }
+
+    fun updateMergerState() {
+        mapMerger = mapMerger
     }
 
     suspend fun mergeMaps(mapName: String, navController: NavController, context: Context) {
-        if (chosenMaps.size < 2) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
+        if (!hasEnoughMaps()) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
         val mapsFile = mapsState.getMapsFile(context)
         val newFileName = "$mapName.txt"
         val output = mapsFile.findFile(newFileName)
         if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)
         isMerging = true
         withContext(Dispatchers.IO) {
-            val newMapLines = mutableListOf<String>()
             Thread.sleep(2000) // Can't live without seeing progress indicator
-            chosenMaps.forEachIndexed { index, mapToMerge ->
-                val isBaseMap = index == 0
-                val filtered = LACUtil.filterMapToMergeContent(mapToMerge, isBaseMap, context)
-                newMapLines.addAll(filtered)
-            }
+            val newMapContent = mapMerger.mergeMaps(
+                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_noEnoughMaps) }
+            ) ?: return@withContext
             val newFile = mapsFile.createFile("", newFileName)
             val outputStream = context.contentResolver.openOutputStream(newFile!!.uri)!!
             val outputStreamWriter = outputStream.writer(Charsets.UTF_8)
-            outputStreamWriter.write(newMapLines.joinToString("\n"))
+            outputStreamWriter.write(newMapContent)
             outputStreamWriter.flush()
             outputStreamWriter.close()
             outputStream.close()
             mergeMapDialogShown = false
             isMerging = false
-            chosenMaps.clear()
+            mapMerger.mapsToMerge.clear()
+            // No need to update merger state here because it navigates back to maps screen after finishing
             mapsState.getMap(documentFile = newFile)
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("%MAP%", mapName), icon = Icons.Rounded.Done)
         }
