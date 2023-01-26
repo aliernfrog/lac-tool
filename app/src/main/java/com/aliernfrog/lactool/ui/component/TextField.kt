@@ -53,7 +53,7 @@ fun TextField(
     )
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(all = 8.dp)
             .clip(if (rounded) AppComponentShape else RectangleShape)
             .background(containerColor)
@@ -64,7 +64,7 @@ fun TextField(
         androidx.compose.material3.TextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             label = label,
             placeholder = placeholder,
             leadingIcon = leadingIcon?.let { { Icon(it, null) } },

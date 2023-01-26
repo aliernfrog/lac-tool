@@ -205,6 +205,7 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
         onValueChange = { mapsEditState.objectFilter = mapsEditState.objectFilter.copy(query = it) },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
         singleLine = true,
+        containerColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier.padding(horizontal = 8.dp)
     )
     ScrollableRow(
