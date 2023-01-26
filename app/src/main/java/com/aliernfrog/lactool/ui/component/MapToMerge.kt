@@ -31,11 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aliernfrog.laclib.data.LACMapToMerge
+import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMapToMerge
 import com.aliernfrog.lactool.util.extension.clickableWithColor
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 @Composable
 fun MapToMerge(
@@ -47,12 +47,13 @@ fun MapToMerge(
     contentColor: Color = contentColorFor(containerColor),
     expandedHeaderContainerColor: Color = contentColor.copy(0.4f),
     expandedHeaderContentColor: Color = contentColorFor(expandedHeaderContainerColor),
+    onUpdateState: () -> Unit,
     onMakeBase: () -> Unit,
     onRemove: () -> Unit,
     onClick: () -> Unit
 ) {
     val animatedRotation = animateFloatAsState(if (expanded) 0f else 180f)
-    val isCoordsValid = GeneralUtil.parseAsXYZ(mapToMerge.mergePosition.value) != null
+    val isCoordsValid = LACLibUtil.parseAsXYZ(mapToMerge.mergePosition) != null
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,7 +82,7 @@ fun MapToMerge(
                         tint = headerContentColor
                     )
                     Text(
-                        text = mapToMerge.map.name,
+                        text = mapToMerge.mapName,
                         color = headerContentColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -112,28 +113,40 @@ fun MapToMerge(
                         else R.string.mapsMerge_map_position_invalid
                     )) },
                     isError = !isCoordsValid,
-                    value = mapToMerge.mergePosition.value,
-                    onValueChange = { mapToMerge.mergePosition.value = it },
+                    value = mapToMerge.mergePosition,
+                    onValueChange = {
+                        mapToMerge.mergePosition = it
+                        onUpdateState()
+                    },
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true
                 )
                 Switch(
                     title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
-                    checked = mapToMerge.mergeSpawnpoints.value,
-                    onCheckedChange = { mapToMerge.mergeSpawnpoints.value = it },
+                    checked = mapToMerge.mergeSpawnpoints,
+                    onCheckedChange = {
+                        mapToMerge.mergeSpawnpoints = it
+                        onUpdateState()
+                    },
                     contentColor = contentColor
                 )
                 Switch(
                     title = stringResource(R.string.mapsMerge_map_includeRacingCheckpoints),
-                    checked = mapToMerge.mergeRacingCheckpoints.value,
-                    onCheckedChange = { mapToMerge.mergeRacingCheckpoints.value = it },
+                    checked = mapToMerge.mergeRacingCheckpoints,
+                    onCheckedChange = {
+                        mapToMerge.mergeRacingCheckpoints = it
+                        onUpdateState()
+                    },
                     contentColor = contentColor
                 )
                 Switch(
                     title = stringResource(R.string.mapsMerge_map_includeTDMSpawnpoints),
-                    checked = mapToMerge.mergeTDMSpawnpoints.value,
-                    onCheckedChange = { mapToMerge.mergeTDMSpawnpoints.value = it },
+                    checked = mapToMerge.mergeTDMSpawnpoints,
+                    onCheckedChange = {
+                        mapToMerge.mergeTDMSpawnpoints = it
+                        onUpdateState()
+                    },
                     contentColor = contentColor
                 )
                 if (!isBaseMap) ButtonShapeless(

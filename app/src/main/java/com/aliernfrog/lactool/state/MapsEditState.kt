@@ -12,8 +12,8 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapObjectFilter
-import com.aliernfrog.laclib.editor.LACMapEditor
 import com.aliernfrog.laclib.enum.LACMapType
+import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.enum.TopToastColor

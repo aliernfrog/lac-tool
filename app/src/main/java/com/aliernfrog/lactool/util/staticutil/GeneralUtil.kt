@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.ContextCompat
-import com.aliernfrog.lactool.data.XYZ
 
 @Suppress("DEPRECATION")
 class GeneralUtil {
@@ -30,25 +29,6 @@ class GeneralUtil {
 
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
             return "file://$wallpapersPath/$fileName"
-        }
-
-        /**
-         * Parses the [string] as [XYZ]
-         * @return [XYZ] if it can be parsed, null otherwise
-         */
-        fun parseAsXYZ(string: String): XYZ? {
-            val split = string
-                .split(",")
-                .map { it.replace(" ","") }
-                .filter {
-                    it.toDoubleOrNull() != null
-                }
-            return if (split.size != 3) null
-            else XYZ(
-                x = split[0].toDouble(),
-                y = split[1].toDouble(),
-                z = split[2].toDouble()
-            )
         }
     }
 }
