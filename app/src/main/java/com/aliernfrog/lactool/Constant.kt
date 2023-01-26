@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.data.LACMapObjectFilter
 import com.aliernfrog.lactool.data.Social
 
-val AppRoundnessSize = 30.dp
+val AppRoundnessSize = 28.dp
 val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
 
 object ConfigKey {
