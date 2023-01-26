@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -21,12 +22,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.AppRoundnessSize
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun ModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetState, sheetScrollState: ScrollState = rememberScrollState(), sheetContent: @Composable ColumnScope.() -> Unit) {
+fun ModalBottomSheet(
+    title: String? = null,
+    sheetState: ModalBottomSheetState,
+    sheetScrollState: ScrollState = rememberScrollState(),
+    sheetContent: @Composable ColumnScope.() -> Unit
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     ModalBottomSheetLayout(
         sheetBackgroundColor = Color.Transparent,
@@ -35,12 +40,22 @@ fun ModalBottomSheet(title: String? = null, sheetState: ModalBottomSheetState, s
         sheetElevation = 0.dp,
         content = {},
         sheetContent = {
-            Column(modifier = Modifier.statusBarsPadding().fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).background(MaterialTheme.colorScheme.background).imePadding(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, shape = AppComponentShape)
-                    .size(30.dp, 5.dp)
-                    .align(Alignment.CenterHorizontally)
+            Column(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize))
+                    .background(MaterialTheme.colorScheme.background)
+                    .imePadding(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .size(32.dp, 4.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                        .align(Alignment.CenterHorizontally)
                 )
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).verticalScroll(sheetScrollState).navigationBarsPadding()) {
                     if (title != null) Text(text = title, fontSize = 30.sp, modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally))
