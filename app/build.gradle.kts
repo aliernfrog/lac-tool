@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.4.0-alpha03"
-val composeCompilerVersion = "1.3.2"
+val composeVersion = "1.4.0-alpha05"
+val composeCompilerVersion = "1.4.0"
 
 android {
     namespace = "com.aliernfrog.lactool"
