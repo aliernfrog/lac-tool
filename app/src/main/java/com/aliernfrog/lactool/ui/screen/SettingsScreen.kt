@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -113,7 +110,7 @@ private fun AboutApp(updateState: UpdateState, settingsState: SettingsState) {
             title = stringResource(R.string.settings_about_version),
             description = version,
             component = {
-                Button(
+                OutlinedButton(
                     onClick = { scope.launch { updateState.checkUpdates(manuallyTriggered = true) } }
                 ) {
                     Text(stringResource(R.string.settings_about_checkUpdates))
