@@ -57,9 +57,15 @@ fun ModalBottomSheet(
                         .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
                         .align(Alignment.CenterHorizontally)
                 )
-                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)).verticalScroll(sheetScrollState).navigationBarsPadding()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize))
+                        .verticalScroll(sheetScrollState)
+                ) {
                     if (title != null) Text(text = title, fontSize = 30.sp, modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally))
                     sheetContent()
+                    Spacer(Modifier.systemBarsPadding())
                 }
             }
         }
