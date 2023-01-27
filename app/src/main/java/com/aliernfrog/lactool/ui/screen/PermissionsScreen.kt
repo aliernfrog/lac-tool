@@ -45,7 +45,7 @@ fun PermissionsScreen(uriPath: String?, onSuccess: @Composable () -> Unit) {
         else AppScaffold(
             title = stringResource(R.string.permissions)
         ) {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
+            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
                 PermissionsSetUp(
                     uriPath = uriPath,
                     storagePermissions = storagePermissions,

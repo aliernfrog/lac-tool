@@ -58,7 +58,7 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController
             navController.popBackStack()
         }
     ) {
-        Column(Modifier.verticalScroll(mapsMergeState.scrollState)) {
+        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeState.scrollState)) {
             PickMapButton(mapsMergeState)
             MapsList(mapsMergeState)
             Spacer(Modifier.systemBarsPadding().height(70.dp))

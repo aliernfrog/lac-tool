@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -40,7 +41,7 @@ fun SettingsScreen(config: SharedPreferences, updateState: UpdateState, settings
         title = stringResource(R.string.settings),
         topAppBarState = settingsState.topAppBarState
     ) {
-        Column(Modifier.verticalScroll(settingsState.scrollState)) {
+        Column(Modifier.fillMaxSize().verticalScroll(settingsState.scrollState)) {
             AppearanceOptions(settingsState)
             MapsOptions(settingsState)
             AboutApp(updateState, settingsState)

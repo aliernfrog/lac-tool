@@ -33,7 +33,7 @@ fun AppScaffold(
         floatingActionButton = floatingActionButton,
         contentWindowInsets = WindowInsets(0,0,0,0),
         content = {
-            Box(modifier = Modifier.padding(it).fillMaxSize().systemBarsPadding()) {
+            Box(modifier = Modifier.padding(it)) {
                 content()
             }
         }
@@ -48,7 +48,7 @@ private fun AppTopBar(
     onBackClick: (() -> Unit)? = null
 ) {
     LargeTopAppBar(
-        title = { Text(title, Modifier.systemBarsPadding()) },
+        title = { Text(title) },
         scrollBehavior = scrollBehavior,
         navigationIcon = {
             if (onBackClick != null) {

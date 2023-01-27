@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.screen
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -42,7 +43,7 @@ fun MapsScreen(mapsState: MapsState, navController: NavController) {
         title = stringResource(R.string.maps),
         topAppBarState = mapsState.topAppBarState
     ) {
-        Column(Modifier.verticalScroll(mapsState.scrollState)) {
+        Column(Modifier.fillMaxSize().verticalScroll(mapsState.scrollState)) {
             PickMapFileButton(mapsState)
             MapActions(mapsState, navController)
             Divider(
