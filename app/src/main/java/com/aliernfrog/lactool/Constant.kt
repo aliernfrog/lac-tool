@@ -7,6 +7,7 @@ import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 28.dp
 val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
+const val experimentalSettingsRequiredClicks = 10
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"

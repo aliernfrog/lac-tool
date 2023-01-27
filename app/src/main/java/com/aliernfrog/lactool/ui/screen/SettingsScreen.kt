@@ -30,14 +30,12 @@ import com.aliernfrog.lactool.state.UpdateState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 
-private const val experimentalRequiredClicks = 10
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, updateState: UpdateState, settingsState: SettingsState) {
+fun SettingsScreen(config: SharedPreferences, updateState: UpdateState, settingsState: SettingsState) {
     AppScaffold(
         title = stringResource(R.string.settings),
         topAppBarState = settingsState.topAppBarState
@@ -45,8 +43,8 @@ fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, upda
         Column(Modifier.verticalScroll(settingsState.scrollState)) {
             AppearanceOptions(settingsState)
             MapsOptions(settingsState)
-            AboutApp(topToastState, updateState, settingsState)
-            if (settingsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalSettings(config, updateState, settingsState)
+            AboutApp(updateState, settingsState)
+            if (settingsState.experimentalSettingsShown) ExperimentalSettings(config, updateState, settingsState)
         }
     }
 }
@@ -105,7 +103,7 @@ private fun MapsOptions(settingsState: SettingsState) {
 }
 
 @Composable
-private fun AboutApp(topToastState: TopToastState, updateState: UpdateState, settingsState: SettingsState) {
+private fun AboutApp(updateState: UpdateState, settingsState: SettingsState) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
@@ -121,8 +119,7 @@ private fun AboutApp(topToastState: TopToastState, updateState: UpdateState, set
                 }
             }
         ) {
-            settingsState.aboutClickCount.value++
-            if (settingsState.aboutClickCount.value == experimentalRequiredClicks) topToastState.showToast(R.string.settings_experimental_enabled)
+            settingsState.onAboutClick()
         }
         Switch(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
