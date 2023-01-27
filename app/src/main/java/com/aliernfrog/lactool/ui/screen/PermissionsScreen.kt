@@ -15,6 +15,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -28,10 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionsScreen(uriPath: String?, onSuccess: @Composable () -> Unit) {
     val context = LocalContext.current
@@ -39,14 +42,18 @@ fun PermissionsScreen(uriPath: String?, onSuccess: @Composable () -> Unit) {
     var uriPermissions by remember { mutableStateOf(if (uriPath != null) FileUtil.checkUriPermission(uriPath, context) else true) }
     Crossfade(targetState = (storagePermissions && uriPermissions)) { hasPermissions ->
         if (hasPermissions) onSuccess()
-        else Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-            PermissionsSetUp(
-                uriPath = uriPath,
-                storagePermissions = storagePermissions,
-                uriPermissions = uriPermissions,
-                onStorageResult =  { storagePermissions = it },
-                onUriResult = { uriPermissions = it }
-            )
+        else AppScaffold(
+            title = stringResource(R.string.permissions)
+        ) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                PermissionsSetUp(
+                    uriPath = uriPath,
+                    storagePermissions = storagePermissions,
+                    uriPermissions = uriPermissions,
+                    onStorageResult =  { storagePermissions = it },
+                    onUriResult = { uriPermissions = it }
+                )
+            }
         }
     }
 }

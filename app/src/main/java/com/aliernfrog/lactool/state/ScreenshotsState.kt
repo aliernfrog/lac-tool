@@ -10,6 +10,8 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
@@ -21,11 +23,13 @@ import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+@OptIn(ExperimentalMaterial3Api::class)
 class ScreenshotsState(
     _topToastState: TopToastState,
     config: SharedPreferences
 ) {
     private val topToastState = _topToastState
+    val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
     val screenshotsDir = config.getString(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)!!
     private lateinit var screenshotsFile: DocumentFileCompat

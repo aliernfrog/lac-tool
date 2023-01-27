@@ -13,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.mutableStateOf
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
@@ -26,11 +28,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
+@OptIn(ExperimentalMaterial3Api::class)
 class WallpapersState(
     _topToastState: TopToastState,
     config: SharedPreferences
 ) {
     private val topToastState = _topToastState
+    val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
     val wallpapersDir = config.getString(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR)!!
     private lateinit var wallpapersFile: DocumentFileCompat

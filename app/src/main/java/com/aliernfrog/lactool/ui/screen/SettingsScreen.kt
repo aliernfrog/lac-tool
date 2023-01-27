@@ -6,10 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +22,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.ConfigKey
-import com.aliernfrog.lactool.Link
-import com.aliernfrog.lactool.MainActivity
+import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.state.SettingsState
@@ -37,13 +35,19 @@ import kotlinx.coroutines.launch
 
 private const val experimentalRequiredClicks = 10
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, updateState: UpdateState, settingsState: SettingsState) {
-    Column(Modifier.fillMaxSize().verticalScroll(settingsState.scrollState)) {
-        AppearanceOptions(settingsState)
-        MapsOptions(settingsState)
-        AboutApp(topToastState, updateState, settingsState)
-        if (settingsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalSettings(config, updateState, settingsState)
+    AppScaffold(
+        title = stringResource(R.string.settings),
+        topAppBarState = settingsState.topAppBarState
+    ) {
+        Column(Modifier.verticalScroll(settingsState.scrollState)) {
+            AppearanceOptions(settingsState)
+            MapsOptions(settingsState)
+            AboutApp(topToastState, updateState, settingsState)
+            if (settingsState.aboutClickCount.value >= experimentalRequiredClicks) ExperimentalSettings(config, updateState, settingsState)
+        }
     }
 }
 

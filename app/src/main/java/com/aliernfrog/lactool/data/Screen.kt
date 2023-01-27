@@ -7,6 +7,5 @@ data class Screen(
     val name: String,
     val iconFilled: Painter?,
     val iconOutlined: Painter?,
-    val isSubScreen: Boolean = false,
-    val onNavigationBack: () -> Unit
+    val isSubScreen: Boolean = false
 )

@@ -4,7 +4,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,37 +28,39 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.WallpapersState
-import com.aliernfrog.lactool.ui.component.ButtonRounded
-import com.aliernfrog.lactool.ui.component.ColumnRounded
-import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.*
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WallpapersScreen(wallpapersState: WallpapersState) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) { wallpapersState.getWallpapersFile(context); wallpapersState.getImportedWallpapers() }
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        state = wallpapersState.lazyListState
+    AppScaffold(
+        title = stringResource(R.string.wallpapers),
+        topAppBarState = wallpapersState.topAppBarState
     ) {
-        item {
-            PickImageButton(wallpapersState)
-            ChosenWallpaper(wallpapersState)
-            ErrorWithIcon(
-                error = stringResource(R.string.wallpapers_noWallpapers),
-                painter = rememberVectorPainter(Icons.Rounded.HideImage),
-                visible = wallpapersState.importedWallpapers.value.isEmpty()
-            )
-        }
-        items(wallpapersState.importedWallpapers.value) {
-            ImageButton(
-                model = it.painterModel,
-                title = it.name,
-                description = stringResource(R.string.wallpapers_list_clickToViewActions)
-            ) {
-                scope.launch { wallpapersState.showWallpaperSheet(it) }
+        LazyColumn(
+            state = wallpapersState.lazyListState
+        ) {
+            item {
+                PickImageButton(wallpapersState)
+                ChosenWallpaper(wallpapersState)
+                ErrorWithIcon(
+                    error = stringResource(R.string.wallpapers_noWallpapers),
+                    painter = rememberVectorPainter(Icons.Rounded.HideImage),
+                    visible = wallpapersState.importedWallpapers.value.isEmpty()
+                )
+            }
+            items(wallpapersState.importedWallpapers.value) {
+                ImageButton(
+                    model = it.painterModel,
+                    title = it.name,
+                    description = stringResource(R.string.wallpapers_list_clickToViewActions)
+                ) {
+                    scope.launch { wallpapersState.showWallpaperSheet(it) }
+                }
             }
         }
     }

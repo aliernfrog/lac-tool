@@ -71,12 +71,12 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val navController = rememberAnimatedNavController()
-        val screens = getScreens(navController, mapsState.mapsEditState)
+        val screens = getScreens()
         BaseScaffold(screens, navController) {
             AnimatedNavHost(
                 navController = navController,
                 startDestination = NavigationConstant.INITIAL_DESTINATION,
-                modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it).systemBarsPadding(),
+                modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it),
                 enterTransition = { scaleIn(
                     animationSpec = tween(delayMillis = 100),
                     initialScale = 0.95f
@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
                 composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
-                composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState) }
+                composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
