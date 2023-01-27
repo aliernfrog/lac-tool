@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.aliernfrog.lactool.data.Screen
@@ -14,6 +16,7 @@ import com.aliernfrog.lactool.data.Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @Composable (PaddingValues) -> Unit) {
+    val layoutDirection = LocalLayoutDirection.current
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentScreen = screens.find { it.route == currentRoute }
     Scaffold(
@@ -21,7 +24,14 @@ fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @
         bottomBar = { BottomBar(navController, screens, currentScreen) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
-        content(it)
+        val paddingValues = if (currentScreen?.isSubScreen != true) it
+        else PaddingValues(
+            start = it.calculateStartPadding(layoutDirection),
+            top = it.calculateTopPadding(),
+            end = it.calculateEndPadding(layoutDirection),
+            bottom = 0.dp
+        )
+        content(paddingValues)
     }
 }
 
