@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -13,9 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.state.*
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.component.SheetBackHandler
@@ -30,6 +29,9 @@ import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.getScreens
 import com.aliernfrog.toptoast.component.TopToastHost
 import com.aliernfrog.toptoast.state.TopToastState
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -63,18 +65,37 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalLayoutApi::class)
+    @OptIn(ExperimentalLayoutApi::class, ExperimentalAnimationApi::class)
     @Composable
     private fun BaseScaffold() {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
-        val navController = rememberNavController()
+        val navController = rememberAnimatedNavController()
         val screens = getScreens(navController, mapsState.mapsEditState)
         BaseScaffold(screens, navController) {
-            NavHost(
+            AnimatedNavHost(
                 navController = navController,
                 startDestination = NavigationConstant.INITIAL_DESTINATION,
-                modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it).systemBarsPadding()
+                modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it).systemBarsPadding(),
+                enterTransition = { scaleIn(
+                    animationSpec = tween(delayMillis = 100),
+                    initialScale = 0.95f
+                ) + fadeIn(
+                    animationSpec = tween(delayMillis = 100)
+                ) },
+                exitTransition = { fadeOut(tween(100)) },
+                popEnterTransition = { scaleIn(
+                    animationSpec = tween(delayMillis = 100),
+                    initialScale = 1.05f
+                ) + fadeIn(
+                    animationSpec = tween(delayMillis = 100)
+                ) },
+                popExitTransition = { scaleOut(
+                    animationSpec = tween(100),
+                    targetScale = 1.05f
+                ) + fadeOut(
+                    animationSpec = tween(100)
+                ) }
             ) {
                 composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
                 composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
