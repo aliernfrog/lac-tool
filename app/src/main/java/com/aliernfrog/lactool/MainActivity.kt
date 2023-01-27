@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                 ) },
                 popExitTransition = { scaleOut(
                     animationSpec = tween(100),
-                    targetScale = 1.05f
+                    targetScale = 0.95f
                 ) + fadeOut(
                     animationSpec = tween(100)
                 ) }
