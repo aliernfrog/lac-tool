@@ -41,6 +41,8 @@ fun ButtonWithComponent(
             Text(text = title, color = contentColor, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             if (description != null) Text(text = description, color = contentColor, fontSize = 14.sp, lineHeight = 18.sp)
         }
-        component()
+        Column(Modifier.padding(horizontal = 8.dp)) {
+            component()
+        }
     }
 }

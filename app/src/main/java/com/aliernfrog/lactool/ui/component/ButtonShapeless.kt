@@ -54,6 +54,11 @@ fun ButtonShapeless(
             Text(text = title, color = contentColor, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             if (description != null) Text(text = description, color = contentColor, fontSize = 14.sp, lineHeight = 18.sp)
         }
-        if (expanded != null) Image(Icons.Rounded.KeyboardArrowUp, null, modifier = Modifier.rotate(animatedRotation.value), colorFilter = ColorFilter.tint(contentColor))
+        if (expanded != null) Image(
+            imageVector = Icons.Rounded.KeyboardArrowUp,
+            contentDescription = null,
+            modifier = Modifier.padding(horizontal = 2.dp).rotate(animatedRotation.value),
+            colorFilter = ColorFilter.tint(contentColor)
+        )
     }
 }
