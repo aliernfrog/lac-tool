@@ -18,6 +18,7 @@
     <string name="info_permissionsHint">Click to fix this issue</string>
     <string name="info_deleteQuestion">Are you sure you want to delete %NAME%?\nThis can NOT be undone!</string>
     <string name="internalStorage">Internal storage</string>
+    <string name="permissions">Permissions</string>
     <string name="maps">Maps</string>
     <string name="maps_alreadyExists">A map with this name already exists, choose another name</string>
     <string name="maps_pickMap">Pick a map</string>

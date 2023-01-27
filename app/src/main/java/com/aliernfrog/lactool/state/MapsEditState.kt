@@ -9,6 +9,8 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapObjectFilter
@@ -23,9 +25,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
+@OptIn(ExperimentalMaterial3Api::class)
 class MapsEditState(_topToastState: TopToastState) {
     private val topToastState = _topToastState
+    val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
+    val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
 
     @OptIn(ExperimentalMaterialApi::class)

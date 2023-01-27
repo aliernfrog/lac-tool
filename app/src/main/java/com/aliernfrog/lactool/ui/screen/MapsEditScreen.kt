@@ -11,12 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FindReplace
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -37,18 +33,31 @@ import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    Box(Modifier.fillMaxSize()) {
-        Actions(mapsEditState, navController)
-        FloatingActionButton(
-            icon = Icons.Rounded.Done,
-            modifier = Modifier.align(Alignment.BottomEnd),
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            scope.launch { mapsEditState.saveAndFinishEditing(navController, context) }
+    AppScaffold(
+        title = stringResource(R.string.mapsEdit),
+        topAppBarState = mapsEditState.topAppBarState,
+        floatingActionButton = {
+            FloatingActionButton(
+                icon = Icons.Rounded.Done,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                scope.launch { mapsEditState.saveAndFinishEditing(navController, context) }
+            }
+        },
+        onBackClick = {
+            scope.launch { mapsEditState.onNavigationBack(navController) }
+        }
+    ) {
+        Column(Modifier.padding(it).fillMaxSize().verticalScroll(mapsEditState.scrollState)) {
+            GeneralActions(mapsEditState, navController)
+            OptionsActions(mapsEditState)
+            MiscActions(mapsEditState)
+            Spacer(Modifier.systemBarsPadding().height(70.dp))
         }
     }
     if (mapsEditState.saveWarningShown.value) SaveWarningDialog(
@@ -63,16 +72,6 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
     )
     BackHandler {
         scope.launch { mapsEditState.onNavigationBack(navController) }
-    }
-}
-
-@Composable
-private fun Actions(mapsEditState: MapsEditState, navController: NavController) {
-    Column(Modifier.animateContentSize().verticalScroll(mapsEditState.scrollState)) {
-        GeneralActions(mapsEditState, navController)
-        OptionsActions(mapsEditState)
-        MiscActions(mapsEditState)
-        Spacer(Modifier.height(70.dp))
     }
 }
 

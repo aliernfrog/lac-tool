@@ -8,12 +8,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material.icons.rounded.Build
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -24,43 +20,48 @@ import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsMergeState
-import com.aliernfrog.lactool.ui.component.ButtonRounded
-import com.aliernfrog.lactool.ui.component.ColumnRounded
-import com.aliernfrog.lactool.ui.component.MapToMerge
+import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    Box {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeState.scrollState)) {
+    AppScaffold(
+        title = stringResource(R.string.mapsMerge),
+        topAppBarState = mapsMergeState.topAppBarState,
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = mapsMergeState.hasEnoughMaps() && !mapsMergeState.mergeMapDialogShown,
+                modifier = Modifier.systemBarsPadding(),
+                enter = scaleIn() + fadeIn(),
+                exit = scaleOut() + fadeOut()
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = { mapsMergeState.mergeMapDialogShown = true },
+                    shape = RoundedCornerShape(20.dp),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Build,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(stringResource(R.string.mapsMerge_merge))
+                }
+            }
+        },
+        onBackClick = {
+            navController.popBackStack()
+        }
+    ) {
+        Column(Modifier.padding(it).fillMaxSize().verticalScroll(mapsMergeState.scrollState)) {
             PickMapButton(mapsMergeState)
             MapsList(mapsMergeState)
-            Spacer(Modifier.height(70.dp))
-        }
-        AnimatedVisibility(
-            visible = mapsMergeState.hasEnoughMaps() && !mapsMergeState.mergeMapDialogShown,
-            enter = scaleIn() + fadeIn(),
-            exit = scaleOut() + fadeOut(),
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            ExtendedFloatingActionButton(
-                onClick = { mapsMergeState.mergeMapDialogShown = true },
-                modifier = Modifier.padding(8.dp),
-                shape = RoundedCornerShape(20.dp),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Build,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text(stringResource(R.string.mapsMerge_merge))
-            }
+            Spacer(Modifier.systemBarsPadding().height(70.dp))
         }
     }
     if (mapsMergeState.mergeMapDialogShown) MergeMapDialog(
