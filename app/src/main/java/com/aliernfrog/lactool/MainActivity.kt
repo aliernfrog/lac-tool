@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
             AnimatedNavHost(
                 navController = navController,
                 startDestination = NavigationConstant.INITIAL_DESTINATION,
-                modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it),
+                modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it).imePadding(),
                 enterTransition = { scaleIn(
                     animationSpec = tween(delayMillis = 100),
                     initialScale = 0.95f

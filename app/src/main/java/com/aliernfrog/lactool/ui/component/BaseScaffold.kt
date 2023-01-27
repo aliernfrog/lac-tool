@@ -17,7 +17,7 @@ fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentScreen = screens.find { it.route == currentRoute }
     Scaffold(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface).imePadding(),
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
         bottomBar = { BottomBar(navController, screens, currentScreen) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
@@ -25,13 +25,12 @@ fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BottomBar(navController: NavController, screens: List<Screen>, currentScreen: Screen?) {
     AnimatedVisibility(
-        visible = !WindowInsets.isImeVisible && !(currentScreen?.isSubScreen ?: false),
-        enter = slideInVertically(initialOffsetY = { it }, animationSpec = tween(durationMillis = 100)) + fadeIn(),
-        exit = fadeOut(animationSpec = tween(durationMillis = 0))
+        visible = !(currentScreen?.isSubScreen ?: false),
+        enter = slideInVertically(animationSpec = tween(durationMillis = 150), initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutVertically(animationSpec = tween(durationMillis = 150), targetOffsetY = { it }) + fadeOut()
     ) {
         BottomAppBar {
             screens.filter { !it.isSubScreen }.forEach {
