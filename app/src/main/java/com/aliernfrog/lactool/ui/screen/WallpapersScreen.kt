@@ -4,7 +4,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,9 +40,8 @@ fun WallpapersScreen(wallpapersState: WallpapersState) {
     AppScaffold(
         title = stringResource(R.string.wallpapers),
         topAppBarState = wallpapersState.topAppBarState
-    ) { paddingValues ->
+    ) {
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).fillMaxSize(),
             state = wallpapersState.lazyListState
         ) {
             item {

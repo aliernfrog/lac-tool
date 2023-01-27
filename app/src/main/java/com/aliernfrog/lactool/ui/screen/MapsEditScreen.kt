@@ -53,7 +53,7 @@ fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
             scope.launch { mapsEditState.onNavigationBack(navController) }
         }
     ) {
-        Column(Modifier.padding(it).fillMaxSize().verticalScroll(mapsEditState.scrollState)) {
+        Column(Modifier.verticalScroll(mapsEditState.scrollState)) {
             GeneralActions(mapsEditState, navController)
             OptionsActions(mapsEditState)
             MiscActions(mapsEditState)

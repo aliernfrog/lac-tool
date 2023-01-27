@@ -1,7 +1,6 @@
 package com.aliernfrog.lactool.ui.screen
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,9 +32,8 @@ fun ScreenshotScreen(screenshotsState: ScreenshotsState) {
     AppScaffold(
         title = stringResource(R.string.screenshots),
         topAppBarState = screenshotsState.topAppBarState
-    ) { paddingValues ->
+    ) {
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).fillMaxSize(),
             state = screenshotsState.lazyListState
         ) {
             item {

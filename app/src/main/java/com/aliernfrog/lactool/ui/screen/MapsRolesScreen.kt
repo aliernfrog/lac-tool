@@ -1,6 +1,9 @@
 package com.aliernfrog.lactool.ui.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -40,11 +43,10 @@ fun MapsRolesScreen(mapsEditState: MapsEditState, navController: NavController) 
         onBackClick = {
             navController.popBackStack()
         }
-    ) { paddingValues ->
+    ) {
         val roles = mapsEditState.mapEditor?.mapRoles ?: mutableListOf()
         LazyColumn(
-            state = mapsEditState.rolesLazyListState,
-            modifier = Modifier.padding(paddingValues).fillMaxSize()
+            state = mapsEditState.rolesLazyListState
         ) {
             item {
                 Text(

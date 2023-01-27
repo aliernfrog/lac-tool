@@ -1,8 +1,6 @@
 package com.aliernfrog.lactool.ui.component
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
@@ -20,7 +18,7 @@ fun AppScaffold(
     topAppBarState: TopAppBarState = TopAppBarState(0F,0F,0F),
     floatingActionButton: @Composable () -> Unit = {},
     onBackClick: (() -> Unit)? = null,
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
     Scaffold(
@@ -34,7 +32,11 @@ fun AppScaffold(
         },
         floatingActionButton = floatingActionButton,
         contentWindowInsets = WindowInsets(0,0,0,0),
-        content = content
+        content = {
+            Box(modifier = Modifier.padding(it).fillMaxSize().systemBarsPadding()) {
+                content()
+            }
+        }
     )
 }
 
@@ -46,7 +48,7 @@ private fun AppTopBar(
     onBackClick: (() -> Unit)? = null
 ) {
     LargeTopAppBar(
-        title = { Text(title) },
+        title = { Text(title, Modifier.systemBarsPadding()) },
         scrollBehavior = scrollBehavior,
         navigationIcon = {
             if (onBackClick != null) {

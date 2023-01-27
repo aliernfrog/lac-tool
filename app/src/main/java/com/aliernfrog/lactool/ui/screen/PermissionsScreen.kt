@@ -44,8 +44,8 @@ fun PermissionsScreen(uriPath: String?, onSuccess: @Composable () -> Unit) {
         if (hasPermissions) onSuccess()
         else AppScaffold(
             title = stringResource(R.string.permissions)
-        ) { paddingValues ->
-            Column(Modifier.padding(paddingValues).fillMaxSize().verticalScroll(rememberScrollState())) {
+        ) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 PermissionsSetUp(
                     uriPath = uriPath,
                     storagePermissions = storagePermissions,
