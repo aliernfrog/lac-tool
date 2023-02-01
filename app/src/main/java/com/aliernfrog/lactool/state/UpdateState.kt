@@ -46,7 +46,8 @@ class UpdateState(
         withContext(Dispatchers.IO) {
             try {
                 val responseJson = JSONObject(URL(releaseUrl).readText())
-                val json = responseJson.getJSONObject(if (isCurrentAlpha) "preRelease" else "stable")
+                val branchKey = if (isCurrentAlpha && responseJson.has("preRelease")) "preRelease" else "stable"
+                val json = responseJson.getJSONObject(branchKey)
                 val latestVersionCode = json.getInt("versionCode")
                 val latestVersionName = json.getString("versionName")
                 val latestBody = json.getString("body")
