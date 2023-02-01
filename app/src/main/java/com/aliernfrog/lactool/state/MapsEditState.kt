@@ -32,6 +32,8 @@ class MapsEditState(_topToastState: TopToastState) {
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
+    val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
+    val materialsLazyListState = LazyListState()
 
     @OptIn(ExperimentalMaterialApi::class)
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)

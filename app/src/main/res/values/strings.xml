@@ -83,6 +83,9 @@
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: %ROLE%</string>
     <string name="mapsRoles_illegalChars">Role can NOT contain: "%CHAR%"</string>
+    <string name="mapsMaterials">Materials</string>
+    <string name="mapsMaterials_description">Currently has %n materials</string>
+    <string name="mapsMaterials_usedCount">Used by %n objects</string>
     <string name="mapsMerge">Merge maps</string>
     <string name="mapsMerge_addMap">Add a map to merge</string>
     <string name="mapsMerge_mapsToMerge">Maps to merge</string>

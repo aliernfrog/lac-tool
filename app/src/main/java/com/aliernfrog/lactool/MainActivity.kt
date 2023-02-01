@@ -100,6 +100,7 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
                 composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState, navController) }
+                composable(Destination.MAPS_MATERIALS.route) { MapsMaterialsScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }

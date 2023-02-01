@@ -30,6 +30,7 @@ enum class Destination(
     MAPS("maps", R.string.maps, Icons.Default.PinDrop, Icons.Outlined.PinDrop),
     MAPS_EDIT("mapsEdit", R.string.mapsEdit, isSubScreen = true),
     MAPS_ROLES("mapsRoles", R.string.mapsRoles, isSubScreen = true),
+    MAPS_MATERIALS("mapsMaterials", R.string.mapsMaterials, isSubScreen = true),
     MAPS_MERGE("mapsMerge", R.string.mapsMerge, isSubScreen = true),
     WALLPAPERS("wallpapers", R.string.wallpapers, Icons.Default.Photo, Icons.Outlined.Photo),
     SCREENSHOTS("screenshots", R.string.screenshots, Icons.Default.PhotoCamera, Icons.Outlined.PhotoCamera),
