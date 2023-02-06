@@ -86,6 +86,10 @@
     <string name="mapsMaterials">Materials</string>
     <string name="mapsMaterials_description">Currently has %n materials</string>
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
+    <string name="mapsMaterials_material_copyUrl">Copy material URL</string>
+    <string name="mapsMaterials_material_delete">Delete material</string>
+    <string name="mapsMaterials_material_delete_description">Material will be removed from %n objects after deleted</string>
+    <string name="mapsMaterials_deleted">Deleted \"%MATERIAL%\" and removed it from %OBJECTS% objects</string>
     <string name="mapsMerge">Merge maps</string>
     <string name="mapsMerge_addMap">Add a map to merge</string>
     <string name="mapsMerge_mapsToMerge">Maps to merge</string>

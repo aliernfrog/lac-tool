@@ -111,6 +111,7 @@ class MainActivity : ComponentActivity() {
                 mapsState.mapsMergeState.pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState,
+                mapsState.mapsEditState.materialSheetState,
                 wallpapersState.wallpaperSheetState,
                 screenshotsState.screenshotSheetState
             )
@@ -140,6 +141,12 @@ class MainActivity : ComponentActivity() {
         AddRoleSheet(
             state = mapsState.mapsEditState.addRoleSheetState,
             onRoleAdd = { mapsState.mapsEditState.addRole(it, context) }
+        )
+        DownloadableMaterialSheet(
+            material = mapsState.mapsEditState.materialSheetChosenMaterial.value,
+            state = mapsState.mapsEditState.materialSheetState,
+            topToastState = topToastState,
+            onDeleteRequest = { mapsState.mapsEditState.deleteDownloadableMaterial(it, context) }
         )
         WallpaperSheet(
             wallpaper = wallpapersState.wallpaperSheetWallpaper.value,

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -14,10 +15,12 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ImageButton
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavController) {
+    val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.mapsMaterials),
         topAppBarState = mapsEditState.materialsTopAppBarState,
@@ -37,7 +40,7 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                     title = it.name,
                     description = stringResource(R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString())
                 ) {
-                    //TODO
+                    scope.launch { mapsEditState.showMaterialSheet(it) }
                 }
             }
             item {
