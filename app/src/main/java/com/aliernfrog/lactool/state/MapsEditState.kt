@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
@@ -25,25 +26,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 class MapsEditState(_topToastState: TopToastState) {
     private val topToastState = _topToastState
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
+    val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
+    val materialsLazyListState = LazyListState()
 
-    @OptIn(ExperimentalMaterialApi::class)
     val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
-    @OptIn(ExperimentalMaterialApi::class)
     val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
+    val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
     var saveWarningShown = mutableStateOf(false)
 
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
     var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
+    val failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
     val roleSheetChosenRole = mutableStateOf("")
+    val materialSheetChosenMaterial = mutableStateOf<LACMapDownloadableMaterial?>(null)
+    val materialSheetMaterialFailed = mutableStateOf(false)
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
@@ -112,6 +117,25 @@ class MapsEditState(_topToastState: TopToastState) {
         }
     }
 
+    fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
+        val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
+        failedMaterials.remove(material)
+        updateMapEditorState()
+        topToastState.showToast(
+            text = context.getString(R.string.mapsMaterials_deleted)
+                .replace("%MATERIAL%", material.name)
+                .replace("%OBJECTS%", removedObjects.toString()),
+            icon = Icons.Rounded.Delete
+        )
+    }
+
+    suspend fun onDownloadableMaterialError(material: LACMapDownloadableMaterial) {
+        if (!failedMaterials.contains(material)) {
+            failedMaterials.add(material)
+            materialsLazyListState.animateScrollToItem(0)
+        }
+    }
+
     fun updateMapEditorState() {
         mapEditor = mapEditor
     }
@@ -135,13 +159,21 @@ class MapsEditState(_topToastState: TopToastState) {
         objectFilter = LACMapObjectFilter()
         mapFile = null
         mapDocumentFile = null
+        failedMaterials.clear()
         scrollState.scrollTo(0)
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     suspend fun showRoleSheet(role: String) {
         roleSheetChosenRole.value = role
         roleSheetState.show()
+    }
+
+    suspend fun showMaterialSheet(material: LACMapDownloadableMaterial) {
+        if (materialSheetChosenMaterial.value != material) {
+            materialSheetMaterialFailed.value = false
+            materialSheetChosenMaterial.value = material
+        }
+        materialSheetState.show()
     }
 
     suspend fun onNavigationBack(navController: NavController) {

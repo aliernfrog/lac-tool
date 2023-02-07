@@ -116,6 +116,16 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
                 navController.navigate(Destination.MAPS_ROLES.route)
             }
         }
+        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
+            ButtonShapeless(
+                title = stringResource(R.string.mapsMaterials),
+                description = stringResource(R.string.mapsMaterials_description).replace("%n", (mapsEditState.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
+                expanded = false,
+                arrowRotation = 90f
+            ) {
+                navController.navigate(Destination.MAPS_MATERIALS.route)
+            }
+        }
     }
 }
 

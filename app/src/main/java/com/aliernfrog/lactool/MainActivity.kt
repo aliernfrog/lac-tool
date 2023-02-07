@@ -100,6 +100,7 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
                 composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState, navController) }
+                composable(Destination.MAPS_MATERIALS.route) { MapsMaterialsScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
@@ -110,6 +111,7 @@ class MainActivity : ComponentActivity() {
                 mapsState.mapsMergeState.pickMapSheetState,
                 mapsState.mapsEditState.roleSheetState,
                 mapsState.mapsEditState.addRoleSheetState,
+                mapsState.mapsEditState.materialSheetState,
                 wallpapersState.wallpaperSheetState,
                 screenshotsState.screenshotSheetState
             )
@@ -139,6 +141,14 @@ class MainActivity : ComponentActivity() {
         AddRoleSheet(
             state = mapsState.mapsEditState.addRoleSheetState,
             onRoleAdd = { mapsState.mapsEditState.addRole(it, context) }
+        )
+        DownloadableMaterialSheet(
+            material = mapsState.mapsEditState.materialSheetChosenMaterial.value,
+            failed = mapsState.mapsEditState.materialSheetMaterialFailed.value,
+            state = mapsState.mapsEditState.materialSheetState,
+            topToastState = topToastState,
+            onDeleteRequest = { mapsState.mapsEditState.deleteDownloadableMaterial(it, context) },
+            onError = { mapsState.mapsEditState.materialSheetMaterialFailed.value = true }
         )
         WallpaperSheet(
             wallpaper = wallpapersState.wallpaperSheetWallpaper.value,
