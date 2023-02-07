@@ -48,6 +48,7 @@ class MapsEditState(_topToastState: TopToastState) {
     val failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
     val roleSheetChosenRole = mutableStateOf("")
     val materialSheetChosenMaterial = mutableStateOf<LACMapDownloadableMaterial?>(null)
+    val materialSheetMaterialFailed = mutableStateOf(false)
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
@@ -160,7 +161,10 @@ class MapsEditState(_topToastState: TopToastState) {
     }
 
     suspend fun showMaterialSheet(material: LACMapDownloadableMaterial) {
-        materialSheetChosenMaterial.value = material
+        if (materialSheetChosenMaterial.value != material) {
+            materialSheetMaterialFailed.value = false
+            materialSheetChosenMaterial.value = material
+        }
         materialSheetState.show()
     }
 

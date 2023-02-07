@@ -1,5 +1,8 @@
 package com.aliernfrog.lactool.ui.sheet
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -7,11 +10,11 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -25,6 +28,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
+import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -33,9 +37,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun DownloadableMaterialSheet(
     material: LACMapDownloadableMaterial?,
+    failed: Boolean,
     state: ModalBottomSheetState,
     topToastState: TopToastState?,
-    onDeleteRequest: (LACMapDownloadableMaterial) -> Unit
+    onDeleteRequest: (LACMapDownloadableMaterial) -> Unit,
+    onError: () -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
@@ -47,11 +53,22 @@ fun DownloadableMaterialSheet(
             fontFamily = FontFamily.Monospace
         )
         AsyncImage(
-            model = material?.url,
+            model = material?.url.toString().replace("ad",""),
             contentDescription = null,
             modifier = Modifier.fillMaxWidth().padding(8.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            onError = { onError() }
         )
+        AnimatedVisibility(
+            visible = failed,
+            exit = fadeOut(tween(0))
+        ) {
+            ErrorWithIcon(
+                error = stringResource(R.string.mapsMaterials_material_failed),
+                painter = rememberVectorPainter(Icons.Rounded.Report),
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        }
         Divider(
             modifier = Modifier.padding(8.dp).alpha(0.7f),
             thickness = 1.dp,

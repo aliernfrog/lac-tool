@@ -144,9 +144,11 @@ class MainActivity : ComponentActivity() {
         )
         DownloadableMaterialSheet(
             material = mapsState.mapsEditState.materialSheetChosenMaterial.value,
+            failed = mapsState.mapsEditState.materialSheetMaterialFailed.value,
             state = mapsState.mapsEditState.materialSheetState,
             topToastState = topToastState,
-            onDeleteRequest = { mapsState.mapsEditState.deleteDownloadableMaterial(it, context) }
+            onDeleteRequest = { mapsState.mapsEditState.deleteDownloadableMaterial(it, context) },
+            onError = { mapsState.mapsEditState.materialSheetMaterialFailed.value = true }
         )
         WallpaperSheet(
             wallpaper = wallpapersState.wallpaperSheetWallpaper.value,

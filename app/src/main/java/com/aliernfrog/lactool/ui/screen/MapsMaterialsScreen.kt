@@ -46,12 +46,16 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                 }
             }
             items(materials) {
+                var failed by remember { mutableStateOf(false) }
                 ImageButton(
                     model = it.url,
                     title = it.name,
-                    description = stringResource(R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
+                    description = stringResource(if (failed) R.string.mapsMaterials_failed else R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
+                    painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
+                    containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
                     onError = { _ ->
                         if (!mapsEditState.failedMaterials.contains(it)) mapsEditState.failedMaterials.add(it)
+                        failed = true
                     }
                 ) {
                     scope.launch { mapsEditState.showMaterialSheet(it) }
