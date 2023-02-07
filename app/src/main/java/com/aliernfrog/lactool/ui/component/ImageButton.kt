@@ -29,7 +29,14 @@ fun ImageButton(
     onError: (AsyncImagePainter.State.Error) -> Unit = {},
     onClick: () -> Unit
 ) {
-    Box(Modifier.fillMaxWidth().padding(8.dp).clip(AppComponentShape).clickable { onClick() }) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clip(AppComponentShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { onClick() }
+    ) {
         AsyncImage(
             model = model,
             contentDescription = null,
