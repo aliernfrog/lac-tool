@@ -132,7 +132,7 @@ class MapsEditState(_topToastState: TopToastState) {
     suspend fun onDownloadableMaterialError(material: LACMapDownloadableMaterial) {
         if (!failedMaterials.contains(material)) {
             failedMaterials.add(material)
-            materialsLazyListState.scrollToItem(-1)
+            materialsLazyListState.scrollToItem(0)
         }
     }
 
