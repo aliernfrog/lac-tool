@@ -119,6 +119,7 @@ class MapsEditState(_topToastState: TopToastState) {
 
     fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
+        failedMaterials.remove(material)
         updateMapEditorState()
         topToastState.showToast(
             text = context.getString(R.string.mapsMaterials_deleted)
@@ -126,6 +127,13 @@ class MapsEditState(_topToastState: TopToastState) {
                 .replace("%OBJECTS%", removedObjects.toString()),
             icon = Icons.Rounded.Delete
         )
+    }
+
+    suspend fun onDownloadableMaterialError(material: LACMapDownloadableMaterial) {
+        if (!failedMaterials.contains(material)) {
+            failedMaterials.add(material)
+            materialsLazyListState.scrollToItem(-1)
+        }
     }
 
     fun updateMapEditorState() {

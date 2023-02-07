@@ -54,7 +54,7 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                     painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
                     containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
                     onError = { _ ->
-                        if (!mapsEditState.failedMaterials.contains(it)) mapsEditState.failedMaterials.add(it)
+                        scope.launch { mapsEditState.onDownloadableMaterialError(it) }
                     }
                 ) {
                     scope.launch { mapsEditState.showMaterialSheet(it) }
