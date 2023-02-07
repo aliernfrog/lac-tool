@@ -85,6 +85,9 @@
     <string name="mapsRoles_illegalChars">Role can NOT contain: "%CHAR%"</string>
     <string name="mapsMaterials">Materials</string>
     <string name="mapsMaterials_description">Currently has %n materials</string>
+    <string name="mapsMaterials_failedMaterials">Invalid materials</string>
+    <string name="mapsMaterials_failedMaterials_description">%n materials failed to load. This might cause errors when loading the map in LAC</string>
+    <string name="mapsMaterials_failedMaterials_clickToViewMore">Click to view more</string>
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
     <string name="mapsMaterials_material_copyUrl">Copy material URL</string>
     <string name="mapsMaterials_material_delete">Delete material</string>

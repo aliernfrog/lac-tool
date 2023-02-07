@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
@@ -25,6 +26,7 @@ fun ImageButton(
     title: String,
     description: String? = null,
     showDetails: Boolean = true,
+    onError: (AsyncImagePainter.State.Error) -> Unit = {},
     onClick: () -> Unit
 ) {
     Box(Modifier.fillMaxWidth().padding(8.dp).clip(AppComponentShape).clickable { onClick() }) {
@@ -32,7 +34,8 @@ fun ImageButton(
             model = model,
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            onError = onError
         )
         if (showDetails) Column(
             modifier = Modifier
