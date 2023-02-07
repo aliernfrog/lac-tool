@@ -46,7 +46,7 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                 }
             }
             items(materials) {
-                var failed by remember { mutableStateOf(false) }
+                val failed = mapsEditState.failedMaterials.contains(it)
                 ImageButton(
                     model = it.url,
                     title = it.name,
@@ -55,7 +55,6 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                     containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
                     onError = { _ ->
                         if (!mapsEditState.failedMaterials.contains(it)) mapsEditState.failedMaterials.add(it)
-                        failed = true
                     }
                 ) {
                     scope.launch { mapsEditState.showMaterialSheet(it) }

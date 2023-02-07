@@ -53,7 +53,7 @@ fun DownloadableMaterialSheet(
             fontFamily = FontFamily.Monospace
         )
         AsyncImage(
-            model = material?.url.toString().replace("ad",""),
+            model = material?.url,
             contentDescription = null,
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             contentScale = ContentScale.Crop,
