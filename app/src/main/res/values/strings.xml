@@ -87,7 +87,9 @@
     <string name="mapsMaterials_description">Currently has %n materials</string>
     <string name="mapsMaterials_failedMaterials">Invalid materials</string>
     <string name="mapsMaterials_failedMaterials_description">%n materials failed to load. This might cause errors when loading the map in LAC, remove them to avoid errors</string>
-    <string name="mapsMaterials_failedMaterials_clickToViewMore">Click to view more</string>
+    <string name="mapsMaterials_unusedMaterials">Unused materials</string>
+    <string name="mapsMaterials_unusedMaterials_description">%n materials are unused and can be removed</string>
+    <string name="mapsMaterials_clickToViewMore">Click to view more</string>
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
     <string name="mapsMaterials_failed">This material failed to load and might cause errors when loading the map in LAC, remove to avoid errors. Used by %n objects</string>
     <string name="mapsMaterials_material_failed">This material failed to load and might cause errors when loading the map in LAC, remove to avoid errors</string>

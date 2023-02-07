@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Report
+import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.component.AppScaffold
@@ -35,14 +37,19 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
         }
     ) {
         val materials = mapsEditState.mapEditor?.downloadableMaterials ?: listOf()
+        val unusedMaterials = materials.filter { it.usedBy.isEmpty() }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = mapsEditState.materialsLazyListState
         ) {
-            //TODO handle unused materials
             item {
                 AnimatedVisibility(mapsEditState.failedMaterials.isNotEmpty()) {
                     FailedMaterials(mapsEditState)
+                }
+            }
+            item {
+                AnimatedVisibility(unusedMaterials.isNotEmpty()) {
+                    UnusedMaterials(unusedMaterials, mapsEditState)
                 }
             }
             items(materials) {
@@ -82,11 +89,39 @@ private fun FailedMaterials(mapsEditState: MapsEditState) {
         mapsEditState.failedMaterials.forEach { material ->
             ButtonShapeless(
                 title = material.name,
-                description = stringResource(R.string.mapsMaterials_failedMaterials_clickToViewMore)
+                description = stringResource(R.string.mapsMaterials_clickToViewMore)
             ) {
                 scope.launch {
                     mapsEditState.showMaterialSheet(material)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun UnusedMaterials(unusedMaterials: List<LACMapDownloadableMaterial>, mapsEditState: MapsEditState) {
+    val scope = rememberCoroutineScope()
+    var expanded by remember { mutableStateOf(false) }
+    ExpandableColumnRounded(
+        title = stringResource(R.string.mapsMaterials_unusedMaterials),
+        description = stringResource(R.string.mapsMaterials_unusedMaterials_description).replace("%n", unusedMaterials.size.toString()),
+        painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
+        headerContainerColor = MaterialTheme.colorScheme.secondary,
+        expanded = expanded,
+        onExpandedChange = { expanded = it }
+    ) {
+        unusedMaterials.forEach { material ->
+            ButtonShapeless(
+                title = material.name,
+                description = stringResource(R.string.mapsMaterials_clickToViewMore)
+            ) {
+                scope.launch {
+                    mapsEditState.showMaterialSheet(material)
+                }
+            }
+            LaunchedEffect(Unit) {
+                mapsEditState.materialsLazyListState.animateScrollToItem(0)
             }
         }
     }
