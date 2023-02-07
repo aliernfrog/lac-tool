@@ -50,7 +50,9 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                     model = it.url,
                     title = it.name,
                     description = stringResource(R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
-                    onError = { _ -> mapsEditState.failedMaterials.add(it) }
+                    onError = { _ ->
+                        if (!mapsEditState.failedMaterials.contains(it)) mapsEditState.failedMaterials.add(it)
+                    }
                 ) {
                     scope.launch { mapsEditState.showMaterialSheet(it) }
                 }

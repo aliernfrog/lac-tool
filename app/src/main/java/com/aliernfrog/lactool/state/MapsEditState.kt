@@ -45,9 +45,9 @@ class MapsEditState(_topToastState: TopToastState) {
     private var mapDocumentFile: DocumentFileCompat? = null
     var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
+    val failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
     val roleSheetChosenRole = mutableStateOf("")
     val materialSheetChosenMaterial = mutableStateOf<LACMapDownloadableMaterial?>(null)
-    val failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
 
     @SuppressLint("Recycle")
     suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
@@ -150,6 +150,7 @@ class MapsEditState(_topToastState: TopToastState) {
         objectFilter = LACMapObjectFilter()
         mapFile = null
         mapDocumentFile = null
+        failedMaterials.clear()
         scrollState.scrollTo(0)
     }
 
