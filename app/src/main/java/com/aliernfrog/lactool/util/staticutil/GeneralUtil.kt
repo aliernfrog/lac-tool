@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.util.staticutil
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.ContextCompat
@@ -25,6 +26,12 @@ class GeneralUtil {
         fun checkStoragePermissions(context: Context): Boolean {
             return if (Build.VERSION.SDK_INT >= 30) Environment.isExternalStorageManager()
             else ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun isConnectedToInternet(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnected
         }
 
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {

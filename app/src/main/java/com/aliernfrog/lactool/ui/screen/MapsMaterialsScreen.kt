@@ -23,6 +23,7 @@ import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ExpandableColumnRounded
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,6 +73,7 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
             }
         }
     }
+    MaterialsNoConnectionDialog()
 }
 
 @Composable
@@ -120,9 +122,9 @@ private fun UnusedMaterials(unusedMaterials: List<LACMapDownloadableMaterial>, m
                     mapsEditState.showMaterialSheet(material)
                 }
             }
-            LaunchedEffect(Unit) {
-                mapsEditState.materialsLazyListState.animateScrollToItem(0)
-            }
         }
+    }
+    LaunchedEffect(unusedMaterials) {
+        if (unusedMaterials.isNotEmpty()) mapsEditState.materialsLazyListState.scrollToItem(0)
     }
 }
