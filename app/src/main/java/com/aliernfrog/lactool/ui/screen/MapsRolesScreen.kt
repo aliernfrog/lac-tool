@@ -48,7 +48,7 @@ fun MapsRolesScreen(mapsEditState: MapsEditState, navController: NavController) 
         ) {
             item {
                 Text(
-                    text = stringResource(R.string.mapsRoles_showingCount).replace("%COUNT%", roles.size.toString()),
+                    text = stringResource(R.string.mapsRoles_showingCount).replace("{COUNT}", roles.size.toString()),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }

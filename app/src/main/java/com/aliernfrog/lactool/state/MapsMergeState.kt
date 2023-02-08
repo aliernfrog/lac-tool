@@ -65,7 +65,7 @@ class MapsMergeState(
         mapMerger.makeMapBase(index)
         optionsExpandedFor.value = 0
         topToastState.showToast(
-            text = context.getString(R.string.mapsMerge_map_madeBase).replace("%MAP%", mapName),
+            text = context.getString(R.string.mapsMerge_map_madeBase).replace("{MAP}", mapName),
             icon = Icons.Rounded.Done
         )
         updateMergerState()
@@ -75,7 +75,7 @@ class MapsMergeState(
         mapMerger.mapsToMerge.removeAt(index)
         optionsExpandedFor.value = 0
         topToastState.showToast(
-            text = context.getString(R.string.mapsMerge_map_removed).replace("%MAP%", mapName),
+            text = context.getString(R.string.mapsMerge_map_removed).replace("{MAP}", mapName),
             icon = Icons.Rounded.Done
         )
         updateMergerState()
@@ -113,7 +113,7 @@ class MapsMergeState(
             mapMerger.mapsToMerge.clear()
             // No need to update merger state here because it navigates back to maps screen after finishing
             mapsState.getMap(documentFile = newFile)
-            topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("%MAP%", mapName), icon = Icons.Rounded.Done)
+            topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", mapName), icon = Icons.Rounded.Done)
         }
         navController.popBackStack()
     }

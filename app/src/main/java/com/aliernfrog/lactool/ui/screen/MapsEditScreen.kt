@@ -109,7 +109,7 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
         AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.mapRoles != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsRoles),
-                description = stringResource(R.string.mapsRolesDescription).replace("%COUNT%", (mapsEditState.mapEditor?.mapRoles?.size ?: 0).toString()),
+                description = stringResource(R.string.mapsRoles_description).replace("{COUNT}", (mapsEditState.mapEditor?.mapRoles?.size ?: 0).toString()),
                 expanded = false,
                 arrowRotation = 90f
             ) {

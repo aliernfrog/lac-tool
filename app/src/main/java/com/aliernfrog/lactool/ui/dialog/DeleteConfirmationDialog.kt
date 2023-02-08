@@ -41,7 +41,7 @@ fun DeleteConfirmationDialog(
         text = {
             Text(
                 stringResource(R.string.info_deleteQuestion)
-                    .replace("%NAME%", name)
+                    .replace("{NAME}", name)
             )
         }
     )

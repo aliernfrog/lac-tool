@@ -98,7 +98,7 @@ class MapsEditState(_topToastState: TopToastState) {
     fun deleteRole(role: String, context: Context) {
         mapEditor?.deleteRole(role)
         updateMapEditorState()
-        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Delete)
+        topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("{ROLE}", role.removeHtml()), Icons.Rounded.Delete)
     }
 
     fun addRole(role: String, context: Context) {
@@ -106,14 +106,14 @@ class MapsEditState(_topToastState: TopToastState) {
             role = role,
             onIllegalChar = {
                 topToastState.showToast(
-                    text = context.getString(R.string.mapsRoles_illegalChars).replace("%CHAR%", it),
+                    text = context.getString(R.string.mapsRoles_illegalChars).replace("{CHAR}", it),
                     icon = Icons.Rounded.PriorityHigh,
                     iconTintColor = TopToastColor.ERROR
                 )
             }
         ) {
             updateMapEditorState()
-            topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("%ROLE%", role.removeHtml()), Icons.Rounded.Check)
+            topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("{ROLE}", role.removeHtml()), Icons.Rounded.Check)
         }
     }
 
@@ -123,8 +123,8 @@ class MapsEditState(_topToastState: TopToastState) {
         updateMapEditorState()
         topToastState.showToast(
             text = context.getString(R.string.mapsMaterials_deleted)
-                .replace("%MATERIAL%", material.name)
-                .replace("%OBJECTS%", removedObjects.toString()),
+                .replace("{MATERIAL}", material.name)
+                .replace("{REPLACEDCOUNT}", removedObjects.toString()),
             icon = Icons.Rounded.Delete
         )
     }
