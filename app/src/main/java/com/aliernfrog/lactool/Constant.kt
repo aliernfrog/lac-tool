@@ -3,6 +3,7 @@ package com.aliernfrog.lactool
 import android.os.Environment
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
+import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 28.dp
@@ -28,9 +29,38 @@ object ConfigKey {
     val DEFAULT_SCREENSHOTS_DIR = "${Environment.getExternalStorageDirectory()}/Android/data/com.MA.LAC/files/screenshots"
 }
 
-object Link {
+object SettingsConstant {
     val socials = listOf(
         Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
         Social("LAC Tool GitHub", "https://github.com/aliernfrog/lac-tool")
+    )
+    val pathOptions = listOf(
+        PrefEditItem(
+            key = ConfigKey.KEY_MAPS_DIR,
+            default = ConfigKey.DEFAULT_MAPS_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_maps
+        ),
+        PrefEditItem(
+            key = ConfigKey.KEY_WALLPAPERS_DIR,
+            default = ConfigKey.DEFAULT_WALLPAPERS_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_wallpapers
+        ),
+        PrefEditItem(
+            key = ConfigKey.KEY_SCREENSHOTS_DIR,
+            default = ConfigKey.DEFAULT_SCREENSHOTS_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_screenshots
+        ),
+        PrefEditItem(
+            key = ConfigKey.KEY_MAPS_EXPORT_DIR,
+            default = ConfigKey.DEFAULT_MAPS_EXPORT_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_mapsExport
+        )
+    )
+    val experimentalPrefOptions = listOf(
+        PrefEditItem(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL),
+        PrefEditItem(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR),
+        PrefEditItem(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR),
+        PrefEditItem(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR),
+        PrefEditItem(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
     )
 }
