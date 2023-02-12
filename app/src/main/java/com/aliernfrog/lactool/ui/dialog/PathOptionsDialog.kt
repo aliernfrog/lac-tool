@@ -1,8 +1,11 @@
 package com.aliernfrog.lactool.ui.dialog
 
 import android.content.SharedPreferences
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,6 +14,7 @@ import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.SettingsBackupRestore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
@@ -19,6 +23,7 @@ import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.data.PrefEditItem
+import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 
 @Composable
 fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boolean) -> Unit) {
@@ -69,10 +74,17 @@ fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boole
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
+    val treePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree(),
+        onResult = {
+            if (it != null) option.mutableValue.value = UriToFileUtil.getRealFolderPath(it)
+        }
+    )
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = option.mutableValue.value,
         onValueChange = { option.mutableValue.value = it },
+        singleLine = true,
         shape = AppComponentShape,
         label = {
             Text(stringResource(option.labelResourceId!!))
@@ -81,16 +93,25 @@ private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
             Text(option.default)
         },
         trailingIcon = {
-            IconButton(
-                onClick = { option.mutableValue.value = option.default }
-            ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Rounded.SettingsBackupRestore),
-                    contentDescription = stringResource(R.string.settings_general_pathOptions_restoreDefault)
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = { treePicker.launch(null) }
+                ) {
+                    Icon(
+                        painter = rememberVectorPainter(Icons.Rounded.Folder),
+                        contentDescription = stringResource(R.string.settings_general_pathOptions_pickDirectory)
+                    )
+                }
+                IconButton(
+                    onClick = { option.mutableValue.value = option.default }
+                ) {
+                    Icon(
+                        painter = rememberVectorPainter(Icons.Rounded.SettingsBackupRestore),
+                        contentDescription = stringResource(R.string.settings_general_pathOptions_restoreDefault)
+                    )
+                }
             }
-        },
-        singleLine = true
+        }
     )
 
     LaunchedEffect(Unit) {
