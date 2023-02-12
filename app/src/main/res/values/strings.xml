@@ -157,6 +157,10 @@
     <string name="settings_general_pathOptions_wallpapers">LAC wallpapers directory</string>
     <string name="settings_general_pathOptions_screenshots">LAC screenshots directory</string>
     <string name="settings_general_pathOptions_mapsExport">Exported maps directory</string>
+    <string name="settings_general_pathOptions_presets_default">Default</string>
+    <string name="settings_general_pathOptions_presets_lacd">LACD (LAC BETA)</string>
+    <string name="settings_general_pathOptions_presets_lacm">LACM (LAC MOD)</string>
+    <string name="settings_general_pathOptions_presets_lacmb">LACMB (LAC MB)</string>
     <string name="settings_about">About</string>
     <string name="settings_about_version">LAC Tool version</string>
     <string name="settings_about_checkUpdates">Check for updates</string>

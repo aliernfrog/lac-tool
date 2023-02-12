@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,8 +25,11 @@ import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.data.PrefEditItem
+import com.aliernfrog.lactool.ui.component.ScrollableRow
+import com.aliernfrog.lactool.util.extension.applyPathOptionPreset
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boolean) -> Unit) {
     val pathOptions = SettingsConstant.pathOptions
@@ -64,6 +68,20 @@ fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boole
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                ScrollableRow(gradientColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)) {
+                    SettingsConstant.pathOptionPresets.forEach { preset ->
+                        SuggestionChip(
+                            onClick = {
+                                pathOptions.forEach { option ->
+                                    option.applyPathOptionPreset(preset)
+                                }
+                            },
+                            label = { Text(stringResource(preset.labelResourceId)) },
+                            shape = AppComponentShape,
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
+                    }
+                }
                 pathOptions.forEach { option ->
                     PathOption(option, config)
                 }
