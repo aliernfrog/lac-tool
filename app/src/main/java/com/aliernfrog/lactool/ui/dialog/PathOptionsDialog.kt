@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.dialog
 import android.content.SharedPreferences
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -102,13 +103,15 @@ private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
                         contentDescription = stringResource(R.string.settings_general_pathOptions_pickDirectory)
                     )
                 }
-                IconButton(
-                    onClick = { option.mutableValue.value = option.default }
-                ) {
-                    Icon(
-                        painter = rememberVectorPainter(Icons.Rounded.SettingsBackupRestore),
-                        contentDescription = stringResource(R.string.settings_general_pathOptions_restoreDefault)
-                    )
+                AnimatedVisibility(visible = option.mutableValue.value != option.default) {
+                    IconButton(
+                        onClick = { option.mutableValue.value = option.default }
+                    ) {
+                        Icon(
+                            painter = rememberVectorPainter(Icons.Rounded.SettingsBackupRestore),
+                            contentDescription = stringResource(R.string.settings_general_pathOptions_restoreDefault)
+                        )
+                    }
                 }
             }
         }
