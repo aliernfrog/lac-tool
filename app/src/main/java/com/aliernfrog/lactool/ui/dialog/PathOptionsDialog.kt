@@ -108,19 +108,8 @@ private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
         label = {
             Text(stringResource(option.labelResourceId!!))
         },
-        placeholder = {
-            Text(option.default)
-        },
         trailingIcon = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(
-                    onClick = { treePicker.launch(null) }
-                ) {
-                    Icon(
-                        painter = rememberVectorPainter(Icons.Rounded.Folder),
-                        contentDescription = stringResource(R.string.settings_general_pathOptions_pickDirectory)
-                    )
-                }
                 AnimatedVisibility(visible = option.mutableValue.value != option.default) {
                     IconButton(
                         onClick = { option.mutableValue.value = option.default }
@@ -130,6 +119,14 @@ private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
                             contentDescription = stringResource(R.string.settings_general_pathOptions_restoreDefault)
                         )
                     }
+                }
+                IconButton(
+                    onClick = { treePicker.launch(null) }
+                ) {
+                    Icon(
+                        painter = rememberVectorPainter(Icons.Rounded.Folder),
+                        contentDescription = stringResource(R.string.settings_general_pathOptions_pickDirectory)
+                    )
                 }
             }
         }
