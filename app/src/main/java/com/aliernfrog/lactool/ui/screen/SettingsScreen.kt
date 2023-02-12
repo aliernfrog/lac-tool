@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,13 +28,12 @@ import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, updateState: UpdateState, settingsState: SettingsState) {
+fun SettingsScreen(config: SharedPreferences, updateState: UpdateState, settingsState: SettingsState) {
     AppScaffold(
         title = stringResource(R.string.settings),
         topAppBarState = settingsState.topAppBarState
@@ -50,12 +47,8 @@ fun SettingsScreen(config: SharedPreferences, topToastState: TopToastState, upda
     }
     if (settingsState.pathOptionsDialogShown) PathOptionsDialog(
         config = config,
-        onDismissRequest = { saved ->
+        onDismissRequest = {
             settingsState.pathOptionsDialogShown = false
-            if (saved) topToastState.showToast(
-                text = R.string.settings_general_pathOptions_saved,
-                icon = Icons.Rounded.Check
-            )
         }
     )
 }

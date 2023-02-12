@@ -19,22 +19,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.util.extension.applyPathOptionPreset
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boolean) -> Unit) {
+fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: () -> Unit) {
+    val context = LocalContext.current
     val pathOptions = SettingsConstant.pathOptions
     AlertDialog(
-        onDismissRequest = { onDismissRequest(false) },
+        onDismissRequest = { onDismissRequest() },
         confirmButton = {
             Button(
                 onClick = {
@@ -43,14 +47,14 @@ fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boole
                         configEditor.putString(option.key, option.mutableValue.value)
                     }
                     configEditor.apply()
-                    onDismissRequest(true)
+                    GeneralUtil.restartApp(context)
                 }
             ) {
                 Text(stringResource(R.string.action_done))
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = { onDismissRequest(false) }) {
+            OutlinedButton(onClick = { onDismissRequest() }) {
                 Text(stringResource(R.string.action_cancel))
             }
         },
@@ -68,6 +72,7 @@ fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: (saved: Boole
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Text(stringResource(R.string.settings_general_pathOptions_willRestart), fontSize = 14.sp, lineHeight = 18.sp)
                 ScrollableRow(gradientColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)) {
                     SettingsConstant.pathOptionPresets.forEach { preset ->
                         SuggestionChip(

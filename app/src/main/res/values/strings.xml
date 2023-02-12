@@ -150,7 +150,7 @@
     <string name="settings_general_showMapThumbnailsInList_description">Know which map you are on</string>
     <string name="settings_general_pathOptions">Directories</string>
     <string name="settings_general_pathOptions_description">Configure directories used in LAC Tool</string>
-    <string name="settings_general_pathOptions_saved">Saved directory configuration</string>
+    <string name="settings_general_pathOptions_willRestart">LAC Tool will be restarted after saving your changes</string>
     <string name="settings_general_pathOptions_pickDirectory">Pick directory</string>
     <string name="settings_general_pathOptions_restoreDefault">Restore default value</string>
     <string name="settings_general_pathOptions_maps">LAC maps directory</string>
