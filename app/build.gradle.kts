@@ -66,4 +66,5 @@ dependencies {
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.2")
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("com.github.jeziellago:compose-markdown:0.3.2")
 }

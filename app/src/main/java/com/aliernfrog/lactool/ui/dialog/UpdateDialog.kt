@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.UpdateState
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun UpdateDialog(updateState: UpdateState) {
@@ -42,9 +43,14 @@ fun UpdateDialog(updateState: UpdateState) {
             Text(updateState.newVersionName)
         },
         text = {
-            Text(
-                text = updateState.newVersionBody,
-                modifier = Modifier.verticalScroll(rememberScrollState())
+            MarkdownText(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                markdown = updateState.newVersionBody,
+                color = LocalContentColor.current,
+                style = LocalTextStyle.current,
+                onLinkClicked = {
+                    uriHandler.openUri(it)
+                }
             )
         }
     )
