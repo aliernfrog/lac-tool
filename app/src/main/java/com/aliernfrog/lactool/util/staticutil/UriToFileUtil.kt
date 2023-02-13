@@ -17,6 +17,12 @@ Only for local files, at least for now
 
 class UriToFileUtil {
     companion object {
+
+        fun getRealFolderPath(uri: Uri): String {
+            return if (uri.path!!.startsWith("/tree/primary:")) uri.path!!.replace("/tree/primary:", Environment.getExternalStorageDirectory().absolutePath+"/")
+            else uri.path!!
+        }
+
         fun getRealFilePath(uri: Uri, context: Context): String? {
             try {
                 var docId: String? = null

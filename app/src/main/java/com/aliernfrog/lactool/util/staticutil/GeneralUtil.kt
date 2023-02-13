@@ -1,12 +1,15 @@
 package com.aliernfrog.lactool.util.staticutil
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.ContextCompat
+import com.aliernfrog.lactool.MainActivity
 
 @Suppress("DEPRECATION")
 class GeneralUtil {
@@ -32,6 +35,12 @@ class GeneralUtil {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connectivityManager.activeNetworkInfo ?: return false
             return networkInfo.isConnected
+        }
+
+        fun restartApp(context: Context) {
+            val intent = Intent(context, MainActivity::class.java)
+            (context as Activity).finish()
+            context.startActivity(intent)
         }
 
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {

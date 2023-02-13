@@ -31,6 +31,7 @@ class SettingsState(
     val autoCheckUpdates = mutableStateOf(config.getBoolean(ConfigKey.KEY_APP_AUTO_UPDATES, true))
 
     val themeOptionsExpanded = mutableStateOf(false)
+    var pathOptionsDialogShown by mutableStateOf(false)
     val linksExpanded = mutableStateOf(false)
     val forceShowMaterialYouOption = mutableStateOf(false)
     var experimentalSettingsShown by mutableStateOf(false)

@@ -3,6 +3,8 @@ package com.aliernfrog.lactool
 import android.os.Environment
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
+import com.aliernfrog.lactool.data.PathOptionPreset
+import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 28.dp
@@ -28,9 +30,62 @@ object ConfigKey {
     val DEFAULT_SCREENSHOTS_DIR = "${Environment.getExternalStorageDirectory()}/Android/data/com.MA.LAC/files/screenshots"
 }
 
-object Link {
+object SettingsConstant {
+    private val externalStorageRoot = Environment.getExternalStorageDirectory().absolutePath
     val socials = listOf(
         Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
         Social("LAC Tool GitHub", "https://github.com/aliernfrog/lac-tool")
+    )
+    val pathOptions = listOf(
+        PrefEditItem(
+            key = ConfigKey.KEY_MAPS_DIR,
+            default = ConfigKey.DEFAULT_MAPS_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_maps
+        ),
+        PrefEditItem(
+            key = ConfigKey.KEY_WALLPAPERS_DIR,
+            default = ConfigKey.DEFAULT_WALLPAPERS_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_wallpapers
+        ),
+        PrefEditItem(
+            key = ConfigKey.KEY_SCREENSHOTS_DIR,
+            default = ConfigKey.DEFAULT_SCREENSHOTS_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_screenshots
+        ),
+        PrefEditItem(
+            key = ConfigKey.KEY_MAPS_EXPORT_DIR,
+            default = ConfigKey.DEFAULT_MAPS_EXPORT_DIR,
+            labelResourceId = R.string.settings_general_pathOptions_mapsExport
+        )
+    )
+    val pathOptionPresets = listOf(
+        PathOptionPreset(
+            labelResourceId = R.string.settings_general_pathOptions_presets_default,
+            lacMapsPath = ConfigKey.DEFAULT_MAPS_DIR,
+            lacWallpapersPath = ConfigKey.DEFAULT_WALLPAPERS_DIR,
+            lacScreenshotsPath = ConfigKey.DEFAULT_SCREENSHOTS_DIR,
+            appMapsExportPath = ConfigKey.DEFAULT_MAPS_EXPORT_DIR
+        ),
+        PathOptionPreset(
+            labelResourceId = R.string.settings_general_pathOptions_presets_lacd,
+            lacMapsPath = "$externalStorageRoot/Android/data/com.MA.LACD/files/editor",
+            lacWallpapersPath = "$externalStorageRoot/Android/data/com.MA.LACD/files/wallpaper",
+            lacScreenshotsPath = "$externalStorageRoot/Android/data/com.MA.LACD/files/screenshots"
+        ),
+        PathOptionPreset(
+            labelResourceId = R.string.settings_general_pathOptions_presets_lacm,
+            lacMapsPath = "$externalStorageRoot/Android/data/com.MA.LACM/files/editor",
+            lacWallpapersPath = "$externalStorageRoot/Android/data/com.MA.LACM/files/wallpaper",
+            lacScreenshotsPath = "$externalStorageRoot/Android/data/com.MA.LACM/files/screenshots"
+        ),
+        PathOptionPreset(
+            labelResourceId = R.string.settings_general_pathOptions_presets_lacmb,
+            lacMapsPath = "$externalStorageRoot/Android/data/com.MA.LACMB/files/editor",
+            lacWallpapersPath = "$externalStorageRoot/Android/data/com.MA.LACMB/files/wallpaper",
+            lacScreenshotsPath = "$externalStorageRoot/Android/data/com.MA.LACMB/files/screenshots"
+        )
+    )
+    val experimentalPrefOptions = listOf(
+        PrefEditItem(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
     )
 }

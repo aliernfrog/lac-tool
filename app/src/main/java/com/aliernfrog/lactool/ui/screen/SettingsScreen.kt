@@ -22,10 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.state.SettingsState
 import com.aliernfrog.lactool.state.UpdateState
 import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import kotlinx.coroutines.launch
@@ -40,11 +40,17 @@ fun SettingsScreen(config: SharedPreferences, updateState: UpdateState, settings
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(settingsState.scrollState)) {
             AppearanceOptions(settingsState)
-            MapsOptions(settingsState)
+            GeneralOptions(settingsState)
             AboutApp(updateState, settingsState)
             if (settingsState.experimentalSettingsShown) ExperimentalSettings(config, updateState, settingsState)
         }
     }
+    if (settingsState.pathOptionsDialogShown) PathOptionsDialog(
+        config = config,
+        onDismissRequest = {
+            settingsState.pathOptionsDialogShown = false
+        }
+    )
 }
 
 @Composable
@@ -88,14 +94,22 @@ private fun AppearanceOptions(settingsState: SettingsState) {
 }
 
 @Composable
-private fun MapsOptions(settingsState: SettingsState) {
-    ColumnDivider(title = stringResource(R.string.settings_maps)) {
+private fun GeneralOptions(settingsState: SettingsState) {
+    ColumnDivider(title = stringResource(R.string.settings_general)) {
         Switch(
-            title = stringResource(R.string.settings_maps_showMapThumbnailsInList),
-            description = stringResource(R.string.settings_maps_showMapThumbnailsInList_description),
+            title = stringResource(R.string.settings_general_showMapThumbnailsInList),
+            description = stringResource(R.string.settings_general_showMapThumbnailsInList_description),
             checked = settingsState.showMapThumbnailsInList.value
         ) {
             settingsState.setShowMapThumbnailsInList(it)
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_general_pathOptions),
+            description = stringResource(R.string.settings_general_pathOptions_description),
+            expanded = false,
+            arrowRotation = 90f
+        ) {
+            settingsState.pathOptionsDialogShown = true
         }
     }
 }
@@ -142,7 +156,7 @@ private fun Links(settingsState: SettingsState) {
         exit = shrinkVertically() + fadeOut()
     ) {
         ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
-            Link.socials.forEach {
+            SettingsConstant.socials.forEach {
                 val icon = when(it.url.split("/")[2]) {
                     "discord.gg" -> painterResource(id = R.drawable.discord)
                     "github.com" -> painterResource(id = R.drawable.github)
@@ -159,13 +173,6 @@ private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateS
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val configEditor = config.edit()
-    val prefEdits = listOf(
-        PrefEditItem(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL),
-        PrefEditItem(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR),
-        PrefEditItem(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR),
-        PrefEditItem(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR),
-        PrefEditItem(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
-    )
     ColumnDivider(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
         Text(stringResource(R.string.settings_experimental_description), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
         Switch(
@@ -181,7 +188,7 @@ private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateS
         ButtonShapeless(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
             configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
         }
-        prefEdits.forEach { prefEdit ->
+        SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
             val value = remember { mutableStateOf(config.getString(prefEdit.key, prefEdit.default)!!) }
             TextField(
                 label = { Text(text = "Prefs: ${prefEdit.key}") },
@@ -198,7 +205,7 @@ private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateS
             )
         }
         ButtonShapeless(title = stringResource(R.string.settings_experimental_resetPrefs), contentColor = MaterialTheme.colorScheme.error) {
-            prefEdits.forEach {
+            SettingsConstant.experimentalPrefOptions.forEach {
                 configEditor.remove(it.key)
             }
             configEditor.apply()
