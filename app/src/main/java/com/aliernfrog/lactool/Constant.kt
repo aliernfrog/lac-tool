@@ -9,6 +9,7 @@ import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 28.dp
 val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
+val AppSheetShape = RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)
 const val experimentalSettingsRequiredClicks = 10
 
 object ConfigKey {

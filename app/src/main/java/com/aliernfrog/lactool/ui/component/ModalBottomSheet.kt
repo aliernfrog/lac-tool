@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -18,11 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppRoundnessSize
+import com.aliernfrog.lactool.AppSheetShape
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -44,7 +44,8 @@ fun ModalBottomSheet(
                 modifier = Modifier
                     .statusBarsPadding()
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize))
+                    .shadow(16.dp, AppSheetShape)
+                    .clip(AppSheetShape)
                     .background(MaterialTheme.colorScheme.background)
                     .imePadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -60,7 +61,7 @@ fun ModalBottomSheet(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize))
+                        .clip(AppSheetShape)
                         .verticalScroll(sheetScrollState)
                 ) {
                     if (title != null) Text(text = title, fontSize = 30.sp, modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally))
