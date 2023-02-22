@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.4.0-alpha05"
-val composeCompilerVersion = "1.4.0"
+val composeVersion = "1.4.0-beta02"
+val composeCompilerVersion = "1.4.3"
 
 android {
     namespace = "com.aliernfrog.lactool"
@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha05")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha07")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.29.0-alpha")

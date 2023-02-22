@@ -204,7 +204,6 @@ private fun MiscActions(mapsEditState: MapsEditState) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FilterObjects(mapsEditState: MapsEditState) {
     val context = LocalContext.current

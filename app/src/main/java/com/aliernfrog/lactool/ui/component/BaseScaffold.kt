@@ -13,7 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.aliernfrog.lactool.data.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @Composable (PaddingValues) -> Unit) {
     val layoutDirection = LocalLayoutDirection.current

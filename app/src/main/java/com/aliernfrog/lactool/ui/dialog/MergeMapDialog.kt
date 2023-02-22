@@ -15,7 +15,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MergeMapDialog(
     isMerging: Boolean,

@@ -32,7 +32,6 @@ import com.aliernfrog.lactool.util.extension.applyPathOptionPreset
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: () -> Unit) {
     val context = LocalContext.current
@@ -95,7 +94,6 @@ fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: () -> Unit) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
     val treePicker = rememberLauncherForActivityResult(
