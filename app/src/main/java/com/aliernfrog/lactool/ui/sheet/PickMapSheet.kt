@@ -28,6 +28,7 @@ import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
+import com.aliernfrog.toptoast.enum.TopToastType
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +70,12 @@ private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File
                 withContext(Dispatchers.IO) {
                     val convertedPath = UriToFileUtil.getRealFilePath(it.data?.data!!, context)
                     if (convertedPath != null) onFilePick(File(convertedPath))
-                    else topToastState.showToast(R.string.warning_couldntConvertToPath, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
+                    else topToastState.showToast(
+                        text = R.string.warning_couldntConvertToPath,
+                        icon = Icons.Rounded.PriorityHigh,
+                        iconTintColor = TopToastColor.ERROR,
+                        type = TopToastType.ANDROID
+                    )
                 }
             }
         }
