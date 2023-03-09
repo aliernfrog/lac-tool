@@ -1,9 +1,7 @@
 package com.aliernfrog.lactool.ui.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -15,14 +13,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.state.MapsEditState
-import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.ButtonShapeless
-import com.aliernfrog.lactool.ui.component.ExpandableColumnRounded
-import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import kotlinx.coroutines.launch
 
@@ -38,20 +34,12 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
         }
     ) {
         val materials = mapsEditState.mapEditor?.downloadableMaterials ?: listOf()
-        val unusedMaterials = materials.filter { it.usedBy.isEmpty() }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = mapsEditState.materialsLazyListState
         ) {
             item {
-                AnimatedVisibility(mapsEditState.failedMaterials.isNotEmpty()) {
-                    FailedMaterials(mapsEditState)
-                }
-            }
-            item {
-                AnimatedVisibility(unusedMaterials.isNotEmpty()) {
-                    UnusedMaterials(unusedMaterials, mapsEditState)
-                }
+                Suggestions(mapsEditState)
             }
             items(materials) {
                 val failed = mapsEditState.failedMaterials.contains(it)
@@ -74,6 +62,29 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
         }
     }
     MaterialsNoConnectionDialog()
+}
+
+@Composable
+private fun Suggestions(mapsEditState: MapsEditState) {
+    val unusedMaterials = mapsEditState.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
+    val hasSuggestions = mapsEditState.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
+    AnimatedVisibility(
+        visible = hasSuggestions,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        ColumnDivider(
+            title = stringResource(R.string.mapsMaterials_suggestions),
+            innerModifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            AnimatedVisibility(visible = mapsEditState.failedMaterials.isNotEmpty()) {
+                FailedMaterials(mapsEditState)
+            }
+            AnimatedVisibility(visible = unusedMaterials.isNotEmpty()) {
+                UnusedMaterials(unusedMaterials, mapsEditState)
+            }
+        }
+    }
 }
 
 @Composable
