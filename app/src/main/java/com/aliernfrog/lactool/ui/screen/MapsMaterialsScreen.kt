@@ -124,7 +124,7 @@ private fun UnusedMaterials(unusedMaterials: List<LACMapDownloadableMaterial>, m
             }
         }
     }
-    LaunchedEffect(unusedMaterials) {
+    LaunchedEffect(Unit) {
         if (unusedMaterials.isNotEmpty()) mapsEditState.materialsLazyListState.scrollToItem(0)
     }
 }
