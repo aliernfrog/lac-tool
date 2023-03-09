@@ -268,7 +268,8 @@ private fun TextField(label: String, value: String, onValueChange: (String) -> U
         keyboardOptions = if (numberOnly) KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
         singleLine = true,
         containerColor = MaterialTheme.colorScheme.surface,
-        rounded = false
+        rounded = false,
+        modifier = Modifier.padding(horizontal = 8.dp)
     )
 }
 
