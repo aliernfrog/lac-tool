@@ -62,7 +62,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.29.0-alpha")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-    implementation("com.github.aliernfrog:top-toast-compose:1.1.1")
+    implementation("com.github.aliernfrog:top-toast-compose:1.2.0")
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.2")
     implementation("io.coil-kt:coil-compose:2.2.2")
