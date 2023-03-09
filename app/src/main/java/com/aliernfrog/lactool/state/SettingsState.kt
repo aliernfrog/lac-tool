@@ -18,7 +18,7 @@ import com.aliernfrog.toptoast.state.TopToastState
 
 @OptIn(ExperimentalMaterial3Api::class)
 class SettingsState(
-    private val topToastState: TopToastState,
+    val topToastState: TopToastState,
     private val config: SharedPreferences
 ) {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)

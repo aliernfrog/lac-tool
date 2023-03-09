@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +30,7 @@ import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
 
 
@@ -209,6 +212,11 @@ private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateS
                 configEditor.remove(it.key)
             }
             configEditor.apply()
+            settingsState.topToastState.showToast(
+                text = context.getString(R.string.settings_experimental_resetPrefsDone),
+                icon = Icons.Rounded.Done,
+                type = TopToastType.ANDROID
+            )
             restartApp(context)
         }
     }
