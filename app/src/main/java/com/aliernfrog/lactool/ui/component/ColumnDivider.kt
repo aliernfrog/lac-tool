@@ -17,10 +17,15 @@ fun ColumnDivider(
     modifier: Modifier = Modifier,
     topDivider: Boolean = false,
     bottomDivider: Boolean = true,
+    innerModifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    if (topDivider) Divider(modifier = Modifier.padding(16.dp).alpha(0.7f), thickness = 1.dp, color = MaterialTheme.colorScheme.surfaceVariant)
-    if (title != null) Text(text = title, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-    Column(modifier, content = content)
-    if (bottomDivider) Divider(modifier = Modifier.padding(16.dp).alpha(0.7f), thickness = 1.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+    Column(modifier) {
+        if (topDivider) Divider(modifier = Modifier.padding(16.dp).alpha(0.7f), thickness = 1.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+        if (title != null) Text(text = title, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+        Column(innerModifier) {
+            content()
+        }
+        if (bottomDivider) Divider(modifier = Modifier.padding(16.dp).alpha(0.7f), thickness = 1.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+    }
 }
