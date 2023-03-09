@@ -54,7 +54,7 @@ fun PathOptionsDialog(
                     }
                     configEditor.apply()
                     topToastState.showToast(
-                        text = context.getString(R.string.settings_general_pathOptions_saved),
+                        text = R.string.settings_general_pathOptions_saved,
                         icon = Icons.Rounded.Done,
                         type = TopToastType.ANDROID
                     )

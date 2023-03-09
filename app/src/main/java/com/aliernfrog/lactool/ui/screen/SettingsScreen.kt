@@ -214,7 +214,7 @@ private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateS
             }
             configEditor.apply()
             settingsState.topToastState.showToast(
-                text = context.getString(R.string.settings_experimental_resetPrefsDone),
+                text = R.string.settings_experimental_resetPrefsDone,
                 icon = Icons.Rounded.Done,
                 type = TopToastType.ANDROID
             )
