@@ -49,6 +49,7 @@ fun SettingsScreen(config: SharedPreferences, updateState: UpdateState, settings
         }
     }
     if (settingsState.pathOptionsDialogShown) PathOptionsDialog(
+        topToastState = settingsState.topToastState,
         config = config,
         onDismissRequest = {
             settingsState.pathOptionsDialogShown = false

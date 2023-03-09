@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.SettingsBackupRestore
 import androidx.compose.material3.*
@@ -31,9 +32,15 @@ import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.util.extension.applyPathOptionPreset
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
+import com.aliernfrog.toptoast.enum.TopToastType
+import com.aliernfrog.toptoast.state.TopToastState
 
 @Composable
-fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: () -> Unit) {
+fun PathOptionsDialog(
+    topToastState: TopToastState,
+    config: SharedPreferences,
+    onDismissRequest: () -> Unit
+) {
     val context = LocalContext.current
     val pathOptions = SettingsConstant.pathOptions
     AlertDialog(
@@ -46,6 +53,11 @@ fun PathOptionsDialog(config: SharedPreferences, onDismissRequest: () -> Unit) {
                         configEditor.putString(option.key, option.mutableValue.value)
                     }
                     configEditor.apply()
+                    topToastState.showToast(
+                        text = context.getString(R.string.settings_general_pathOptions_saved),
+                        icon = Icons.Rounded.Done,
+                        type = TopToastType.ANDROID
+                    )
                     GeneralUtil.restartApp(context)
                 }
             ) {
