@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.4.0-rc01"
-val composeCompilerVersion = "1.4.3"
+val composeVersion = "1.5.0-beta01"
+val composeCompilerVersion = "1.4.7"
 
 android {
     namespace = "com.aliernfrog.lactool"
@@ -45,7 +45,7 @@ android {
         kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -53,18 +53,18 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha08")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.29.0-alpha")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-    implementation("com.github.aliernfrog:top-toast-compose:1.2.0")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha02")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.31.2-alpha")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
+    implementation("com.github.aliernfrog:top-toast-compose:1.3.1")
     implementation("com.github.aliernfrog:laclib:1.1.0")
-    implementation("com.lazygeniouz:dfc:1.0.2")
-    implementation("io.coil-kt:coil-compose:2.2.2")
-    implementation("com.github.jeziellago:compose-markdown:0.3.2")
+    implementation("com.lazygeniouz:dfc:1.0.4")
+    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("com.github.jeziellago:compose-markdown:0.3.3")
 }
