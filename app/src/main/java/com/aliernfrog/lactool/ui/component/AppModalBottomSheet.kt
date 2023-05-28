@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.AppBottomSheetShape
+import com.aliernfrog.lactool.ui.theme.AppBottomSheetShape
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)

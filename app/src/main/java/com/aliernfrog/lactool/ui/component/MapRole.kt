@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
-import com.aliernfrog.lactool.AppComponentShape
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
 @Composable
 fun MapRole(role: String, showRaw: Boolean = false, onClick: () -> Unit) {

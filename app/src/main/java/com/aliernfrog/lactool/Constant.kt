@@ -1,17 +1,11 @@
 package com.aliernfrog.lactool
 
 import android.os.Environment
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.data.PathOptionPreset
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 
-val AppRoundnessSize = 28.dp
-val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
-val AppBottomSheetShape = RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)
 const val experimentalSettingsRequiredClicks = 10
-
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 
 object ConfigKey {

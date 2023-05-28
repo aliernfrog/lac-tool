@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

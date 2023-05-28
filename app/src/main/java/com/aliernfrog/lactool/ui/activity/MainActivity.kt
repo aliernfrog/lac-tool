@@ -16,7 +16,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.state.*
 import com.aliernfrog.lactool.ui.component.BaseScaffold
@@ -34,7 +33,6 @@ import com.aliernfrog.toptoast.state.TopToastState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -48,7 +46,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState(window.decorView)
         mapsState = MapsState(topToastState, config)
@@ -72,7 +69,6 @@ class MainActivity : ComponentActivity() {
         ) {
             BaseScaffold()
             TopToastHost(mainViewModel.topToastState)
-            SystemBars(darkTheme)
         }
         LaunchedEffect(Unit) {
             mainViewModel.scope = scope
@@ -181,13 +177,6 @@ class MainActivity : ComponentActivity() {
             latestVersionInfo = mainViewModel.latestVersionInfo
         )
         AlphaWarningDialog(config)
-    }
-
-    @Composable
-    private fun SystemBars(darkTheme: Boolean) {
-        val controller = rememberSystemUiController()
-        controller.systemBarsDarkContentEnabled = !darkTheme
-        controller.isNavigationBarContrastEnforced = false
     }
 
     @Composable
