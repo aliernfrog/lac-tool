@@ -29,7 +29,7 @@ import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.ModalBottomSheet
+import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 
@@ -45,7 +45,7 @@ fun DownloadableMaterialSheet(
 ) {
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
-    ModalBottomSheet(sheetState = state) {
+    AppModalBottomSheet(sheetState = state) {
         Text(
             text = material?.url.toString(),
             modifier = Modifier.padding(top = 8.dp).padding(horizontal = 8.dp),

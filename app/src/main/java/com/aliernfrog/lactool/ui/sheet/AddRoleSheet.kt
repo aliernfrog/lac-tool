@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ButtonCentered
-import com.aliernfrog.lactool.ui.component.ModalBottomSheet
+import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.TextField
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
     val roleName = remember { mutableStateOf("") }
     val roleColor = remember { mutableStateOf("") }
     val roleHtml = buildRoleHtml(roleName.value, roleColor.value)
-    ModalBottomSheet(sheetState = state) {
+    AppModalBottomSheet(sheetState = state) {
         TextField(
             value = roleName.value,
             onValueChange = { roleName.value = it },

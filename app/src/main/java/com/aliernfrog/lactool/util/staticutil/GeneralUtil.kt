@@ -9,7 +9,7 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.ContextCompat
-import com.aliernfrog.lactool.MainActivity
+import com.aliernfrog.lactool.ui.activity.MainActivity
 
 @Suppress("DEPRECATION")
 class GeneralUtil {

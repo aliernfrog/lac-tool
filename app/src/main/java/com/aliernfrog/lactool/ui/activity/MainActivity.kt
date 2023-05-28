@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool
+package com.aliernfrog.lactool.ui.activity
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,19 +11,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.state.*
 import com.aliernfrog.lactool.ui.component.BaseScaffold
-import com.aliernfrog.lactool.ui.component.SheetBackHandler
 import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
-import com.aliernfrog.lactool.ui.dialog.UpdateDialog
 import com.aliernfrog.lactool.ui.screen.*
 import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.getScreens
@@ -34,13 +36,12 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
     private lateinit var topToastState: TopToastState
-    private lateinit var settingsState: SettingsState
-    private lateinit var updateState: UpdateState
     private lateinit var mapsState: MapsState
     private lateinit var wallpapersState: WallpapersState
     private lateinit var screenshotsState: ScreenshotsState
@@ -50,24 +51,42 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState(window.decorView)
-        settingsState = SettingsState(topToastState, config)
-        updateState = UpdateState(topToastState, config, applicationContext)
         mapsState = MapsState(topToastState, config)
         wallpapersState = WallpapersState(topToastState, config)
         screenshotsState = ScreenshotsState(topToastState, config)
         setContent {
-            val darkTheme = getDarkThemePreference()
-            LACToolTheme(darkTheme, settingsState.materialYou.value) {
-                BaseScaffold()
-                TopToastHost(topToastState)
-                SystemBars(darkTheme)
-            }
+            AppContent()
+        }
+    }
+
+    @Composable
+    private fun AppContent(
+        mainViewModel: MainViewModel = getViewModel()
+    ) {
+        val view = LocalView.current
+        val scope = rememberCoroutineScope()
+        val darkTheme = getDarkThemePreference(mainViewModel.prefs.theme)
+        LACToolTheme(
+            darkTheme = darkTheme,
+            dynamicColors = mainViewModel.prefs.materialYou
+        ) {
+            BaseScaffold()
+            TopToastHost(mainViewModel.topToastState)
+            SystemBars(darkTheme)
+        }
+        LaunchedEffect(Unit) {
+            mainViewModel.scope = scope
+            mainViewModel.topToastState.setComposeView(view)
+
+            if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkForUpdates()
         }
     }
 
     @OptIn(ExperimentalLayoutApi::class, ExperimentalAnimationApi::class)
     @Composable
-    private fun BaseScaffold() {
+    private fun BaseScaffold(
+        mainViewModel: MainViewModel = getViewModel()
+    ) {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val navController = rememberAnimatedNavController()
@@ -104,23 +123,16 @@ class MainActivity : ComponentActivity() {
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
-                composable(Destination.SETTINGS.route) { SettingsScreen(config, updateState, settingsState) }
+                composable(Destination.SETTINGS.route) {
+                    SettingsScreen()
+                }
             }
-            SheetBackHandler(
-                mapsState.pickMapSheetState,
-                mapsState.mapsMergeState.pickMapSheetState,
-                mapsState.mapsEditState.roleSheetState,
-                mapsState.mapsEditState.addRoleSheetState,
-                mapsState.mapsEditState.materialSheetState,
-                wallpapersState.wallpaperSheetState,
-                screenshotsState.screenshotSheetState
-            )
         }
         PickMapSheet(
             mapsState = mapsState,
             topToastState = topToastState,
             sheetState = mapsState.pickMapSheetState,
-            showMapThumbnails = settingsState.showMapThumbnailsInList.value,
+            showMapThumbnails = mainViewModel.prefs.showMapThumbnailsInList,
             onFilePick = { mapsState.getMap(file = it) },
             onDocumentFilePick = { mapsState.getMap(documentFile = it) }
         )
@@ -128,7 +140,7 @@ class MainActivity : ComponentActivity() {
             mapsState = mapsState,
             topToastState = topToastState,
             sheetState = mapsState.mapsMergeState.pickMapSheetState,
-            showMapThumbnails = settingsState.showMapThumbnailsInList.value,
+            showMapThumbnails = mainViewModel.prefs.showMapThumbnailsInList,
             onFilePick = { scope.launch { mapsState.mapsMergeState.addMap(it, context) } },
             onDocumentFilePick = { scope.launch { mapsState.mapsMergeState.addMap(it, context) } }
         )
@@ -164,7 +176,10 @@ class MainActivity : ComponentActivity() {
             onShareRequest = { scope.launch { screenshotsState.shareImportedScreenshot(it, context) } },
             onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it) } }
         )
-        UpdateDialog(updateState)
+        UpdateSheet(
+            sheetState = mainViewModel.updateSheetState,
+            latestVersionInfo = mainViewModel.latestVersionInfo
+        )
         AlphaWarningDialog(config)
     }
 
@@ -176,8 +191,8 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun getDarkThemePreference(): Boolean {
-        return when(settingsState.theme.value) {
+    private fun getDarkThemePreference(theme: Int): Boolean {
+        return when(theme) {
             Theme.LIGHT.int -> false
             Theme.DARK.int -> true
             else -> isSystemInDarkTheme()

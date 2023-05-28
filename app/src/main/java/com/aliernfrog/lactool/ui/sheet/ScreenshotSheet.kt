@@ -22,7 +22,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
-import com.aliernfrog.lactool.ui.component.ModalBottomSheet
+import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
 
@@ -36,7 +36,7 @@ fun ScreenshotsSheet(
 ) {
     val scope = rememberCoroutineScope()
     var deleteConfirmationShown by remember { mutableStateOf(false) }
-    ModalBottomSheet(sheetState = state) {
+    AppModalBottomSheet(sheetState = state) {
         Text(
             text = screenshot?.fileName.toString(),
             modifier = Modifier.padding(top = 8.dp).padding(horizontal = 8.dp),

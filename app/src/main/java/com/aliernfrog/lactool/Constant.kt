@@ -9,8 +9,10 @@ import com.aliernfrog.lactool.data.Social
 
 val AppRoundnessSize = 28.dp
 val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
-val AppSheetShape = RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)
+val AppBottomSheetShape = RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)
 const val experimentalSettingsRequiredClicks = 10
+
+const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"
@@ -35,7 +37,7 @@ object SettingsConstant {
     private val externalStorageRoot = Environment.getExternalStorageDirectory().absolutePath
     val socials = listOf(
         Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
-        Social("LAC Tool GitHub", "https://github.com/aliernfrog/lac-tool")
+        Social("LAC Tool GitHub", githubRepoURL)
     )
     val pathOptions = listOf(
         PrefEditItem(

@@ -181,5 +181,8 @@
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>
     <string name="updates_error">Something went wrong while checking for updates</string>
+    <string name="updates_stable">Stable</string>
+    <string name="updates_preRelease">Pre-release</string>
+    <string name="updates_openInGithub">View in GitHub</string>
     <string name="updates_update">Update</string>
 </resources>

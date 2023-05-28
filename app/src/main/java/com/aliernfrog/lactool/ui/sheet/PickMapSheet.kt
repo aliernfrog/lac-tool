@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
@@ -50,7 +49,7 @@ fun PickMapSheet(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val hideSheet = { scope.launch { sheetState.hide() } }
-    ModalBottomSheet(title = stringResource(R.string.maps_pickMap), sheetState, scrollState) {
+    AppModalBottomSheet(title = stringResource(R.string.maps_pickMap), sheetState, scrollState) {
         PickFromDeviceButton(topToastState) { onFilePick(it); hideSheet() }
         Maps(mapsState, showMapThumbnails, { onFilePick(it); hideSheet() }, { onDocumentFilePick(it); hideSheet() })
     }
@@ -86,10 +85,9 @@ private fun PickFromDeviceButton(topToastState: TopToastState, onFilePick: (File
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Maps(mapsState: MapsState, showMapThumbnails: Boolean, onFilePick: (File) -> Unit, onDocumentFilePick: (DocumentFileCompat) -> Unit) {
-    var selectedSegment by remember { mutableStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
+    var selectedSegment by remember { mutableIntStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     SegmentedButtons(options = listOf(stringResource (R.string.maps_pickMap_imported), stringResource(R.string.maps_pickMap_exported))) {
         selectedSegment = it
     }
