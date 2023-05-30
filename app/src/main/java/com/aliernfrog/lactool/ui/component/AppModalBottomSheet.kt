@@ -95,7 +95,7 @@ fun BaseModalBottomSheet(
     )
 
     LaunchedEffect(sheetState.isVisible) {
-        if (!sheetState.isVisible) keyboardController?.hide()
+        keyboardController?.hide()
     }
 
     BackHandler(sheetState.isVisible) {

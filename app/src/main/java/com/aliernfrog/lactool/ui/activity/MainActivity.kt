@@ -25,6 +25,7 @@ import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.getScreens
@@ -81,7 +82,8 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalLayoutApi::class, ExperimentalAnimationApi::class)
     @Composable
     private fun BaseScaffold(
-        mainViewModel: MainViewModel = getViewModel()
+        mainViewModel: MainViewModel = getViewModel(),
+        mapsViewModel: MapsViewModel = getViewModel()
     ) {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
@@ -112,7 +114,15 @@ class MainActivity : ComponentActivity() {
                     animationSpec = tween(100)
                 ) }
             ) {
-                composable(Destination.MAPS.route) { PermissionsScreen(mapsState.mapsDir) { MapsScreen(mapsState, navController) } }
+                composable(Destination.MAPS.route) {
+                    PermissionsScreen(mapsState.mapsDir) {
+                        MapsScreen(
+                            onNavigateRequest = { destination ->
+                                navController.navigate(destination.route)
+                            }
+                        )
+                    }
+                }
                 composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState, navController) }
                 composable(Destination.MAPS_MATERIALS.route) { MapsMaterialsScreen(mapsState.mapsEditState, navController) }
@@ -125,20 +135,15 @@ class MainActivity : ComponentActivity() {
             }
         }
         PickMapSheet(
-            mapsState = mapsState,
-            topToastState = topToastState,
-            sheetState = mapsState.pickMapSheetState,
-            showMapThumbnails = mainViewModel.prefs.showMapThumbnailsInList,
-            onFilePick = { mapsState.getMap(file = it) },
-            onDocumentFilePick = { mapsState.getMap(documentFile = it) }
+            onFilePick = {
+                mapsViewModel.getMap(it)
+            }
         )
         PickMapSheet(
-            mapsState = mapsState,
-            topToastState = topToastState,
             sheetState = mapsState.mapsMergeState.pickMapSheetState,
-            showMapThumbnails = mainViewModel.prefs.showMapThumbnailsInList,
-            onFilePick = { scope.launch { mapsState.mapsMergeState.addMap(it, context) } },
-            onDocumentFilePick = { scope.launch { mapsState.mapsMergeState.addMap(it, context) } }
+            onFilePick = { scope.launch {
+                mapsState.mapsMergeState.addMap(it, context)
+            } }
         )
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,

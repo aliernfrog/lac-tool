@@ -15,6 +15,12 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // General options
     var showMapThumbnailsInList by booleanPreference(ConfigKey.KEY_SHOW_MAP_THUMBNAILS_LIST, true)
 
+    // Directory options
+    var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)
+    var lacWallpapersDir by stringPreference(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR)
+    var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
+    var exportedMapsDir by stringPreference(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)
+
     // Updates options
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
