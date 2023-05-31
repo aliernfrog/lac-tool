@@ -137,13 +137,17 @@ class MainActivity : ComponentActivity() {
         PickMapSheet(
             onFilePick = {
                 mapsViewModel.getMap(it)
+                true
             }
         )
         PickMapSheet(
             sheetState = mapsState.mapsMergeState.pickMapSheetState,
-            onFilePick = { scope.launch {
-                mapsState.mapsMergeState.addMap(it, context)
-            } }
+            onFilePick = {
+                scope.launch {
+                    mapsState.mapsMergeState.addMap(it, context)
+                }
+                true
+            }
         )
         RoleSheet(
             role = mapsState.mapsEditState.roleSheetChosenRole.value,

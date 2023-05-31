@@ -35,7 +35,6 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.enum.TopToastType
-import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,11 +47,17 @@ fun PickMapSheet(
     mapsViewModel: MapsViewModel = getViewModel(),
     sheetState: ModalBottomSheetState = mapsViewModel.pickMapSheetState,
     getShowMapThumbnails: () -> Boolean = { mapsViewModel.prefs.showMapThumbnailsInList },
-    onFilePick: (file: Any) -> Unit
+    onFilePick: (file: Any) -> Boolean
 ) {
     val scope = rememberCoroutineScope()
-    val hideSheet = { scope.launch { mapsViewModel.pickMapSheetState.hide() } }
     var mapThumbnailsShown by remember { mutableStateOf(getShowMapThumbnails()) }
+
+    fun pickFile(file: Any) {
+        if (onFilePick(file)) scope.launch {
+            sheetState.hide()
+        }
+    }
+
     AppModalBottomSheet(
         title = stringResource(R.string.maps_pickMap),
         sheetState = sheetState
@@ -67,7 +72,7 @@ fun PickMapSheet(
                 )
             },
             onFilePick = {
-                onFilePick(it)
+                pickFile(it)
             }
         )
         Maps(
@@ -75,12 +80,7 @@ fun PickMapSheet(
             exportedMaps = mapsViewModel.exportedMaps,
             showMapThumbnails = mapThumbnailsShown,
             onFilePick = {
-                onFilePick(it)
-                hideSheet()
-            },
-            onDocumentFilePick = {
-                onFilePick(it)
-                hideSheet()
+                pickFile(it)
             }
         )
     }
@@ -124,8 +124,7 @@ private fun Maps(
     importedMaps: List<LACMap>,
     exportedMaps: List<LACMap>,
     showMapThumbnails: Boolean,
-    onFilePick: (File) -> Unit,
-    onDocumentFilePick: (DocumentFileCompat) -> Unit
+    onFilePick: (Any) -> Unit
 ) {
     var selectedSegment by remember { mutableIntStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     SegmentedButtons(
@@ -143,8 +142,7 @@ private fun Maps(
                 maps = maps,
                 isShowingExportedMaps = it == PickMapSheetSegments.EXPORTED.ordinal,
                 showMapThumbnails = showMapThumbnails,
-                onFilePick = onFilePick,
-                onDocumentFilePick = onDocumentFilePick
+                onFilePick = onFilePick
             )
         }
     }
@@ -155,14 +153,13 @@ private fun MapsList(
     maps: List<LACMap>,
     isShowingExportedMaps: Boolean,
     showMapThumbnails: Boolean,
-    onFilePick: (File) -> Unit,
-    onDocumentFilePick: (DocumentFileCompat) -> Unit
+    onFilePick: (Any) -> Unit
 ) {
     if (maps.isNotEmpty()) {
         maps.forEach { map ->
             MapButton(map, showMapThumbnail = showMapThumbnails) {
-                if (map.documentFile != null) onDocumentFilePick(map.documentFile)
-                else if (map.file != null) onFilePick(map.file)
+                val file = map.documentFile ?: map.file
+                if (file != null) onFilePick(file)
             }
         }
     } else {
