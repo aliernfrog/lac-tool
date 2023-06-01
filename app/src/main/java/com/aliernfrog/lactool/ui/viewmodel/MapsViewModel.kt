@@ -37,7 +37,8 @@ import java.io.File
 class MapsViewModel(
     context: Context,
     val topToastState: TopToastState,
-    val prefs: PreferenceManager
+    val prefs: PreferenceManager,
+    private val mapsEditViewModel: MapsEditViewModel
 ) : ViewModel() {
     val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, density = Density(context))
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -131,9 +132,8 @@ class MapsViewModel(
         onNavigateMapEditScreenRequest: () -> Unit
     ) {
         val map = chosenMap ?: return
-        /*TODO if (map.documentFile != null) mapsEditState.loadMap(null, map.documentFile, context)
-        else if (map.file != null) mapsEditState.loadMap(map.file, null, context)
-        else return*/
+        val mapFile = map.file ?: map.documentFile ?: return
+        mapsEditViewModel.loadMap(mapFile, context)
         onNavigateMapEditScreenRequest()
     }
 

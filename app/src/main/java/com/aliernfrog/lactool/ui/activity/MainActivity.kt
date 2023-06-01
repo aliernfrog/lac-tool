@@ -25,6 +25,7 @@ import com.aliernfrog.lactool.ui.sheet.*
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
@@ -83,7 +84,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun BaseScaffold(
         mainViewModel: MainViewModel = getViewModel(),
-        mapsViewModel: MapsViewModel = getViewModel()
+        mapsViewModel: MapsViewModel = getViewModel(),
+        mapsEditViewModel: MapsEditViewModel = getViewModel()
     ) {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
@@ -115,7 +117,7 @@ class MainActivity : ComponentActivity() {
                 ) }
             ) {
                 composable(Destination.MAPS.route) {
-                    PermissionsScreen(mapsState.mapsDir) {
+                    PermissionsScreen(mapsViewModel.mapsDir) {
                         MapsScreen(
                             onNavigateRequest = { destination ->
                                 navController.navigate(destination.route)
@@ -123,9 +125,24 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-                composable(Destination.MAPS_EDIT.route) { MapsEditScreen(mapsState.mapsEditState, navController) }
-                composable(Destination.MAPS_ROLES.route) { MapsRolesScreen(mapsState.mapsEditState, navController) }
-                composable(Destination.MAPS_MATERIALS.route) { MapsMaterialsScreen(mapsState.mapsEditState, navController) }
+                composable(Destination.MAPS_EDIT.route) {
+                    MapsEditScreen(
+                        onNavigateBackRequest = { navController.popBackStack() },
+                        onNavigateRequest = { destination ->
+                            navController.navigate(destination.route)
+                        }
+                    )
+                }
+                composable(Destination.MAPS_ROLES.route) {
+                    MapsRolesScreen(
+                        onNavigateBackRequest = { navController.popBackStack() }
+                    )
+                }
+                composable(Destination.MAPS_MATERIALS.route) {
+                    MapsMaterialsScreen(
+                        onNavigateBackRequest = { navController.popBackStack() }
+                    )
+                }
                 composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
@@ -150,22 +167,22 @@ class MainActivity : ComponentActivity() {
             }
         )
         RoleSheet(
-            role = mapsState.mapsEditState.roleSheetChosenRole.value,
-            state = mapsState.mapsEditState.roleSheetState,
-            topToastState = topToastState,
-            onDeleteRole = { mapsState.mapsEditState.deleteRole(it, context) }
+            role = mapsEditViewModel.roleSheetChosenRole,
+            state = mapsEditViewModel.roleSheetState,
+            topToastState = mapsEditViewModel.topToastState,
+            onDeleteRole = { mapsEditViewModel.deleteRole(it, context) }
         )
         AddRoleSheet(
-            state = mapsState.mapsEditState.addRoleSheetState,
-            onRoleAdd = { mapsState.mapsEditState.addRole(it, context) }
+            state = mapsEditViewModel.addRoleSheetState,
+            onRoleAdd = { mapsEditViewModel.addRole(it, context) }
         )
         DownloadableMaterialSheet(
-            material = mapsState.mapsEditState.materialSheetChosenMaterial.value,
-            failed = mapsState.mapsEditState.materialSheetMaterialFailed.value,
-            state = mapsState.mapsEditState.materialSheetState,
-            topToastState = topToastState,
-            onDeleteRequest = { mapsState.mapsEditState.deleteDownloadableMaterial(it, context) },
-            onError = { mapsState.mapsEditState.materialSheetMaterialFailed.value = true }
+            material = mapsEditViewModel.materialSheetChosenMaterial,
+            failed = mapsEditViewModel.materialSheetMaterialFailed,
+            state = mapsEditViewModel.materialSheetState,
+            topToastState = mapsEditViewModel.topToastState,
+            onDeleteRequest = { mapsEditViewModel.deleteDownloadableMaterial(it, context) },
+            onError = { mapsEditViewModel.materialSheetMaterialFailed = true }
         )
         WallpaperSheet(
             wallpaper = wallpapersState.wallpaperSheetWallpaper.value,

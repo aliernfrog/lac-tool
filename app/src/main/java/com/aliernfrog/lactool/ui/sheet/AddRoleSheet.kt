@@ -36,7 +36,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
+fun AddRoleSheet(
+    state: ModalBottomSheetState,
+    onRoleAdd: (String) -> Unit
+) {
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }

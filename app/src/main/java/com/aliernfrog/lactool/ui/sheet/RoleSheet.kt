@@ -23,7 +23,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoleSheet(role: String, state: ModalBottomSheetState, topToastState: TopToastState? = null, onDeleteRole: (String) -> Unit) {
+fun RoleSheet(
+    role: String,
+    state: ModalBottomSheetState,
+    topToastState: TopToastState? = null,
+    onDeleteRole: (String) -> Unit
+) {
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
     AppModalBottomSheet(sheetState = state) {
