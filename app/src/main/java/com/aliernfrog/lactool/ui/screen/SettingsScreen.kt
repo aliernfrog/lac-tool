@@ -3,12 +3,12 @@ package com.aliernfrog.lactool.ui.screen
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
@@ -27,11 +27,9 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
-import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.toptoast.enum.TopToastType
-import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -51,7 +49,7 @@ fun SettingsScreen(
             AppearanceOptions(
                 theme = settingsViewModel.prefs.theme,
                 materialYou = settingsViewModel.prefs.materialYou,
-                forceShowMaterialYouOption = settingsViewModel.forceShowMaterialYouOption,
+                showMaterialYouOption = settingsViewModel.showMaterialYouOption,
                 themeOptionsExpanded = settingsViewModel.themeOptionsExpanded,
                 onThemeOptionsExpandedStateChange = { settingsViewModel.themeOptionsExpanded = it },
                 onThemeChange = { settingsViewModel.prefs.theme = it },
@@ -69,27 +67,14 @@ fun SettingsScreen(
                 linksExpanded = settingsViewModel.linksExpanded,
                 onCheckUpdatesRequest = {
                     scope.launch {
-                        mainViewModel.checkForUpdates(manuallyTriggered = true)
+                        mainViewModel.checkUpdates(manuallyTriggered = true)
                     }
                 },
                 onAboutClick = { settingsViewModel.onAboutClick() },
                 onAutoCheckUpdatesChange = { settingsViewModel.prefs.autoCheckUpdates = it },
                 onLinksExpandedStateChange = { settingsViewModel.linksExpanded = it }
             )
-            if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings(
-                config = settingsViewModel.prefs.prefs,
-                topToastState = settingsViewModel.topToastState,
-                forceShowMaterialYouOption = settingsViewModel.forceShowMaterialYouOption,
-                onForceShowMaterialYouOptionChange = { settingsViewModel.forceShowMaterialYouOption = it },
-                onCheckUpdatesRequest = { manuallyTriggered, ignoreVersion ->
-                    scope.launch {
-                        mainViewModel.checkForUpdates(
-                            manuallyTriggered = manuallyTriggered,
-                            ignoreVersion = ignoreVersion
-                        )
-                    }
-                }
-            )
+            if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings()
         }
     }
     if (settingsViewModel.pathOptionsDialogShown) PathOptionsDialog(
@@ -105,7 +90,7 @@ fun SettingsScreen(
 private fun AppearanceOptions(
     theme: Int,
     materialYou: Boolean,
-    forceShowMaterialYouOption: Boolean,
+    showMaterialYouOption: Boolean,
     themeOptionsExpanded: Boolean,
     onThemeOptionsExpandedStateChange: (Boolean) -> Unit,
     onThemeChange: (Int) -> Unit,
@@ -139,7 +124,7 @@ private fun AppearanceOptions(
                 }
             }
         }
-        if (forceShowMaterialYouOption || supportsMaterialYou) Switch(
+        if (showMaterialYouOption) Switch(
             title = stringResource(R.string.settings_appearance_materialYou),
             description = stringResource(R.string.settings_appearance_materialYou_description),
             checked = materialYou
@@ -245,34 +230,46 @@ private fun Links(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ExperimentalSettings(
-    config: SharedPreferences,
-    topToastState: TopToastState,
-    forceShowMaterialYouOption: Boolean,
-    onForceShowMaterialYouOptionChange: (Boolean) -> Unit,
-    onCheckUpdatesRequest: (manuallyTriggered: Boolean, ignoreVersion: Boolean) -> Unit
+    mainViewModel: MainViewModel = getViewModel(),
+    settingsViewModel: SettingsViewModel = getViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val configEditor = config.edit()
+    val configEditor = settingsViewModel.prefs.prefs.edit()
     ColumnDivider(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
         Text(stringResource(R.string.settings_experimental_description), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
         Switch(
-            title = stringResource(R.string.settings_experimental_forceShowMaterialYouOption),
-            checked = forceShowMaterialYouOption,
+            title = stringResource(R.string.settings_experimental_showMaterialYouOption),
+            checked = settingsViewModel.showMaterialYouOption,
             onCheckedChange = {
-                onForceShowMaterialYouOptionChange(it)
+                settingsViewModel.showMaterialYouOption = it
             }
         )
-        ButtonShapeless(title = stringResource(R.string.settings_experimental_checkUpdateIgnoreVersion)) {
-            scope.launch { onCheckUpdatesRequest(false, true) }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_experimental_checkUpdates)
+        ) {
+            scope.launch { mainViewModel.checkUpdates(ignoreVersion = true) }
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_experimental_showUpdateToast)
+        ) {
+            mainViewModel.showUpdateToast()
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_experimental_showUpdateDialog)
+        ) {
+            scope.launch { mainViewModel.updateSheetState.show() }
         }
         ButtonShapeless(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
             configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
         }
         SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
-            val value = remember { mutableStateOf(config.getString(prefEdit.key, prefEdit.default)!!) }
+            val value = remember { mutableStateOf(
+                settingsViewModel.prefs.prefs.getString(prefEdit.key, prefEdit.default)!!
+            ) }
             TextField(
                 label = { Text(text = "Prefs: ${prefEdit.key}") },
                 value = value.value,
@@ -292,7 +289,7 @@ private fun ExperimentalSettings(
                 configEditor.remove(it.key)
             }
             configEditor.apply()
-            topToastState.showToast(
+            settingsViewModel.topToastState.showToast(
                 text = R.string.settings_experimental_resetPrefsDone,
                 icon = Icons.Rounded.Done,
                 type = TopToastType.ANDROID

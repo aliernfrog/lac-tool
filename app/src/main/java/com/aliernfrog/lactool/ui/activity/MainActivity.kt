@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
             mainViewModel.scope = scope
             mainViewModel.topToastState.setComposeView(view)
 
-            if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkForUpdates()
+            if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkUpdates()
         }
     }
 

@@ -173,8 +173,10 @@
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
-    <string name="settings_experimental_forceShowMaterialYouOption">Force show Material You option</string>
-    <string name="settings_experimental_checkUpdateIgnoreVersion">Ignore version and check updates</string>
+    <string name="settings_experimental_showMaterialYouOption">Show Material You option</string>
+    <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
+    <string name="settings_experimental_showUpdateToast">Show update toast</string>
+    <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
     <string name="settings_experimental_resetAckedAlpha">Reset acknowledged alpha version</string>
     <string name="settings_experimental_resetPrefs">Reset prefs</string>
     <string name="settings_experimental_resetPrefsDone">Restored defaults values for experimental prefs</string>

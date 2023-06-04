@@ -52,7 +52,7 @@ class MainViewModel(
     ))
         private set
 
-    suspend fun checkForUpdates(
+    suspend fun checkUpdates(
         manuallyTriggered: Boolean = false,
         ignoreVersion: Boolean = false
     ) {
