@@ -26,6 +26,7 @@ import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
+import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
@@ -42,7 +43,6 @@ import org.koin.androidx.compose.getViewModel
 class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
     private lateinit var topToastState: TopToastState
-    private lateinit var mapsState: MapsState
     private lateinit var wallpapersState: WallpapersState
     private lateinit var screenshotsState: ScreenshotsState
 
@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState(window.decorView)
-        mapsState = MapsState(topToastState, config)
         wallpapersState = WallpapersState(topToastState, config)
         screenshotsState = ScreenshotsState(topToastState, config)
         setContent {
@@ -85,7 +84,8 @@ class MainActivity : ComponentActivity() {
     private fun BaseScaffold(
         mainViewModel: MainViewModel = getViewModel(),
         mapsViewModel: MapsViewModel = getViewModel(),
-        mapsEditViewModel: MapsEditViewModel = getViewModel()
+        mapsEditViewModel: MapsEditViewModel = getViewModel(),
+        mapsMergeViewModel: MapsMergeViewModel = getViewModel()
     ) {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
@@ -143,7 +143,11 @@ class MainActivity : ComponentActivity() {
                         onNavigateBackRequest = { navController.popBackStack() }
                     )
                 }
-                composable(Destination.MAPS_MERGE.route) { MapsMergeScreen(mapsState.mapsMergeState, navController) }
+                composable(Destination.MAPS_MERGE.route) {
+                    MapsMergeScreen(
+                        onNavigateBackRequest = { navController.popBackStack() }
+                    )
+                }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
                 composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
                 composable(Destination.SETTINGS.route) {
@@ -158,10 +162,10 @@ class MainActivity : ComponentActivity() {
             }
         )
         PickMapSheet(
-            sheetState = mapsState.mapsMergeState.pickMapSheetState,
+            sheetState = mapsMergeViewModel.pickMapSheetState,
             onFilePick = {
                 scope.launch {
-                    mapsState.mapsMergeState.addMap(it, context)
+                    mapsMergeViewModel.addMap(it, context)
                 }
                 true
             }

@@ -1,9 +1,6 @@
 package com.aliernfrog.lactool.di
 
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
+import com.aliernfrog.lactool.ui.viewmodel.*
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -13,4 +10,5 @@ val viewModelModule = module {
 
     singleOf(::MapsViewModel)
     singleOf(::MapsEditViewModel)
+    singleOf(::MapsMergeViewModel)
 }
