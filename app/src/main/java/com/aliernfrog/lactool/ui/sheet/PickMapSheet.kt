@@ -129,7 +129,7 @@ private fun Maps(
     var selectedSegment by remember { mutableIntStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     SegmentedButtons(
         options = listOf(
-            stringResource (R.string.maps_pickMap_imported),
+            stringResource(R.string.maps_pickMap_imported),
             stringResource(R.string.maps_pickMap_exported)
         )
     ) {
