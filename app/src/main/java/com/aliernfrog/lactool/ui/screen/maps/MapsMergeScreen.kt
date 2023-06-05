@@ -85,7 +85,7 @@ fun MapsMergeScreen(
         }
     )
     LaunchedEffect(Unit) {
-        mapsMergeViewModel.loadMaps(context)
+        mapsMergeViewModel.loadMaps()
     }
 }
 

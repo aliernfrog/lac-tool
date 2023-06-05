@@ -33,6 +33,7 @@ import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
+import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.getScreens
@@ -49,14 +50,12 @@ class MainActivity : ComponentActivity() {
     private lateinit var config: SharedPreferences
     private lateinit var topToastState: TopToastState
     private lateinit var wallpapersState: WallpapersState
-    private lateinit var screenshotsState: ScreenshotsState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
         topToastState = TopToastState(window.decorView)
         wallpapersState = WallpapersState(topToastState, config)
-        screenshotsState = ScreenshotsState(topToastState, config)
         setContent {
             AppContent()
         }
@@ -90,7 +89,8 @@ class MainActivity : ComponentActivity() {
         mainViewModel: MainViewModel = getViewModel(),
         mapsViewModel: MapsViewModel = getViewModel(),
         mapsEditViewModel: MapsEditViewModel = getViewModel(),
-        mapsMergeViewModel: MapsMergeViewModel = getViewModel()
+        mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+        screenshotsViewModel: ScreenshotsViewModel = getViewModel()
     ) {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
@@ -154,7 +154,11 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
-                composable(Destination.SCREENSHOTS.route) { PermissionsScreen(screenshotsState.screenshotsDir) { ScreenshotScreen(screenshotsState) } }
+                composable(Destination.SCREENSHOTS.route) {
+                    PermissionsScreen(screenshotsViewModel.screenshotsDir) {
+                        ScreenshotScreen()
+                    }
+                }
                 composable(Destination.SETTINGS.route) {
                     SettingsScreen()
                 }
@@ -202,10 +206,10 @@ class MainActivity : ComponentActivity() {
             onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it) } }
         )
         ScreenshotsSheet(
-            screenshot = screenshotsState.screenshotSheetScreeenshot.value,
-            state = screenshotsState.screenshotSheetState,
-            onShareRequest = { scope.launch { screenshotsState.shareImportedScreenshot(it, context) } },
-            onDeleteRequest = { scope.launch { screenshotsState.deleteImportedScreenshot(it) } }
+            screenshot = screenshotsViewModel.screenshotSheetScreeenshot,
+            state = screenshotsViewModel.screenshotSheetState,
+            onShareRequest = { scope.launch { screenshotsViewModel.shareImportedScreenshot(it, context) } },
+            onDeleteRequest = { scope.launch { screenshotsViewModel.deleteImportedScreenshot(it) } }
         )
         UpdateSheet(
             sheetState = mainViewModel.updateSheetState,

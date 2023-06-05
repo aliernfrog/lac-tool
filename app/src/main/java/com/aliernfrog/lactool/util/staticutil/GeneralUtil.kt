@@ -8,8 +8,10 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Environment
+import android.provider.DocumentsContract
 import androidx.core.content.ContextCompat
 import com.aliernfrog.lactool.ui.activity.MainActivity
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 
 @Suppress("DEPRECATION")
 class GeneralUtil {
@@ -45,6 +47,12 @@ class GeneralUtil {
 
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
             return "file://$wallpapersPath/$fileName"
+        }
+
+        fun getDocumentFileFromPath(path: String, context: Context): DocumentFileCompat {
+            val treeId = path.replace("${Environment.getExternalStorageDirectory()}/", "primary:")
+            val treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId)
+            return DocumentFileCompat.fromTreeUri(context, treeUri)!!
         }
     }
 }

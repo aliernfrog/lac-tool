@@ -45,8 +45,7 @@ class MapsMergeViewModel(
 
     val hasEnoughMaps get() = mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
 
-    suspend fun loadMaps(context: Context) {
-        mapsViewModel.getMapsFile(context)
+    suspend fun loadMaps() {
         mapsViewModel.fetchAllMaps()
     }
 
@@ -56,7 +55,7 @@ class MapsMergeViewModel(
         onNavigateBackRequest: () -> Unit
     ) {
         if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
-        val mapsFile = mapsViewModel.getMapsFile(context)
+        val mapsFile = mapsViewModel.mapsFile
         val newFileName = "$newMapName.txt"
         val output = mapsFile.findFile(newFileName)
         if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)

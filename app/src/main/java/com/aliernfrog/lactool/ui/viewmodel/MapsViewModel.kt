@@ -1,8 +1,6 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.os.Environment
-import android.provider.DocumentsContract
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -25,6 +23,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -46,7 +45,7 @@ class MapsViewModel(
 
     val mapsDir = prefs.lacMapsDir
     val exportedMapsDir = prefs.exportedMapsDir
-    private lateinit var mapsFile: DocumentFileCompat
+    val mapsFile = GeneralUtil.getDocumentFileFromPath(mapsDir, context)
     private val exportedMapsFile = File(exportedMapsDir)
 
     var mapDeleteDialogShown by mutableStateOf(false)
@@ -57,7 +56,6 @@ class MapsViewModel(
     var lastMapName by mutableStateOf("")
 
     init {
-        getMapsFile(context)
         viewModelScope.launch { fetchAllMaps() }
     }
 
@@ -184,20 +182,12 @@ class MapsViewModel(
         }
     }
 
-    fun getMapsFile(context: Context): DocumentFileCompat {
-        if (::mapsFile.isInitialized) return mapsFile
-        val treeId = mapsDir.replace("${Environment.getExternalStorageDirectory()}/", "primary:")
-        val treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId)
-        mapsFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
-        return mapsFile
-    }
-
     suspend fun fetchAllMaps() {
         fetchImportedMaps()
         fetchExportedMaps()
     }
 
-    suspend fun fetchImportedMaps() {
+    private suspend fun fetchImportedMaps() {
         withContext(Dispatchers.IO) {
             val files = mapsFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".txt") }.sortedBy { it.name.lowercase() }
             val maps = files.map {
@@ -208,7 +198,7 @@ class MapsViewModel(
         }
     }
 
-    suspend fun fetchExportedMaps() {
+    private suspend fun fetchExportedMaps() {
         withContext(Dispatchers.IO) {
             val files = exportedMapsFile.listFiles()?.filter { it.isFile && it.name.lowercase().endsWith(".txt") }?.sortedBy { it.name.lowercase() }
             val maps = files?.map { LACMap(it.nameWithoutExtension, it.name, it.length(), it.lastModified(), it, null) }

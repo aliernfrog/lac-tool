@@ -11,4 +11,6 @@ val viewModelModule = module {
     singleOf(::MapsViewModel)
     singleOf(::MapsEditViewModel)
     singleOf(::MapsMergeViewModel)
+
+    singleOf(::ScreenshotsViewModel)
 }
