@@ -4,6 +4,7 @@ import android.content.Context
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 class PreferenceManager(context: Context) : BasePreferenceManager(
     prefs = context.getSharedPreferences(ConfigKey.PREF_NAME, Context.MODE_PRIVATE)
@@ -24,4 +25,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // Updates options
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
+
+    // Technical
+    var lastAlphaAck by stringPreference(ConfigKey.KEY_APP_LAST_ALPHA_ACK, GeneralUtil.getAppVersionName(context))
 }

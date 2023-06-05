@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.activity
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,8 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import com.aliernfrog.lactool.ConfigKey
-import com.aliernfrog.lactool.state.*
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
 import com.aliernfrog.lactool.ui.screen.*
@@ -34,11 +31,11 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
+import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.getScreens
 import com.aliernfrog.toptoast.component.TopToastHost
-import com.aliernfrog.toptoast.state.TopToastState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -47,15 +44,9 @@ import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
-    private lateinit var config: SharedPreferences
-    private lateinit var topToastState: TopToastState
-    private lateinit var wallpapersState: WallpapersState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        config = getSharedPreferences(ConfigKey.PREF_NAME, MODE_PRIVATE)
-        topToastState = TopToastState(window.decorView)
-        wallpapersState = WallpapersState(topToastState, config)
         setContent {
             AppContent()
         }
@@ -90,6 +81,7 @@ class MainActivity : ComponentActivity() {
         mapsViewModel: MapsViewModel = getViewModel(),
         mapsEditViewModel: MapsEditViewModel = getViewModel(),
         mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+        wallpapersViewModel: WallpapersViewModel = getViewModel(),
         screenshotsViewModel: ScreenshotsViewModel = getViewModel()
     ) {
         val context = LocalContext.current
@@ -153,7 +145,11 @@ class MainActivity : ComponentActivity() {
                         onNavigateBackRequest = { navController.popBackStack() }
                     )
                 }
-                composable(Destination.WALLPAPERS.route) { PermissionsScreen(wallpapersState.wallpapersDir) { WallpapersScreen(wallpapersState) } }
+                composable(Destination.WALLPAPERS.route) {
+                    PermissionsScreen(wallpapersViewModel.wallpapersDir) {
+                        WallpapersScreen()
+                    }
+                }
                 composable(Destination.SCREENSHOTS.route) {
                     PermissionsScreen(screenshotsViewModel.screenshotsDir) {
                         ScreenshotScreen()
@@ -198,12 +194,12 @@ class MainActivity : ComponentActivity() {
             onError = { mapsEditViewModel.materialSheetMaterialFailed = true }
         )
         WallpaperSheet(
-            wallpaper = wallpapersState.wallpaperSheetWallpaper.value,
-            wallpapersPath = wallpapersState.wallpapersDir,
-            state = wallpapersState.wallpaperSheetState,
-            topToastState = topToastState,
-            onShareRequest = { scope.launch { wallpapersState.shareImportedWallpaper(it, context) } },
-            onDeleteRequest = { scope.launch { wallpapersState.deleteImportedWallpaper(it) } }
+            wallpaper = wallpapersViewModel.wallpaperSheetWallpaper,
+            wallpapersPath = wallpapersViewModel.wallpapersDir,
+            state = wallpapersViewModel.wallpaperSheetState,
+            topToastState = wallpapersViewModel.topToastState,
+            onShareRequest = { scope.launch { wallpapersViewModel.shareImportedWallpaper(it, context) } },
+            onDeleteRequest = { scope.launch { wallpapersViewModel.deleteImportedWallpaper(it) } }
         )
         ScreenshotsSheet(
             screenshot = screenshotsViewModel.screenshotSheetScreeenshot,
@@ -215,7 +211,7 @@ class MainActivity : ComponentActivity() {
             sheetState = mainViewModel.updateSheetState,
             latestVersionInfo = mainViewModel.latestVersionInfo
         )
-        AlphaWarningDialog(config)
+        AlphaWarningDialog()
     }
 
     @Composable

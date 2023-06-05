@@ -1,10 +1,7 @@
-package com.aliernfrog.lactool.state
+package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Environment
-import android.provider.DocumentsContract
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -15,11 +12,16 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import com.aliernfrog.lactool.ConfigKey
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Density
+import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
@@ -28,23 +30,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class)
-class WallpapersState(
-    _topToastState: TopToastState,
-    config: SharedPreferences
-) {
-    private val topToastState = _topToastState
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+class WallpapersViewModel(
+    context: Context,
+    prefs: PreferenceManager,
+    val topToastState: TopToastState
+) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
-    val wallpapersDir = config.getString(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR)!!
+    val wallpapersDir = prefs.lacWallpapersDir
     private lateinit var wallpapersFile: DocumentFileCompat
 
-    @OptIn(ExperimentalMaterialApi::class)
-    val wallpaperSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val wallpaperSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
 
-    val importedWallpapers = mutableStateOf(emptyList<ImageFile>())
-    val pickedWallpaper = mutableStateOf<ImageFile?>(null)
-    val wallpaperSheetWallpaper = mutableStateOf<ImageFile?>(null)
+    var importedWallpapers by mutableStateOf(emptyList<ImageFile>())
+    var pickedWallpaper by mutableStateOf<ImageFile?>(null)
+    var wallpaperSheetWallpaper by mutableStateOf<ImageFile?>(null)
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
@@ -54,7 +55,7 @@ class WallpapersState(
                 return@withContext
             }
             val file = File(path)
-            pickedWallpaper.value = ImageFile(
+            pickedWallpaper = ImageFile(
                 name = file.nameWithoutExtension,
                 fileName = file.name,
                 painterModel = file.absolutePath
@@ -63,7 +64,7 @@ class WallpapersState(
     }
 
     suspend fun importPickedWallpaper(context: Context) {
-        val wallpaper = pickedWallpaper.value ?: return
+        val wallpaper = pickedWallpaper ?: return
         withContext(Dispatchers.IO) {
             val outputFile = wallpapersFile.createFile("", wallpaper.name+".jpg") ?: return@withContext
             val inputStream = File(wallpaper.painterModel).inputStream()
@@ -71,8 +72,8 @@ class WallpapersState(
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
-            pickedWallpaper.value = null
-            getImportedWallpapers()
+            pickedWallpaper = null
+            fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
         }
     }
@@ -86,33 +87,32 @@ class WallpapersState(
     suspend fun deleteImportedWallpaper(wallpaper: ImageFile) {
         withContext(Dispatchers.IO) {
             wallpapersFile.findFile(wallpaper.fileName)?.delete()
-            getImportedWallpapers()
+            fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
     }
 
     fun getWallpapersFile(context: Context): DocumentFileCompat {
-        if (::wallpapersFile.isInitialized) return wallpapersFile
-        val treeId = wallpapersDir.replace("${Environment.getExternalStorageDirectory()}/", "primary:")
-        val treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId)
-        wallpapersFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
+        if (!::wallpapersFile.isInitialized)
+            wallpapersFile = GeneralUtil.getDocumentFileFromPath(wallpapersDir, context)
         return wallpapersFile
     }
 
-    suspend fun getImportedWallpapers() {
+    suspend fun fetchImportedWallpapers() {
         withContext(Dispatchers.IO) {
-            val files = wallpapersFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".jpg") }.sortedBy { it.name.lowercase() }
-            val wallpapers = files.map {
+            val files = wallpapersFile.listFiles()
+                .filter { it.isFile() && it.name.lowercase().endsWith(".jpg") }
+                .sortedBy { it.name.lowercase() }
+            importedWallpapers = files.map {
                 val nameWithoutExtension = FileUtil.removeExtension(it.name)
                 ImageFile(nameWithoutExtension, it.name, wallpapersFile.findFile(it.name))
             }
-            importedWallpapers.value = wallpapers
         }
     }
 
     @OptIn(ExperimentalMaterialApi::class)
     suspend fun showWallpaperSheet(wallpaper: ImageFile) {
-        wallpaperSheetWallpaper.value = wallpaper
+        wallpaperSheetWallpaper = wallpaper
         wallpaperSheetState.show()
     }
 }
