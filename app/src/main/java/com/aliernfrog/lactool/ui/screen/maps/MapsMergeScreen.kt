@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
