@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -28,7 +27,6 @@ import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -45,7 +43,7 @@ class MapsViewModel(
 
     val mapsDir = prefs.lacMapsDir
     val exportedMapsDir = prefs.exportedMapsDir
-    val mapsFile = GeneralUtil.getDocumentFileFromPath(mapsDir, context)
+    lateinit var mapsFile: DocumentFileCompat
     private val exportedMapsFile = File(exportedMapsDir)
 
     var mapDeleteDialogShown by mutableStateOf(false)
@@ -54,10 +52,6 @@ class MapsViewModel(
     var chosenMap by mutableStateOf<LACMap?>(null)
     var mapNameEdit by mutableStateOf("")
     var lastMapName by mutableStateOf("")
-
-    init {
-        viewModelScope.launch { fetchAllMaps() }
-    }
 
     fun getMap(file: Any?) {
         when (file) {
@@ -180,6 +174,12 @@ class MapsViewModel(
             mapNameEdit = map.name
             lastMapName = map.name
         }
+    }
+
+    fun getMapsFile(context: Context): DocumentFileCompat {
+        if (!::mapsFile.isInitialized)
+            mapsFile = GeneralUtil.getDocumentFileFromPath(mapsDir, context)
+        return mapsFile
     }
 
     suspend fun fetchAllMaps() {

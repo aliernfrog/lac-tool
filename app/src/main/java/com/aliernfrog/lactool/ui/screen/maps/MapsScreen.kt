@@ -39,8 +39,10 @@ fun MapsScreen(
     mapsViewModel: MapsViewModel = getViewModel(),
     onNavigateRequest: (Destination) -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
+        mapsViewModel.getMapsFile(context)
         mapsViewModel.fetchAllMaps()
     }
     AppScaffold(

@@ -21,6 +21,7 @@ import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -33,12 +34,18 @@ class ScreenshotsViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
     val screenshotsDir = prefs.lacScreenshotsDir
-    private val screenshotsFile = GeneralUtil.getDocumentFileFromPath(screenshotsDir, context)
+    private lateinit var screenshotsFile: DocumentFileCompat
 
     val screenshotSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
 
     var screenshots by mutableStateOf(emptyList<ImageFile>())
     var screenshotSheetScreeenshot by mutableStateOf<ImageFile?>(null)
+
+    fun getScreenshotsFile(context: Context): DocumentFileCompat {
+        if (!::screenshotsFile.isInitialized)
+            screenshotsFile = GeneralUtil.getDocumentFileFromPath(screenshotsDir, context)
+        return screenshotsFile
+    }
 
     suspend fun fetchScreenshots() {
         withContext(Dispatchers.IO) {

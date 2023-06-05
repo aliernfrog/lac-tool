@@ -55,7 +55,7 @@ class MapsMergeViewModel(
         onNavigateBackRequest: () -> Unit
     ) {
         if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
-        val mapsFile = mapsViewModel.mapsFile
+        val mapsFile = mapsViewModel.getMapsFile(context)
         val newFileName = "$newMapName.txt"
         val output = mapsFile.findFile(newFileName)
         if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)

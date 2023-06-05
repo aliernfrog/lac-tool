@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
@@ -29,8 +30,10 @@ import org.koin.androidx.compose.getViewModel
 fun ScreenshotScreen(
     screenshotsViewModel: ScreenshotsViewModel = getViewModel()
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
+        screenshotsViewModel.getScreenshotsFile(context)
         screenshotsViewModel.fetchScreenshots()
     }
     AppScaffold(
