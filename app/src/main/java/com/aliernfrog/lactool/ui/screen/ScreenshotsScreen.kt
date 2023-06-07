@@ -27,7 +27,7 @@ import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenshotScreen(
+fun ScreenshotsScreen(
     screenshotsViewModel: ScreenshotsViewModel = getViewModel()
 ) {
     val context = LocalContext.current
