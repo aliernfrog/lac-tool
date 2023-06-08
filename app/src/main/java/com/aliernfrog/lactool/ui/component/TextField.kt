@@ -20,10 +20,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextField(
     value: String,
@@ -42,16 +41,18 @@ fun TextField(
     containerColor: Color = MaterialTheme.colorScheme.secondary,
     contentColor: Color = contentColorFor(containerColor),
     rounded: Boolean = true,
-    colors: TextFieldColors = TextFieldDefaults.textFieldColors(
+    colors: TextFieldColors = TextFieldDefaults.colors(
         focusedTextColor = contentColor,
         unfocusedTextColor = contentColor,
-        containerColor = containerColor,
+        focusedContainerColor = containerColor,
+        unfocusedContainerColor = containerColor,
+        disabledContainerColor = containerColor,
         cursorColor = contentColor,
         selectionColors = TextSelectionColors(handleColor = contentColor, backgroundColor = contentColor.copy(0.5f)),
         focusedLabelColor = contentColor,
         unfocusedLabelColor = contentColor.copy(0.7f),
         focusedPlaceholderColor = contentColor.copy(0.7f),
-        unfocusedPlaceholderColor = contentColor.copy(0.7f)
+        unfocusedPlaceholderColor = contentColor.copy(0.7f),
     )
 ) {
     Box(

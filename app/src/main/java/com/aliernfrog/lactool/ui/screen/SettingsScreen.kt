@@ -3,12 +3,12 @@ package com.aliernfrog.lactool.ui.screen
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
@@ -24,41 +24,78 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.state.SettingsState
-import com.aliernfrog.lactool.state.UpdateState
+import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
-import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(config: SharedPreferences, updateState: UpdateState, settingsState: SettingsState) {
+fun SettingsScreen(
+    mainViewModel: MainViewModel = getViewModel(),
+    settingsViewModel: SettingsViewModel = getViewModel()
+) {
+    val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.settings),
-        topAppBarState = settingsState.topAppBarState
+        topAppBarState = settingsViewModel.topAppBarState
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(settingsState.scrollState)) {
-            AppearanceOptions(settingsState)
-            GeneralOptions(settingsState)
-            AboutApp(updateState, settingsState)
-            if (settingsState.experimentalSettingsShown) ExperimentalSettings(config, updateState, settingsState)
+        Column(Modifier.fillMaxSize().verticalScroll(settingsViewModel.scrollState)) {
+            AppearanceOptions(
+                theme = settingsViewModel.prefs.theme,
+                materialYou = settingsViewModel.prefs.materialYou,
+                showMaterialYouOption = settingsViewModel.showMaterialYouOption,
+                themeOptionsExpanded = settingsViewModel.themeOptionsExpanded,
+                onThemeOptionsExpandedStateChange = { settingsViewModel.themeOptionsExpanded = it },
+                onThemeChange = { settingsViewModel.prefs.theme = it },
+                onMaterialYouChange = { settingsViewModel.prefs.materialYou = it }
+            )
+            GeneralOptions(
+                showMapThumbnailsInList = settingsViewModel.prefs.showMapThumbnailsInList,
+                onShowMapThumbnailsInListChange = { settingsViewModel.prefs.showMapThumbnailsInList = it },
+                onPathOptionsDialogShowRequest = { settingsViewModel.pathOptionsDialogShown = true }
+            )
+            AboutApp(
+                appVersionName = mainViewModel.applicationVersionName,
+                appVersionCode = mainViewModel.applicationVersionCode,
+                autoCheckUpdates = settingsViewModel.prefs.autoCheckUpdates,
+                linksExpanded = settingsViewModel.linksExpanded,
+                onCheckUpdatesRequest = {
+                    scope.launch {
+                        mainViewModel.checkUpdates(manuallyTriggered = true)
+                    }
+                },
+                onAboutClick = { settingsViewModel.onAboutClick() },
+                onAutoCheckUpdatesChange = { settingsViewModel.prefs.autoCheckUpdates = it },
+                onLinksExpandedStateChange = { settingsViewModel.linksExpanded = it }
+            )
+            if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings()
         }
     }
-    if (settingsState.pathOptionsDialogShown) PathOptionsDialog(
-        topToastState = settingsState.topToastState,
-        config = config,
+    if (settingsViewModel.pathOptionsDialogShown) PathOptionsDialog(
+        topToastState = settingsViewModel.topToastState,
+        config = settingsViewModel.prefs.prefs,
         onDismissRequest = {
-            settingsState.pathOptionsDialogShown = false
+            settingsViewModel.pathOptionsDialogShown = false
         }
     )
 }
 
 @Composable
-private fun AppearanceOptions(settingsState: SettingsState) {
+private fun AppearanceOptions(
+    theme: Int,
+    materialYou: Boolean,
+    showMaterialYouOption: Boolean,
+    themeOptionsExpanded: Boolean,
+    onThemeOptionsExpandedStateChange: (Boolean) -> Unit,
+    onThemeChange: (Int) -> Unit,
+    onMaterialYouChange: (Boolean) -> Unit
+) {
     val themeOptions = listOf(
         stringResource(R.string.settings_appearance_theme_system),
         stringResource(R.string.settings_appearance_theme_light),
@@ -68,44 +105,48 @@ private fun AppearanceOptions(settingsState: SettingsState) {
         ButtonShapeless(
             title = stringResource(R.string.settings_appearance_theme),
             description = stringResource(R.string.settings_appearance_theme_description),
-            expanded = settingsState.themeOptionsExpanded.value
+            expanded = themeOptionsExpanded
         ) {
-            settingsState.themeOptionsExpanded.value = !settingsState.themeOptionsExpanded.value
+            onThemeOptionsExpandedStateChange(!themeOptionsExpanded)
         }
         AnimatedVisibility(
-            visible = settingsState.themeOptionsExpanded.value,
+            visible = themeOptionsExpanded,
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut()
         ) {
             ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                 RadioButtons(
                     options = themeOptions,
-                    initialIndex = settingsState.theme.value,
+                    initialIndex = theme,
                     optionsRounded = true
                 ) {
-                    settingsState.setTheme(it)
+                    onThemeChange(it)
                 }
             }
         }
-        if (settingsState.forceShowMaterialYouOption.value || supportsMaterialYou) Switch(
+        if (showMaterialYouOption) Switch(
             title = stringResource(R.string.settings_appearance_materialYou),
             description = stringResource(R.string.settings_appearance_materialYou_description),
-            checked = settingsState.materialYou.value
+            checked = materialYou
         ) {
-            settingsState.setMaterialYou(it)
+            onMaterialYouChange(it)
         }
     }
 }
 
 @Composable
-private fun GeneralOptions(settingsState: SettingsState) {
+private fun GeneralOptions(
+    showMapThumbnailsInList: Boolean,
+    onShowMapThumbnailsInListChange: (Boolean) -> Unit,
+    onPathOptionsDialogShowRequest: () -> Unit
+) {
     ColumnDivider(title = stringResource(R.string.settings_general)) {
         Switch(
             title = stringResource(R.string.settings_general_showMapThumbnailsInList),
             description = stringResource(R.string.settings_general_showMapThumbnailsInList_description),
-            checked = settingsState.showMapThumbnailsInList.value
+            checked = showMapThumbnailsInList
         ) {
-            settingsState.setShowMapThumbnailsInList(it)
+            onShowMapThumbnailsInListChange(it)
         }
         ButtonShapeless(
             title = stringResource(R.string.settings_general_pathOptions),
@@ -113,49 +154,66 @@ private fun GeneralOptions(settingsState: SettingsState) {
             expanded = false,
             arrowRotation = 90f
         ) {
-            settingsState.pathOptionsDialogShown = true
+            onPathOptionsDialogShowRequest()
         }
     }
 }
 
 @Composable
-private fun AboutApp(updateState: UpdateState, settingsState: SettingsState) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val version = "v${GeneralUtil.getAppVersionName(context)} (${GeneralUtil.getAppVersionCode(context)})"
+private fun AboutApp(
+    appVersionName: String,
+    appVersionCode: Int,
+    autoCheckUpdates: Boolean,
+    linksExpanded: Boolean,
+    onCheckUpdatesRequest: () -> Unit,
+    onAboutClick: () -> Unit,
+    onAutoCheckUpdatesChange: (Boolean) -> Unit,
+    onLinksExpandedStateChange: (Boolean) -> Unit
+) {
+    val version = "$appVersionName ($appVersionCode)"
     ColumnDivider(title = stringResource(R.string.settings_about), bottomDivider = false) {
         ButtonWithComponent(
             title = stringResource(R.string.settings_about_version),
             description = version,
             component = {
                 OutlinedButton(
-                    onClick = { scope.launch { updateState.checkUpdates(manuallyTriggered = true) } }
+                    onClick = { onCheckUpdatesRequest() }
                 ) {
                     Text(stringResource(R.string.settings_about_checkUpdates))
                 }
             }
         ) {
-            settingsState.onAboutClick()
+            onAboutClick()
         }
         Switch(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
             description = stringResource(R.string.settings_about_autoCheckUpdates_description),
-            checked = settingsState.autoCheckUpdates.value
+            checked = autoCheckUpdates
         ) {
-            settingsState.setAutoCheckUpdates(it)
+            onAutoCheckUpdatesChange(it)
         }
-        Links(settingsState)
+        Links(
+            linksExpanded = linksExpanded,
+            onLinksExpandedStateChange = onLinksExpandedStateChange
+        )
     }
 }
 
 @Composable
-private fun Links(settingsState: SettingsState) {
+private fun Links(
+    linksExpanded: Boolean,
+    onLinksExpandedStateChange: (Boolean) -> Unit
+) {
     val uriHandler = LocalUriHandler.current
-    ButtonShapeless(title = stringResource(R.string.settings_about_links), description = stringResource(R.string.settings_about_links_description), expanded = settingsState.linksExpanded.value) {
-        settingsState.linksExpanded.value = !settingsState.linksExpanded.value
+    ButtonShapeless(
+        title = stringResource(R.string.settings_about_links),
+        description = stringResource(R.string.settings_about_links_description),
+        expanded = linksExpanded
+    ) {
+        onLinksExpandedStateChange(!linksExpanded)
     }
     AnimatedVisibility(
-        visible = settingsState.linksExpanded.value,
+        visible = linksExpanded,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
     ) {
@@ -172,28 +230,46 @@ private fun Links(settingsState: SettingsState) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateState, settingsState: SettingsState) {
+private fun ExperimentalSettings(
+    mainViewModel: MainViewModel = getViewModel(),
+    settingsViewModel: SettingsViewModel = getViewModel()
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val configEditor = config.edit()
+    val configEditor = settingsViewModel.prefs.prefs.edit()
     ColumnDivider(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
         Text(stringResource(R.string.settings_experimental_description), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
         Switch(
-            title = stringResource(R.string.settings_experimental_forceShowMaterialYouOption),
-            checked = settingsState.forceShowMaterialYouOption.value,
+            title = stringResource(R.string.settings_experimental_showMaterialYouOption),
+            checked = settingsViewModel.showMaterialYouOption,
             onCheckedChange = {
-                settingsState.forceShowMaterialYouOption.value = it
+                settingsViewModel.showMaterialYouOption = it
             }
         )
-        ButtonShapeless(title = stringResource(R.string.settings_experimental_checkUpdateIgnoreVersion)) {
-            scope.launch { updateState.checkUpdates(manuallyTriggered = true, ignoreVersion = true) }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_experimental_checkUpdates)
+        ) {
+            scope.launch { mainViewModel.checkUpdates(ignoreVersion = true) }
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_experimental_showUpdateToast)
+        ) {
+            mainViewModel.showUpdateToast()
+        }
+        ButtonShapeless(
+            title = stringResource(R.string.settings_experimental_showUpdateDialog)
+        ) {
+            scope.launch { mainViewModel.updateSheetState.show() }
         }
         ButtonShapeless(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
             configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
         }
         SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
-            val value = remember { mutableStateOf(config.getString(prefEdit.key, prefEdit.default)!!) }
+            val value = remember { mutableStateOf(
+                settingsViewModel.prefs.prefs.getString(prefEdit.key, prefEdit.default)!!
+            ) }
             TextField(
                 label = { Text(text = "Prefs: ${prefEdit.key}") },
                 value = value.value,
@@ -213,7 +289,7 @@ private fun ExperimentalSettings(config: SharedPreferences, updateState: UpdateS
                 configEditor.remove(it.key)
             }
             configEditor.apply()
-            settingsState.topToastState.showToast(
+            settingsViewModel.topToastState.showToast(
                 text = R.string.settings_experimental_resetPrefsDone,
                 icon = Icons.Rounded.Done,
                 type = TopToastType.ANDROID

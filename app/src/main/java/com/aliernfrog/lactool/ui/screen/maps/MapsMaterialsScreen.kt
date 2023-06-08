@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -14,35 +14,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
+import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavController) {
+fun MapsMaterialsScreen(
+    mapsEditViewModel: MapsEditViewModel = getViewModel(),
+    onNavigateBackRequest: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.mapsMaterials),
-        topAppBarState = mapsEditState.materialsTopAppBarState,
+        topAppBarState = mapsEditViewModel.materialsTopAppBarState,
         onBackClick = {
-            navController.popBackStack()
+            onNavigateBackRequest()
         }
     ) {
-        val materials = mapsEditState.mapEditor?.downloadableMaterials ?: listOf()
+        val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = mapsEditState.materialsLazyListState
+            state = mapsEditViewModel.materialsLazyListState
         ) {
             item {
-                Suggestions(mapsEditState)
+                Suggestions()
             }
             items(materials) {
-                val failed = mapsEditState.failedMaterials.contains(it)
+                val failed = mapsEditViewModel.failedMaterials.contains(it)
                 ImageButton(
                     model = it.url,
                     title = it.name,
@@ -50,10 +53,10 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
                     painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
                     containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
                     onError = { _ ->
-                        scope.launch { mapsEditState.onDownloadableMaterialError(it) }
+                        scope.launch { mapsEditViewModel.onDownloadableMaterialError(it) }
                     }
                 ) {
-                    scope.launch { mapsEditState.showMaterialSheet(it) }
+                    scope.launch { mapsEditViewModel.showMaterialSheet(it) }
                 }
             }
             item {
@@ -65,9 +68,12 @@ fun MapsMaterialsScreen(mapsEditState: MapsEditState, navController: NavControll
 }
 
 @Composable
-private fun Suggestions(mapsEditState: MapsEditState) {
-    val unusedMaterials = mapsEditState.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
-    val hasSuggestions = mapsEditState.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
+private fun Suggestions(
+    mapsEditViewModel: MapsEditViewModel = getViewModel()
+) {
+    val scope = rememberCoroutineScope()
+    val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
+    val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     AnimatedVisibility(
         visible = hasSuggestions,
         enter = expandVertically() + fadeIn(),
@@ -77,48 +83,66 @@ private fun Suggestions(mapsEditState: MapsEditState) {
             title = stringResource(R.string.mapsMaterials_suggestions),
             innerModifier = Modifier.padding(horizontal = 8.dp)
         ) {
-            AnimatedVisibility(visible = mapsEditState.failedMaterials.isNotEmpty()) {
-                FailedMaterials(mapsEditState)
+            AnimatedVisibility(visible = mapsEditViewModel.failedMaterials.isNotEmpty()) {
+                FailedMaterials(
+                    failedMaterials = mapsEditViewModel.failedMaterials,
+                    onMaterialClick = {
+                        scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                    }
+                )
             }
             AnimatedVisibility(visible = unusedMaterials.isNotEmpty()) {
-                UnusedMaterials(unusedMaterials, mapsEditState)
+                UnusedMaterials(
+                    unusedMaterials = unusedMaterials,
+                    onScrollUpRequest = {
+                        scope.launch { mapsEditViewModel.materialsLazyListState.scrollToItem(0) }
+                    },
+                    onMaterialClick = {
+                        scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun FailedMaterials(mapsEditState: MapsEditState) {
-    val scope = rememberCoroutineScope()
+private fun FailedMaterials(
+    failedMaterials: List<LACMapDownloadableMaterial>,
+    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     ExpandableColumnRounded(
         title = stringResource(R.string.mapsMaterials_failedMaterials),
-        description = stringResource(R.string.mapsMaterials_failedMaterials_description).replace("%n", mapsEditState.failedMaterials.size.toString()),
+        description = stringResource(R.string.mapsMaterials_failedMaterials_description)
+            .replace("%n", failedMaterials.size.toString()),
         painter = rememberVectorPainter(Icons.Rounded.Report),
         headerContainerColor = MaterialTheme.colorScheme.error,
         expanded = expanded,
         onExpandedChange = { expanded = it }
     ) {
-        mapsEditState.failedMaterials.forEach { material ->
+        failedMaterials.forEach { material ->
             ButtonShapeless(
                 title = material.name,
                 description = stringResource(R.string.mapsMaterials_clickToViewMore)
             ) {
-                scope.launch {
-                    mapsEditState.showMaterialSheet(material)
-                }
+                onMaterialClick(material)
             }
         }
     }
 }
 
 @Composable
-private fun UnusedMaterials(unusedMaterials: List<LACMapDownloadableMaterial>, mapsEditState: MapsEditState) {
-    val scope = rememberCoroutineScope()
+private fun UnusedMaterials(
+    unusedMaterials: List<LACMapDownloadableMaterial>,
+    onScrollUpRequest: () -> Unit,
+    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     ExpandableColumnRounded(
         title = stringResource(R.string.mapsMaterials_unusedMaterials),
-        description = stringResource(R.string.mapsMaterials_unusedMaterials_description).replace("%n", unusedMaterials.size.toString()),
+        description = stringResource(R.string.mapsMaterials_unusedMaterials_description)
+            .replace("%n", unusedMaterials.size.toString()),
         painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
         headerContainerColor = MaterialTheme.colorScheme.secondary,
         expanded = expanded,
@@ -129,13 +153,12 @@ private fun UnusedMaterials(unusedMaterials: List<LACMapDownloadableMaterial>, m
                 title = material.name,
                 description = stringResource(R.string.mapsMaterials_clickToViewMore)
             ) {
-                scope.launch {
-                    mapsEditState.showMaterialSheet(material)
-                }
+                onMaterialClick(material)
             }
         }
     }
+
     LaunchedEffect(Unit) {
-        if (unusedMaterials.isNotEmpty()) mapsEditState.materialsLazyListState.scrollToItem(0)
+        onScrollUpRequest()
     }
 }

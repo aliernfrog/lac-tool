@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
@@ -21,86 +21,103 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.state.MapsState
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.resolveFile
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MapsScreen(mapsState: MapsState, navController: NavController) {
+fun MapsScreen(
+    mapsViewModel: MapsViewModel = getViewModel(),
+    onNavigateRequest: (Destination) -> Unit
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) { mapsState.getMapsFile(context); mapsState.getImportedMaps(); mapsState.getExportedMaps() }
+    LaunchedEffect(Unit) {
+        mapsViewModel.getMapsFile(context)
+        mapsViewModel.fetchAllMaps()
+    }
     AppScaffold(
         title = stringResource(R.string.maps),
-        topAppBarState = mapsState.topAppBarState
+        topAppBarState = mapsViewModel.topAppBarState
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsState.scrollState)) {
-            PickMapFileButton(mapsState)
-            MapActions(mapsState, navController)
+        Column(Modifier.fillMaxSize().verticalScroll(mapsViewModel.scrollState)) {
+            PickMapFileButton {
+                scope.launch { mapsViewModel.pickMapSheetState.show() }
+            }
+            MapActions(
+                mapsViewModel = mapsViewModel,
+                onNavigateRequest = onNavigateRequest
+            )
             Divider(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
-            OtherActions(navController)
+            OtherActions(
+                onNavigateMapsMergeScreenRequest = {
+                    onNavigateRequest(Destination.MAPS_MERGE)
+                }
+            )
         }
     }
-    if (mapsState.mapDeleteDialogShown.value) DeleteConfirmationDialog(
-        name = mapsState.lastMapName.value,
-        onDismissRequest = { mapsState.mapDeleteDialogShown.value = false },
+    if (mapsViewModel.mapDeleteDialogShown) DeleteConfirmationDialog(
+        name = mapsViewModel.lastMapName,
+        onDismissRequest = { mapsViewModel.mapDeleteDialogShown = false },
         onConfirmDelete = {
             scope.launch {
-                mapsState.deleteChosenMap()
-                mapsState.mapDeleteDialogShown.value = false
+                mapsViewModel.deleteChosenMap()
+                mapsViewModel.mapDeleteDialogShown = false
             }
         }
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun PickMapFileButton(mapsState: MapsState) {
-    val scope = rememberCoroutineScope()
+private fun PickMapFileButton(
+    onClick: () -> Unit
+) {
     ButtonRounded(
         title = stringResource(R.string.maps_pickMap),
         painter = rememberVectorPainter(Icons.Rounded.PinDrop),
-        containerColor = MaterialTheme.colorScheme.primary
-    ) {
-        scope.launch { mapsState.pickMapSheetState.show() }
-    }
+        containerColor = MaterialTheme.colorScheme.primary,
+        onClick = onClick
+    )
 }
 
 @Composable
-private fun MapActions(mapsState: MapsState, navController: NavController) {
+private fun MapActions(
+    mapsViewModel: MapsViewModel,
+    onNavigateRequest: (Destination) -> Unit
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val mapChosen = mapsState.chosenMap.value != null
-    val isImported = mapsState.getChosenMapPath()?.startsWith(mapsState.mapsDir) ?: false
-    val isExported = mapsState.getChosenMapPath()?.startsWith(mapsState.mapsExportDir) ?: false
-    val mapNameUpdated = mapsState.getMapNameEdit(false) != mapsState.chosenMap.value?.name
+    val mapChosen = mapsViewModel.chosenMap != null
+    val isImported = mapsViewModel.getChosenMapPath()?.startsWith(mapsViewModel.mapsDir) ?: false
+    val isExported = mapsViewModel.getChosenMapPath()?.startsWith(mapsViewModel.exportedMapsDir) ?: false
+    val mapNameUpdated = mapsViewModel.getMapNameEdit(false) != mapsViewModel.chosenMap?.name
     MapActionVisibility(visible = mapChosen) {
         Column {
             TextField(
-                value = mapsState.mapNameEdit.value,
-                onValueChange = { mapsState.mapNameEdit.value = it },
+                value = mapsViewModel.mapNameEdit,
+                onValueChange = { mapsViewModel.mapNameEdit = it },
                 label = { Text(stringResource(R.string.maps_mapName)) },
-                placeholder = { Text(mapsState.chosenMap.value!!.name) },
+                placeholder = { Text(mapsViewModel.chosenMap!!.name) },
                 leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
                 singleLine = true,
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 doneIcon = rememberVectorPainter(Icons.Rounded.Edit),
                 doneIconShown = isImported && mapNameUpdated,
                 onDone = {
-                    scope.launch { mapsState.renameChosenMap() }
+                    scope.launch { mapsViewModel.renameChosenMap() }
                 }
             )
             Divider(
@@ -116,7 +133,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             painter = rememberVectorPainter(Icons.Rounded.Download),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            scope.launch { mapsState.importChosenMap(context) }
+            scope.launch { mapsViewModel.importChosenMap(context) }
         }
     }
     MapActionVisibility(visible = mapChosen && isImported) {
@@ -124,7 +141,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             title = stringResource(R.string.maps_export),
             painter = rememberVectorPainter(Icons.Rounded.Upload)
         ) {
-            scope.launch { mapsState.exportChosenMap(context) }
+            scope.launch { mapsViewModel.exportChosenMap(context) }
         }
     }
     MapActionVisibility(visible = mapChosen) {
@@ -132,7 +149,7 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             title = stringResource(R.string.maps_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
-            scope.launch { FileUtil.shareFile(mapsState.chosenMap.value!!.resolveFile(), context) }
+            scope.launch { FileUtil.shareFile(mapsViewModel.chosenMap!!.resolveFile(), context) }
         }
     }
     MapActionVisibility(visible = mapChosen) {
@@ -141,7 +158,14 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             description = stringResource(R.string.maps_edit_description),
             painter = rememberVectorPainter(Icons.Rounded.Edit)
         ) {
-            scope.launch { mapsState.editChosenMap(context, navController) }
+            scope.launch {
+                mapsViewModel.editChosenMap(
+                    context = context,
+                    onNavigateMapEditScreenRequest = {
+                        onNavigateRequest(Destination.MAPS_EDIT)
+                    }
+                )
+            }
         }
     }
     MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
@@ -150,18 +174,18 @@ private fun MapActions(mapsState: MapsState, navController: NavController) {
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             containerColor = MaterialTheme.colorScheme.error
         ) {
-            mapsState.mapDeleteDialogShown.value = true
+            mapsViewModel.mapDeleteDialogShown = true
         }
     }
 }
 
 @Composable
-private fun OtherActions(navController: NavController) {
+private fun OtherActions(onNavigateMapsMergeScreenRequest: () -> Unit) {
     ButtonRounded(
         title = stringResource(R.string.mapsMerge),
         painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt)
     ) {
-        navController.navigate(Destination.MAPS_MERGE.route)
+        onNavigateMapsMergeScreenRequest()
     }
 }
 

@@ -1,23 +1,26 @@
 package com.aliernfrog.lactool.ui.dialog
 
-import android.content.SharedPreferences
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun AlphaWarningDialog(config: SharedPreferences) {
-    val context = LocalContext.current
-    val currentVersion = remember { GeneralUtil.getAppVersionName(context) }
+fun AlphaWarningDialog(
+    mainViewModel: MainViewModel = getViewModel()
+) {
+    val currentVersion = remember { mainViewModel.applicationVersionName }
     var shown by remember { mutableStateOf(
         currentVersion.contains("alpha") &&
-        config.getString(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "") != currentVersion
+        mainViewModel.prefs.lastAlphaAck != currentVersion
     ) }
 
     if (shown) AlertDialog(
@@ -28,7 +31,7 @@ fun AlphaWarningDialog(config: SharedPreferences) {
         confirmButton = {
             Button(
                 onClick = {
-                    config.edit().putString(ConfigKey.KEY_APP_LAST_ALPHA_ACK, currentVersion).apply()
+                    mainViewModel.prefs.lastAlphaAck = currentVersion
                     shown = false
                 }
             ) {

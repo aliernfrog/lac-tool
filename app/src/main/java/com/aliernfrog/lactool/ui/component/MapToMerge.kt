@@ -6,7 +6,11 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PinDrop
@@ -33,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.laclib.util.LACLibUtil
-import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 
 @Composable

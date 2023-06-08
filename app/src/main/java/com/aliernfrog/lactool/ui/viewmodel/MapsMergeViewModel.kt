@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.state
+package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
 import androidx.compose.foundation.ScrollState
@@ -11,10 +11,12 @@ import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavController
+import androidx.compose.ui.unit.Density
+import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
@@ -27,20 +29,58 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
-class MapsMergeState(
-    _topToastState: TopToastState,
-    _mapsState: MapsState
-) {
-    private val topToastState = _topToastState
-    private val mapsState = _mapsState
-    val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+class MapsMergeViewModel(
+    context: Context,
+    private val topToastState: TopToastState,
+    private val mapsViewModel: MapsViewModel
+) : ViewModel() {
+    val pickMapSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
     var mapMerger by mutableStateOf(LACMapMerger(), neverEqualPolicy())
-    val optionsExpandedFor = mutableStateOf(0)
+    var optionsExpandedFor by mutableIntStateOf(0)
     var mergeMapDialogShown by mutableStateOf(false)
     var isMerging by mutableStateOf(false)
+
+    val hasEnoughMaps get() = mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
+
+    suspend fun loadMaps() {
+        mapsViewModel.fetchAllMaps()
+    }
+
+    suspend fun mergeMaps(
+        context: Context,
+        newMapName: String,
+        onNavigateBackRequest: () -> Unit
+    ) {
+        if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
+        val mapsFile = mapsViewModel.getMapsFile(context)
+        val newFileName = "$newMapName.txt"
+        val output = mapsFile.findFile(newFileName)
+        if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)
+        isMerging = true
+        withContext(Dispatchers.IO) {
+            Thread.sleep(2000) // Can't live without seeing progress indicator
+            val newMapContent = mapMerger.mergeMaps(
+                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_noEnoughMaps) }
+            ) ?: return@withContext
+            val newFile = mapsFile.createFile("", newFileName)
+            val outputStream = context.contentResolver.openOutputStream(newFile!!.uri)!!
+            val outputStreamWriter = outputStream.writer(Charsets.UTF_8)
+            outputStreamWriter.write(newMapContent)
+            outputStreamWriter.flush()
+            outputStreamWriter.close()
+            outputStream.close()
+            mergeMapDialogShown = false
+            isMerging = false
+            mapMerger.mapsToMerge.clear()
+            // No need to update merger state here because it navigates back to maps screen after finishing
+            mapsViewModel.getMap(newFile)
+            topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
+        }
+        onNavigateBackRequest()
+    }
 
     suspend fun addMap(file: Any, context: Context) {
         withContext(Dispatchers.IO) {
@@ -61,19 +101,9 @@ class MapsMergeState(
         }
     }
 
-    fun makeMapBase(index: Int, mapName: String, context: Context) {
-        mapMerger.makeMapBase(index)
-        optionsExpandedFor.value = 0
-        topToastState.showToast(
-            text = context.getString(R.string.mapsMerge_map_madeBase).replace("{MAP}", mapName),
-            icon = Icons.Rounded.Done
-        )
-        updateMergerState()
-    }
-
     fun removeMap(index: Int, mapName: String, context: Context) {
         mapMerger.mapsToMerge.removeAt(index)
-        optionsExpandedFor.value = 0
+        optionsExpandedFor = 0
         topToastState.showToast(
             text = context.getString(R.string.mapsMerge_map_removed).replace("{MAP}", mapName),
             icon = Icons.Rounded.Done
@@ -81,48 +111,17 @@ class MapsMergeState(
         updateMergerState()
     }
 
-    fun hasEnoughMaps(): Boolean {
-        return mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
+
+    fun makeMapBase(index: Int, mapName: String, context: Context) {
+        mapMerger.makeMapBase(index)
+        optionsExpandedFor = 0
+        topToastState.showToast(
+            text = context.getString(R.string.mapsMerge_map_madeBase).replace("{MAP}", mapName),
+            icon = Icons.Rounded.Done
+        )
+        updateMergerState()
     }
 
-    fun updateMergerState() {
-        mapMerger = mapMerger
-    }
-
-    suspend fun mergeMaps(mapName: String, navController: NavController, context: Context) {
-        if (!hasEnoughMaps()) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
-        val mapsFile = mapsState.getMapsFile(context)
-        val newFileName = "$mapName.txt"
-        val output = mapsFile.findFile(newFileName)
-        if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)
-        isMerging = true
-        withContext(Dispatchers.IO) {
-            Thread.sleep(2000) // Can't live without seeing progress indicator
-            val newMapContent = mapMerger.mergeMaps(
-                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_noEnoughMaps) }
-            ) ?: return@withContext
-            val newFile = mapsFile.createFile("", newFileName)
-            val outputStream = context.contentResolver.openOutputStream(newFile!!.uri)!!
-            val outputStreamWriter = outputStream.writer(Charsets.UTF_8)
-            outputStreamWriter.write(newMapContent)
-            outputStreamWriter.flush()
-            outputStreamWriter.close()
-            outputStream.close()
-            mergeMapDialogShown = false
-            isMerging = false
-            mapMerger.mapsToMerge.clear()
-            // No need to update merger state here because it navigates back to maps screen after finishing
-            mapsState.getMap(documentFile = newFile)
-            topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", mapName), icon = Icons.Rounded.Done)
-        }
-        navController.popBackStack()
-    }
-
-    suspend fun loadMaps(context: Context) {
-        mapsState.getMapsFile(context)
-        mapsState.getImportedMaps()
-        mapsState.getExportedMaps()
-    }
 
     /**
      * Cancels merging and hides merge map dialog
@@ -132,5 +131,9 @@ class MapsMergeState(
         topToastState.showToast(reason, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
         mergeMapDialogShown = false
         isMerging = false
+    }
+
+    fun updateMergerState() {
+        mapMerger = mapMerger
     }
 }

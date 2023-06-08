@@ -1,6 +1,11 @@
 package com.aliernfrog.lactool.ui.sheet
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -10,7 +15,11 @@ import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -20,21 +29,24 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ButtonCentered
-import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.ui.component.TextField
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun AddRoleSheet(state: ModalBottomSheetState, onRoleAdd: (String) -> Unit) {
+fun AddRoleSheet(
+    state: ModalBottomSheetState,
+    onRoleAdd: (String) -> Unit
+) {
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     val roleName = remember { mutableStateOf("") }
     val roleColor = remember { mutableStateOf("") }
     val roleHtml = buildRoleHtml(roleName.value, roleColor.value)
-    ModalBottomSheet(sheetState = state) {
+    AppModalBottomSheet(sheetState = state) {
         TextField(
             value = roleName.value,
             onValueChange = { roleName.value = it },

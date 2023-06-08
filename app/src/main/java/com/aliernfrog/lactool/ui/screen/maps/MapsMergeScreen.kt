@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -16,31 +16,34 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.state.MapsMergeState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
+import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController) {
+fun MapsMergeScreen(
+    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    onNavigateBackRequest: () -> Unit
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.mapsMerge),
-        topAppBarState = mapsMergeState.topAppBarState,
+        topAppBarState = mapsMergeViewModel.topAppBarState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = mapsMergeState.hasEnoughMaps() && !mapsMergeState.mergeMapDialogShown,
+                visible = mapsMergeViewModel.hasEnoughMaps && !mapsMergeViewModel.mergeMapDialogShown,
                 modifier = Modifier.systemBarsPadding(),
                 enter = scaleIn() + fadeIn(),
                 exit = scaleOut() + fadeOut()
             ) {
                 ExtendedFloatingActionButton(
-                    onClick = { mapsMergeState.mergeMapDialogShown = true },
+                    onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
                     shape = RoundedCornerShape(20.dp),
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -55,32 +58,45 @@ fun MapsMergeScreen(mapsMergeState: MapsMergeState, navController: NavController
             }
         },
         onBackClick = {
-            navController.popBackStack()
+            onNavigateBackRequest()
         }
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeState.scrollState)) {
-            PickMapButton(mapsMergeState)
-            MapsList(mapsMergeState)
+        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
+            PickMapButton {
+                scope.launch { mapsMergeViewModel.pickMapSheetState.show() }
+            }
+            MapsList(
+                maps = mapsMergeViewModel.mapMerger.mapsToMerge
+            )
             Spacer(Modifier.systemBarsPadding().height(70.dp))
         }
     }
-    if (mapsMergeState.mergeMapDialogShown) MergeMapDialog(
-        isMerging = mapsMergeState.isMerging,
-        onDismissRequest = { mapsMergeState.mergeMapDialogShown = false },
-        onConfirm = { scope.launch { mapsMergeState.mergeMaps(it, navController, context) } }
+    if (mapsMergeViewModel.mergeMapDialogShown) MergeMapDialog(
+        isMerging = mapsMergeViewModel.isMerging,
+        onDismissRequest = { mapsMergeViewModel.mergeMapDialogShown = false },
+        onConfirm = { newMapName ->
+            scope.launch {
+                mapsMergeViewModel.mergeMaps(
+                    context = context,
+                    newMapName = newMapName,
+                    onNavigateBackRequest = onNavigateBackRequest
+                )
+            }
+        }
     )
     LaunchedEffect(Unit) {
-        mapsMergeState.loadMaps(context)
+        mapsMergeViewModel.loadMaps()
     }
 }
 
 @Composable
-private fun MapsList(mapsMergeState: MapsMergeState) {
-    val baseMap = mapsMergeState.mapMerger.mapsToMerge.firstOrNull()
-    val mapsToMerge = mapsMergeState.mapMerger.mapsToMerge.toList().drop(1)
+private fun MapsList(
+    maps: List<LACMapToMerge>
+) {
+    val baseMap = maps.firstOrNull()
+    val mapsToMerge = maps.toList().drop(1)
     AnimatedVisibility(baseMap != null) {
         MapButtonWithActions(
-            mapsMergeState = mapsMergeState,
             mapToMerge = baseMap ?: LACMapToMerge("-", "-"),
             mapIndex = 0
         )
@@ -91,7 +107,6 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
         ) {
             mapsToMerge.forEachIndexed { index, map ->
                 MapButtonWithActions(
-                    mapsMergeState = mapsMergeState,
                     mapToMerge = map,
                     mapIndex = index+1,
                     containerColor = MaterialTheme.colorScheme.surface
@@ -101,41 +116,40 @@ private fun MapsList(mapsMergeState: MapsMergeState) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun PickMapButton(mapsMergeState: MapsMergeState) {
-    val scope = rememberCoroutineScope()
+private fun PickMapButton(
+    onClick: () -> Unit
+) {
     ButtonRounded(
         title = stringResource(R.string.mapsMerge_addMap),
         painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt),
-        containerColor = MaterialTheme.colorScheme.primary
-    ) {
-        scope.launch { mapsMergeState.pickMapSheetState.show() }
-    }
+        containerColor = MaterialTheme.colorScheme.primary,
+        onClick = onClick
+    )
 }
 
 @Composable
 private fun MapButtonWithActions(
-    mapsMergeState: MapsMergeState,
+    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
     mapToMerge: LACMapToMerge,
     mapIndex: Int,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     val context = LocalContext.current
     val isBase = mapIndex == 0
-    val expanded = mapsMergeState.optionsExpandedFor.value == mapIndex
+    val expanded = mapsMergeViewModel.optionsExpandedFor == mapIndex
     MapToMerge(
         mapToMerge = mapToMerge,
         isBaseMap = isBase,
         expanded = expanded || isBase,
         showExpandedIndicator = !isBase,
         containerColor = containerColor,
-        onUpdateState = { mapsMergeState.updateMergerState() },
-        onMakeBase = { mapsMergeState.makeMapBase(mapIndex, mapToMerge.mapName, context) },
-        onRemove = { mapsMergeState.removeMap(mapIndex, mapToMerge.mapName, context) },
+        onUpdateState = { mapsMergeViewModel.updateMergerState() },
+        onMakeBase = { mapsMergeViewModel.makeMapBase(mapIndex, mapToMerge.mapName, context) },
+        onRemove = { mapsMergeViewModel.removeMap(mapIndex, mapToMerge.mapName, context) },
         onClick = {
             if (!isBase) {
-                mapsMergeState.optionsExpandedFor.value = if (expanded) 0
+                mapsMergeViewModel.optionsExpandedFor = if (expanded) 0
                 else mapIndex
             }
         }

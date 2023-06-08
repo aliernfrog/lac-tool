@@ -18,47 +18,55 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.state.ScreenshotsState
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenshotScreen(screenshotsState: ScreenshotsState) {
+fun ScreenshotsScreen(
+    screenshotsViewModel: ScreenshotsViewModel = getViewModel()
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) { screenshotsState.getScreenshotsFile(context); screenshotsState.getImportedScreenshots() }
+    LaunchedEffect(Unit) {
+        screenshotsViewModel.getScreenshotsFile(context)
+        screenshotsViewModel.fetchScreenshots()
+    }
     AppScaffold(
         title = stringResource(R.string.screenshots),
-        topAppBarState = screenshotsState.topAppBarState
+        topAppBarState = screenshotsViewModel.topAppBarState
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = screenshotsState.lazyListState
+            state = screenshotsViewModel.lazyListState
         ) {
             item {
                 ErrorWithIcon(
                     error = stringResource(R.string.screenshots_noScreenshots),
                     painter = rememberVectorPainter(Icons.Rounded.NoPhotography),
-                    visible = screenshotsState.importedScreenshots.value.isEmpty()
+                    visible = screenshotsViewModel.screenshots.isEmpty()
                 )
                 AnimatedVisibility(
-                    visible = screenshotsState.importedScreenshots.value.isNotEmpty(),
+                    visible = screenshotsViewModel.screenshots.isNotEmpty(),
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {
                     Text(stringResource(R.string.screenshots_clickHint), Modifier.padding(8.dp))
                 }
             }
-            items(screenshotsState.importedScreenshots.value) {
+            items(screenshotsViewModel.screenshots) {
                 ImageButton(
                     model = it.painterModel,
                     title = it.name,
                     showDetails = false
                 ) {
-                    scope.launch { screenshotsState.showScreenshotSheet(it) }
+                    scope.launch {
+                        screenshotsViewModel.showScreenshotSheet(it)
+                    }
                 }
             }
         }

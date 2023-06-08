@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
@@ -20,76 +20,90 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
-import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.state.MapsEditState
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
+import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapsEditScreen(mapsEditState: MapsEditState, navController: NavController) {
+fun MapsEditScreen(
+    mapsEditViewModel: MapsEditViewModel = getViewModel(),
+    onNavigateBackRequest: () -> Unit,
+    onNavigateRequest: (Destination) -> Unit
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.mapsEdit),
-        topAppBarState = mapsEditState.topAppBarState,
+        topAppBarState = mapsEditViewModel.topAppBarState,
         floatingActionButton = {
             FloatingActionButton(
                 icon = Icons.Rounded.Done,
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                scope.launch { mapsEditState.saveAndFinishEditing(navController, context) }
+                scope.launch {
+                    mapsEditViewModel.saveAndFinishEditing(
+                        onNavigateBackRequest = onNavigateBackRequest,
+                        context = context
+                    )
+                }
             }
         },
         onBackClick = {
-            scope.launch { mapsEditState.onNavigationBack(navController) }
+            scope.launch { mapsEditViewModel.onNavigationBack(onNavigateBackRequest) }
         }
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsEditState.scrollState)) {
-            GeneralActions(mapsEditState, navController)
-            OptionsActions(mapsEditState)
-            MiscActions(mapsEditState)
+        Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
+            GeneralActions(
+                onNavigateRequest = onNavigateRequest
+            )
+            OptionsActions()
+            MiscActions()
             Spacer(Modifier.systemBarsPadding().height(70.dp))
         }
     }
-    if (mapsEditState.saveWarningShown.value) SaveWarningDialog(
-        onDismissRequest = { mapsEditState.saveWarningShown.value = false },
-        onKeepEditing = { mapsEditState.saveWarningShown.value = false },
+    if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
+        onDismissRequest = { mapsEditViewModel.saveWarningShown = false },
+        onKeepEditing = { mapsEditViewModel.saveWarningShown = false },
         onDiscardChanges = {
             scope.launch {
-                mapsEditState.finishEditingWithoutSaving(navController)
-                mapsEditState.saveWarningShown.value = false
+                mapsEditViewModel.finishEditingWithoutSaving(onNavigateBackRequest)
+                mapsEditViewModel.saveWarningShown = false
             }
         }
     )
     BackHandler {
-        scope.launch { mapsEditState.onNavigationBack(navController) }
+        scope.launch { mapsEditViewModel.onNavigationBack(onNavigateBackRequest) }
     }
 }
 
 @Composable
-private fun GeneralActions(mapsEditState: MapsEditState, navController: NavController) {
+private fun GeneralActions(
+    mapsEditViewModel: MapsEditViewModel = getViewModel(),
+    onNavigateRequest: (Destination) -> Unit
+) {
     val typesExpanded = remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
-        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.serverName != null) {
+        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
-                value = mapsEditState.mapEditor?.serverName ?: "",
-                onValueChange = { mapsEditState.setServerName(it) }
+                value = mapsEditViewModel.mapEditor?.serverName ?: "",
+                onValueChange = { mapsEditViewModel.setServerName(it) }
             )
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.mapType != null) {
+        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapType != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsEdit_mapType),
-                description = mapsEditState.mapEditor?.mapType?.getName() ?: "",
+                description = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
                 expanded = typesExpanded.value
             ) {
                 typesExpanded.value = !typesExpanded.value
@@ -98,49 +112,53 @@ private fun GeneralActions(mapsEditState: MapsEditState, navController: NavContr
                 ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     RadioButtons(
                         options = LACMapType.values().map { it.getName() },
-                        initialIndex = (mapsEditState.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
+                        initialIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         optionsRounded = true,
-                        onSelect = { mapsEditState.setMapType(LACMapType.values()[it]) }
+                        onSelect = { mapsEditViewModel.setMapType(LACMapType.values()[it]) }
                     )
                 }
             }
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.mapRoles != null) {
+        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsRoles),
-                description = stringResource(R.string.mapsRoles_description).replace("{COUNT}", (mapsEditState.mapEditor?.mapRoles?.size ?: 0).toString()),
+                description = stringResource(R.string.mapsRoles_description)
+                    .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
                 expanded = false,
                 arrowRotation = 90f
             ) {
-                navController.navigate(Destination.MAPS_ROLES.route)
+                onNavigateRequest(Destination.MAPS_ROLES)
             }
         }
-        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
+        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsMaterials),
-                description = stringResource(R.string.mapsMaterials_description).replace("%n", (mapsEditState.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
+                description = stringResource(R.string.mapsMaterials_description)
+                    .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
                 expanded = false,
                 arrowRotation = 90f
             ) {
-                navController.navigate(Destination.MAPS_MATERIALS.route)
+                onNavigateRequest(Destination.MAPS_MATERIALS)
             }
         }
     }
 }
 
 @Composable
-private fun OptionsActions(mapsEditState: MapsEditState) {
-    AnimatedVisibilityColumn(visible = !mapsEditState.mapEditor?.mapOptions.isNullOrEmpty()) {
+private fun OptionsActions(
+    mapsEditViewModel: MapsEditViewModel = getViewModel()
+) {
+    AnimatedVisibilityColumn(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
         ColumnDivider(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
-            mapsEditState.mapEditor?.mapOptions?.forEach { option ->
+            mapsEditViewModel.mapEditor?.mapOptions?.forEach { option ->
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(
                         label = option.label,
                         value = option.value,
                         onValueChange = {
                             option.value = it 
-                            mapsEditState.updateMapEditorState()
+                            mapsEditViewModel.updateMapEditorState()
                         },
                         placeholder = option.value,
                         numberOnly = true
@@ -150,7 +168,7 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
                         checked = option.value == "true",
                         onCheckedChange = {
                             option.value = it.toString()
-                            mapsEditState.updateMapEditorState()
+                            mapsEditViewModel.updateMapEditorState()
                         }
                     )
                     LACMapOptionType.SWITCH -> Switch(
@@ -158,7 +176,7 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
                         checked = option.value == "enabled",
                         onCheckedChange = {
                             option.value = if (it) "enabled" else "disabled"
-                            mapsEditState.updateMapEditorState()
+                            mapsEditViewModel.updateMapEditorState()
                         }
                     )
                 }
@@ -168,17 +186,19 @@ private fun OptionsActions(mapsEditState: MapsEditState) {
 }
 
 @Composable
-private fun MiscActions(mapsEditState: MapsEditState) {
+private fun MiscActions(
+    mapsEditViewModel: MapsEditViewModel = getViewModel()
+) {
     val context = LocalContext.current
     var filterObjectsExpanded by remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
-        AnimatedVisibilityColumn(visible = mapsEditState.mapEditor?.replacableObjects?.isEmpty() != true) {
+        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                 description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
                 painter = rememberVectorPainter(Icons.Rounded.FindReplace)
             ) {
-                mapsEditState.replaceOldObjects(context)
+                mapsEditViewModel.replaceOldObjects(context)
             }
         }
         ButtonShapeless(
@@ -198,19 +218,23 @@ private fun MiscActions(mapsEditState: MapsEditState) {
                     .animateContentSize()
                     .padding(vertical = 8.dp)
             ) {
-                FilterObjects(mapsEditState)
+                FilterObjects()
             }
         }
     }
 }
 
 @Composable
-private fun FilterObjects(mapsEditState: MapsEditState) {
+private fun FilterObjects(
+    mapsEditViewModel: MapsEditViewModel = getViewModel()
+) {
     val context = LocalContext.current
-    val matches = mapsEditState.getObjectFilterMatches().size
+    val matches = mapsEditViewModel.getObjectFilterMatches().size
     TextField(
-        value = mapsEditState.objectFilter.query,
-        onValueChange = { mapsEditState.objectFilter = mapsEditState.objectFilter.copy(query = it) },
+        value = mapsEditViewModel.objectFilter.query,
+        onValueChange = {
+            mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(query = it)
+        },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
         singleLine = true,
         containerColor = MaterialTheme.colorScheme.surface,
@@ -222,7 +246,7 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
     ) {
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             SuggestionChip(
-                onClick = { mapsEditState.objectFilter = suggestion },
+                onClick = { mapsEditViewModel.objectFilter = suggestion },
                 label = { Text(suggestion.filterName ?: "-") },
                 shape = AppComponentShape,
                 interactionSource = remember { MutableInteractionSource() }
@@ -231,16 +255,16 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
     }
     Switch(
         title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
-        checked = mapsEditState.objectFilter.caseSensitive
+        checked = mapsEditViewModel.objectFilter.caseSensitive
     ) {
-        mapsEditState.objectFilter = mapsEditState.objectFilter.copy(caseSensitive = it)
+        mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(caseSensitive = it)
     }
     Switch(
         title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
         description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
-        checked = mapsEditState.objectFilter.exactMatch
+        checked = mapsEditViewModel.objectFilter.exactMatch
     ) {
-        mapsEditState.objectFilter = mapsEditState.objectFilter.copy(exactMatch = it)
+        mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(exactMatch = it)
     }
     Text(
         text = stringResource(R.string.mapsEdit_filterObjects_matches).replace("%n", matches.toString()),
@@ -253,7 +277,7 @@ private fun FilterObjects(mapsEditState: MapsEditState) {
             containerColor = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
-            mapsEditState.removeObjectFilterMatches(context)
+            mapsEditViewModel.removeObjectFilterMatches(context)
         }
     }
 }

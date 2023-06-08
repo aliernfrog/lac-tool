@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0-alpha02")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.4")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.31.2-alpha")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
     implementation("com.github.aliernfrog:top-toast-compose:1.3.1")

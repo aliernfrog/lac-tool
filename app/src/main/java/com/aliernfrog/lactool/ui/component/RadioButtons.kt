@@ -9,7 +9,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComponentShape
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
 @Composable
 fun RadioButtons(
@@ -29,7 +29,7 @@ fun RadioButtons(
     optionsRounded: Boolean = false,
     onSelect: (Int) -> Unit
 ) {
-    val (selectedIndex, onOptionSelect) = remember { mutableStateOf(initialIndex) }
+    val (selectedIndex, onOptionSelect) = remember { mutableIntStateOf(initialIndex) }
     options.forEachIndexed { index, option ->
         val selected = selectedIndex == index
         val onSelected = { onOptionSelect(index); onSelect(index) }

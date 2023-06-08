@@ -13,20 +13,25 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ColumnDivider
 import com.aliernfrog.lactool.ui.component.MapRole
-import com.aliernfrog.lactool.ui.component.ModalBottomSheet
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoleSheet(role: String, state: ModalBottomSheetState, topToastState: TopToastState? = null, onDeleteRole: (String) -> Unit) {
+fun RoleSheet(
+    role: String,
+    state: ModalBottomSheetState,
+    topToastState: TopToastState? = null,
+    onDeleteRole: (String) -> Unit
+) {
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
-    ModalBottomSheet(sheetState = state) {
+    AppModalBottomSheet(sheetState = state) {
         ColumnDivider(null) {
             MapRole(role, true) {}
         }

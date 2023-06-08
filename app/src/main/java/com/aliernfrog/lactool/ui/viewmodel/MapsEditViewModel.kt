@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.state
+package com.aliernfrog.lactool.ui.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,11 +8,20 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.PriorityHigh
+import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
-import androidx.compose.runtime.*
-import androidx.navigation.NavController
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Density
+import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
@@ -26,9 +35,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
-class MapsEditState(_topToastState: TopToastState) {
-    private val topToastState = _topToastState
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+class MapsEditViewModel(
+    val topToastState: TopToastState,
+    context: Context
+) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -36,31 +47,38 @@ class MapsEditState(_topToastState: TopToastState) {
     val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val materialsLazyListState = LazyListState()
 
-    val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
-    val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
-    val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, isSkipHalfExpanded = true)
-    var saveWarningShown = mutableStateOf(false)
+    val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    var saveWarningShown by mutableStateOf(false)
 
     private var mapFile: File? = null
     private var mapDocumentFile: DocumentFileCompat? = null
+
     var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
-    val failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
-    val roleSheetChosenRole = mutableStateOf("")
-    val materialSheetChosenMaterial = mutableStateOf<LACMapDownloadableMaterial?>(null)
-    val materialSheetMaterialFailed = mutableStateOf(false)
+    var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
+    var roleSheetChosenRole by mutableStateOf("")
+    var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
+    var materialSheetMaterialFailed by mutableStateOf(false)
 
     @SuppressLint("Recycle")
-    suspend fun loadMap(file: File?, documentFile: DocumentFileCompat?, context: Context) {
-        if (file == null && documentFile == null) throw IllegalArgumentException()
-        mapFile = file
-        mapDocumentFile = documentFile
+    suspend fun loadMap(file: Any, context: Context) {
+        when (file) {
+            is File -> mapFile = file
+            is DocumentFileCompat -> mapDocumentFile = file
+            else -> throw IllegalArgumentException()
+        }
         withContext(Dispatchers.IO) {
-            val inputStream = file?.inputStream() ?: context.contentResolver.openInputStream(documentFile!!.uri)
-            val content = inputStream?.bufferedReader()?.readText() ?: return@withContext
+            val inputStream = mapFile?.inputStream() ?: context.contentResolver.openInputStream(mapDocumentFile!!.uri)
+            val content = inputStream?.bufferedReader()?.readText() ?: return@withContext inputStream?.close()
             mapEditor = LACMapEditor(content)
             inputStream.close()
         }
+    }
+
+    fun updateMapEditorState() {
+        mapEditor = mapEditor
     }
 
     fun setServerName(serverName: String) {
@@ -71,28 +89,6 @@ class MapsEditState(_topToastState: TopToastState) {
     fun setMapType(mapType: LACMapType) {
         mapEditor?.mapType = mapType
         updateMapEditorState()
-    }
-
-    fun replaceOldObjects(context: Context) {
-        val replacedObjects = mapEditor?.replaceOldObjects() ?: 0
-        updateMapEditorState()
-        topToastState.showToast(
-            text = context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replacedObjects.toString()),
-            icon = Icons.Rounded.Done
-        )
-    }
-
-    fun getObjectFilterMatches(): List<String> {
-        return mapEditor?.getObjectsMatchingFilter(objectFilter) ?: listOf()
-    }
-
-    fun removeObjectFilterMatches(context: Context) {
-        val removedObjects = mapEditor?.removeObjectsMatchingFilter(objectFilter)
-        objectFilter = LACMapObjectFilter()
-        topToastState.showToast(
-            text = context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", removedObjects.toString()),
-            icon = Icons.Rounded.Delete
-        )
     }
 
     fun deleteRole(role: String, context: Context) {
@@ -117,6 +113,11 @@ class MapsEditState(_topToastState: TopToastState) {
         }
     }
 
+    suspend fun showRoleSheet(role: String) {
+        roleSheetChosenRole = role
+        roleSheetState.show()
+    }
+
     fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
         failedMaterials.remove(material)
@@ -136,12 +137,38 @@ class MapsEditState(_topToastState: TopToastState) {
         }
     }
 
-    fun updateMapEditorState() {
-        mapEditor = mapEditor
+    suspend fun showMaterialSheet(material: LACMapDownloadableMaterial) {
+        if (materialSheetChosenMaterial != material) {
+            materialSheetMaterialFailed = false
+            materialSheetChosenMaterial = material
+        }
+        materialSheetState.show()
+    }
+
+    fun replaceOldObjects(context: Context) {
+        val replacedObjects = mapEditor?.replaceOldObjects() ?: 0
+        updateMapEditorState()
+        topToastState.showToast(
+            text = context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replacedObjects.toString()),
+            icon = Icons.Rounded.Done
+        )
+    }
+
+    fun getObjectFilterMatches(): List<String> {
+        return mapEditor?.getObjectsMatchingFilter(objectFilter) ?: listOf()
+    }
+
+    fun removeObjectFilterMatches(context: Context) {
+        val removedObjects = mapEditor?.removeObjectsMatchingFilter(objectFilter)
+        objectFilter = LACMapObjectFilter()
+        topToastState.showToast(
+            text = context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", removedObjects.toString()),
+            icon = Icons.Rounded.Delete
+        )
     }
 
     @SuppressLint("Recycle")
-    suspend fun saveAndFinishEditing(navController: NavController, context: Context) {
+    suspend fun saveAndFinishEditing(onNavigateBackRequest: () -> Unit, context: Context) {
         withContext(Dispatchers.IO) {
             val newContent = mapEditor?.applyChanges() ?: return@withContext
             val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
@@ -150,11 +177,11 @@ class MapsEditState(_topToastState: TopToastState) {
             outputStreamWriter.close()
             topToastState.showToast(R.string.maps_edit_saved, Icons.Rounded.Save)
         }
-        finishEditingWithoutSaving(navController)
+        finishEditingWithoutSaving(onNavigateBackRequest)
     }
 
-    suspend fun finishEditingWithoutSaving(navController: NavController) {
-        navController.popBackStack()
+    suspend fun finishEditingWithoutSaving(onNavigateBackRequest: () -> Unit) {
+        onNavigateBackRequest()
         mapEditor = null
         objectFilter = LACMapObjectFilter()
         mapFile = null
@@ -163,21 +190,8 @@ class MapsEditState(_topToastState: TopToastState) {
         scrollState.scrollTo(0)
     }
 
-    suspend fun showRoleSheet(role: String) {
-        roleSheetChosenRole.value = role
-        roleSheetState.show()
-    }
-
-    suspend fun showMaterialSheet(material: LACMapDownloadableMaterial) {
-        if (materialSheetChosenMaterial.value != material) {
-            materialSheetMaterialFailed.value = false
-            materialSheetChosenMaterial.value = material
-        }
-        materialSheetState.show()
-    }
-
-    suspend fun onNavigationBack(navController: NavController) {
-        if (mapEditor == null) finishEditingWithoutSaving(navController)
-        else saveWarningShown.value = true
+    suspend fun onNavigationBack(onNavigateBackRequest: () -> Unit) {
+        if (mapEditor == null) finishEditingWithoutSaving(onNavigateBackRequest)
+        else saveWarningShown = true
     }
 }
