@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FindReplace
@@ -230,15 +232,24 @@ private fun FilterObjects(
 ) {
     val context = LocalContext.current
     val matches = mapsEditViewModel.getObjectFilterMatches().size
-    TextField(
+    OutlinedTextField(
         value = mapsEditViewModel.objectFilter.query,
         onValueChange = {
             mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(query = it)
         },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
+        trailingIcon = {
+          Icon(Icons.Default.Search, null)
+        },
         singleLine = true,
-        containerColor = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.padding(horizontal = 8.dp)
+        shape = AppComponentShape,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 4.dp
+            )
     )
     ScrollableRow(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -271,13 +282,22 @@ private fun FilterObjects(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     )
     Crossfade(targetState = matches > 0) {
-        ButtonCentered(
-            title = stringResource(R.string.mapsEdit_filterObjects_removeMatches),
+        Button(
+            onClick = { mapsEditViewModel.removeObjectFilterMatches(context) },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error
+            ),
             enabled = it,
-            containerColor = MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
-            mapsEditViewModel.removeObjectFilterMatches(context)
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = null,
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            Text(stringResource(R.string.mapsEdit_filterObjects_removeMatches))
         }
     }
 }
