@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -28,6 +31,7 @@ import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
+import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
@@ -123,7 +127,7 @@ private fun AppearanceOptions(
                 }
             }
         }
-        if (showMaterialYouOption) com.aliernfrog.lactool.ui.component.form.SwitchRow(
+        if (showMaterialYouOption) SwitchRow(
             title = stringResource(R.string.settings_appearance_materialYou),
             description = stringResource(R.string.settings_appearance_materialYou_description),
             checked = materialYou
@@ -140,7 +144,7 @@ private fun GeneralOptions(
     onPathOptionsDialogShowRequest: () -> Unit
 ) {
     FormSection(title = stringResource(R.string.settings_general)) {
-        com.aliernfrog.lactool.ui.component.form.SwitchRow(
+        SwitchRow(
             title = stringResource(R.string.settings_general_showMapThumbnailsInList),
             description = stringResource(R.string.settings_general_showMapThumbnailsInList_description),
             checked = showMapThumbnailsInList
@@ -184,7 +188,7 @@ private fun AboutApp(
         ) {
             onAboutClick()
         }
-        com.aliernfrog.lactool.ui.component.form.SwitchRow(
+        SwitchRow(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
             description = stringResource(R.string.settings_about_autoCheckUpdates_description),
             checked = autoCheckUpdates
@@ -212,7 +216,12 @@ private fun Links(
         onLinksExpandedStateChange(!linksExpanded)
     }
     FadeVisibility(linksExpanded) {
-        ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .clip(AppComponentShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+        ) {
             SettingsConstant.socials.forEach {
                 val icon = when(it.url.split("/")[2]) {
                     "discord.gg" -> painterResource(id = R.drawable.discord)
@@ -221,8 +230,9 @@ private fun Links(
                 }
                 ButtonRow(
                     title = it.name,
+                    description = it.url,
                     painter = icon,
-                    shape = AppComponentShape,
+                    contentPadding = PaddingValues(horizontal = 16.dp),
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     uriHandler.openUri(it.url)
@@ -243,7 +253,7 @@ private fun ExperimentalSettings(
     val configEditor = settingsViewModel.prefs.prefs.edit()
     FormSection(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
         Text(stringResource(R.string.settings_experimental_description), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
-        com.aliernfrog.lactool.ui.component.form.SwitchRow(
+        SwitchRow(
             title = stringResource(R.string.settings_experimental_showMaterialYouOption),
             checked = settingsViewModel.showMaterialYouOption,
             onCheckedChange = {

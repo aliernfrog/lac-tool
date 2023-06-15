@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.component.form
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -29,6 +30,7 @@ fun ButtonRow(
     arrowRotation: Float = if (expanded == true) 0f else 180f,
     trailingComponent: @Composable (() -> Unit)? = null,
     shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     containerColor: Color = Color.Transparent,
     contentColor: Color =
         if (containerColor == Color.Transparent)
@@ -43,6 +45,7 @@ fun ButtonRow(
         description = description,
         painter = painter,
         shape = shape,
+        contentPadding = contentPadding,
         containerColor = containerColor,
         contentColor = contentColor,
         onClick = onClick

@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.component.form
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -30,6 +31,7 @@ fun FormRow(
     description: String? = null,
     painter: Painter? = null,
     shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     containerColor: Color = Color.Transparent,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit,
@@ -45,7 +47,8 @@ fun FormRow(
                 color = contentColor,
                 onClick = onClick
             )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(contentPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         painter?.let {
