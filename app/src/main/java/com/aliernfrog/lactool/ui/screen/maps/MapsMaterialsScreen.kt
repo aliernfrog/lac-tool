@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
@@ -75,7 +77,7 @@ private fun Suggestions(
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
     val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibility(hasSuggestions) {
-        ColumnDivider(
+        FormSection(
             title = stringResource(R.string.mapsMaterials_suggestions),
             innerModifier = Modifier.padding(horizontal = 8.dp)
         ) {
@@ -118,7 +120,7 @@ private fun FailedMaterials(
         onExpandedChange = { expanded = it }
     ) {
         failedMaterials.forEach { material ->
-            ButtonShapeless(
+            ButtonRow(
                 title = material.name,
                 description = stringResource(R.string.mapsMaterials_clickToViewMore)
             ) {
@@ -145,7 +147,7 @@ private fun UnusedMaterials(
         onExpandedChange = { expanded = it }
     ) {
         unusedMaterials.forEach { material ->
-            ButtonShapeless(
+            ButtonRow(
                 title = material.name,
                 description = stringResource(R.string.mapsMaterials_clickToViewMore)
             ) {

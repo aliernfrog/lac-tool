@@ -28,8 +28,8 @@ import coil.compose.AsyncImage
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.ButtonShapeless
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 
@@ -74,7 +74,7 @@ fun DownloadableMaterialSheet(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant
         )
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.mapsMaterials_material_copyUrl),
             painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
         ) {
@@ -82,7 +82,7 @@ fun DownloadableMaterialSheet(
             topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
             scope.launch { state.hide() }
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.mapsMaterials_material_delete),
             description = stringResource(R.string.mapsMaterials_material_delete_description).replace("%n", material?.usedBy?.size.toString()),
             painter = rememberVectorPainter(Icons.Rounded.Delete),

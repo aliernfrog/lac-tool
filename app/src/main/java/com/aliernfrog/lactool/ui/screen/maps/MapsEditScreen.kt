@@ -27,6 +27,8 @@ import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
@@ -94,7 +96,7 @@ private fun GeneralActions(
     onNavigateRequest: (Destination) -> Unit
 ) {
     val typesExpanded = remember { mutableStateOf(false) }
-    ColumnDivider(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
+    FormSection(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
@@ -103,7 +105,7 @@ private fun GeneralActions(
             )
         }
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapType != null) {
-            ButtonShapeless(
+            ButtonRow(
                 title = stringResource(R.string.mapsEdit_mapType),
                 description = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
                 expanded = typesExpanded.value
@@ -123,7 +125,7 @@ private fun GeneralActions(
             }
         }
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
-            ButtonShapeless(
+            ButtonRow(
                 title = stringResource(R.string.mapsRoles),
                 description = stringResource(R.string.mapsRoles_description)
                     .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
@@ -134,7 +136,7 @@ private fun GeneralActions(
             }
         }
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
-            ButtonShapeless(
+            ButtonRow(
                 title = stringResource(R.string.mapsMaterials),
                 description = stringResource(R.string.mapsMaterials_description)
                     .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
@@ -152,7 +154,7 @@ private fun OptionsActions(
     mapsEditViewModel: MapsEditViewModel = getViewModel()
 ) {
     FadeVisibilityColumn(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
-        ColumnDivider(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
+        FormSection(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
             mapsEditViewModel.mapEditor?.mapOptions?.forEach { option ->
                 when (option.type) {
                     LACMapOptionType.NUMBER -> TextField(
@@ -165,7 +167,7 @@ private fun OptionsActions(
                         placeholder = option.value,
                         numberOnly = true
                     )
-                    LACMapOptionType.BOOLEAN -> Switch(
+                    LACMapOptionType.BOOLEAN -> com.aliernfrog.lactool.ui.component.form.SwitchRow(
                         title = option.label,
                         checked = option.value == "true",
                         onCheckedChange = {
@@ -173,7 +175,7 @@ private fun OptionsActions(
                             mapsEditViewModel.updateMapEditorState()
                         }
                     )
-                    LACMapOptionType.SWITCH -> Switch(
+                    LACMapOptionType.SWITCH -> com.aliernfrog.lactool.ui.component.form.SwitchRow(
                         title = option.label,
                         checked = option.value == "enabled",
                         onCheckedChange = {
@@ -193,9 +195,9 @@ private fun MiscActions(
 ) {
     val context = LocalContext.current
     var filterObjectsExpanded by remember { mutableStateOf(false) }
-    ColumnDivider(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
+    FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
-            ButtonShapeless(
+            ButtonRow(
                 title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                 description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
                 painter = rememberVectorPainter(Icons.Rounded.FindReplace)
@@ -203,7 +205,7 @@ private fun MiscActions(
                 mapsEditViewModel.replaceOldObjects(context)
             }
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.mapsEdit_filterObjects),
             description = stringResource(R.string.mapsEdit_filterObjects_description),
             painter = rememberVectorPainter(Icons.Rounded.FilterAlt),
@@ -264,13 +266,13 @@ private fun FilterObjects(
             )
         }
     }
-    Switch(
+    com.aliernfrog.lactool.ui.component.form.SwitchRow(
         title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
         checked = mapsEditViewModel.objectFilter.caseSensitive
     ) {
         mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(caseSensitive = it)
     }
-    Switch(
+    com.aliernfrog.lactool.ui.component.form.SwitchRow(
         title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
         description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
         checked = mapsEditViewModel.objectFilter.exactMatch

@@ -14,9 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.ButtonShapeless
-import com.aliernfrog.lactool.ui.component.ColumnDivider
 import com.aliernfrog.lactool.ui.component.MapRole
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -32,11 +32,11 @@ fun RoleSheet(
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
     AppModalBottomSheet(sheetState = state) {
-        ColumnDivider(null) {
+        FormSection(null) {
             MapRole(role, true) {}
         }
-        ColumnDivider(null, bottomDivider = false) {
-            ButtonShapeless(
+        FormSection(null, bottomDivider = false) {
+            ButtonRow(
                 title = stringResource(R.string.mapsRoles_copyRoleName),
                 painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
             ) {
@@ -44,7 +44,7 @@ fun RoleSheet(
                 topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
                 scope.launch { state.hide() }
             }
-            ButtonShapeless(
+            ButtonRow(
                 title = stringResource(R.string.mapsRoles_copyRoleRaw),
                 painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
             ) {
@@ -52,7 +52,7 @@ fun RoleSheet(
                 topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
                 scope.launch { state.hide() }
             }
-            ButtonShapeless(
+            ButtonRow(
                 title = stringResource(R.string.mapsRoles_deleteRole),
                 painter = rememberVectorPainter(Icons.Rounded.Delete),
                 contentColor = MaterialTheme.colorScheme.error

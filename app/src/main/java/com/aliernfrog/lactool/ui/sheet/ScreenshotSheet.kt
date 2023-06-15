@@ -22,7 +22,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.ButtonShapeless
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
 
@@ -54,13 +54,13 @@ fun ScreenshotsSheet(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant
         )
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.screenshots_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
             if (screenshot != null) onShareRequest(screenshot)
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.screenshots_delete),
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             contentColor = MaterialTheme.colorScheme.error

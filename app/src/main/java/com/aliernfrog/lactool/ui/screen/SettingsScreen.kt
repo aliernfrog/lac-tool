@@ -26,7 +26,10 @@ import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.toptoast.enum.TopToastType
@@ -101,8 +104,8 @@ private fun AppearanceOptions(
         stringResource(R.string.settings_appearance_theme_light),
         stringResource(R.string.settings_appearance_theme_dark)
     )
-    ColumnDivider(title = stringResource(R.string.settings_appearance)) {
-        ButtonShapeless(
+    FormSection(title = stringResource(R.string.settings_appearance)) {
+        ButtonRow(
             title = stringResource(R.string.settings_appearance_theme),
             description = stringResource(R.string.settings_appearance_theme_description),
             expanded = themeOptionsExpanded
@@ -120,7 +123,7 @@ private fun AppearanceOptions(
                 }
             }
         }
-        if (showMaterialYouOption) Switch(
+        if (showMaterialYouOption) com.aliernfrog.lactool.ui.component.form.SwitchRow(
             title = stringResource(R.string.settings_appearance_materialYou),
             description = stringResource(R.string.settings_appearance_materialYou_description),
             checked = materialYou
@@ -136,15 +139,15 @@ private fun GeneralOptions(
     onShowMapThumbnailsInListChange: (Boolean) -> Unit,
     onPathOptionsDialogShowRequest: () -> Unit
 ) {
-    ColumnDivider(title = stringResource(R.string.settings_general)) {
-        Switch(
+    FormSection(title = stringResource(R.string.settings_general)) {
+        com.aliernfrog.lactool.ui.component.form.SwitchRow(
             title = stringResource(R.string.settings_general_showMapThumbnailsInList),
             description = stringResource(R.string.settings_general_showMapThumbnailsInList_description),
             checked = showMapThumbnailsInList
         ) {
             onShowMapThumbnailsInListChange(it)
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.settings_general_pathOptions),
             description = stringResource(R.string.settings_general_pathOptions_description),
             expanded = false,
@@ -167,11 +170,11 @@ private fun AboutApp(
     onLinksExpandedStateChange: (Boolean) -> Unit
 ) {
     val version = "$appVersionName ($appVersionCode)"
-    ColumnDivider(title = stringResource(R.string.settings_about), bottomDivider = false) {
-        ButtonWithComponent(
+    FormSection(title = stringResource(R.string.settings_about), bottomDivider = false) {
+        ButtonRow(
             title = stringResource(R.string.settings_about_version),
             description = version,
-            component = {
+            trailingComponent = {
                 OutlinedButton(
                     onClick = { onCheckUpdatesRequest() }
                 ) {
@@ -181,7 +184,7 @@ private fun AboutApp(
         ) {
             onAboutClick()
         }
-        Switch(
+        com.aliernfrog.lactool.ui.component.form.SwitchRow(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
             description = stringResource(R.string.settings_about_autoCheckUpdates_description),
             checked = autoCheckUpdates
@@ -201,7 +204,7 @@ private fun Links(
     onLinksExpandedStateChange: (Boolean) -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
-    ButtonShapeless(
+    ButtonRow(
         title = stringResource(R.string.settings_about_links),
         description = stringResource(R.string.settings_about_links_description),
         expanded = linksExpanded
@@ -216,7 +219,14 @@ private fun Links(
                     "github.com" -> painterResource(id = R.drawable.github)
                     else -> null
                 }
-                ButtonShapeless(title = it.name, painter = icon, rounded = true, contentColor = MaterialTheme.colorScheme.onSurfaceVariant) { uriHandler.openUri(it.url) }
+                ButtonRow(
+                    title = it.name,
+                    painter = icon,
+                    shape = AppComponentShape,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ) {
+                    uriHandler.openUri(it.url)
+                }
             }
         }
     }
@@ -231,31 +241,31 @@ private fun ExperimentalSettings(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val configEditor = settingsViewModel.prefs.prefs.edit()
-    ColumnDivider(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
+    FormSection(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
         Text(stringResource(R.string.settings_experimental_description), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
-        Switch(
+        com.aliernfrog.lactool.ui.component.form.SwitchRow(
             title = stringResource(R.string.settings_experimental_showMaterialYouOption),
             checked = settingsViewModel.showMaterialYouOption,
             onCheckedChange = {
                 settingsViewModel.showMaterialYouOption = it
             }
         )
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.settings_experimental_checkUpdates)
         ) {
             scope.launch { mainViewModel.checkUpdates(ignoreVersion = true) }
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.settings_experimental_showUpdateToast)
         ) {
             mainViewModel.showUpdateToast()
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.settings_experimental_showUpdateDialog)
         ) {
             scope.launch { mainViewModel.updateSheetState.show() }
         }
-        ButtonShapeless(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
+        ButtonRow(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
             configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
         }
         SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
@@ -276,7 +286,7 @@ private fun ExperimentalSettings(
                 }
             )
         }
-        ButtonShapeless(title = stringResource(R.string.settings_experimental_resetPrefs), contentColor = MaterialTheme.colorScheme.error) {
+        ButtonRow(title = stringResource(R.string.settings_experimental_resetPrefs), contentColor = MaterialTheme.colorScheme.error) {
             SettingsConstant.experimentalPrefOptions.forEach {
                 configEditor.remove(it.key)
             }

@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.ButtonShapeless
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.state.TopToastState
@@ -62,7 +62,7 @@ fun WallpaperSheet(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant
         )
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.wallpapers_copyImportUrl),
             description = stringResource(R.string.wallpapers_copyImportUrlDescription),
             painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
@@ -71,13 +71,13 @@ fun WallpaperSheet(
             topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
             scope.launch { state.hide() }
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.wallpapers_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
         ) {
             if (wallpaper != null) onShareRequest(wallpaper)
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.wallpapers_delete),
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             contentColor = MaterialTheme.colorScheme.error

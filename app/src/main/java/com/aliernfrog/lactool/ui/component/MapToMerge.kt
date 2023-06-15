@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 
@@ -126,7 +128,7 @@ fun MapToMerge(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true
                 )
-                Switch(
+                SwitchRow(
                     title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
                     checked = mapToMerge.mergeSpawnpoints,
                     onCheckedChange = {
@@ -135,7 +137,7 @@ fun MapToMerge(
                     },
                     contentColor = contentColor
                 )
-                Switch(
+                SwitchRow(
                     title = stringResource(R.string.mapsMerge_map_includeRacingCheckpoints),
                     checked = mapToMerge.mergeRacingCheckpoints,
                     onCheckedChange = {
@@ -144,7 +146,7 @@ fun MapToMerge(
                     },
                     contentColor = contentColor
                 )
-                Switch(
+                SwitchRow(
                     title = stringResource(R.string.mapsMerge_map_includeTDMSpawnpoints),
                     checked = mapToMerge.mergeTDMSpawnpoints,
                     onCheckedChange = {
@@ -153,14 +155,14 @@ fun MapToMerge(
                     },
                     contentColor = contentColor
                 )
-                if (!isBaseMap) ButtonShapeless(
+                if (!isBaseMap) ButtonRow(
                     title = stringResource(R.string.mapsMerge_map_makeBase),
                     painter = rememberVectorPainter(Icons.Rounded.Home),
                     contentColor = contentColor
                 ) {
                     onMakeBase()
                 }
-                ButtonShapeless(
+                ButtonRow(
                     title = stringResource(R.string.mapsMerge_map_remove),
                     painter = rememberVectorPainter(Icons.Rounded.Close),
                     contentColor = MaterialTheme.colorScheme.error
