@@ -1,7 +1,9 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -11,7 +13,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.IosShare
-import androidx.compose.material.icons.rounded.PinDrop
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.Divider
@@ -23,17 +25,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.TextField
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
+import com.aliernfrog.lactool.ui.theme.AppInnerComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.resolveFile
@@ -93,9 +99,9 @@ fun MapsScreen(
 private fun PickMapFileButton(
     onClick: () -> Unit
 ) {
-    ButtonRounded(
+    RoundedButtonRow(
         title = stringResource(R.string.maps_pickMap),
-        painter = rememberVectorPainter(Icons.Rounded.PinDrop),
+        painter = rememberVectorPainter(Icons.Rounded.LocationOn),
         containerColor = MaterialTheme.colorScheme.primary,
         onClick = onClick
     )
@@ -133,61 +139,75 @@ private fun MapActions(
             color = MaterialTheme.colorScheme.surfaceVariant
         )
     }
-    FadeVisibility(visible = mapChosen && !isImported) {
-        ButtonRounded(
-            title = stringResource(R.string.maps_import),
-            painter = rememberVectorPainter(Icons.Rounded.Download),
-            containerColor = MaterialTheme.colorScheme.primary
+    FadeVisibility(mapChosen) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clip(AppComponentShape),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            scope.launch { mapsViewModel.importChosenMap(context) }
-        }
-    }
-    FadeVisibility(visible = mapChosen && isImported) {
-        ButtonRounded(
-            title = stringResource(R.string.maps_export),
-            painter = rememberVectorPainter(Icons.Rounded.Upload)
-        ) {
-            scope.launch { mapsViewModel.exportChosenMap(context) }
-        }
-    }
-    FadeVisibility(visible = mapChosen) {
-        ButtonRounded(
-            title = stringResource(R.string.maps_share),
-            painter = rememberVectorPainter(Icons.Rounded.IosShare)
-        ) {
-            scope.launch { FileUtil.shareFile(mapsViewModel.chosenMap!!.resolveFile(), context) }
-        }
-    }
-    FadeVisibility(visible = mapChosen) {
-        ButtonRounded(
-            title = stringResource(R.string.maps_edit),
-            description = stringResource(R.string.maps_edit_description),
-            painter = rememberVectorPainter(Icons.Rounded.Edit)
-        ) {
-            scope.launch {
-                mapsViewModel.editChosenMap(
-                    context = context,
-                    onNavigateMapEditScreenRequest = {
-                        onNavigateRequest(Destination.MAPS_EDIT)
-                    }
-                )
+            FadeVisibility(!isImported) {
+                ButtonRow(
+                    title = stringResource(R.string.maps_import),
+                    painter = rememberVectorPainter(Icons.Rounded.Download),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    shape = AppInnerComponentShape
+                ) {
+                    scope.launch { mapsViewModel.importChosenMap(context) }
+                }
             }
-        }
-    }
-    FadeVisibility(visible = mapChosen && (isImported || isExported)) {
-        ButtonRounded(
-            title = stringResource(R.string.maps_delete),
-            painter = rememberVectorPainter(Icons.Rounded.Delete),
-            containerColor = MaterialTheme.colorScheme.error
-        ) {
-            mapsViewModel.mapDeleteDialogShown = true
+            FadeVisibility(isImported) {
+                ButtonRow(
+                    title = stringResource(R.string.maps_export),
+                    painter = rememberVectorPainter(Icons.Rounded.Upload),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = AppInnerComponentShape
+                ) {
+                    scope.launch { mapsViewModel.exportChosenMap(context) }
+                }
+            }
+            ButtonRow(
+                title = stringResource(R.string.maps_share),
+                painter = rememberVectorPainter(Icons.Rounded.IosShare),
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                shape = AppInnerComponentShape
+            ) {
+                scope.launch { FileUtil.shareFile(mapsViewModel.chosenMap!!.resolveFile(), context) }
+            }
+            ButtonRow(
+                title = stringResource(R.string.maps_edit),
+                description = stringResource(R.string.maps_edit_description),
+                painter = rememberVectorPainter(Icons.Rounded.Edit),
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                shape = AppInnerComponentShape
+            ) {
+                scope.launch {
+                    mapsViewModel.editChosenMap(
+                        context = context,
+                        onNavigateMapEditScreenRequest = {
+                            onNavigateRequest(Destination.MAPS_EDIT)
+                        }
+                    )
+                }
+            }
+            FadeVisibility(visible = mapChosen && (isImported || isExported)) {
+                ButtonRow(
+                    title = stringResource(R.string.maps_delete),
+                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                    containerColor = MaterialTheme.colorScheme.error,
+                    shape = AppInnerComponentShape
+                ) {
+                    mapsViewModel.mapDeleteDialogShown = true
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun OtherActions(onNavigateMapsMergeScreenRequest: () -> Unit) {
-    ButtonRounded(
+    RoundedButtonRow(
         title = stringResource(R.string.mapsMerge),
         painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt)
     ) {

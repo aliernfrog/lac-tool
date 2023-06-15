@@ -52,7 +52,7 @@ fun FormRow(
             Icon(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier.size(40.dp).padding(1.dp),
+                modifier = Modifier.size(30.dp).padding(1.dp),
                 tint = contentColor
             )
         }
