@@ -1,11 +1,6 @@
 package com.aliernfrog.lactool.ui.sheet
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -31,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ButtonCentered
+import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.TextField
 import kotlinx.coroutines.launch
 
@@ -64,11 +60,7 @@ fun AddRoleSheet(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
             singleLine = true
         )
-        AnimatedVisibility(
-            visible = roleHtml.isNotBlank(),
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut()
-        ) {
+        FadeVisibility(roleHtml.isNotBlank()) {
             Text(
                 text = roleHtml,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),

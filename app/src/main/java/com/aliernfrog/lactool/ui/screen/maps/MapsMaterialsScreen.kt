@@ -74,11 +74,7 @@ private fun Suggestions(
     val scope = rememberCoroutineScope()
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
     val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
-    AnimatedVisibility(
-        visible = hasSuggestions,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut()
-    ) {
+    FadeVisibility(hasSuggestions) {
         ColumnDivider(
             title = stringResource(R.string.mapsMaterials_suggestions),
             innerModifier = Modifier.padding(horizontal = 8.dp)

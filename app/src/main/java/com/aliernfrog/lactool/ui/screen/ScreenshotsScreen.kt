@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import kotlinx.coroutines.launch
@@ -50,11 +51,7 @@ fun ScreenshotsScreen(
                     painter = rememberVectorPainter(Icons.Rounded.NoPhotography),
                     visible = screenshotsViewModel.screenshots.isEmpty()
                 )
-                AnimatedVisibility(
-                    visible = screenshotsViewModel.screenshots.isNotEmpty(),
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut()
-                ) {
+                FadeVisibility(screenshotsViewModel.screenshots.isNotEmpty()) {
                     Text(stringResource(R.string.screenshots_clickHint), Modifier.padding(8.dp))
                 }
             }

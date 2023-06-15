@@ -1,11 +1,6 @@
 package com.aliernfrog.lactool.ui.component
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -90,12 +85,8 @@ fun ExpandableColumnRounded(
                 tint = headerContentColor
             )
         }
-        AnimatedVisibility(
-            visible = expanded,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut()
-        ) {
-            Column { content() }
+        FadeVisibilityColumn(expanded) {
+            content()
         }
     }
 }

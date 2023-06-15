@@ -95,14 +95,14 @@ private fun GeneralActions(
 ) {
     val typesExpanded = remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
-        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.serverName != null) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.serverName != null) {
             TextField(
                 label = stringResource(R.string.mapsEdit_serverName),
                 value = mapsEditViewModel.mapEditor?.serverName ?: "",
                 onValueChange = { mapsEditViewModel.setServerName(it) }
             )
         }
-        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapType != null) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapType != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsEdit_mapType),
                 description = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
@@ -110,7 +110,7 @@ private fun GeneralActions(
             ) {
                 typesExpanded.value = !typesExpanded.value
             }
-            AnimatedVisibilityColumn(visible = typesExpanded.value) {
+            FadeVisibilityColumn(visible = typesExpanded.value) {
                 ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     RadioButtons(
                         options = LACMapType.values().map { it.getName() },
@@ -122,7 +122,7 @@ private fun GeneralActions(
                 }
             }
         }
-        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsRoles),
                 description = stringResource(R.string.mapsRoles_description)
@@ -133,7 +133,7 @@ private fun GeneralActions(
                 onNavigateRequest(Destination.MAPS_ROLES)
             }
         }
-        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsMaterials),
                 description = stringResource(R.string.mapsMaterials_description)
@@ -151,7 +151,7 @@ private fun GeneralActions(
 private fun OptionsActions(
     mapsEditViewModel: MapsEditViewModel = getViewModel()
 ) {
-    AnimatedVisibilityColumn(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
+    FadeVisibilityColumn(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
         ColumnDivider(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
             mapsEditViewModel.mapEditor?.mapOptions?.forEach { option ->
                 when (option.type) {
@@ -194,7 +194,7 @@ private fun MiscActions(
     val context = LocalContext.current
     var filterObjectsExpanded by remember { mutableStateOf(false) }
     ColumnDivider(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
-        AnimatedVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
             ButtonShapeless(
                 title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                 description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
@@ -211,7 +211,7 @@ private fun MiscActions(
         ) {
             filterObjectsExpanded = !filterObjectsExpanded
         }
-        AnimatedVisibilityColumn(visible = filterObjectsExpanded) {
+        FadeVisibilityColumn(visible = filterObjectsExpanded) {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -315,11 +315,4 @@ private fun TextField(label: String, value: String, onValueChange: (String) -> U
         rounded = false,
         modifier = Modifier.padding(horizontal = 8.dp)
     )
-}
-
-@Composable
-private fun AnimatedVisibilityColumn(visible: Boolean, content: @Composable () -> Unit) {
-    AnimatedVisibility(visible, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
-        Column { content() }
-    }
 }

@@ -112,11 +112,7 @@ private fun PickedWallpaper(
     pickedWallpaper: ImageFile?,
     onImport: () -> Unit
 ) {
-    AnimatedVisibility(
-        visible = pickedWallpaper != null,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut()
-    ) {
+    FadeVisibility(pickedWallpaper != null) {
         ColumnRounded(title = stringResource(R.string.wallpapers_chosenWallpaper)) {
             AsyncImage(
                 model = pickedWallpaper?.painterModel,

@@ -1,10 +1,5 @@
 package com.aliernfrog.lactool.ui.component
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,11 +25,7 @@ fun ErrorWithIcon(
     visible: Boolean = true,
     contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut()
-    ) {
+    FadeVisibility(visible) {
         Column(
             modifier = modifier.fillMaxWidth().padding(8.dp).alpha(0.7f),
             horizontalAlignment = Alignment.CenterHorizontally,

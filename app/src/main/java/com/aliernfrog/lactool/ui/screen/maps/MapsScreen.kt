@@ -1,13 +1,19 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.AddLocationAlt
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.IosShare
+import androidx.compose.material.icons.rounded.PinDrop
+import androidx.compose.material.icons.rounded.TextFields
+import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ButtonRounded
+import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
@@ -104,30 +112,28 @@ private fun MapActions(
     val isImported = mapsViewModel.getChosenMapPath()?.startsWith(mapsViewModel.mapsDir) ?: false
     val isExported = mapsViewModel.getChosenMapPath()?.startsWith(mapsViewModel.exportedMapsDir) ?: false
     val mapNameUpdated = mapsViewModel.getMapNameEdit(false) != mapsViewModel.chosenMap?.name
-    MapActionVisibility(visible = mapChosen) {
-        Column {
-            TextField(
-                value = mapsViewModel.mapNameEdit,
-                onValueChange = { mapsViewModel.mapNameEdit = it },
-                label = { Text(stringResource(R.string.maps_mapName)) },
-                placeholder = { Text(mapsViewModel.chosenMap!!.name) },
-                leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
-                singleLine = true,
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                doneIcon = rememberVectorPainter(Icons.Rounded.Edit),
-                doneIconShown = isImported && mapNameUpdated,
-                onDone = {
-                    scope.launch { mapsViewModel.renameChosenMap() }
-                }
-            )
-            Divider(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
-        }
+    FadeVisibilityColumn(visible = mapChosen) {
+        TextField(
+            value = mapsViewModel.mapNameEdit,
+            onValueChange = { mapsViewModel.mapNameEdit = it },
+            label = { Text(stringResource(R.string.maps_mapName)) },
+            placeholder = { Text(mapsViewModel.chosenMap!!.name) },
+            leadingIcon = rememberVectorPainter(Icons.Rounded.TextFields),
+            singleLine = true,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            doneIcon = rememberVectorPainter(Icons.Rounded.Edit),
+            doneIconShown = isImported && mapNameUpdated,
+            onDone = {
+                scope.launch { mapsViewModel.renameChosenMap() }
+            }
+        )
+        Divider(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.surfaceVariant
+        )
     }
-    MapActionVisibility(visible = mapChosen && !isImported) {
+    FadeVisibility(visible = mapChosen && !isImported) {
         ButtonRounded(
             title = stringResource(R.string.maps_import),
             painter = rememberVectorPainter(Icons.Rounded.Download),
@@ -136,7 +142,7 @@ private fun MapActions(
             scope.launch { mapsViewModel.importChosenMap(context) }
         }
     }
-    MapActionVisibility(visible = mapChosen && isImported) {
+    FadeVisibility(visible = mapChosen && isImported) {
         ButtonRounded(
             title = stringResource(R.string.maps_export),
             painter = rememberVectorPainter(Icons.Rounded.Upload)
@@ -144,7 +150,7 @@ private fun MapActions(
             scope.launch { mapsViewModel.exportChosenMap(context) }
         }
     }
-    MapActionVisibility(visible = mapChosen) {
+    FadeVisibility(visible = mapChosen) {
         ButtonRounded(
             title = stringResource(R.string.maps_share),
             painter = rememberVectorPainter(Icons.Rounded.IosShare)
@@ -152,7 +158,7 @@ private fun MapActions(
             scope.launch { FileUtil.shareFile(mapsViewModel.chosenMap!!.resolveFile(), context) }
         }
     }
-    MapActionVisibility(visible = mapChosen) {
+    FadeVisibility(visible = mapChosen) {
         ButtonRounded(
             title = stringResource(R.string.maps_edit),
             description = stringResource(R.string.maps_edit_description),
@@ -168,7 +174,7 @@ private fun MapActions(
             }
         }
     }
-    MapActionVisibility(visible = mapChosen && (isImported || isExported)) {
+    FadeVisibility(visible = mapChosen && (isImported || isExported)) {
         ButtonRounded(
             title = stringResource(R.string.maps_delete),
             painter = rememberVectorPainter(Icons.Rounded.Delete),
@@ -187,14 +193,4 @@ private fun OtherActions(onNavigateMapsMergeScreenRequest: () -> Unit) {
     ) {
         onNavigateMapsMergeScreenRequest()
     }
-}
-
-@Composable
-private fun MapActionVisibility(visible: Boolean, content: @Composable AnimatedVisibilityScope.() -> Unit) {
-    return AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn() + expandVertically(),
-        exit = fadeOut() + shrinkVertically(),
-        content = content
-    )
 }

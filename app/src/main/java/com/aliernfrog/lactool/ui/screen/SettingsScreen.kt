@@ -109,11 +109,7 @@ private fun AppearanceOptions(
         ) {
             onThemeOptionsExpandedStateChange(!themeOptionsExpanded)
         }
-        AnimatedVisibility(
-            visible = themeOptionsExpanded,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut()
-        ) {
+        FadeVisibility(themeOptionsExpanded) {
             ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                 RadioButtons(
                     options = themeOptions,
@@ -212,11 +208,7 @@ private fun Links(
     ) {
         onLinksExpandedStateChange(!linksExpanded)
     }
-    AnimatedVisibility(
-        visible = linksExpanded,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut()
-    ) {
+    FadeVisibility(linksExpanded) {
         ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
             SettingsConstant.socials.forEach {
                 val icon = when(it.url.split("/")[2]) {
