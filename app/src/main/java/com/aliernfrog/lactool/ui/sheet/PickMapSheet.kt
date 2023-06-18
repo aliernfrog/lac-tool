@@ -47,13 +47,13 @@ fun PickMapSheet(
     mapsViewModel: MapsViewModel = getViewModel(),
     sheetState: ModalBottomSheetState = mapsViewModel.pickMapSheetState,
     getShowMapThumbnails: () -> Boolean = { mapsViewModel.prefs.showMapThumbnailsInList },
-    onFilePick: (file: Any) -> Boolean
+    onMapPick: (map: Any) -> Boolean
 ) {
     val scope = rememberCoroutineScope()
     var mapThumbnailsShown by remember { mutableStateOf(getShowMapThumbnails()) }
 
-    fun pickFile(file: Any) {
-        if (onFilePick(file)) scope.launch {
+    fun pickMap(map: Any) {
+        if (onMapPick(map)) scope.launch {
             sheetState.hide()
         }
     }
@@ -72,15 +72,15 @@ fun PickMapSheet(
                 )
             },
             onFilePick = {
-                pickFile(it)
+                pickMap(it)
             }
         )
         Maps(
             importedMaps = mapsViewModel.importedMaps,
             exportedMaps = mapsViewModel.exportedMaps,
             showMapThumbnails = mapThumbnailsShown,
-            onFilePick = {
-                pickFile(it)
+            onMapPick = {
+                pickMap(it)
             }
         )
     }
@@ -124,7 +124,7 @@ private fun Maps(
     importedMaps: List<LACMap>,
     exportedMaps: List<LACMap>,
     showMapThumbnails: Boolean,
-    onFilePick: (Any) -> Unit
+    onMapPick: (Any) -> Unit
 ) {
     var selectedSegment by remember { mutableIntStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     SegmentedButtons(
@@ -142,7 +142,7 @@ private fun Maps(
                 maps = maps,
                 isShowingExportedMaps = it == PickMapSheetSegments.EXPORTED.ordinal,
                 showMapThumbnails = showMapThumbnails,
-                onFilePick = onFilePick
+                onMapPick = onMapPick
             )
         }
     }
@@ -153,13 +153,12 @@ private fun MapsList(
     maps: List<LACMap>,
     isShowingExportedMaps: Boolean,
     showMapThumbnails: Boolean,
-    onFilePick: (Any) -> Unit
+    onMapPick: (Any) -> Unit
 ) {
     if (maps.isNotEmpty()) {
         maps.forEach { map ->
             MapButton(map, showMapThumbnail = showMapThumbnails) {
-                val file = map.documentFile ?: map.file
-                if (file != null) onFilePick(file)
+                onMapPick(map)
             }
         }
     } else {

@@ -63,6 +63,8 @@ fun SettingsScreen(
                 onMaterialYouChange = { settingsViewModel.prefs.materialYou = it }
             )
             GeneralOptions(
+                showChosenMapThumbnail = settingsViewModel.prefs.showChosenMapThumbnail,
+                onShowChosenMapThumbnailChange = { settingsViewModel.prefs.showChosenMapThumbnail = it },
                 showMapThumbnailsInList = settingsViewModel.prefs.showMapThumbnailsInList,
                 onShowMapThumbnailsInListChange = { settingsViewModel.prefs.showMapThumbnailsInList = it },
                 onPathOptionsDialogShowRequest = { settingsViewModel.pathOptionsDialogShown = true }
@@ -139,11 +141,19 @@ private fun AppearanceOptions(
 
 @Composable
 private fun GeneralOptions(
+    showChosenMapThumbnail: Boolean,
+    onShowChosenMapThumbnailChange: (Boolean) -> Unit,
     showMapThumbnailsInList: Boolean,
     onShowMapThumbnailsInListChange: (Boolean) -> Unit,
     onPathOptionsDialogShowRequest: () -> Unit
 ) {
     FormSection(title = stringResource(R.string.settings_general)) {
+        SwitchRow(
+            title = stringResource(R.string.settings_general_showChosenMapThumbnail),
+            description = stringResource(R.string.settings_general_showChosenMapThumbnail_description),
+            checked = showChosenMapThumbnail,
+            onCheckedChange = onShowChosenMapThumbnailChange
+        )
         SwitchRow(
             title = stringResource(R.string.settings_general_showMapThumbnailsInList),
             description = stringResource(R.string.settings_general_showMapThumbnailsInList_description),

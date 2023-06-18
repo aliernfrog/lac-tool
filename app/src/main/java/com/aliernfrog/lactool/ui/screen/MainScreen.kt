@@ -143,14 +143,14 @@ private fun ModalBottomSheets(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     PickMapSheet(
-        onFilePick = {
-            mapsViewModel.getMap(it)
+        onMapPick = {
+            mapsViewModel.chooseMap(it)
             true
         }
     )
     PickMapSheet(
         sheetState = mapsMergeViewModel.pickMapSheetState,
-        onFilePick = {
+        onMapPick = {
             scope.launch {
                 mapsMergeViewModel.addMap(it, context)
             }

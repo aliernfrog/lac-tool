@@ -16,6 +16,7 @@ fun LACMap.getDetails(context: Context): String? {
     if (this.lastModified != null) details.add(
         FileUtil.lastModifiedFromLong(this.lastModified, context)
     )
-    return if (details.isEmpty()) null
-    else details.joinToString(" | ")
+    val result = if (details.isEmpty()) null else details.joinToString(" | ")
+    this.details = result
+    return result
 }

@@ -10,5 +10,6 @@ data class LACMap(
     val lastModified: Long? = null,
     val file: File? = null,
     val documentFile: DocumentFileCompat? = null,
-    val thumbnailPainterModel: Any? = null
+    val thumbnailPainterModel: Any? = null,
+    var details: String? = null
 )

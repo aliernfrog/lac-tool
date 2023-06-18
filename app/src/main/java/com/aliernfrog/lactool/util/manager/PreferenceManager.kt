@@ -13,6 +13,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     var materialYou by booleanPreference(ConfigKey.KEY_APP_MATERIAL_YOU, true)
 
     // General options
+    var showChosenMapThumbnail by booleanPreference(ConfigKey.KEY_SHOW_CHOSEN_MAP_THUMBNAIL, true)
     var showMapThumbnailsInList by booleanPreference(ConfigKey.KEY_SHOW_MAP_THUMBNAILS_LIST, true)
 
     // Directory options
