@@ -2,23 +2,17 @@ package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PinDrop
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -26,11 +20,10 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.data.LACMap
+import com.aliernfrog.lactool.ui.component.form.FormHeader
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.extension.getDetails
@@ -38,16 +31,26 @@ import com.aliernfrog.lactool.util.extension.getDetails
 @Composable
 fun MapButton(
     map: LACMap,
+    modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     showMapThumbnail: Boolean = true,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val mapDetails = map.getDetails(context)
-    Box(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComponentShape).background(containerColor).clickableWithColor(contentColor) {
-        onClick()
-    }) {
+    val mapDetails = remember { map.getDetails(context) }
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max)
+            .padding(8.dp)
+            .clip(AppComponentShape)
+            .background(containerColor)
+            .clickableWithColor(
+                color = contentColor,
+                onClick = onClick
+            )
+    ) {
         if (showMapThumbnail) AsyncImage(
             model = map.thumbnailPainterModel,
             contentDescription = null,
@@ -58,23 +61,17 @@ fun MapButton(
             contentScale = ContentScale.Crop,
             alpha = 0.5f
         )
-        Row(
+        FormHeader(
+            title = map.name,
+            description = mapDetails,
+            painter = rememberVectorPainter(Icons.Outlined.PinDrop),
             modifier = Modifier
-                .fillMaxHeight()
-                .background(Brush.horizontalGradient(listOf(containerColor,Color.Transparent)))
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = rememberVectorPainter(Icons.Outlined.PinDrop),
-                contentDescription = null,
-                modifier = Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp),
-                tint = contentColor
-            )
-            Column {
-                Text(text = map.name, color = contentColor, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                if (mapDetails != null) Text(text = mapDetails, modifier = Modifier.alpha(0.9f), color = contentColor, fontSize = 12.sp)
-            }
-        }
+                .fillMaxSize()
+                .background(Brush.horizontalGradient(listOf(
+                    containerColor,
+                    Color.Transparent
+                )))
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+        )
     }
 }
