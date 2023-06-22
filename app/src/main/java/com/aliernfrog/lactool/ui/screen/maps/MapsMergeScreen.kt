@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
@@ -121,7 +122,7 @@ private fun MapsList(
 private fun PickMapButton(
     onClick: () -> Unit
 ) {
-    ButtonRounded(
+    RoundedButtonRow(
         title = stringResource(R.string.mapsMerge_addMap),
         painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt),
         containerColor = MaterialTheme.colorScheme.primary,

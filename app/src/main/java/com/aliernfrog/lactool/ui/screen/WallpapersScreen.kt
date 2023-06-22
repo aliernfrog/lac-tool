@@ -30,6 +30,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
@@ -96,7 +97,7 @@ private fun PickImageButton(
             if (uri != null) onPickUri(uri)
         }
     )
-    ButtonRounded(
+    RoundedButtonRow(
         title = stringResource(R.string.wallpapers_pickImage),
         painter = rememberVectorPainter(Icons.Rounded.Image),
         containerColor = MaterialTheme.colorScheme.primary
@@ -120,7 +121,7 @@ private fun PickedWallpaper(
                 modifier = Modifier.fillMaxWidth().padding(8.dp).clip(AppComponentShape),
                 contentScale = ContentScale.Crop
             )
-            ButtonRounded(
+            RoundedButtonRow(
                 title = stringResource(R.string.wallpapers_chosen_import),
                 painter = rememberVectorPainter(Icons.Rounded.Download),
                 containerColor = MaterialTheme.colorScheme.primary
