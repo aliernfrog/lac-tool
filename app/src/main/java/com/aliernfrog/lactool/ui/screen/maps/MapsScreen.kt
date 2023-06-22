@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.IosShare
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.Divider
@@ -37,6 +36,7 @@ import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
+import com.aliernfrog.lactool.ui.component.maps.PickMapFileButton
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.theme.AppInnerComponentShape
@@ -64,7 +64,10 @@ fun MapsScreen(
         topAppBarState = mapsViewModel.topAppBarState
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsViewModel.scrollState)) {
-            PickMapFileButton {
+            PickMapFileButton(
+                chosenMap = mapsViewModel.chosenMap,
+                showMapThumbnail = mapsViewModel.prefs.showChosenMapThumbnail
+            ) {
                 scope.launch { mapsViewModel.pickMapSheetState.show() }
             }
             MapActions(
@@ -92,18 +95,6 @@ fun MapsScreen(
                 mapsViewModel.mapDeleteDialogShown = false
             }
         }
-    )
-}
-
-@Composable
-private fun PickMapFileButton(
-    onClick: () -> Unit
-) {
-    RoundedButtonRow(
-        title = stringResource(R.string.maps_pickMap),
-        painter = rememberVectorPainter(Icons.Rounded.LocationOn),
-        containerColor = MaterialTheme.colorScheme.primary,
-        onClick = onClick
     )
 }
 

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
@@ -76,14 +77,18 @@ class MapsMergeViewModel(
             isMerging = false
             mapMerger.mapsToMerge.clear()
             // No need to update merger state here because it navigates back to maps screen after finishing
-            mapsViewModel.getMap(newFile)
+            mapsViewModel.chooseMap(newFile)
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
         }
         onNavigateBackRequest()
     }
 
-    suspend fun addMap(file: Any, context: Context) {
+    suspend fun addMap(map: Any, context: Context) {
         withContext(Dispatchers.IO) {
+            val file = when (map) {
+                is LACMap -> map.documentFile ?: map.file ?: throw NullPointerException()
+                else -> map
+            }
             val mapName = when (file) {
                 is DocumentFileCompat -> FileUtil.removeExtension(file.name)
                 is File -> file.nameWithoutExtension

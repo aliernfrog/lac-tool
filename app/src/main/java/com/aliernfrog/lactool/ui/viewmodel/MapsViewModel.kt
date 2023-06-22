@@ -43,7 +43,7 @@ class MapsViewModel(
 
     val mapsDir = prefs.lacMapsDir
     val exportedMapsDir = prefs.exportedMapsDir
-    lateinit var mapsFile: DocumentFileCompat
+    private lateinit var mapsFile: DocumentFileCompat
     private val exportedMapsFile = File(exportedMapsDir)
 
     var mapDeleteDialogShown by mutableStateOf(false)
@@ -53,27 +53,35 @@ class MapsViewModel(
     var mapNameEdit by mutableStateOf("")
     var lastMapName by mutableStateOf("")
 
-    fun getMap(file: Any?) {
-        when (file) {
+    fun chooseMap(map: Any?) {
+        var mapToChoose: LACMap? = null
+        when (map) {
             is File -> {
-                val mapName = file.nameWithoutExtension
-                if (file.exists()) chooseMap(LACMap(
+                val mapName = map.nameWithoutExtension
+                if (map.exists()) mapToChoose = LACMap(
                     name = mapName,
-                    fileName = file.name,
-                    file = file
-                ))
+                    fileName = map.name,
+                    file = map
+                )
                 else fileDoesntExist()
             }
             is DocumentFileCompat -> {
-                val mapName = FileUtil.removeExtension(file.name)
-                if (file.exists()) chooseMap(LACMap(
+                val mapName = FileUtil.removeExtension(map.name)
+                if (map.exists()) mapToChoose = LACMap(
                     name = mapName,
-                    fileName = file.name,
-                    documentFile = file
-                ))
+                    fileName = map.name,
+                    documentFile = map
+                )
                 else fileDoesntExist()
             }
-             else -> chooseMap(null)
+            is LACMap -> mapToChoose = map
+            else -> mapToChoose = null
+        }
+
+        chosenMap = mapToChoose
+        if (mapToChoose != null) {
+            mapNameEdit = mapToChoose.name
+            lastMapName = mapToChoose.name
         }
     }
 
@@ -87,7 +95,7 @@ class MapsViewModel(
                 val newFileName = file.name.replaceFirst(currentName, newName)
                 file.renameTo(newFileName)
             }
-            getMap(mapsFile.findFile(newName))
+            chooseMap(mapsFile.findFile(newName))
             topToastState.showToast(R.string.maps_rename_done, Icons.Rounded.Edit)
             fetchImportedMaps()
         }
@@ -100,7 +108,7 @@ class MapsViewModel(
         else withContext(Dispatchers.IO) {
             output = mapsFile.createFile("", getMapNameEdit()) ?: return@withContext
             FileUtil.copyFile(mapPath, output ?: return@withContext, context)
-            getMap(output)
+            chooseMap(output)
             topToastState.showToast(R.string.maps_import_done, Icons.Rounded.Download)
             fetchImportedMaps()
         }
@@ -113,7 +121,7 @@ class MapsViewModel(
         else withContext(Dispatchers.IO) {
             if (output.parentFile?.isDirectory != true) output.parentFile?.mkdirs()
             FileUtil.copyFile(mapFile, output.absolutePath, context)
-            getMap(file = output)
+            chooseMap(map = output)
             topToastState.showToast(R.string.maps_export_done, Icons.Rounded.Upload)
             fetchExportedMaps()
         }
@@ -139,7 +147,7 @@ class MapsViewModel(
                 map.file?.delete()
                 fetchExportedMaps()
             }
-            getMap(null)
+            chooseMap(null)
             topToastState.showToast(R.string.maps_delete_done, Icons.Rounded.Delete)
         }
     }
@@ -166,14 +174,6 @@ class MapsViewModel(
         if (thumbnailFile != null && thumbnailFile.exists() && thumbnailFile.isFile()) list.add(thumbnailFile)
         if (dataFile != null && dataFile.exists() && dataFile.isDirectory()) list.add(dataFile)
         return list
-    }
-
-    private fun chooseMap(map: LACMap?) {
-        chosenMap = map
-        if (map != null) {
-            mapNameEdit = map.name
-            lastMapName = map.name
-        }
     }
 
     fun getMapsFile(context: Context): DocumentFileCompat {

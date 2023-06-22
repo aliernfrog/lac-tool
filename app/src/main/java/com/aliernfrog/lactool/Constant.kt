@@ -16,6 +16,7 @@ object ConfigKey {
     const val KEY_APP_LAST_ALPHA_ACK = "lastAlphaAck"
     const val KEY_APP_UPDATES_URL = "updatesUrl"
     const val KEY_SHOW_MAP_THUMBNAILS_LIST = "showMapThumbnailsList"
+    const val KEY_SHOW_CHOSEN_MAP_THUMBNAIL = "chosenMapThumbnail"
     const val KEY_MAPS_DIR = "mapsDir"
     const val KEY_MAPS_EXPORT_DIR = "mapsExportDir"
     const val KEY_WALLPAPERS_DIR = "wallpapersDir"

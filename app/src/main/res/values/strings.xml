@@ -147,8 +147,10 @@
     <string name="settings_appearance_materialYou">Material You</string>
     <string name="settings_appearance_materialYou_description">Theme based on colors of your device</string>
     <string name="settings_general">General</string>
+    <string name="settings_general_showChosenMapThumbnail">Show thumbnail of selected map</string>
+    <string name="settings_general_showChosenMapThumbnail_description">Know which map you are on</string>
     <string name="settings_general_showMapThumbnailsInList">Show map thumbnails in map list</string>
-    <string name="settings_general_showMapThumbnailsInList_description">Know which map you are on</string>
+    <string name="settings_general_showMapThumbnailsInList_description">Easily identify the maps you have</string>
     <string name="settings_general_pathOptions">Directories</string>
     <string name="settings_general_pathOptions_description">Configure directories used in LAC Tool</string>
     <string name="settings_general_pathOptions_willRestart">LAC Tool will be restarted after saving your changes</string>

@@ -5,6 +5,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
@@ -20,17 +22,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.ButtonRounded
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.MapButton
+import com.aliernfrog.lactool.ui.component.maps.MapButton
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
+import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -47,13 +51,13 @@ fun PickMapSheet(
     mapsViewModel: MapsViewModel = getViewModel(),
     sheetState: ModalBottomSheetState = mapsViewModel.pickMapSheetState,
     getShowMapThumbnails: () -> Boolean = { mapsViewModel.prefs.showMapThumbnailsInList },
-    onFilePick: (file: Any) -> Boolean
+    onMapPick: (map: Any) -> Boolean
 ) {
     val scope = rememberCoroutineScope()
     var mapThumbnailsShown by remember { mutableStateOf(getShowMapThumbnails()) }
 
-    fun pickFile(file: Any) {
-        if (onFilePick(file)) scope.launch {
+    fun pickMap(map: Any) {
+        if (onMapPick(map)) scope.launch {
             sheetState.hide()
         }
     }
@@ -72,15 +76,15 @@ fun PickMapSheet(
                 )
             },
             onFilePick = {
-                pickFile(it)
+                pickMap(it)
             }
         )
         Maps(
             importedMaps = mapsViewModel.importedMaps,
             exportedMaps = mapsViewModel.exportedMaps,
             showMapThumbnails = mapThumbnailsShown,
-            onFilePick = {
-                pickFile(it)
+            onMapPick = {
+                pickMap(it)
             }
         )
     }
@@ -108,7 +112,7 @@ private fun PickFromDeviceButton(
             }
         }
     }
-    ButtonRounded(
+    RoundedButtonRow(
         title = stringResource(R.string.maps_pickMap_device),
         painter = rememberVectorPainter(Icons.Rounded.Folder),
         containerColor = MaterialTheme.colorScheme.primary,
@@ -124,14 +128,16 @@ private fun Maps(
     importedMaps: List<LACMap>,
     exportedMaps: List<LACMap>,
     showMapThumbnails: Boolean,
-    onFilePick: (Any) -> Unit
+    onMapPick: (Any) -> Unit
 ) {
     var selectedSegment by remember { mutableIntStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     SegmentedButtons(
         options = listOf(
             stringResource(R.string.maps_pickMap_imported),
             stringResource(R.string.maps_pickMap_exported)
-        )
+        ),
+        selectedOptionIndex = selectedSegment,
+        modifier = Modifier.fillMaxWidth().padding(8.dp)
     ) {
         selectedSegment = it
     }
@@ -142,7 +148,7 @@ private fun Maps(
                 maps = maps,
                 isShowingExportedMaps = it == PickMapSheetSegments.EXPORTED.ordinal,
                 showMapThumbnails = showMapThumbnails,
-                onFilePick = onFilePick
+                onMapPick = onMapPick
             )
         }
     }
@@ -153,13 +159,12 @@ private fun MapsList(
     maps: List<LACMap>,
     isShowingExportedMaps: Boolean,
     showMapThumbnails: Boolean,
-    onFilePick: (Any) -> Unit
+    onMapPick: (Any) -> Unit
 ) {
     if (maps.isNotEmpty()) {
         maps.forEach { map ->
             MapButton(map, showMapThumbnail = showMapThumbnails) {
-                val file = map.documentFile ?: map.file
-                if (file != null) onFilePick(file)
+                onMapPick(map)
             }
         }
     } else {

@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.MapRole
+import com.aliernfrog.lactool.ui.component.maps.MapRole
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.util.extension.removeHtml
