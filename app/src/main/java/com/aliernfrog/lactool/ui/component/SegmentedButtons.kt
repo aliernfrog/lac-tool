@@ -89,22 +89,4 @@ fun SegmentedButtons(
             }
         }
     }
-    /*Crossfade(targetState = selectedIndex) {
-        Row(Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(8.dp).clip(AppComponentShape).background(backgroundColor).padding(3.dp)) {
-            options.forEachIndexed { index, option ->
-                val selected = it == index
-                Text(
-                    text = option,
-                    color = if (selected) selectedContentColor else contentColor,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxSize().weight(1f).clip(AppComponentShape)
-                        .clickable { onOptionSelect(index); onSelect(index) }
-                        .background(if (selected) selectedBackgroundColor else backgroundColor)
-                        .padding(8.dp)
-                        .alpha(if (selected) 1f else 0.6f)
-                )
-            }
-        }
-    }*/
 }
