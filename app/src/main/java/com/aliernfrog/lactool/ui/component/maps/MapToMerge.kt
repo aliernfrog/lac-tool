@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.component
+package com.aliernfrog.lactool.ui.component.maps
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape

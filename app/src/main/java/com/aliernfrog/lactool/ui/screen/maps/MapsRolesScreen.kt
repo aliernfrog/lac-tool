@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
-import com.aliernfrog.lactool.ui.component.MapRole
+import com.aliernfrog.lactool.ui.component.maps.MapRole
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel

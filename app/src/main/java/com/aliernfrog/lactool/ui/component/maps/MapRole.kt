@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.component
+package com.aliernfrog.lactool.ui.component.maps
 
 import android.graphics.Typeface
 import android.text.Spanned

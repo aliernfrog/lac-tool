@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.component
+package com.aliernfrog.lactool.ui.component.maps
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
