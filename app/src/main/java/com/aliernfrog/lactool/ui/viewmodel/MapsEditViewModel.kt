@@ -47,8 +47,8 @@ class MapsEditViewModel(
     val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val materialsLazyListState = LazyListState()
 
-    val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
-    val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context), isSkipHalfExpanded = true)
+    val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context), isSkipHalfExpanded = true)
     val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
     var saveWarningShown by mutableStateOf(false)
 
