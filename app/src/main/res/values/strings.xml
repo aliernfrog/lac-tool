@@ -84,7 +84,6 @@
     <string name="mapsRoles_roleColor">Role color</string>
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: {ROLE}</string>
-    <string name="mapsRoles_addRolePreview">Preview</string>
     <string name="mapsRoles_addRoleHint">Role preview</string>
     <string name="mapsRoles_illegalChars">Role can NOT contain: "{CHAR}"</string>
     <string name="mapsMaterials">Materials</string>
