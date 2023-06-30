@@ -5,6 +5,7 @@
     <string name="action_ok">Okay</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_dismiss">Dismiss</string>
+    <string name="action_clear">Clear</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="warning_alphaVersion">This version of LAC Tool is an alpha and things may be broken or missing. You can report issues on GitHub.</string>
@@ -74,6 +75,7 @@
     <string name="mapsRoles">Edit roles</string>
     <string name="mapsRoles_description">Currently has {COUNT} roles</string>
     <string name="mapsRoles_showingCount">Showing {COUNT} roles</string>
+    <string name="mapsRoles_noRoles">This map does not have any roles</string>
     <string name="mapsRoles_copyRoleName">Copy role name</string>
     <string name="mapsRoles_copyRoleRaw">Copy raw role name</string>
     <string name="mapsRoles_deleteRole">Delete role</string>
@@ -82,6 +84,8 @@
     <string name="mapsRoles_roleColor">Role color</string>
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: {ROLE}</string>
+    <string name="mapsRoles_addRolePreview">Preview</string>
+    <string name="mapsRoles_addRoleHint">Role preview</string>
     <string name="mapsRoles_illegalChars">Role can NOT contain: "{CHAR}"</string>
     <string name="mapsMaterials">Materials</string>
     <string name="mapsMaterials_description">Currently has %n materials</string>

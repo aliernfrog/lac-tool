@@ -47,7 +47,6 @@ class MapsEditViewModel(
     val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val materialsLazyListState = LazyListState()
 
-    val roleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context), isSkipHalfExpanded = true)
     val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context), isSkipHalfExpanded = true)
     val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
     var saveWarningShown by mutableStateOf(false)
@@ -58,7 +57,6 @@ class MapsEditViewModel(
     var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
     var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
-    var roleSheetChosenRole by mutableStateOf("")
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
 
@@ -111,11 +109,6 @@ class MapsEditViewModel(
             updateMapEditorState()
             topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("{ROLE}", role.removeHtml()), Icons.Rounded.Check)
         }
-    }
-
-    suspend fun showRoleSheet(role: String) {
-        roleSheetChosenRole = role
-        roleSheetState.show()
     }
 
     fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {

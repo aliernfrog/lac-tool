@@ -21,7 +21,7 @@ fun FormSection(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(modifier) {
-        if (topDivider) DividerRow()
+        if (topDivider) DividerRow(Modifier.padding(16.dp))
 
         if (title != null) Text(
             text = title,
@@ -36,6 +36,6 @@ fun FormSection(
             content = content
         )
 
-        if (bottomDivider) DividerRow()
+        if (bottomDivider) DividerRow(Modifier.padding(16.dp))
     }
 }

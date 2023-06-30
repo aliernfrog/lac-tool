@@ -26,7 +26,6 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsScreen
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
-import com.aliernfrog.lactool.ui.sheet.RoleSheet
 import com.aliernfrog.lactool.ui.sheet.ScreenshotsSheet
 import com.aliernfrog.lactool.ui.sheet.UpdateSheet
 import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
@@ -156,12 +155,6 @@ private fun ModalBottomSheets(
             }
             true
         }
-    )
-    RoleSheet(
-        role = mapsEditViewModel.roleSheetChosenRole,
-        state = mapsEditViewModel.roleSheetState,
-        topToastState = mapsEditViewModel.topToastState,
-        onDeleteRole = { mapsEditViewModel.deleteRole(it, context) }
     )
     AddRoleSheet(
         state = mapsEditViewModel.addRoleSheetState,

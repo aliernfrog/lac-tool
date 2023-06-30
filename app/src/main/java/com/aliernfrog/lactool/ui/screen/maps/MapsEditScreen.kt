@@ -29,6 +29,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
+import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
@@ -167,7 +168,7 @@ private fun OptionsActions(
                         placeholder = option.value,
                         numberOnly = true
                     )
-                    LACMapOptionType.BOOLEAN -> com.aliernfrog.lactool.ui.component.form.SwitchRow(
+                    LACMapOptionType.BOOLEAN -> SwitchRow(
                         title = option.label,
                         checked = option.value == "true",
                         onCheckedChange = {
@@ -175,7 +176,7 @@ private fun OptionsActions(
                             mapsEditViewModel.updateMapEditorState()
                         }
                     )
-                    LACMapOptionType.SWITCH -> com.aliernfrog.lactool.ui.component.form.SwitchRow(
+                    LACMapOptionType.SWITCH -> SwitchRow(
                         title = option.label,
                         checked = option.value == "enabled",
                         onCheckedChange = {
@@ -266,13 +267,13 @@ private fun FilterObjects(
             )
         }
     }
-    com.aliernfrog.lactool.ui.component.form.SwitchRow(
+    SwitchRow(
         title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
         checked = mapsEditViewModel.objectFilter.caseSensitive
     ) {
         mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(caseSensitive = it)
     }
-    com.aliernfrog.lactool.ui.component.form.SwitchRow(
+    SwitchRow(
         title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
         description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
         checked = mapsEditViewModel.objectFilter.exactMatch
