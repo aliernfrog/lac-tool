@@ -41,7 +41,7 @@ fun PickMapFileButton(
 ) {
     val context = LocalContext.current
     LaunchedEffect(chosenMap) {
-        if (chosenMap?.details == null) chosenMap?.getDetails(context)
+        if (chosenMap?.details?.value == null) chosenMap?.getDetails(context)
     }
 
     Box(
@@ -79,7 +79,7 @@ fun PickMapFileButton(
         ) {
             FormHeader(
                 title = chosenMap?.name ?: stringResource(R.string.maps_pickMap),
-                description = chosenMap?.details,
+                description = chosenMap?.details?.value,
                 painter = rememberVectorPainter(Icons.Rounded.LocationOn),
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
