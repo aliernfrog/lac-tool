@@ -87,15 +87,16 @@ class MapsViewModel(
 
     suspend fun renameChosenMap() {
         val newName = getMapNameEdit(false)
+        val newNameTxt = "$newName.txt"
         val currentName = chosenMap?.name ?: return
-        val output = mapsFile.findFile(getMapNameEdit())
+        val output = mapsFile.findFile(newNameTxt)
         if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             getChosenMapFiles().forEach { file ->
                 val newFileName = file.name.replaceFirst(currentName, newName)
                 file.renameTo(newFileName)
             }
-            chooseMap(mapsFile.findFile(newName))
+            chooseMap(mapsFile.findFile(newNameTxt))
             topToastState.showToast(R.string.maps_rename_done, Icons.Rounded.Edit)
             fetchImportedMaps()
         }
@@ -103,10 +104,11 @@ class MapsViewModel(
 
     suspend fun importChosenMap(context: Context) {
         val mapPath = chosenMap?.file?.absolutePath ?: return
-        var output = mapsFile.findFile(getMapNameEdit())
+        val mapName = getMapNameEdit()
+        var output = mapsFile.findFile(mapNameEdit)
         if (output != null && output.exists()) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
-            output = mapsFile.createFile("", getMapNameEdit()) ?: return@withContext
+            output = mapsFile.createFile("", mapName) ?: return@withContext
             FileUtil.copyFile(mapPath, output ?: return@withContext, context)
             chooseMap(output)
             topToastState.showToast(R.string.maps_import_done, Icons.Rounded.Download)
