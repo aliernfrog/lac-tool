@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.component.form
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -51,7 +52,8 @@ fun FormHeader(
                     text = description,
                     color = contentColor,
                     fontSize = 14.sp,
-                    lineHeight = 18.sp
+                    lineHeight = 18.sp,
+                    modifier = Modifier.animateContentSize()
                 )
             }
         }

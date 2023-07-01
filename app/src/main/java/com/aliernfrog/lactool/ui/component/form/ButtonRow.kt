@@ -33,8 +33,7 @@ fun ButtonRow(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     containerColor: Color = Color.Transparent,
     contentColor: Color =
-        if (containerColor == Color.Transparent)
-            MaterialTheme.colorScheme.onSurface
+        if (containerColor == Color.Transparent) MaterialTheme.colorScheme.onSurface
         else contentColorFor(containerColor),
     onClick: () -> Unit
 ) {

@@ -11,6 +11,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,7 +20,8 @@ import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
-import com.aliernfrog.lactool.ui.component.form.FormSection
+import com.aliernfrog.lactool.ui.component.form.DividerRow
+import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
@@ -76,78 +79,58 @@ private fun Suggestions(
     val scope = rememberCoroutineScope()
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
     val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
-    FadeVisibility(hasSuggestions) {
-        FormSection(
-            title = stringResource(R.string.mapsMaterials_suggestions),
-            innerModifier = Modifier.padding(horizontal = 8.dp)
+    FadeVisibilityColumn(hasSuggestions) {
+        Suggestion(
+            titleRef = R.string.mapsMaterials_failedMaterials,
+            descriptionRef = R.string.mapsMaterials_failedMaterials_description,
+            painter = rememberVectorPainter(Icons.Rounded.Report),
+            accentColor = MaterialTheme.colorScheme.error,
+            materials = mapsEditViewModel.failedMaterials,
+            onMaterialClick = {
+                scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+            }
+        )
+        Suggestion(
+            titleRef = R.string.mapsMaterials_unusedMaterials,
+            descriptionRef = R.string.mapsMaterials_unusedMaterials_description,
+            painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
+            accentColor = MaterialTheme.colorScheme.secondary,
+            materials = unusedMaterials,
+            onMaterialClick = {
+                scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+            }
+        )
+        DividerRow(Modifier.padding(8.dp))
+    }
+}
+
+@Composable
+private fun Suggestion(
+    titleRef: Int,
+    descriptionRef: Int,
+    painter: Painter,
+    accentColor: Color,
+    materials: List<LACMapDownloadableMaterial>,
+    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    FadeVisibility(materials.isNotEmpty()) {
+        ExpandableRow(
+            expanded = expanded,
+            title = stringResource(titleRef),
+            description = stringResource(descriptionRef).replace("%n", materials.size.toString()),
+            painter = painter,
+            minimizedHeaderContentColor = accentColor,
+            expandedHeaderColor = accentColor,
+            onClickHeader = { expanded = !expanded }
         ) {
-            AnimatedVisibility(visible = mapsEditViewModel.failedMaterials.isNotEmpty()) {
-                FailedMaterials(
-                    failedMaterials = mapsEditViewModel.failedMaterials,
-                    onMaterialClick = {
-                        scope.launch { mapsEditViewModel.showMaterialSheet(it) }
-                    }
-                )
-            }
-            AnimatedVisibility(visible = unusedMaterials.isNotEmpty()) {
-                UnusedMaterials(
-                    unusedMaterials = unusedMaterials,
-                    onMaterialClick = {
-                        scope.launch { mapsEditViewModel.showMaterialSheet(it) }
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun FailedMaterials(
-    failedMaterials: List<LACMapDownloadableMaterial>,
-    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    ExpandableColumnRounded(
-        title = stringResource(R.string.mapsMaterials_failedMaterials),
-        description = stringResource(R.string.mapsMaterials_failedMaterials_description)
-            .replace("%n", failedMaterials.size.toString()),
-        painter = rememberVectorPainter(Icons.Rounded.Report),
-        headerContainerColor = MaterialTheme.colorScheme.error,
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
-    ) {
-        failedMaterials.forEach { material ->
-            ButtonRow(
-                title = material.name,
-                description = stringResource(R.string.mapsMaterials_clickToViewMore)
-            ) {
-                onMaterialClick(material)
-            }
-        }
-    }
-}
-
-@Composable
-private fun UnusedMaterials(
-    unusedMaterials: List<LACMapDownloadableMaterial>,
-    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    ExpandableColumnRounded(
-        title = stringResource(R.string.mapsMaterials_unusedMaterials),
-        description = stringResource(R.string.mapsMaterials_unusedMaterials_description)
-            .replace("%n", unusedMaterials.size.toString()),
-        painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
-        headerContainerColor = MaterialTheme.colorScheme.secondary,
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
-    ) {
-        unusedMaterials.forEach { material ->
-            ButtonRow(
-                title = material.name,
-                description = stringResource(R.string.mapsMaterials_clickToViewMore)
-            ) {
-                onMaterialClick(material)
+            materials.forEach { material ->
+                ButtonRow(
+                    title = material.name,
+                    description = stringResource(R.string.mapsMaterials_clickToViewMore)
+                ) {
+                    onMaterialClick(material)
+                }
             }
         }
     }
