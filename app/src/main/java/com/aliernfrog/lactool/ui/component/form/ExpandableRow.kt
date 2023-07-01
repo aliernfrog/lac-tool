@@ -33,7 +33,7 @@ fun ExpandableRow(
     minimizedHeaderContentColor: Color =
         if (minimizedHeaderColor == Color.Transparent) MaterialTheme.colorScheme.onSurface
         else contentColorFor(minimizedHeaderColor),
-    expandedHeaderColor: Color = MaterialTheme.colorScheme.primary,
+    expandedHeaderColor: Color = MaterialTheme.colorScheme.secondary,
     expandedHeaderContentColor: Color = contentColorFor(expandedHeaderColor),
     expandedContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     expandedPadding: Dp = 8.dp,

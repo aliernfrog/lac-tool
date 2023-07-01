@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -30,10 +28,10 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.toptoast.enum.TopToastType
@@ -44,45 +42,16 @@ import org.koin.androidx.compose.getViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    mainViewModel: MainViewModel = getViewModel(),
     settingsViewModel: SettingsViewModel = getViewModel()
 ) {
-    val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.settings),
         topAppBarState = settingsViewModel.topAppBarState
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(settingsViewModel.scrollState)) {
-            AppearanceOptions(
-                theme = settingsViewModel.prefs.theme,
-                materialYou = settingsViewModel.prefs.materialYou,
-                showMaterialYouOption = settingsViewModel.showMaterialYouOption,
-                themeOptionsExpanded = settingsViewModel.themeOptionsExpanded,
-                onThemeOptionsExpandedStateChange = { settingsViewModel.themeOptionsExpanded = it },
-                onThemeChange = { settingsViewModel.prefs.theme = it },
-                onMaterialYouChange = { settingsViewModel.prefs.materialYou = it }
-            )
-            GeneralOptions(
-                showChosenMapThumbnail = settingsViewModel.prefs.showChosenMapThumbnail,
-                onShowChosenMapThumbnailChange = { settingsViewModel.prefs.showChosenMapThumbnail = it },
-                showMapThumbnailsInList = settingsViewModel.prefs.showMapThumbnailsInList,
-                onShowMapThumbnailsInListChange = { settingsViewModel.prefs.showMapThumbnailsInList = it },
-                onPathOptionsDialogShowRequest = { settingsViewModel.pathOptionsDialogShown = true }
-            )
-            AboutApp(
-                appVersionName = mainViewModel.applicationVersionName,
-                appVersionCode = mainViewModel.applicationVersionCode,
-                autoCheckUpdates = settingsViewModel.prefs.autoCheckUpdates,
-                linksExpanded = settingsViewModel.linksExpanded,
-                onCheckUpdatesRequest = {
-                    scope.launch {
-                        mainViewModel.checkUpdates(manuallyTriggered = true)
-                    }
-                },
-                onAboutClick = { settingsViewModel.onAboutClick() },
-                onAutoCheckUpdatesChange = { settingsViewModel.prefs.autoCheckUpdates = it },
-                onLinksExpandedStateChange = { settingsViewModel.linksExpanded = it }
-            )
+            AppearanceOptions()
+            GeneralOptions()
+            AboutApp()
             if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings()
         }
     }
@@ -97,13 +66,7 @@ fun SettingsScreen(
 
 @Composable
 private fun AppearanceOptions(
-    theme: Int,
-    materialYou: Boolean,
-    showMaterialYouOption: Boolean,
-    themeOptionsExpanded: Boolean,
-    onThemeOptionsExpandedStateChange: (Boolean) -> Unit,
-    onThemeChange: (Int) -> Unit,
-    onMaterialYouChange: (Boolean) -> Unit
+    settingsViewModel: SettingsViewModel = getViewModel()
 ) {
     val themeOptions = listOf(
         stringResource(R.string.settings_appearance_theme_system),
@@ -111,55 +74,50 @@ private fun AppearanceOptions(
         stringResource(R.string.settings_appearance_theme_dark)
     )
     FormSection(title = stringResource(R.string.settings_appearance)) {
-        ButtonRow(
+        ExpandableRow(
+            expanded = settingsViewModel.themeOptionsExpanded,
             title = stringResource(R.string.settings_appearance_theme),
             description = stringResource(R.string.settings_appearance_theme_description),
-            expanded = themeOptionsExpanded
+            onClickHeader = {
+                settingsViewModel.themeOptionsExpanded = !settingsViewModel.themeOptionsExpanded
+            }
         ) {
-            onThemeOptionsExpandedStateChange(!themeOptionsExpanded)
-        }
-        FadeVisibility(themeOptionsExpanded) {
-            ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
-                RadioButtons(
-                    options = themeOptions,
-                    initialIndex = theme,
-                    optionsRounded = true
-                ) {
-                    onThemeChange(it)
-                }
+            RadioButtons(
+                options = themeOptions,
+                selectedOptionIndex = settingsViewModel.prefs.theme
+            ) {
+                settingsViewModel.prefs.theme = it
             }
         }
-        if (showMaterialYouOption) SwitchRow(
+        if (settingsViewModel.showMaterialYouOption) SwitchRow(
             title = stringResource(R.string.settings_appearance_materialYou),
             description = stringResource(R.string.settings_appearance_materialYou_description),
-            checked = materialYou
+            checked = settingsViewModel.prefs.materialYou
         ) {
-            onMaterialYouChange(it)
+            settingsViewModel.prefs.materialYou
         }
     }
 }
 
 @Composable
 private fun GeneralOptions(
-    showChosenMapThumbnail: Boolean,
-    onShowChosenMapThumbnailChange: (Boolean) -> Unit,
-    showMapThumbnailsInList: Boolean,
-    onShowMapThumbnailsInListChange: (Boolean) -> Unit,
-    onPathOptionsDialogShowRequest: () -> Unit
+    settingsViewModel: SettingsViewModel = getViewModel()
 ) {
     FormSection(title = stringResource(R.string.settings_general)) {
         SwitchRow(
             title = stringResource(R.string.settings_general_showChosenMapThumbnail),
             description = stringResource(R.string.settings_general_showChosenMapThumbnail_description),
-            checked = showChosenMapThumbnail,
-            onCheckedChange = onShowChosenMapThumbnailChange
+            checked = settingsViewModel.prefs.showChosenMapThumbnail,
+            onCheckedChange = {
+                settingsViewModel.prefs.showChosenMapThumbnail = it
+            }
         )
         SwitchRow(
             title = stringResource(R.string.settings_general_showMapThumbnailsInList),
             description = stringResource(R.string.settings_general_showMapThumbnailsInList_description),
-            checked = showMapThumbnailsInList
+            checked = settingsViewModel.prefs.showMapThumbnailsInList
         ) {
-            onShowMapThumbnailsInListChange(it)
+            settingsViewModel.prefs.showMapThumbnailsInList = it
         }
         ButtonRow(
             title = stringResource(R.string.settings_general_pathOptions),
@@ -167,47 +125,44 @@ private fun GeneralOptions(
             expanded = false,
             arrowRotation = 90f
         ) {
-            onPathOptionsDialogShowRequest()
+            settingsViewModel.pathOptionsDialogShown = true
         }
     }
 }
 
 @Composable
 private fun AboutApp(
-    appVersionName: String,
-    appVersionCode: Int,
-    autoCheckUpdates: Boolean,
-    linksExpanded: Boolean,
-    onCheckUpdatesRequest: () -> Unit,
-    onAboutClick: () -> Unit,
-    onAutoCheckUpdatesChange: (Boolean) -> Unit,
-    onLinksExpandedStateChange: (Boolean) -> Unit
+    mainViewModel: MainViewModel = getViewModel(),
+    settingsViewModel: SettingsViewModel = getViewModel()
 ) {
-    val version = "$appVersionName ($appVersionCode)"
+    val scope = rememberCoroutineScope()
+    val version = "${mainViewModel.applicationVersionName} (${mainViewModel.applicationVersionCode})"
     FormSection(title = stringResource(R.string.settings_about), bottomDivider = false) {
         ButtonRow(
             title = stringResource(R.string.settings_about_version),
             description = version,
             trailingComponent = {
                 OutlinedButton(
-                    onClick = { onCheckUpdatesRequest() }
+                    onClick = { scope.launch {
+                        mainViewModel.checkUpdates(manuallyTriggered = true)
+                    } }
                 ) {
                     Text(stringResource(R.string.settings_about_checkUpdates))
                 }
             }
         ) {
-            onAboutClick()
+            settingsViewModel.onAboutClick()
         }
         SwitchRow(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
             description = stringResource(R.string.settings_about_autoCheckUpdates_description),
-            checked = autoCheckUpdates
+            checked = settingsViewModel.prefs.autoCheckUpdates
         ) {
-            onAutoCheckUpdatesChange(it)
+            settingsViewModel.prefs.autoCheckUpdates = it
         }
         Links(
-            linksExpanded = linksExpanded,
-            onLinksExpandedStateChange = onLinksExpandedStateChange
+            linksExpanded = settingsViewModel.linksExpanded,
+            onLinksExpandedStateChange = { settingsViewModel.linksExpanded = it }
         )
     }
 }
@@ -218,35 +173,28 @@ private fun Links(
     onLinksExpandedStateChange: (Boolean) -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
-    ButtonRow(
+    ExpandableRow(
+        expanded = linksExpanded,
         title = stringResource(R.string.settings_about_links),
         description = stringResource(R.string.settings_about_links_description),
-        expanded = linksExpanded
+        onClickHeader = {
+            onLinksExpandedStateChange(!linksExpanded)
+        }
     ) {
-        onLinksExpandedStateChange(!linksExpanded)
-    }
-    FadeVisibility(linksExpanded) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .clip(AppComponentShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-        ) {
-            SettingsConstant.socials.forEach {
-                val icon = when(it.url.split("/")[2]) {
-                    "discord.gg" -> painterResource(id = R.drawable.discord)
-                    "github.com" -> painterResource(id = R.drawable.github)
-                    else -> null
-                }
-                ButtonRow(
-                    title = it.name,
-                    description = it.url,
-                    painter = icon,
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ) {
-                    uriHandler.openUri(it.url)
-                }
+        SettingsConstant.socials.forEach {
+            val icon = when (it.url.split("/")[2]) {
+                "discord.gg" -> painterResource(id = R.drawable.discord)
+                "github.com" -> painterResource(id = R.drawable.github)
+                else -> null
+            }
+            ButtonRow(
+                title = it.name,
+                description = it.url,
+                painter = icon,
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ) {
+                uriHandler.openUri(it.url)
             }
         }
     }

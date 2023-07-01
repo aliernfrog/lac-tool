@@ -117,7 +117,7 @@ private fun GeneralActions(
                 ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
                     RadioButtons(
                         options = LACMapType.values().map { it.getName() },
-                        initialIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
+                        selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         optionsRounded = true,
                         onSelect = { mapsEditViewModel.setMapType(LACMapType.values()[it]) }

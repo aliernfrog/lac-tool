@@ -9,8 +9,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,16 +21,15 @@ import com.aliernfrog.lactool.ui.theme.AppComponentShape
 @Composable
 fun RadioButtons(
     options: List<String>,
-    initialIndex: Int = 0,
+    selectedOptionIndex: Int = 0,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     optionsRounded: Boolean = false,
     onSelect: (Int) -> Unit
 ) {
-    val (selectedIndex, onOptionSelect) = remember { mutableIntStateOf(initialIndex) }
     options.forEachIndexed { index, option ->
-        val selected = selectedIndex == index
-        val onSelected = { onOptionSelect(index); onSelect(index) }
+        val selected = selectedOptionIndex == index
+        val onSelected = { onSelect(index) }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().clip(if (optionsRounded) AppComponentShape else RectangleShape).clickable { onSelected() }.padding(horizontal = 2.dp)
