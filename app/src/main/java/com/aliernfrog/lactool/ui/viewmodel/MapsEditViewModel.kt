@@ -16,6 +16,7 @@ import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
@@ -56,6 +57,7 @@ class MapsEditViewModel(
 
     var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
+    var rolesExpandedRoleIndex by mutableIntStateOf(-1)
     var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
