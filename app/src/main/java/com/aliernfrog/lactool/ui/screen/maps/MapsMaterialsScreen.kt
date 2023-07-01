@@ -37,6 +37,13 @@ fun MapsMaterialsScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(mapsEditViewModel.mapEditor?.downloadableMaterials?.size) {
+        // Back out if materials list is empty, which means there's nothing much to do in this screen
+        if (mapsEditViewModel.mapEditor?.downloadableMaterials.isNullOrEmpty())
+            onNavigateBackRequest()
+    }
+
     AppScaffold(
         title = stringResource(R.string.mapsMaterials),
         topAppBarState = mapsEditViewModel.materialsTopAppBarState,
@@ -79,10 +86,10 @@ fun MapsMaterialsScreen(
             onDismissRequest = { mapsEditViewModel.pendingMaterialDelete = null }
         ) {
             mapsEditViewModel.deleteDownloadableMaterial(it, context)
+            mapsEditViewModel.pendingMaterialDelete = null
             scope.launch {
                 mapsEditViewModel.materialSheetState.hide()
                 mapsEditViewModel.materialSheetChosenMaterial = null
-                mapsEditViewModel.pendingMaterialDelete = null
             }
         }
     }
