@@ -78,6 +78,8 @@ fun MapRoleRow(
         if (expanded == true) 0f else 180f
     )
 
+    val rawDifferent = role.removeHtml() != role
+
     if (showTopDivider) DividerRow()
     BaseExpandableRow(
         expanded = expanded ?: false,
@@ -105,7 +107,7 @@ fun MapRoleRow(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
-                    FadeVisibility(expanded == true || alwaysShowRaw) {
+                    FadeVisibility((expanded == true || alwaysShowRaw) && rawDifferent) {
                         Text(
                             text = role,
                             color = headerContentColor,
@@ -133,7 +135,7 @@ fun MapRoleRow(
             clipboardManager.setText(AnnotatedString(role.removeHtml()))
             topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
         }
-        ButtonRow(
+        if (rawDifferent) ButtonRow(
             title = stringResource(R.string.mapsRoles_copyRoleRaw),
             painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
         ) {
