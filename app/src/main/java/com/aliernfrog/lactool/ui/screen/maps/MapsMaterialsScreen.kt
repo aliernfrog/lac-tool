@@ -92,9 +92,6 @@ private fun Suggestions(
             AnimatedVisibility(visible = unusedMaterials.isNotEmpty()) {
                 UnusedMaterials(
                     unusedMaterials = unusedMaterials,
-                    onScrollUpRequest = {
-                        scope.launch { mapsEditViewModel.materialsLazyListState.scrollToItem(0) }
-                    },
                     onMaterialClick = {
                         scope.launch { mapsEditViewModel.showMaterialSheet(it) }
                     }
@@ -133,7 +130,6 @@ private fun FailedMaterials(
 @Composable
 private fun UnusedMaterials(
     unusedMaterials: List<LACMapDownloadableMaterial>,
-    onScrollUpRequest: () -> Unit,
     onMaterialClick: (LACMapDownloadableMaterial) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -154,9 +150,5 @@ private fun UnusedMaterials(
                 onMaterialClick(material)
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        onScrollUpRequest()
     }
 }
