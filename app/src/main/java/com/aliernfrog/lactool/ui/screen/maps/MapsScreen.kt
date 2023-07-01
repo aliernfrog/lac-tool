@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.enum.MapImportedState
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
@@ -106,8 +107,8 @@ private fun MapActions(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val mapChosen = mapsViewModel.chosenMap != null
-    val isImported = mapsViewModel.getChosenMapPath()?.startsWith(mapsViewModel.mapsDir) ?: false
-    val isExported = mapsViewModel.getChosenMapPath()?.startsWith(mapsViewModel.exportedMapsDir) ?: false
+    val isImported = mapsViewModel.chosenMap?.importedState == MapImportedState.IMPORTED
+    val isExported = mapsViewModel.chosenMap?.importedState == MapImportedState.EXPORTED
     val mapNameUpdated = mapsViewModel.getMapNameEdit(false) != mapsViewModel.chosenMap?.name
     FadeVisibilityColumn(visible = mapChosen) {
         TextField(

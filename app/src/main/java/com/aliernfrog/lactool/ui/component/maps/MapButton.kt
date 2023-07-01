@@ -52,7 +52,7 @@ fun MapButton(
             )
     ) {
         if (showMapThumbnail) AsyncImage(
-            model = map.thumbnailPainterModel,
+            model = map.thumbnailModel,
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
             placeholder = ColorPainter(containerColor),

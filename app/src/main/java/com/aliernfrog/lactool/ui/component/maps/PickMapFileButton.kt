@@ -40,8 +40,8 @@ fun PickMapFileButton(
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    LaunchedEffect(chosenMap) {
-        if (chosenMap?.details?.value == null) chosenMap?.getDetails(context)
+    LaunchedEffect(chosenMap?.details?.value) {
+        if (chosenMap?.details?.value.isNullOrEmpty()) chosenMap?.getDetails(context)
     }
 
     Box(
@@ -58,7 +58,7 @@ fun PickMapFileButton(
     ) {
         FadeVisibility(showMapThumbnail && chosenMap != null) {
             AsyncImage(
-                model = chosenMap?.thumbnailPainterModel,
+                model = chosenMap?.thumbnailModel,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
@@ -79,7 +79,7 @@ fun PickMapFileButton(
         ) {
             FormHeader(
                 title = chosenMap?.name ?: stringResource(R.string.maps_pickMap),
-                description = chosenMap?.details?.value,
+                description = chosenMap?.getDetails(context),
                 painter = rememberVectorPainter(Icons.Rounded.LocationOn),
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier

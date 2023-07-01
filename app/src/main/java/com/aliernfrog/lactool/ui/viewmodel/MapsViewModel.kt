@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
+import com.aliernfrog.lactool.enum.MapImportedState
+import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -42,16 +44,17 @@ class MapsViewModel(
     val scrollState = ScrollState(0)
 
     val mapsDir = prefs.lacMapsDir
-    val exportedMapsDir = prefs.exportedMapsDir
+    private val exportedMapsDir = prefs.exportedMapsDir
     private lateinit var mapsFile: DocumentFileCompat
     private val exportedMapsFile = File(exportedMapsDir)
 
     var mapDeleteDialogShown by mutableStateOf(false)
     var importedMaps by mutableStateOf(emptyList<LACMap>())
     var exportedMaps by mutableStateOf(emptyList<LACMap>())
-    var chosenMap by mutableStateOf<LACMap?>(null)
     var mapNameEdit by mutableStateOf("")
     var lastMapName by mutableStateOf("")
+
+    var chosenMap by mutableStateOf<LACMap?>(null)
 
     fun chooseMap(map: Any?) {
         var mapToChoose: LACMap? = null
@@ -74,14 +77,21 @@ class MapsViewModel(
                 )
                 else fileDoesntExist()
             }
-            is LACMap -> mapToChoose = map
+            is LACMap -> {
+                mapToChoose = map
+            }
             else -> mapToChoose = null
         }
 
-        chosenMap = mapToChoose
-        if (mapToChoose != null) {
-            mapNameEdit = mapToChoose.name
-            lastMapName = mapToChoose.name
+        val mapPath = mapToChoose?.resolvePath(mapsDir) ?: ""
+        chosenMap = mapToChoose?.copy(
+            importedState = getMapImportedState(mapPath),
+            thumbnailModel = getMapThumbnailModel(mapPath)
+        )
+
+        mapToChoose?.name?.let {
+            mapNameEdit = it
+            lastMapName = it
         }
     }
 
@@ -154,16 +164,21 @@ class MapsViewModel(
         }
     }
 
-    fun getChosenMapPath(): String? {
-        val map = chosenMap ?: return null
-        return if (map.file != null) map.file.absolutePath
-        else if (map.documentFile != null) "$mapsDir/${map.documentFile.name}"
-        else null
-    }
-
     fun getMapNameEdit(addTxtSuffix: Boolean = true): String {
         val suffix = if (addTxtSuffix) ".txt" else ""
         return mapNameEdit.ifBlank { chosenMap?.name }+suffix
+    }
+
+    private fun getMapImportedState(path: String): MapImportedState {
+        return if (path.startsWith(mapsDir)) MapImportedState.IMPORTED
+        else if (path.startsWith(exportedMapsDir)) MapImportedState.EXPORTED
+        else MapImportedState.NONE
+    }
+
+    private fun getMapThumbnailModel(path: String): String? {
+        val fileName = FileUtil.getFileName(path, removeExtension = true)
+        return if (!path.startsWith(mapsDir)) null
+        else mapsFile.findFile("$fileName.jpg")?.uri.toString()
     }
 
     private fun getChosenMapFiles(): List<DocumentFileCompat> {
@@ -191,20 +206,38 @@ class MapsViewModel(
 
     private suspend fun fetchImportedMaps() {
         withContext(Dispatchers.IO) {
-            val files = mapsFile.listFiles().filter { it.isFile() && it.name.lowercase().endsWith(".txt") }.sortedBy { it.name.lowercase() }
-            val maps = files.map {
-                val nameWithoutExtension = FileUtil.removeExtension(it.name)
-                LACMap(nameWithoutExtension, it.name, it.length, it.lastModified, null, it, mapsFile.findFile("${nameWithoutExtension}.jpg")?.uri.toString())
-            }
-            importedMaps = maps
+            importedMaps = mapsFile.listFiles()
+                .filter { it.isFile() && it.name.lowercase().endsWith(".txt") }
+                .sortedBy { it.name.lowercase() }
+                .map {
+                    LACMap(
+                        name = FileUtil.removeExtension(it.name),
+                        fileName = it.name,
+                        fileSize = it.length,
+                        lastModified = it.lastModified,
+                        file = null,
+                        documentFile = it,
+                        thumbnailModel = getMapThumbnailModel("$mapsDir/${it.name}")
+                    )
+                }
         }
     }
 
     private suspend fun fetchExportedMaps() {
         withContext(Dispatchers.IO) {
-            val files = exportedMapsFile.listFiles()?.filter { it.isFile && it.name.lowercase().endsWith(".txt") }?.sortedBy { it.name.lowercase() }
-            val maps = files?.map { LACMap(it.nameWithoutExtension, it.name, it.length(), it.lastModified(), it, null) }
-            if (maps != null) exportedMaps = maps
+            exportedMaps = (exportedMapsFile.listFiles() ?: emptyArray())
+                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
+                .sortedBy { it.name.lowercase() }
+                .map {
+                    LACMap(
+                        name = it.nameWithoutExtension,
+                        fileName = it.name,
+                        fileSize = it.length(),
+                        lastModified = it.lastModified(),
+                        file = it,
+                        documentFile = null
+                    )
+                }
         }
     }
 
