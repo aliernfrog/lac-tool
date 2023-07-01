@@ -50,6 +50,8 @@ class MapsEditViewModel(
 
     val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context), isSkipHalfExpanded = true)
     val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    var mapTypesExpanded by mutableStateOf(false)
+    var objectFilterExpanded by mutableStateOf(false)
     var saveWarningShown by mutableStateOf(false)
 
     private var mapFile: File? = null

@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.component.form
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -45,7 +46,7 @@ fun FormHeader(
                 text = title,
                 color = contentColor,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                modifier = Modifier.fillMaxWidth()
             )
             description?.let {
                 Text(
@@ -53,7 +54,9 @@ fun FormHeader(
                     color = contentColor,
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
-                    modifier = Modifier.animateContentSize()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize()
                 )
             }
         }

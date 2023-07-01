@@ -2,7 +2,6 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.rounded.FindReplace
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -28,6 +26,7 @@ import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
@@ -96,7 +95,6 @@ private fun GeneralActions(
     mapsEditViewModel: MapsEditViewModel = getViewModel(),
     onNavigateRequest: (Destination) -> Unit
 ) {
-    val typesExpanded = remember { mutableStateOf(false) }
     FormSection(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.serverName != null) {
             TextField(
@@ -106,23 +104,20 @@ private fun GeneralActions(
             )
         }
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapType != null) {
-            ButtonRow(
+            ExpandableRow(
+                expanded = mapsEditViewModel.mapTypesExpanded,
                 title = stringResource(R.string.mapsEdit_mapType),
                 description = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
-                expanded = typesExpanded.value
-            ) {
-                typesExpanded.value = !typesExpanded.value
-            }
-            FadeVisibilityColumn(visible = typesExpanded.value) {
-                ColumnRounded(Modifier.padding(horizontal = 8.dp)) {
-                    RadioButtons(
-                        options = LACMapType.values().map { it.getName() },
-                        selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        optionsRounded = true,
-                        onSelect = { mapsEditViewModel.setMapType(LACMapType.values()[it]) }
-                    )
+                onClickHeader = {
+                    mapsEditViewModel.mapTypesExpanded = !mapsEditViewModel.mapTypesExpanded
                 }
+            ) {
+                RadioButtons(
+                    options = LACMapType.values().map { it.getName() },
+                    selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    onSelect = { mapsEditViewModel.setMapType(LACMapType.values()[it]) }
+                )
             }
         }
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
@@ -195,7 +190,6 @@ private fun MiscActions(
     mapsEditViewModel: MapsEditViewModel = getViewModel()
 ) {
     val context = LocalContext.current
-    var filterObjectsExpanded by remember { mutableStateOf(false) }
     FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
             ButtonRow(
@@ -206,23 +200,16 @@ private fun MiscActions(
                 mapsEditViewModel.replaceOldObjects(context)
             }
         }
-        ButtonRow(
+        ExpandableRow(
+            expanded = mapsEditViewModel.objectFilterExpanded,
             title = stringResource(R.string.mapsEdit_filterObjects),
             description = stringResource(R.string.mapsEdit_filterObjects_description),
             painter = rememberVectorPainter(Icons.Rounded.FilterAlt),
-            expanded = filterObjectsExpanded
+            onClickHeader = {
+                mapsEditViewModel.objectFilterExpanded = !mapsEditViewModel.objectFilterExpanded
+            }
         ) {
-            filterObjectsExpanded = !filterObjectsExpanded
-        }
-        FadeVisibilityColumn(visible = filterObjectsExpanded) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clip(AppComponentShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .animateContentSize()
-                    .padding(vertical = 8.dp)
-            ) {
+            Column(Modifier.padding(vertical = 8.dp)) {
                 FilterObjects()
             }
         }
@@ -242,7 +229,7 @@ private fun FilterObjects(
         },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
         trailingIcon = {
-          Icon(Icons.Default.Search, null)
+            Icon(Icons.Default.Search, null)
         },
         singleLine = true,
         shape = AppComponentShape,

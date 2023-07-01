@@ -62,7 +62,7 @@ fun AddRoleSheet(
                 alwaysShowRaw = roleHtml.isNotBlank(),
                 showTopDivider = false,
                 expanded = null,
-                headerColor = MaterialTheme.colorScheme.surfaceVariant,
+                minimizedHeaderColor = MaterialTheme.colorScheme.surfaceVariant,
                 onRoleDelete = {},
                 onClick = {},
                 modifier = Modifier
