@@ -28,7 +28,9 @@ import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
+import com.aliernfrog.lactool.util.extension.removeHtml
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -82,8 +84,7 @@ fun MapsRolesScreen(
                     showTopDivider = index != 0,
                     topToastState = mapsEditViewModel.topToastState,
                     onRoleDelete = { role ->
-                        mapsEditViewModel.rolesExpandedRoleIndex = -1
-                        mapsEditViewModel.deleteRole(role, context)
+                        mapsEditViewModel.pendingRoleDelete = role
                     },
                     onClick = {
                         mapsEditViewModel.rolesExpandedRoleIndex = if (expanded) -1 else index
@@ -93,6 +94,17 @@ fun MapsRolesScreen(
             item {
                 Spacer(Modifier.systemBarsPadding().height(70.dp))
             }
+        }
+    }
+
+    mapsEditViewModel.pendingRoleDelete?.let {
+        DeleteConfirmationDialog(
+            name = it.removeHtml(),
+            onDismissRequest = { mapsEditViewModel.pendingRoleDelete = null }
+        ) {
+            mapsEditViewModel.rolesExpandedRoleIndex = -1
+            mapsEditViewModel.pendingRoleDelete = null
+            mapsEditViewModel.deleteRole(it, context)
         }
     }
 }

@@ -52,6 +52,7 @@ class MapsEditViewModel(
     val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
+    var pendingRoleDelete by mutableStateOf<String?>(null)
     var saveWarningShown by mutableStateOf(false)
 
     private var mapFile: File? = null
