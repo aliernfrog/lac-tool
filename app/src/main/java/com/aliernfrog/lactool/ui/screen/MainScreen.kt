@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.screen
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -16,6 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.ui.component.BaseScaffold
 import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
@@ -37,24 +39,21 @@ import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MainScreen(
     mapsViewModel: MapsViewModel = getViewModel(),
     wallpapersViewModel: WallpapersViewModel = getViewModel(),
     screenshotsViewModel: ScreenshotsViewModel = getViewModel()
 ) {
-    val navController = rememberAnimatedNavController()
+    val navController = rememberNavController()
     BaseScaffold(
         navController = navController
     ) {
-        AnimatedNavHost(
+        NavHost(
             navController = navController,
             startDestination = NavigationConstant.INITIAL_DESTINATION,
             modifier = Modifier.fillMaxSize().padding(it).consumeWindowInsets(it).imePadding(),
