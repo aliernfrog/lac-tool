@@ -164,7 +164,7 @@ private fun ModalBottomSheets(
         failed = mapsEditViewModel.materialSheetMaterialFailed,
         state = mapsEditViewModel.materialSheetState,
         topToastState = mapsEditViewModel.topToastState,
-        onDeleteRequest = { mapsEditViewModel.deleteDownloadableMaterial(it, context) },
+        onDeleteRequest = { mapsEditViewModel.pendingMaterialDelete = it },
         onError = { mapsEditViewModel.materialSheetMaterialFailed = true }
     )
     WallpaperSheet(

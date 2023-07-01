@@ -53,6 +53,7 @@ class MapsEditViewModel(
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
     var pendingRoleDelete by mutableStateOf<String?>(null)
+    var pendingMaterialDelete by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var saveWarningShown by mutableStateOf(false)
 
     private var mapFile: File? = null

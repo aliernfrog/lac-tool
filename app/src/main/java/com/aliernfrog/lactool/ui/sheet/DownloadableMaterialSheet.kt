@@ -31,7 +31,6 @@ import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.toptoast.state.TopToastState
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,7 +43,6 @@ fun DownloadableMaterialSheet(
     onError: () -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
-    val scope = rememberCoroutineScope()
     AppModalBottomSheet(sheetState = state) {
         Text(
             text = material?.url.toString(),
@@ -80,7 +78,6 @@ fun DownloadableMaterialSheet(
         ) {
             clipboardManager.setText(AnnotatedString(material?.url.toString()))
             topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-            scope.launch { state.hide() }
         }
         ButtonRow(
             title = stringResource(R.string.mapsMaterials_material_delete),
@@ -89,7 +86,6 @@ fun DownloadableMaterialSheet(
             contentColor = MaterialTheme.colorScheme.error
         ) {
             if (material != null) onDeleteRequest(material)
-            scope.launch { state.hide() }
         }
     }
 }

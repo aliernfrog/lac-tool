@@ -1,9 +1,9 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.TipsAndUpdates
@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
@@ -22,17 +23,19 @@ import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MapsMaterialsScreen(
     mapsEditViewModel: MapsEditViewModel = getViewModel(),
     onNavigateBackRequest: () -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.mapsMaterials),
@@ -66,6 +69,20 @@ fun MapsMaterialsScreen(
             }
             item {
                 Spacer(Modifier.systemBarsPadding())
+            }
+        }
+    }
+
+    mapsEditViewModel.pendingMaterialDelete?.let {
+        DeleteConfirmationDialog(
+            name = it.name,
+            onDismissRequest = { mapsEditViewModel.pendingMaterialDelete = null }
+        ) {
+            mapsEditViewModel.deleteDownloadableMaterial(it, context)
+            scope.launch {
+                mapsEditViewModel.materialSheetState.hide()
+                mapsEditViewModel.materialSheetChosenMaterial = null
+                mapsEditViewModel.pendingMaterialDelete = null
             }
         }
     }
