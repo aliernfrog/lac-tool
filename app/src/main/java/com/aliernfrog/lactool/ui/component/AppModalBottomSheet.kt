@@ -12,6 +12,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,7 +43,7 @@ fun AppModalBottomSheet(
                 .clip(AppBottomSheetShape)
                 .verticalScroll(sheetScrollState)
         ) {
-            if (title != null) androidx.compose.material3.Text(
+            if (title != null) Text(
                 text = title,
                 fontSize = 30.sp,
                 modifier = Modifier.padding(bottom = 8.dp).align(Alignment.CenterHorizontally)
