@@ -16,7 +16,6 @@ fun FormSection(
     modifier: Modifier = Modifier,
     topDivider: Boolean = false,
     bottomDivider: Boolean = true,
-    innerModifier: Modifier = Modifier,
     titleColor: Color = MaterialTheme.colorScheme.primary,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -31,10 +30,7 @@ fun FormSection(
                 vertical = 8.dp
             )
         )
-        Column(
-            modifier = innerModifier,
-            content = content
-        )
+        content()
 
         if (bottomDivider) DividerRow(Modifier.padding(16.dp))
     }
