@@ -87,16 +87,18 @@ fun MapsScreen(
             )
         }
     }
-    if (mapsViewModel.mapDeleteDialogShown) DeleteConfirmationDialog(
-        name = mapsViewModel.lastMapName,
-        onDismissRequest = { mapsViewModel.mapDeleteDialogShown = false },
-        onConfirmDelete = {
-            scope.launch {
-                mapsViewModel.deleteChosenMap()
-                mapsViewModel.mapDeleteDialogShown = false
+    mapsViewModel.pendingMapDelete?.let {
+        DeleteConfirmationDialog(
+            name = it,
+            onDismissRequest = { mapsViewModel.pendingMapDelete = null },
+            onConfirmDelete = {
+                scope.launch {
+                    mapsViewModel.deleteChosenMap()
+                    mapsViewModel.pendingMapDelete = null
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -190,7 +192,7 @@ private fun MapActions(
                     containerColor = MaterialTheme.colorScheme.error,
                     shape = AppInnerComponentShape
                 ) {
-                    mapsViewModel.mapDeleteDialogShown = true
+                    mapsViewModel.pendingMapDelete = mapsViewModel.chosenMap?.name
                 }
             }
         }

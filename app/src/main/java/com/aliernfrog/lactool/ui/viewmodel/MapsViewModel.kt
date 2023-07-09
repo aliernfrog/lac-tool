@@ -48,11 +48,10 @@ class MapsViewModel(
     private lateinit var mapsFile: DocumentFileCompat
     private val exportedMapsFile = File(exportedMapsDir)
 
-    var mapDeleteDialogShown by mutableStateOf(false)
     var importedMaps by mutableStateOf(emptyList<LACMap>())
     var exportedMaps by mutableStateOf(emptyList<LACMap>())
     var mapNameEdit by mutableStateOf("")
-    var lastMapName by mutableStateOf("")
+    var pendingMapDelete by mutableStateOf<String?>(null)
 
     var chosenMap by mutableStateOf<LACMap?>(null)
 
@@ -91,7 +90,6 @@ class MapsViewModel(
 
         mapToChoose?.name?.let {
             mapNameEdit = it
-            lastMapName = it
         }
     }
 
