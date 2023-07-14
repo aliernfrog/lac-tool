@@ -84,6 +84,7 @@ object SettingsConstant {
         )
     )
     val experimentalPrefOptions = listOf(
+        PrefEditItem(ConfigKey.KEY_APP_LAST_ALPHA_ACK, ""),
         PrefEditItem(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
     )
 }

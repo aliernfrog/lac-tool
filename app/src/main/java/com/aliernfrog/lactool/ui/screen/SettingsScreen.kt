@@ -234,9 +234,6 @@ private fun ExperimentalSettings(
         ) {
             scope.launch { mainViewModel.updateSheetState.show() }
         }
-        ButtonRow(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
-            prefs.putString(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "")
-        }
         SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
             val value = remember { mutableStateOf(
                 prefs.getString(prefEdit.key, prefEdit.default)
