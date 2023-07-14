@@ -1,8 +1,5 @@
 package com.aliernfrog.lactool.ui.screen
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
@@ -35,6 +31,7 @@ import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
@@ -260,13 +257,7 @@ private fun ExperimentalSettings(
                 icon = Icons.Rounded.Done,
                 type = TopToastType.ANDROID
             )
-            restartApp(context)
+            GeneralUtil.restartApp(context)
         }
     }
-}
-
-private fun restartApp(context: Context) {
-    val intent = Intent(context, MainActivity::class.java)
-    (context as Activity).finish()
-    context.startActivity(intent)
 }

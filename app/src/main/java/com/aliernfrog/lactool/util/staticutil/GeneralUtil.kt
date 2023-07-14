@@ -10,8 +10,11 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import androidx.core.content.ContextCompat
+import com.aliernfrog.lactool.di.appModules
 import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
 
 @Suppress("DEPRECATION")
 class GeneralUtil {
@@ -39,9 +42,13 @@ class GeneralUtil {
             return networkInfo.isConnected
         }
 
-        fun restartApp(context: Context) {
+        fun restartApp(context: Context, withModules: Boolean = true) {
             val intent = Intent(context, MainActivity::class.java)
             (context as Activity).finish()
+            if (withModules) {
+                unloadKoinModules(appModules)
+                loadKoinModules(appModules)
+            }
             context.startActivity(intent)
         }
 
