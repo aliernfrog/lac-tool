@@ -34,6 +34,7 @@ import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
@@ -57,7 +58,7 @@ fun SettingsScreen(
     }
     if (settingsViewModel.pathOptionsDialogShown) PathOptionsDialog(
         topToastState = settingsViewModel.topToastState,
-        config = settingsViewModel.prefs.prefs,
+        prefs = settingsViewModel.prefs,
         onDismissRequest = {
             settingsViewModel.pathOptionsDialogShown = false
         }
@@ -204,11 +205,11 @@ private fun Links(
 @Composable
 private fun ExperimentalSettings(
     mainViewModel: MainViewModel = getViewModel(),
-    settingsViewModel: SettingsViewModel = getViewModel()
+    settingsViewModel: SettingsViewModel = getViewModel(),
+    prefs: PreferenceManager = settingsViewModel.prefs
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val configEditor = settingsViewModel.prefs.prefs.edit()
     FormSection(title = stringResource(R.string.settings_experimental), bottomDivider = false, topDivider = true) {
         Text(stringResource(R.string.settings_experimental_description), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(horizontal = 16.dp))
         SwitchRow(
@@ -234,11 +235,11 @@ private fun ExperimentalSettings(
             scope.launch { mainViewModel.updateSheetState.show() }
         }
         ButtonRow(title = stringResource(R.string.settings_experimental_resetAckedAlpha)) {
-            configEditor.remove(ConfigKey.KEY_APP_LAST_ALPHA_ACK).apply()
+            prefs.putString(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "")
         }
         SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
             val value = remember { mutableStateOf(
-                settingsViewModel.prefs.prefs.getString(prefEdit.key, prefEdit.default)!!
+                prefs.getString(prefEdit.key, prefEdit.default)
             ) }
             TextField(
                 label = { Text(text = "Prefs: ${prefEdit.key}") },
@@ -249,16 +250,14 @@ private fun ExperimentalSettings(
                 rounded = false,
                 onValueChange = {
                     value.value = it
-                    configEditor.putString(prefEdit.key, it)
-                    configEditor.apply()
+                    prefs.putString(prefEdit.key, it)
                 }
             )
         }
         ButtonRow(title = stringResource(R.string.settings_experimental_resetPrefs), contentColor = MaterialTheme.colorScheme.error) {
             SettingsConstant.experimentalPrefOptions.forEach {
-                configEditor.remove(it.key)
+                prefs.putString(it.key, it.default)
             }
-            configEditor.apply()
             settingsViewModel.topToastState.showToast(
                 text = R.string.settings_experimental_resetPrefsDone,
                 icon = Icons.Rounded.Done,

@@ -9,13 +9,13 @@ import kotlin.reflect.KProperty
 
 @Suppress("SameParameterValue")
 abstract class BasePreferenceManager(
-    val prefs: SharedPreferences
+    private val prefs: SharedPreferences
 ) {
-    protected fun getString(key: String, defaultValue: String?) = prefs.getString(key, defaultValue)!!
+    fun getString(key: String, defaultValue: String?) = prefs.getString(key, defaultValue)!!
     private fun getBoolean(key: String, defaultValue: Boolean) = prefs.getBoolean(key, defaultValue)
     private fun getInt(key: String, defaultValue: Int) = prefs.getInt(key, defaultValue)
 
-    protected fun putString(key: String, value: String?) = prefs.edit { putString(key, value) }
+    fun putString(key: String, value: String?) = prefs.edit { putString(key, value) }
     private fun putBoolean(key: String, value: Boolean) = prefs.edit { putBoolean(key, value) }
     private fun putInt(key: String, value: Int) = prefs.edit { putInt(key, value) }
 

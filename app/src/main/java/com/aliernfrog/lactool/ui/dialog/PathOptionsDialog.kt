@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.dialog
 
-import android.content.SharedPreferences
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -41,6 +40,7 @@ import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.applyPathOptionPreset
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastType
@@ -49,7 +49,7 @@ import com.aliernfrog.toptoast.state.TopToastState
 @Composable
 fun PathOptionsDialog(
     topToastState: TopToastState,
-    config: SharedPreferences,
+    prefs: PreferenceManager,
     onDismissRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -59,11 +59,9 @@ fun PathOptionsDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    val configEditor = config.edit()
                     pathOptions.forEach { option ->
-                        configEditor.putString(option.key, option.mutableValue.value)
+                        prefs.putString(option.key, option.mutableValue.value)
                     }
-                    configEditor.apply()
                     topToastState.showToast(
                         text = R.string.settings_general_pathOptions_saved,
                         icon = Icons.Rounded.Done,
@@ -110,7 +108,10 @@ fun PathOptionsDialog(
                     }
                 }
                 pathOptions.forEach { option ->
-                    PathOption(option, config)
+                    PathOption(option)
+                    LaunchedEffect(Unit) {
+                        option.mutableValue.value = prefs.getString(option.key, option.default)
+                    }
                 }
             }
         }
@@ -118,7 +119,7 @@ fun PathOptionsDialog(
 }
 
 @Composable
-private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
+private fun PathOption(option: PrefEditItem) {
     val treePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
         onResult = {
@@ -157,8 +158,4 @@ private fun PathOption(option: PrefEditItem, config: SharedPreferences) {
             }
         }
     )
-
-    LaunchedEffect(Unit) {
-        option.mutableValue.value = config.getString(option.key, option.default) ?: option.default
-    }
 }
