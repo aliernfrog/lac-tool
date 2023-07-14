@@ -32,9 +32,9 @@ import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.maps.MapButton
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
+import com.aliernfrog.lactool.ui.component.maps.MapButton
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
