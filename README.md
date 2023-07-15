@@ -11,14 +11,17 @@
     <img alt="Download (Android 4.3 or above)" src="https://img.shields.io/badge/v2.0-green?style=for-the-badge&label=Download%20(Android%204.3%2B)&labelColor=green&color=black">
   </a>
   
-  <a href="https://github.com/aliernfrog/lac-tool/releases/latest">
+  <a href="https://github.com/aliernfrog/lac-tool/releases">
     <img alt="Download (Android 6.0 or above)" src="https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Alpha%20(Android%206.0%2B)&labelColor=red&color=black">
   </a>
+
+  ---
+
+  <img alt="Download count" src="https://img.shields.io/github/downloads/aliernfrog/lac-tool/total?style=for-the-badge&label=Download%20Count">
 
   <br><br>
   
   <img src="images/maps.jpg" width="200px"/>
-  
 </div>
 
 ## 💡 Features
