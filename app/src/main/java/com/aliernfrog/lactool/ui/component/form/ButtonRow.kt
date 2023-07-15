@@ -1,12 +1,12 @@
 package com.aliernfrog.lactool.ui.component.form
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -50,13 +50,13 @@ fun ButtonRow(
         onClick = onClick
     ) {
         expanded?.let {
-            Image(
+            Icon(
                 imageVector = Icons.Rounded.KeyboardArrowUp,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(horizontal = 2.dp)
                     .rotate(animatedRotation.value),
-                colorFilter = ColorFilter.tint(contentColor)
+                tint = contentColor
             )
         }
         trailingComponent?.let {
