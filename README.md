@@ -1,12 +1,17 @@
-# LAC Tool
-Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff without having to mess with files
+<div align="center">
 
-## 📥 Download
-[![Download count](https://img.shields.io/github/downloads/aliernfrog/lac-tool/total.svg)]()
-- [Stable version (Android 4.3 or above) (Recommended)](https://github.com/aliernfrog/lac-tool/releases/tag/20)
-- [Alpha version (Android 6.0 or above) (Unstable)](https://github.com/aliernfrog/lac-tool/releases)
-- F-Droid version is no longer available, new updates will be published on GitHub
-- There will be a separate app for Android 4 and 5 in the future, for now please use [LAC Tool v2.0](https://github.com/aliernfrog/lac-tool/releases/tag/20)
+  <img src="app/src/main/res/drawable/lactool120.webp" width="120px"/>
+  
+  # LAC Tool
+  Do most <a href="https://play.google.com/store/apps/details?id=com.MA.LAC">LAC</a> related stuff without having to mess with files
+
+  ## 📥 Download
+  - [Stable version (Android 4.3 or above)](https://github.com/aliernfrog/lac-tool/releases/tag/20)
+  - [Alpha version (Android 6.0 or above)](https://github.com/aliernfrog/lac-tool/releases)
+  
+  <img src="images/maps.jpg" width="200px"/>
+  
+</div>
 
 ## 💡 Features
 - LAC map management
