@@ -3,8 +3,7 @@ name: Build commit
 on:
   push:
     branches-ignore:
-      - 'main'
-      - 'old-codebase'
+      - 'legacy'
       - 'v**'
 
   workflow_dispatch:
