@@ -8,11 +8,11 @@
   <br>
 
   <a href="https://github.com/aliernfrog/lac-tool/releases/tag/20">
-    <img alt="Download (Android 4.3 or above)" src="https://img.shields.io/badge/v2.0-green?style=for-the-badge&label=Download%20(Android%204.3%2B)&labelColor=green&color=black">
+    <img alt="Download (Android 4.3 or above)" src="https://img.shields.io/badge/v2.0-green?style=for-the-badge&label=Download%20(Android%204.3%2B)&labelColor=green&color=grey">
   </a>
   
   <a href="https://github.com/aliernfrog/lac-tool/releases">
-    <img alt="Download (Android 6.0 or above)" src="https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Alpha%20(Android%206.0%2B)&labelColor=red&color=black">
+    <img alt="Download (Android 6.0 or above)" src="https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Alpha%20(Android%206.0%2B)&labelColor=blue&color=grey">
   </a>
 
   ---
