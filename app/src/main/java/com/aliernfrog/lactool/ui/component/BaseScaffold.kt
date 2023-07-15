@@ -1,30 +1,51 @@
 package com.aliernfrog.lactool.ui.component
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.aliernfrog.lactool.data.Screen
+import com.aliernfrog.lactool.util.Destination
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @Composable (PaddingValues) -> Unit) {
+fun BaseScaffold(navController: NavController, content: @Composable (PaddingValues) -> Unit) {
     val layoutDirection = LocalLayoutDirection.current
+    val destinations = remember { Destination.values().toList() }
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-    val currentScreen = screens.find { it.route == currentRoute }
+    val currentDestination = destinations.find { it.route == currentRoute }
     Scaffold(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-        bottomBar = { BottomBar(navController, screens, currentScreen) },
+        bottomBar = {
+            BottomBar(
+                navController = navController,
+                destinations = destinations,
+                currentDestination = currentDestination
+            )
+        },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
-        val paddingValues = if (currentScreen?.isSubScreen != true) it
+        val paddingValues = if (currentDestination?.isSubScreen != true) it
         else PaddingValues(
             start = it.calculateStartPadding(layoutDirection),
             top = it.calculateTopPadding(),
@@ -36,27 +57,32 @@ fun BaseScaffold(screens: List<Screen>, navController: NavController, content: @
 }
 
 @Composable
-private fun BottomBar(navController: NavController, screens: List<Screen>, currentScreen: Screen?) {
+private fun BottomBar(
+    navController: NavController,
+    destinations: List<Destination>,
+    currentDestination: Destination?
+) {
     AnimatedVisibility(
-        visible = !(currentScreen?.isSubScreen ?: false),
+        visible = currentDestination?.isSubScreen != true,
         enter = slideInVertically(animationSpec = tween(durationMillis = 150), initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(animationSpec = tween(durationMillis = 150), targetOffsetY = { it }) + fadeOut()
     ) {
         BottomAppBar {
-            screens.filter { !it.isSubScreen }.forEach {
-                val selected = it.route == currentScreen?.route
+            destinations.filter { !it.isSubScreen }.forEach {
+                val selected = it.route == currentDestination?.route
                 NavigationBarItem(
                     selected = selected,
                     icon = {
                         Icon(
-                            painter = if (selected) it.iconFilled!! else it.iconOutlined!!,
+                            painter = rememberVectorPainter(if (selected) it.vectorFilled!! else it.vectorOutlined!!),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     },
-                    label = { Text(it.name) },
+                    label = { Text(stringResource(it.labelId)) },
                     onClick = {
-                        if (it.route != currentScreen?.route) navController.navigate(it.route) { popUpTo(0) }
+                        if (!selected && currentDestination?.isSubScreen != true)
+                            navController.navigate(it.route) { popUpTo(0) }
                     }
                 )
             }

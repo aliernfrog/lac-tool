@@ -1,15 +1,12 @@
 package com.aliernfrog.lactool
 
 import android.os.Environment
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.data.PathOptionPreset
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 
-val AppRoundnessSize = 28.dp
-val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
 const val experimentalSettingsRequiredClicks = 10
+const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"
@@ -19,6 +16,7 @@ object ConfigKey {
     const val KEY_APP_LAST_ALPHA_ACK = "lastAlphaAck"
     const val KEY_APP_UPDATES_URL = "updatesUrl"
     const val KEY_SHOW_MAP_THUMBNAILS_LIST = "showMapThumbnailsList"
+    const val KEY_SHOW_CHOSEN_MAP_THUMBNAIL = "chosenMapThumbnail"
     const val KEY_MAPS_DIR = "mapsDir"
     const val KEY_MAPS_EXPORT_DIR = "mapsExportDir"
     const val KEY_WALLPAPERS_DIR = "wallpapersDir"
@@ -34,7 +32,7 @@ object SettingsConstant {
     private val externalStorageRoot = Environment.getExternalStorageDirectory().absolutePath
     val socials = listOf(
         Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
-        Social("LAC Tool GitHub", "https://github.com/aliernfrog/lac-tool")
+        Social("LAC Tool GitHub", githubRepoURL)
     )
     val pathOptions = listOf(
         PrefEditItem(
@@ -86,6 +84,7 @@ object SettingsConstant {
         )
     )
     val experimentalPrefOptions = listOf(
+        PrefEditItem(ConfigKey.KEY_APP_LAST_ALPHA_ACK, ""),
         PrefEditItem(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
     )
 }

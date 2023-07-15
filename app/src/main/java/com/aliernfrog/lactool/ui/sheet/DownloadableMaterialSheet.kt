@@ -27,11 +27,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.component.ButtonShapeless
+import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.ModalBottomSheet
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.toptoast.state.TopToastState
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,8 +43,7 @@ fun DownloadableMaterialSheet(
     onError: () -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
-    val scope = rememberCoroutineScope()
-    ModalBottomSheet(sheetState = state) {
+    AppModalBottomSheet(sheetState = state) {
         Text(
             text = material?.url.toString(),
             modifier = Modifier.padding(top = 8.dp).padding(horizontal = 8.dp),
@@ -74,22 +72,20 @@ fun DownloadableMaterialSheet(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant
         )
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.mapsMaterials_material_copyUrl),
             painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
         ) {
             clipboardManager.setText(AnnotatedString(material?.url.toString()))
             topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-            scope.launch { state.hide() }
         }
-        ButtonShapeless(
+        ButtonRow(
             title = stringResource(R.string.mapsMaterials_material_delete),
             description = stringResource(R.string.mapsMaterials_material_delete_description).replace("%n", material?.usedBy?.size.toString()),
             painter = rememberVectorPainter(Icons.Rounded.Delete),
             contentColor = MaterialTheme.colorScheme.error
         ) {
             if (material != null) onDeleteRequest(material)
-            scope.launch { state.hide() }
         }
     }
 }

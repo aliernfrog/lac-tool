@@ -1,4 +1,4 @@
-name: Release in Releases
+name: Release
 
 on:
   push:

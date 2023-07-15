@@ -6,43 +6,42 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComponentShape
 
 @Composable
 fun RadioButtons(
     options: List<String>,
-    initialIndex: Int = 0,
+    selectedOptionIndex: Int,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
-    selectedColor: Color = MaterialTheme.colorScheme.primary,
-    optionsRounded: Boolean = false,
+    colors: RadioButtonColors = RadioButtonDefaults.colors(),
     onSelect: (Int) -> Unit
 ) {
-    val (selectedIndex, onOptionSelect) = remember { mutableStateOf(initialIndex) }
     options.forEachIndexed { index, option ->
-        val selected = selectedIndex == index
-        val onSelected = { onOptionSelect(index); onSelect(index) }
+        val selected = selectedOptionIndex == index
+        val onSelected = { onSelect(index) }
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().clip(if (optionsRounded) AppComponentShape else RectangleShape).clickable { onSelected() }.padding(horizontal = 2.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onSelected() }
+                .padding(horizontal = 2.dp)
         ) {
             RadioButton(
                 selected = selected,
                 onClick = { onSelected() },
-                colors = RadioButtonDefaults.colors(selectedColor = selectedColor, unselectedColor = contentColor.copy(0.5f), disabledSelectedColor = contentColor.copy(0.7f), disabledUnselectedColor = contentColor.copy(0.5f)),
+                colors = colors
             )
-            Text(text = option, fontWeight = FontWeight.Bold, color = contentColor)
+            Text(
+                text = option,
+                color = contentColor
+            )
         }
     }
 }

@@ -3,19 +3,19 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val composeVersion = "1.4.0-alpha05"
-val composeCompilerVersion = "1.4.0"
+val composeVersion = "1.6.0-alpha01"
+val composeCompilerVersion = "1.4.8"
 
 android {
     namespace = "com.aliernfrog.lactool"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 23
-        targetSdk = 33
-        versionCode = 202
-        versionName = "3.0.0-alpha02"
+        targetSdk = 34
+        versionCode = 30004
+        versionName = "3.0.0-alpha04"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -45,7 +45,7 @@ android {
         kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -53,18 +53,19 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha05")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.29.0-alpha")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-    implementation("com.github.aliernfrog:top-toast-compose:1.1.1")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha03")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.navigation:navigation-compose:2.7.0-beta02")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.5")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.4-beta")
+    implementation("com.github.aliernfrog:top-toast-compose:1.3.1")
     implementation("com.github.aliernfrog:laclib:1.1.0")
-    implementation("com.lazygeniouz:dfc:1.0.2")
-    implementation("io.coil-kt:coil-compose:2.2.2")
-    implementation("com.github.jeziellago:compose-markdown:0.3.2")
+    implementation("com.lazygeniouz:dfc:1.0.7")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("com.github.jeziellago:compose-markdown:0.3.4")
 }

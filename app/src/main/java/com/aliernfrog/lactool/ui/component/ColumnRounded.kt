@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComponentShape
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
 @Composable
 fun ColumnRounded(modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceVariant, title: String? = null, titleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant, onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {

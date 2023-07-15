@@ -9,12 +9,8 @@ import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.Screen
 
 object NavigationConstant {
     val INITIAL_DESTINATION = Destination.MAPS.route
@@ -23,29 +19,59 @@ object NavigationConstant {
 enum class Destination(
     val route: String,
     val labelId: Int,
-    val vector: ImageVector? = null,
-    val vectorSelected: ImageVector? = null,
+    val vectorFilled: ImageVector? = null,
+    val vectorOutlined: ImageVector? = null,
     val isSubScreen: Boolean = false
 ) {
-    MAPS("maps", R.string.maps, Icons.Default.PinDrop, Icons.Outlined.PinDrop),
-    MAPS_EDIT("mapsEdit", R.string.mapsEdit, isSubScreen = true),
-    MAPS_ROLES("mapsRoles", R.string.mapsRoles, isSubScreen = true),
-    MAPS_MATERIALS("mapsMaterials", R.string.mapsMaterials, isSubScreen = true),
-    MAPS_MERGE("mapsMerge", R.string.mapsMerge, isSubScreen = true),
-    WALLPAPERS("wallpapers", R.string.wallpapers, Icons.Default.Photo, Icons.Outlined.Photo),
-    SCREENSHOTS("screenshots", R.string.screenshots, Icons.Default.PhotoCamera, Icons.Outlined.PhotoCamera),
-    SETTINGS("settings", R.string.settings, Icons.Default.Settings, Icons.Outlined.Settings)
-}
+    MAPS(
+        route = "maps",
+        labelId = R.string.maps,
+        vectorFilled = Icons.Default.PinDrop,
+        vectorOutlined = Icons.Outlined.PinDrop
+    ),
 
-@Composable
-fun getScreens(): List<Screen> {
-    return Destination.values().map { destination ->
-        Screen(
-            route = destination.route,
-            name = stringResource(destination.labelId),
-            iconFilled = destination.vector?.let { rememberVectorPainter(it) },
-            iconOutlined = destination.vectorSelected?.let { rememberVectorPainter(it) },
-            isSubScreen = destination.isSubScreen
-        )
-    }
+    MAPS_EDIT(
+        route = "mapsEdit",
+        labelId = R.string.mapsEdit,
+        isSubScreen = true
+    ),
+
+    MAPS_ROLES(
+        route = "mapsRoles",
+        labelId = R.string.mapsRoles,
+        isSubScreen = true
+    ),
+
+    MAPS_MATERIALS(
+        route = "mapsMaterials",
+        labelId = R.string.mapsMaterials,
+        isSubScreen = true
+    ),
+
+    MAPS_MERGE(
+        route = "mapsMerge",
+        labelId = R.string.mapsMerge,
+        isSubScreen = true
+    ),
+
+    WALLPAPERS(
+        route = "wallpapers",
+        labelId = R.string.wallpapers,
+        vectorFilled = Icons.Default.Photo,
+        vectorOutlined = Icons.Outlined.Photo
+    ),
+
+    SCREENSHOTS(
+        route = "screenshots",
+        labelId = R.string.screenshots,
+        vectorFilled = Icons.Default.PhotoCamera,
+        vectorOutlined = Icons.Outlined.PhotoCamera
+    ),
+
+    SETTINGS(
+        route = "settings",
+        labelId = R.string.settings,
+        vectorFilled = Icons.Default.Settings,
+        vectorOutlined = Icons.Outlined.Settings
+    )
 }

@@ -19,6 +19,12 @@ class FileUtil {
             return path.substring(0, extensionIndex)
         }
 
+        fun getFileName(path: String, removeExtension: Boolean = false): String {
+            val name = path.split("/").last()
+            return if (removeExtension) removeExtension(name)
+            else name
+        }
+
         fun lastModifiedFromLong(lastModified: Long, context: Context): String {
             return DateUtils.getRelativeDateTimeString(context, lastModified, DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0).toString()
         }

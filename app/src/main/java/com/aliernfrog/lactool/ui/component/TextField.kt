@@ -1,6 +1,9 @@
 package com.aliernfrog.lactool.ui.component
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +12,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +29,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.lactool.AppComponentShape
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextField(
     value: String,
@@ -42,14 +50,18 @@ fun TextField(
     containerColor: Color = MaterialTheme.colorScheme.secondary,
     contentColor: Color = contentColorFor(containerColor),
     rounded: Boolean = true,
-    colors: TextFieldColors = TextFieldDefaults.textFieldColors(
-        textColor = contentColor,
-        containerColor = containerColor,
+    colors: TextFieldColors = TextFieldDefaults.colors(
+        focusedTextColor = contentColor,
+        unfocusedTextColor = contentColor,
+        focusedContainerColor = containerColor,
+        unfocusedContainerColor = containerColor,
+        disabledContainerColor = containerColor,
         cursorColor = contentColor,
         selectionColors = TextSelectionColors(handleColor = contentColor, backgroundColor = contentColor.copy(0.5f)),
         focusedLabelColor = contentColor,
         unfocusedLabelColor = contentColor.copy(0.7f),
-        placeholderColor = contentColor.copy(0.7f)
+        focusedPlaceholderColor = contentColor.copy(0.7f),
+        unfocusedPlaceholderColor = contentColor.copy(0.7f),
     )
 ) {
     Box(
