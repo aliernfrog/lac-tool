@@ -1,10 +1,11 @@
-name: Release in Artifacts
+name: Build commit
 
 on:
   push:
     branches-ignore:
       - 'main'
       - 'old-codebase'
+      - 'v**'
 
   workflow_dispatch:
 
