@@ -92,7 +92,7 @@ private fun AppearanceOptions(
             description = stringResource(R.string.settings_appearance_materialYou_description),
             checked = settingsViewModel.prefs.materialYou
         ) {
-            settingsViewModel.prefs.materialYou
+            settingsViewModel.prefs.materialYou = it
         }
     }
 }
