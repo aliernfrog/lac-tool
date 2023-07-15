@@ -1,6 +1,6 @@
 <div align="center">
 
-  ![LAC Tool icon](app/src/main/res/drawable/lactool120.webp)
+  <img alt="LAC Tool icon" src="app/src/main/res/drawable/lactool120.webp" width="120px"/>
   
   # LAC Tool
   Do most [LAC](https://play.google.com/store/apps/details?id=com.MA.LAC) related stuff without having to mess with files
@@ -17,7 +17,7 @@
 
   ---
   
-  ![LAC Tool screenshot](images/maps.jpg)
+  <img alt="LAC Tool screenshot" src="images/maps.jpg" width="200px"/>
   
 </div>
 
