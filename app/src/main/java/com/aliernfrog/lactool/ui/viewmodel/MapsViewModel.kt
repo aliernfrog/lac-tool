@@ -143,7 +143,7 @@ class MapsViewModel(
         else withContext(Dispatchers.IO) {
             output = exportedMapsFile.createFile("", outputName) ?: return@withContext
             FileUtil.copyFile(mapFile, output ?: return@withContext, context)
-            chooseMap(map = outputName)
+            chooseMap(output)
             topToastState.showToast(R.string.maps_export_done, Icons.Rounded.Upload)
             fetchExportedMaps()
         }
