@@ -9,7 +9,6 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
@@ -22,7 +21,6 @@ import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -48,8 +46,9 @@ class WallpapersViewModel(
     var wallpaperSheetWallpaper by mutableStateOf<ImageFile?>(null)
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
-        withContext(Dispatchers.IO) {
-            val path = UriToFileUtil.getRealFilePath(uri, context)
+        TODO()
+        /*withContext(Dispatchers.IO) {
+            val path = UriUtil.getRealFilePath(uri, context)
             if (path == null) {
                 topToastState.showToast(R.string.warning_couldntConvertToPath, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
@@ -60,7 +59,7 @@ class WallpapersViewModel(
                 fileName = file.name,
                 painterModel = file.absolutePath
             )
-        }
+        }*/
     }
 
     suspend fun importPickedWallpaper(context: Context) {

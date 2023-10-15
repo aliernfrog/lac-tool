@@ -10,11 +10,10 @@ fun LACMap.resolveFile(): Any {
     return this.documentFile ?: this.file!!
 }
 
-fun LACMap.resolvePath(mapsDir: String): String? {
+fun LACMap.resolvePath(): String? {
     return when (val file = this.resolveFile()) {
         is File -> file.absolutePath
-        // Right now, only imported maps can be DocumentFileCompat
-        is DocumentFileCompat -> "$mapsDir/${this.fileName}"
+        is DocumentFileCompat -> file.uri.toString()
         else -> null
     }
 }

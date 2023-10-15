@@ -2,9 +2,6 @@ package com.aliernfrog.lactool.util.staticutil
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Environment
-import android.provider.DocumentsContract
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
@@ -37,12 +34,12 @@ class FileUtil {
             output?.close()
         }
 
-        fun copyFile(source: DocumentFileCompat, destination: String, context: Context) {
+        fun copyFile(source: DocumentFileCompat, destination: DocumentFileCompat, context: Context) {
             val input = context.contentResolver.openInputStream(source.uri)
-            val output = File(destination).outputStream()
-            input?.copyTo(output)
+            context.contentResolver.openOutputStream(destination.uri)?.use { output ->
+                input?.copyTo(output)
+            }
             input?.close()
-            output.close()
         }
 
         fun shareFile(file: Any, context: Context, title: String = context.getString(R.string.action_share)) {
@@ -74,12 +71,6 @@ class FileUtil {
             inputStream?.close()
             output.close()
             return File(targetFile.absolutePath)
-        }
-
-        fun checkUriPermission(path: String, context: Context): Boolean {
-            val treeId = path.replace("${Environment.getExternalStorageDirectory()}/", "primary:")
-            val treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId)
-            return context.checkUriPermission(treeUri, android.os.Process.myPid(), android.os.Process.myUid(), Intent.FLAG_GRANT_READ_URI_PERMISSION) == PackageManager.PERMISSION_GRANTED
         }
     }
 }

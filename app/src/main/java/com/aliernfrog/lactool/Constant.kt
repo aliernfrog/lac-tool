@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool
 
+import android.os.Build
 import android.os.Environment
 import com.aliernfrog.lactool.data.PathOptionPreset
 import com.aliernfrog.lactool.data.PrefEditItem
@@ -7,6 +8,9 @@ import com.aliernfrog.lactool.data.Social
 
 const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
+
+val externalStorageRoot = Environment.getExternalStorageDirectory().toString()+"/"
+val folderPickerSupportsInitialUri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"

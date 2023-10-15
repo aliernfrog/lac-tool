@@ -42,7 +42,6 @@ import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.applyPathOptionPreset
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
 import com.aliernfrog.toptoast.enum.TopToastType
 import com.aliernfrog.toptoast.state.TopToastState
 
@@ -123,7 +122,8 @@ private fun PathOption(option: PrefEditItem) {
     val treePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
         onResult = {
-            if (it != null) option.mutableValue.value = UriToFileUtil.getRealFolderPath(it)
+            TODO()
+            //if (it != null) option.mutableValue.value = UriUtil.getRealFolderPath(it)
         }
     )
     OutlinedTextField(

@@ -5,7 +5,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -23,8 +22,8 @@ import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
+import com.aliernfrog.lactool.ui.screen.maps.MapsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
-import com.aliernfrog.lactool.ui.screen.maps.MapsScreen
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
@@ -42,10 +41,8 @@ import com.aliernfrog.lactool.util.NavigationConstant
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MainScreen(
-    mapsViewModel: MapsViewModel = getViewModel(),
     wallpapersViewModel: WallpapersViewModel = getViewModel(),
     screenshotsViewModel: ScreenshotsViewModel = getViewModel()
 ) {
@@ -78,13 +75,11 @@ fun MainScreen(
             ) }
         ) {
             composable(Destination.MAPS.route) {
-                PermissionsScreen(mapsViewModel.mapsDir) {
-                    MapsScreen(
-                        onNavigateRequest = { destination ->
-                            navController.navigate(destination.route)
-                        }
-                    )
-                }
+                MapsPermissionsScreen(
+                    onNavigateRequest = { destination ->
+                        navController.navigate(destination.route)
+                    }
+                )
             }
             composable(Destination.MAPS_EDIT.route) {
                 MapsEditScreen(
@@ -110,14 +105,14 @@ fun MainScreen(
                 )
             }
             composable(Destination.WALLPAPERS.route) {
-                PermissionsScreen(wallpapersViewModel.wallpapersDir) {
+                /*PermissionsScreen(wallpapersViewModel.wallpapersDir) {
                     WallpapersScreen()
-                }
+                }*/
             }
             composable(Destination.SCREENSHOTS.route) {
-                PermissionsScreen(screenshotsViewModel.screenshotsDir) {
+                /*PermissionsScreen(screenshotsViewModel.screenshotsDir) {
                     ScreenshotsScreen()
-                }
+                }*/
             }
             composable(Destination.SETTINGS.route) {
                 SettingsScreen()

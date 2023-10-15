@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -21,15 +22,19 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.MapImportedState
+import com.aliernfrog.lactool.enum.PickMapSheetSegments
+import com.aliernfrog.lactool.util.extension.cacheFile
+import com.aliernfrog.lactool.util.extension.nameWithoutExtension
+import com.aliernfrog.lactool.util.extension.resolveFile
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.ext.getFullName
 import java.io.File
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -43,15 +48,16 @@ class MapsViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
-    val mapsDir = prefs.lacMapsDir
-    private val exportedMapsDir = prefs.exportedMapsDir
+    private val mapsDir: String get() { return prefs.lacMapsDir }
+    private val exportedMapsDir: String get() { return prefs.exportedMapsDir }
     private lateinit var mapsFile: DocumentFileCompat
-    private val exportedMapsFile = File(exportedMapsDir)
+    private lateinit var exportedMapsFile: DocumentFileCompat
 
     var importedMaps by mutableStateOf(emptyList<LACMap>())
     var exportedMaps by mutableStateOf(emptyList<LACMap>())
     var mapNameEdit by mutableStateOf("")
     var pendingMapDelete by mutableStateOf<String?>(null)
+    var pickMapSheetSelectedSegment by mutableStateOf(PickMapSheetSegments.IMPORTED)
 
     var chosenMap by mutableStateOf<LACMap?>(null)
 
@@ -79,10 +85,11 @@ class MapsViewModel(
             is LACMap -> {
                 mapToChoose = map
             }
-            else -> mapToChoose = null
+            null -> mapToChoose = null
+            else -> throw IllegalArgumentException("Unhandled class: (${map::class.getFullName()})")
         }
 
-        val mapPath = mapToChoose?.resolvePath(mapsDir) ?: ""
+        val mapPath = mapToChoose?.resolvePath() ?: ""
         chosenMap = mapToChoose?.copy(
             importedState = getMapImportedState(mapPath),
             thumbnailModel = getMapThumbnailModel(mapPath)
@@ -111,10 +118,14 @@ class MapsViewModel(
     }
 
     suspend fun importChosenMap(context: Context) {
-        val mapPath = chosenMap?.file?.absolutePath ?: return
+        val mapPath = when (val file = chosenMap?.resolveFile() ?: return) {
+            is File -> file.absolutePath
+            is DocumentFileCompat -> file.uri.cacheFile(context)?.absolutePath
+            else -> null
+        } ?: return
         val mapName = getMapNameEdit()
-        var output = mapsFile.findFile(mapNameEdit)
-        if (output != null && output.exists()) fileAlreadyExists()
+        var output = mapsFile.findFile(mapName)
+        if (output?.exists() == true) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             output = mapsFile.createFile("", mapName) ?: return@withContext
             FileUtil.copyFile(mapPath, output ?: return@withContext, context)
@@ -126,12 +137,13 @@ class MapsViewModel(
 
     suspend fun exportChosenMap(context: Context) {
         val mapFile = chosenMap?.documentFile ?: return
-        val output = File("${exportedMapsDir}/${getMapNameEdit()}")
-        if (output.exists()) fileAlreadyExists()
+        val outputName = getMapNameEdit()
+        var output = exportedMapsFile.findFile(outputName)
+        if (output?.exists() == true) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
-            if (output.parentFile?.isDirectory != true) output.parentFile?.mkdirs()
-            FileUtil.copyFile(mapFile, output.absolutePath, context)
-            chooseMap(map = output)
+            output = exportedMapsFile.createFile("", outputName) ?: return@withContext
+            FileUtil.copyFile(mapFile, output ?: return@withContext, context)
+            chooseMap(map = outputName)
             topToastState.showToast(R.string.maps_export_done, Icons.Rounded.Upload)
             fetchExportedMaps()
         }
@@ -150,15 +162,11 @@ class MapsViewModel(
     suspend fun deleteChosenMap() {
         val map = chosenMap ?: return
         withContext(Dispatchers.IO) {
-            if (map.documentFile != null) {
-                getChosenMapFiles().forEach { it.delete() }
-                fetchImportedMaps()
-            } else {
-                map.file?.delete()
-                fetchExportedMaps()
-            }
+            map.file?.delete()
+            map.documentFile?.delete()
             chooseMap(null)
             topToastState.showToast(R.string.maps_delete_done, Icons.Rounded.Delete)
+            fetchAllMaps()
         }
     }
 
@@ -192,9 +200,29 @@ class MapsViewModel(
     }
 
     fun getMapsFile(context: Context): DocumentFileCompat {
-        if (!::mapsFile.isInitialized)
-            mapsFile = GeneralUtil.getDocumentFileFromPath(mapsDir, context)
+        val isUpToDate = if (!::mapsFile.isInitialized) false
+        else {
+            val updatedPath = mapsFile.uri.resolvePath()
+            val existingPath = Uri.parse(mapsDir).resolvePath()
+            updatedPath == existingPath
+        }
+        if (isUpToDate) return mapsFile
+        val treeUri = Uri.parse(mapsDir)
+        mapsFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
         return mapsFile
+    }
+
+    fun getExportedMapsFile(context: Context): DocumentFileCompat {
+        val isUpToDate = if (!::exportedMapsFile.isInitialized) false
+        else {
+            val updatedPath = exportedMapsFile.uri.resolvePath()
+            val existingPath = Uri.parse(exportedMapsDir).resolvePath()
+            updatedPath == existingPath
+        }
+        if (isUpToDate) return exportedMapsFile
+        val treeUri = Uri.parse(exportedMapsDir)
+        exportedMapsFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
+        return exportedMapsFile
     }
 
     suspend fun fetchAllMaps() {
@@ -213,7 +241,6 @@ class MapsViewModel(
                         fileName = it.name,
                         fileSize = it.length,
                         lastModified = it.lastModified,
-                        file = null,
                         documentFile = it,
                         thumbnailModel = getMapThumbnailModel("$mapsDir/${it.name}")
                     )
@@ -223,17 +250,16 @@ class MapsViewModel(
 
     private suspend fun fetchExportedMaps() {
         withContext(Dispatchers.IO) {
-            exportedMaps = (exportedMapsFile.listFiles() ?: emptyArray())
-                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
+            exportedMaps = exportedMapsFile.listFiles()
+                .filter { it.isFile() && it.name.lowercase().endsWith(".txt") }
                 .sortedBy { it.name.lowercase() }
                 .map {
                     LACMap(
                         name = it.nameWithoutExtension,
                         fileName = it.name,
-                        fileSize = it.length(),
-                        lastModified = it.lastModified(),
-                        file = it,
-                        documentFile = null
+                        fileSize = it.length,
+                        lastModified = it.lastModified,
+                        documentFile = it
                     )
                 }
         }
