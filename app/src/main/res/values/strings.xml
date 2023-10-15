@@ -155,6 +155,9 @@
     <string name="wallpapers_delete">Delete wallpaper</string>
     <string name="wallpapers_deleted">Deleted the wallpaper!</string>
     <string name="screenshots">Screenshots</string>
+    <string name="screenshots_permissions">LAC screenshots folder</string>
+    <string name="screenshots_permissions_description">You need to choose the folder where your LAC screenshots are stored</string>
+    <string name="screenshots_permissions_recommendedPath_description">LAC screenshots are stored in this folder</string>
     <string name="screenshots_noScreenshots">You have not taken any screenshots from the in-game cellphone</string>
     <string name="screenshots_clickHint">Click screenshots to view more actions</string>
     <string name="screenshots_share">Share screnshot</string>

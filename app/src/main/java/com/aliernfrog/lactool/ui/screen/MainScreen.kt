@@ -24,6 +24,7 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
+import com.aliernfrog.lactool.ui.screen.screenshots.ScreenshotsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
@@ -106,9 +107,7 @@ fun MainScreen() {
                 WallpapersPermissionsScreen()
             }
             composable(Destination.SCREENSHOTS.route) {
-                /*PermissionsScreen(screenshotsViewModel.screenshotsDir) {
-                    ScreenshotsScreen()
-                }*/
+                ScreenshotsPermissionsScreen()
             }
             composable(Destination.SETTINGS.route) {
                 SettingsScreen()
