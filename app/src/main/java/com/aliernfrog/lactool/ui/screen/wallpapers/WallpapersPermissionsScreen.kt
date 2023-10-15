@@ -8,7 +8,6 @@ import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.ui.screen.PermissionsScreen
-import com.aliernfrog.lactool.ui.screen.WallpapersScreen
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import org.koin.androidx.compose.getViewModel
 
