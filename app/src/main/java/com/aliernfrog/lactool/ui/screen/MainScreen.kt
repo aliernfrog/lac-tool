@@ -24,6 +24,7 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
+import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
 import com.aliernfrog.lactool.ui.sheet.PickMapSheet
@@ -42,10 +43,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen(
-    wallpapersViewModel: WallpapersViewModel = getViewModel(),
-    screenshotsViewModel: ScreenshotsViewModel = getViewModel()
-) {
+fun MainScreen() {
     val navController = rememberNavController()
     BaseScaffold(
         navController = navController
@@ -105,9 +103,7 @@ fun MainScreen(
                 )
             }
             composable(Destination.WALLPAPERS.route) {
-                /*PermissionsScreen(wallpapersViewModel.wallpapersDir) {
-                    WallpapersScreen()
-                }*/
+                WallpapersPermissionsScreen()
             }
             composable(Destination.SCREENSHOTS.route) {
                 /*PermissionsScreen(screenshotsViewModel.screenshotsDir) {

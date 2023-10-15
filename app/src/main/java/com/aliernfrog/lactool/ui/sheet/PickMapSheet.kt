@@ -73,7 +73,7 @@ fun PickMapSheet(
         PickFromDeviceButton(
             onFail = {
                 mapsViewModel.topToastState.showToast(
-                    text = R.string.maps_pickMap_failed,
+                    text = R.string.warning_pickFile_failed,
                     icon = Icons.Rounded.PriorityHigh,
                     iconTintColor = TopToastColor.ERROR,
                     type = TopToastType.ANDROID

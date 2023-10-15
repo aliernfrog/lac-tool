@@ -1,17 +1,15 @@
 package com.aliernfrog.lactool.util.staticutil
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.os.Build
+import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
-import androidx.core.content.ContextCompat
 import com.aliernfrog.lactool.di.appModules
 import com.aliernfrog.lactool.ui.activity.MainActivity
+import com.aliernfrog.lactool.util.extension.resolvePath
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
@@ -31,11 +29,6 @@ class GeneralUtil {
             return packageInfo.versionCode
         }
 
-        fun checkStoragePermissions(context: Context): Boolean {
-            return if (Build.VERSION.SDK_INT >= 30) Environment.isExternalStorageManager()
-            else ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        }
-
         fun isConnectedToInternet(context: Context): Boolean {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connectivityManager.activeNetworkInfo ?: return false
@@ -53,7 +46,11 @@ class GeneralUtil {
         }
 
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
-            return "file://$wallpapersPath/$fileName"
+            var internalPath = wallpapersPath
+            try {
+                internalPath = Uri.parse(wallpapersPath).resolvePath() ?: wallpapersPath
+            } catch (_: Exception) {}
+            return "file://$internalPath/$fileName"
         }
 
         fun getDocumentFileFromPath(path: String, context: Context): DocumentFileCompat {

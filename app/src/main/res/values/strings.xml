@@ -10,6 +10,7 @@
     <string name="action_delete">Delete</string>
     <string name="warning_alphaVersion">This version of LAC Tool is an alpha and things may be broken or missing. You can report issues on GitHub.</string>
     <string name="warning_fileDoesntExist">File does not exist</string>
+    <string name="warning_pickFile_failed">Failed to pick file</string>
     <string name="warning_missingStoragePermissions">Missing storage permissions</string>
     <string name="warning_missingUriPermissions">Missing LAC data access</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
@@ -40,7 +41,6 @@
     <string name="maps_alreadyExists">A map with this name already exists, choose another name</string>
     <string name="maps_pickMap">Pick a map</string>
     <string name="maps_pickMap_device">Pick from device</string>
-    <string name="maps_pickMap_failed">Failed to pick map</string>
     <string name="maps_pickMap_imported">Your maps</string>
     <string name="maps_pickMap_exported">Exported maps</string>
     <string name="maps_pickMap_noImportedMaps">You do not have any maps</string>
@@ -140,6 +140,9 @@
     <string name="mapsMerge_noEnoughMaps">No enough maps to merge</string>
     <string name="mapsMerge_merged">Merged maps in {MAP} map</string>
     <string name="wallpapers">Wallpapers</string>
+    <string name="wallpapers_permissions">LAC wallpapers folder</string>
+    <string name="wallpapers_permissions_description">You need to choose the folder where your LAC wallpapers are stored</string>
+    <string name="wallpapers_permissions_recommendedPath_description">LAC wallpapers are stored in this folder</string>
     <string name="wallpapers_pickImage">Pick an image</string>
     <string name="wallpapers_noWallpapers">You do not have any wallpapers</string>
     <string name="wallpapers_chosenWallpaper">Chosen wallpaper</string>
