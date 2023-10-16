@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FolderZip
+import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
@@ -128,7 +128,7 @@ private fun PickFromDeviceButton(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        ButtonIcon(rememberVectorPainter(Icons.Outlined.FolderZip))
+        ButtonIcon(rememberVectorPainter(Icons.Outlined.Folder))
         Text(stringResource(R.string.maps_pickMap_device))
     }
 }
