@@ -31,7 +31,7 @@ fun MapsPermissionsScreen(
         ),
         PermissionData(
             titleId = R.string.maps_permissions_exported,
-            recommendedPath = ConfigKey.DEFAULT_MAPS_EXPORT_DIR,
+            recommendedPath = ConfigKey.DEFAULT_EXPORTED_MAPS_DIR,
             recommendedPathDescriptionId = R.string.maps_permissions_exported_recommendedPath_description,
             getUri = { mapsViewModel.prefs.exportedMapsDir },
             onUriUpdate = { mapsViewModel.prefs.exportedMapsDir = it.toString() },

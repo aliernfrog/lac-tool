@@ -1,11 +1,10 @@
 package com.aliernfrog.lactool.data
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 
 data class PrefEditItem(
-    val key: String,
-    val default: String = "",
-    val labelResourceId: Int? = null,
-    val mutableValue: MutableState<String> = mutableStateOf("")
+    val labelResourceId: Int,
+    val getValue: (prefs: PreferenceManager) -> String,
+    val setValue: (newValue: String, prefs: PreferenceManager) -> Unit,
+    val default: String = ""
 )
