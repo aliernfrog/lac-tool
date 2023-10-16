@@ -70,33 +70,6 @@ object SettingsConstant {
             default = ConfigKey.DEFAULT_EXPORTED_MAPS_DIR,
         )
     )
-    /*val pathOptionPresets = listOf(
-        PathOptionPreset(
-            labelResourceId = R.string.settings_general_pathOptions_presets_default,
-            lacMapsPath = ConfigKey.DEFAULT_MAPS_DIR,
-            lacWallpapersPath = ConfigKey.DEFAULT_WALLPAPERS_DIR,
-            lacScreenshotsPath = ConfigKey.DEFAULT_SCREENSHOTS_DIR,
-            appMapsExportPath = ConfigKey.DEFAULT_MAPS_EXPORT_DIR
-        ),
-        PathOptionPreset(
-            labelResourceId = R.string.settings_general_pathOptions_presets_lacd,
-            lacMapsPath = "${externalStorageRoot}Android/data/com.MA.LACD/files/editor",
-            lacWallpapersPath = "${externalStorageRoot}Android/data/com.MA.LACD/files/wallpaper",
-            lacScreenshotsPath = "${externalStorageRoot}Android/data/com.MA.LACD/files/screenshots"
-        ),
-        PathOptionPreset(
-            labelResourceId = R.string.settings_general_pathOptions_presets_lacm,
-            lacMapsPath = "${externalStorageRoot}Android/data/com.MA.LACM/files/editor",
-            lacWallpapersPath = "${externalStorageRoot}Android/data/com.MA.LACM/files/wallpaper",
-            lacScreenshotsPath = "${externalStorageRoot}Android/data/com.MA.LACM/files/screenshots"
-        ),
-        PathOptionPreset(
-            labelResourceId = R.string.settings_general_pathOptions_presets_lacmb,
-            lacMapsPath = "${externalStorageRoot}Android/data/com.MA.LACMB/files/editor",
-            lacWallpapersPath = "${externalStorageRoot}Android/data/com.MA.LACMB/files/wallpaper",
-            lacScreenshotsPath = "${externalStorageRoot}Android/data/com.MA.LACMB/files/screenshots"
-        )
-    )*/
     val experimentalPrefOptions = listOf(
         PrefEditItem(
             labelResourceId = R.string.settings_experimental_lastAlphaAck,
