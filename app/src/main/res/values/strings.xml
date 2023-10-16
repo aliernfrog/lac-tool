@@ -27,6 +27,8 @@
     <string name="permissions_recommendedFolder_doesNotExist">This folder does not exist?</string>
     <string name="permissions_recommendedFolder_manuallyCreate">* If this folder doesn\'t exist, you can create it manually</string>
     <string name="permissions_recommendedFolder_openLACToCreate">* If this folder doesn\'t exist, you can either create it manually or start LAC once to make it create the folder automatically</string>
+    <string name="permissions_recommendedFolder_importWallpaperToCreate">* If this folder doesn\'t exist, you can either create it manually or start LAC, enter any map, open the in-game cellphone, click settings, put a random text in \"Custom wallpaper link\" field, close the keyboard and wait until it says \"FAIL\" or \"SUCCESS\" to make it create the folder automatically</string>
+    <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">* If this folder doesn\'t exist, you can either create it manually or take a screenshot using the in-game cellphone in LAC to make it create the folder automatically</string>
     <string name="permissions_notRecommendedFolder_description">The folder below is recommended:</string>
     <string name="permissions_notRecommendedFolder_question">Do you want to go back and choose the recommended one, or use the unrecommended one?</string>
     <string name="permissions_notRecommendedFolder_chooseRecommendedFolder">Choose recommended folder</string>

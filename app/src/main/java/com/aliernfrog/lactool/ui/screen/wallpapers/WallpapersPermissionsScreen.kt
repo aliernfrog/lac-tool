@@ -20,8 +20,7 @@ fun WallpapersPermissionsScreen(
             titleId = R.string.wallpapers_permissions,
             recommendedPath = ConfigKey.DEFAULT_WALLPAPERS_DIR,
             recommendedPathDescriptionId = R.string.wallpapers_permissions_recommendedPath_description,
-            // TODO confirm LAC creates wallpaper folder automatically
-            doesntExistHintId = R.string.permissions_recommendedFolder_openLACToCreate,
+            doesntExistHintId = R.string.permissions_recommendedFolder_importWallpaperToCreate,
             getUri = { wallpapersViewModel.prefs.lacWallpapersDir },
             onUriUpdate = { wallpapersViewModel.prefs.lacWallpapersDir = it.toString() },
             content = {

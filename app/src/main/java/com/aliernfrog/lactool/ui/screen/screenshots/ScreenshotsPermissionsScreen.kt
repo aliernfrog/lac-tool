@@ -20,8 +20,7 @@ fun ScreenshotsPermissionsScreen(
             titleId = R.string.screenshots_permissions,
             recommendedPath = ConfigKey.DEFAULT_SCREENSHOTS_DIR,
             recommendedPathDescriptionId = R.string.screenshots_permissions_recommendedPath_description,
-            // TODO confirm LAC creates screenshots folder automatically
-            doesntExistHintId = R.string.permissions_recommendedFolder_openLACToCreate,
+            doesntExistHintId = R.string.permissions_recommendedFolder_takeInGameScreenshotToCreate,
             getUri = { screenshotsViewModel.prefs.lacScreenshotsDir },
             onUriUpdate = { screenshotsViewModel.prefs.lacScreenshotsDir = it.toString() },
             content = {
