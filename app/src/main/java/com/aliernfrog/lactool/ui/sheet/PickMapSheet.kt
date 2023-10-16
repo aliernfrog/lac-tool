@@ -157,7 +157,7 @@ private fun Maps(
         Column {
             MapsList(
                 maps = maps,
-                noMapsTextId = it.noMapsId,
+                noMapsTextId = it.noMapsTextId,
                 showMapThumbnails = showMapThumbnails,
                 onMapPick = onMapPick
             )
