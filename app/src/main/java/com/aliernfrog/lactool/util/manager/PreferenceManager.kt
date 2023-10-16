@@ -20,7 +20,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)
     var lacWallpapersDir by stringPreference(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR)
     var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
-    var exportedMapsDir by stringPreference(ConfigKey.KEY_MAPS_EXPORT_DIR, ConfigKey.DEFAULT_MAPS_EXPORT_DIR)
+    var exportedMapsDir by stringPreference(ConfigKey.KEY_EXPORTED_MAPS_DIR, ConfigKey.DEFAULT_EXPORTED_MAPS_DIR)
 
     // Updates options
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)

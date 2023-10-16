@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.screenshots
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxSize

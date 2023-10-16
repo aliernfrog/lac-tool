@@ -10,14 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,12 +31,12 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
+import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
-import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapButton
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
+import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +50,11 @@ import java.io.File
 fun PickMapSheet(
     mapsViewModel: MapsViewModel = getViewModel(),
     sheetState: ModalBottomSheetState = mapsViewModel.pickMapSheetState,
+    selectedSegment: PickMapSheetSegments = mapsViewModel.pickMapSheetSelectedSegment,
     getShowMapThumbnails: () -> Boolean = { mapsViewModel.prefs.showMapThumbnailsInList },
+    onSelectedSegmentChange: (PickMapSheetSegments) -> Unit = {
+        mapsViewModel.pickMapSheetSelectedSegment = it
+    },
     onMapPick: (map: Any) -> Boolean
 ) {
     val scope = rememberCoroutineScope()
@@ -67,9 +71,9 @@ fun PickMapSheet(
         sheetState = sheetState
     ) {
         PickFromDeviceButton(
-            onPathConversionFail = {
+            onFail = {
                 mapsViewModel.topToastState.showToast(
-                    text = R.string.warning_couldntConvertToPath,
+                    text = R.string.warning_pickFile_failed,
                     icon = Icons.Rounded.PriorityHigh,
                     iconTintColor = TopToastColor.ERROR,
                     type = TopToastType.ANDROID
@@ -80,9 +84,10 @@ fun PickMapSheet(
             }
         )
         Maps(
-            importedMaps = mapsViewModel.importedMaps,
-            exportedMaps = mapsViewModel.exportedMaps,
+            maps = selectedSegment.getMaps(mapsViewModel),
             showMapThumbnails = mapThumbnailsShown,
+            selectedSegment = selectedSegment,
+            onSelectedSegmentChange = onSelectedSegmentChange,
             onMapPick = {
                 pickMap(it)
             }
@@ -96,57 +101,63 @@ fun PickMapSheet(
 
 @Composable
 private fun PickFromDeviceButton(
-    onPathConversionFail: () -> Unit,
+    onFail: () -> Unit,
     onFilePick: (File) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.data?.data != null) {
-            scope.launch {
-                withContext(Dispatchers.IO) {
-                    val convertedPath = UriToFileUtil.getRealFilePath(it.data?.data!!, context)
-                    if (convertedPath != null) onFilePick(File(convertedPath))
-                    else onPathConversionFail()
-                }
+        if (it.data?.data != null) scope.launch {
+            withContext(Dispatchers.IO) {
+                val cachedFile = UriUtil.cacheFile(
+                    uri = it.data?.data!!,
+                    parentName = "maps",
+                    context = context
+                )
+                if (cachedFile != null) onFilePick(cachedFile)
+                else onFail()
             }
         }
     }
-    RoundedButtonRow(
-        title = stringResource(R.string.maps_pickMap_device),
-        painter = rememberVectorPainter(Icons.Rounded.Folder),
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
+    Button(
+        onClick = {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
+            launcher.launch(intent)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
-        launcher.launch(intent)
+        ButtonIcon(rememberVectorPainter(Icons.Outlined.Folder))
+        Text(stringResource(R.string.maps_pickMap_device))
     }
 }
 
 @Composable
 private fun Maps(
-    importedMaps: List<LACMap>,
-    exportedMaps: List<LACMap>,
+    maps: List<LACMap>,
     showMapThumbnails: Boolean,
+    selectedSegment: PickMapSheetSegments,
+    onSelectedSegmentChange: (PickMapSheetSegments) -> Unit,
     onMapPick: (Any) -> Unit
 ) {
-    var selectedSegment by remember { mutableIntStateOf(PickMapSheetSegments.IMPORTED.ordinal) }
     SegmentedButtons(
         options = listOf(
             stringResource(R.string.maps_pickMap_imported),
             stringResource(R.string.maps_pickMap_exported)
         ),
-        selectedOptionIndex = selectedSegment,
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        selectedIndex = selectedSegment.ordinal,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
-        selectedSegment = it
+        onSelectedSegmentChange(PickMapSheetSegments.values()[it])
     }
     AnimatedContent(targetState = selectedSegment) {
         Column {
-            val maps = if (it == PickMapSheetSegments.IMPORTED.ordinal) importedMaps else exportedMaps
             MapsList(
                 maps = maps,
-                isShowingExportedMaps = it == PickMapSheetSegments.EXPORTED.ordinal,
+                noMapsTextId = it.noMapsTextId,
                 showMapThumbnails = showMapThumbnails,
                 onMapPick = onMapPick
             )
@@ -157,7 +168,7 @@ private fun Maps(
 @Composable
 private fun MapsList(
     maps: List<LACMap>,
-    isShowingExportedMaps: Boolean,
+    noMapsTextId: Int,
     showMapThumbnails: Boolean,
     onMapPick: (Any) -> Unit
 ) {
@@ -169,7 +180,7 @@ private fun MapsList(
         }
     } else {
         ErrorWithIcon(
-            error = stringResource(if (isShowingExportedMaps) R.string.maps_pickMap_noExportedMaps else R.string.maps_pickMap_noImportedMaps),
+            error = stringResource(noMapsTextId),
             painter = rememberVectorPainter(Icons.Rounded.LocationOff)
         )
     }

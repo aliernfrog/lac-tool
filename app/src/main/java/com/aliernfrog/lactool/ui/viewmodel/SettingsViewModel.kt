@@ -27,10 +27,10 @@ class SettingsViewModel(
 
     var themeOptionsExpanded by mutableStateOf(false)
     var linksExpanded by mutableStateOf(false)
-    var pathOptionsDialogShown by mutableStateOf(false)
+    var folderConfigurationDialogShown by mutableStateOf(false)
     var experimentalSettingsShown by mutableStateOf(false)
     var showMaterialYouOption by mutableStateOf(supportsMaterialYou)
-    var aboutClickCount by mutableIntStateOf(0)
+    private var aboutClickCount by mutableIntStateOf(0)
 
     fun onAboutClick() {
         if (aboutClickCount > experimentalSettingsRequiredClicks) return

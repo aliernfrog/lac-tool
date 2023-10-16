@@ -4,6 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -11,8 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,10 +26,9 @@ import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
-import com.aliernfrog.lactool.ui.dialog.PathOptionsDialog
+import com.aliernfrog.lactool.ui.dialog.FolderConfigurationDialog
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
-import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
@@ -53,11 +51,9 @@ fun SettingsScreen(
             if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings()
         }
     }
-    if (settingsViewModel.pathOptionsDialogShown) PathOptionsDialog(
-        topToastState = settingsViewModel.topToastState,
-        prefs = settingsViewModel.prefs,
+    if (settingsViewModel.folderConfigurationDialogShown) FolderConfigurationDialog(
         onDismissRequest = {
-            settingsViewModel.pathOptionsDialogShown = false
+            settingsViewModel.folderConfigurationDialogShown = false
         }
     )
 }
@@ -118,12 +114,12 @@ private fun GeneralOptions(
             settingsViewModel.prefs.showMapThumbnailsInList = it
         }
         ButtonRow(
-            title = stringResource(R.string.settings_general_pathOptions),
-            description = stringResource(R.string.settings_general_pathOptions_description),
+            title = stringResource(R.string.settings_general_folders),
+            description = stringResource(R.string.settings_general_folders_description),
             expanded = false,
             arrowRotation = 90f
         ) {
-            settingsViewModel.pathOptionsDialogShown = true
+            settingsViewModel.folderConfigurationDialogShown = true
         }
     }
 }
@@ -202,8 +198,7 @@ private fun Links(
 @Composable
 private fun ExperimentalSettings(
     mainViewModel: MainViewModel = getViewModel(),
-    settingsViewModel: SettingsViewModel = getViewModel(),
-    prefs: PreferenceManager = settingsViewModel.prefs
+    settingsViewModel: SettingsViewModel = getViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -232,25 +227,22 @@ private fun ExperimentalSettings(
             scope.launch { mainViewModel.updateSheetState.show() }
         }
         SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
-            val value = remember { mutableStateOf(
-                prefs.getString(prefEdit.key, prefEdit.default)
-            ) }
-            TextField(
-                label = { Text(text = "Prefs: ${prefEdit.key}") },
-                value = value.value,
-                modifier = Modifier.padding(horizontal = 8.dp),
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                containerColor = MaterialTheme.colorScheme.surface,
-                rounded = false,
+            OutlinedTextField(
+                value = prefEdit.getValue(settingsViewModel.prefs),
                 onValueChange = {
-                    value.value = it
-                    prefs.putString(prefEdit.key, it)
-                }
+                    prefEdit.setValue(it, settingsViewModel.prefs)
+                },
+                label = {
+                    Text(stringResource(prefEdit.labelResourceId))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
         ButtonRow(title = stringResource(R.string.settings_experimental_resetPrefs), contentColor = MaterialTheme.colorScheme.error) {
             SettingsConstant.experimentalPrefOptions.forEach {
-                prefs.putString(it.key, it.default)
+                it.setValue(it.default, settingsViewModel.prefs)
             }
             settingsViewModel.topToastState.showToast(
                 text = R.string.settings_experimental_resetPrefsDone,

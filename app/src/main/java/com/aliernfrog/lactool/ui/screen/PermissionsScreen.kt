@@ -1,138 +1,201 @@
 package com.aliernfrog.lactool.ui.screen
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
+import com.aliernfrog.lactool.ui.dialog.NotRecommendedFolderDialog
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
-import com.aliernfrog.lactool.util.extension.clickableWithColor
-import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import com.aliernfrog.lactool.util.extension.appHasPermissions
+import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PermissionsScreen(uriPath: String?, onSuccess: @Composable () -> Unit) {
+fun PermissionsScreen(
+    vararg permissionsData: PermissionData,
+    content: @Composable () -> Unit
+) {
     val context = LocalContext.current
-    var storagePermissions by remember { mutableStateOf(GeneralUtil.checkStoragePermissions(context)) }
-    var uriPermissions by remember { mutableStateOf(if (uriPath != null) FileUtil.checkUriPermission(uriPath, context) else true) }
-    Crossfade(targetState = (storagePermissions && uriPermissions)) { hasPermissions ->
-        if (hasPermissions) onSuccess()
+    fun getMissingPermissions(): List<PermissionData> {
+        return permissionsData.filter {
+            !Uri.parse(it.getUri()).appHasPermissions(context)
+        }
+    }
+
+    var missingPermissions by remember { mutableStateOf(
+        getMissingPermissions()
+    ) }
+
+    Crossfade(targetState = missingPermissions.isEmpty()) { hasPermissions ->
+        if (hasPermissions) content()
         else AppScaffold(
             title = stringResource(R.string.permissions)
         ) {
-            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-                PermissionsSetUp(
-                    uriPath = uriPath,
-                    storagePermissions = storagePermissions,
-                    uriPermissions = uriPermissions,
-                    onStorageResult =  { storagePermissions = it },
-                    onUriResult = { uriPermissions = it }
-                )
-            }
+            PermissionsList(
+                missingPermissions = missingPermissions,
+                onUpdateState = {
+                    missingPermissions = getMissingPermissions()
+                }
+            )
         }
     }
 }
 
-@SuppressLint("InlinedApi")
 @Composable
-private fun PermissionsSetUp(
-    uriPath: String?,
-    storagePermissions: Boolean,
-    uriPermissions: Boolean,
-    onStorageResult: (Boolean) -> Unit,
-    onUriResult: (Boolean) -> Unit
+private fun PermissionsList(
+    missingPermissions: List<PermissionData>,
+    onUpdateState: () -> Unit
 ) {
     val context = LocalContext.current
-    val allFilesAccess = Build.VERSION.SDK_INT >= 30
+    var activePermissionData by remember { mutableStateOf<PermissionData?>(null) }
+    var unrecommendedPathWarningUri by remember { mutableStateOf<Uri?>(null) }
 
-    val storagePermsLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(), onResult = {
-        onStorageResult(GeneralUtil.checkStoragePermissions(context))
-    })
-    val allFilesPermsLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult(), onResult = {
-        onStorageResult(GeneralUtil.checkStoragePermissions(context))
-    })
-    ErrorColumn(
-        visible = !storagePermissions,
-        title = stringResource(R.string.warning_missingStoragePermissions),
-        content = {
-            Text(text = stringResource(R.string.info_storagePermission), color = MaterialTheme.colorScheme.onError)
+    fun takePersistableUriPermissions(uri: Uri) {
+        uri.takePersistablePermissions(context)
+        activePermissionData?.onUriUpdate?.invoke(uri)
+        onUpdateState()
+    }
+    val uriPermsLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree(), onResult = {
+        if (it == null) return@rememberLauncherForActivityResult
+        val recommendedPath = activePermissionData?.recommendedPath
+        if (recommendedPath != null) {
+            val resolvedPath = it.resolvePath()
+            val isRecommendedPath = resolvedPath.equals(recommendedPath, ignoreCase = true)
+            if (!isRecommendedPath) unrecommendedPathWarningUri = it
+            else takePersistableUriPermissions(it)
+        } else {
+            takePersistableUriPermissions(it)
         }
-    ) {
-        if (allFilesAccess) {
-            val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-            intent.data = Uri.fromParts("package", context.packageName, null)
-            allFilesPermsLauncher.launch(intent)
-        } else storagePermsLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    })
+
+    fun openFolderPicker(permissionData: PermissionData) {
+        val starterUri = if (permissionData.recommendedPath != null) DocumentsContract.buildDocumentUri(
+            "com.android.externalstorage.documents",
+            "primary:"+permissionData.recommendedPath.removePrefix("${Environment.getExternalStorageDirectory()}/")
+        ) else null
+        uriPermsLauncher.launch(starterUri)
+        activePermissionData = permissionData
     }
 
-    if (uriPath != null) {
-        val uriPermsLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree(), onResult = {
-            if (it != null) {
-                val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                context.grantUriPermission(context.packageName, it, takeFlags)
-                context.contentResolver.takePersistableUriPermission(it, takeFlags)
-                onUriResult(FileUtil.checkUriPermission(uriPath, context))
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(missingPermissions) { permissionData ->
+            fun requestUriPermission() {
+                val treeId = "primary:"+permissionData.recommendedPath?.removePrefix("${Environment.getExternalStorageDirectory()}/")
+                val uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId)
+                uriPermsLauncher.launch(uri)
+                activePermissionData = permissionData
             }
-        })
-        ErrorColumn(
-            visible = !uriPermissions,
-            title = stringResource(R.string.warning_missingUriPermissions),
-            content = {
-                Text(text = stringResource(R.string.info_uriPermission), color = MaterialTheme.colorScheme.onError)
-                Spacer(Modifier.height(8.dp))
-                Text(uriPath.replaceFirst(Environment.getExternalStorageDirectory().toString(), stringResource(R.string.internalStorage)), fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = MaterialTheme.colorScheme.onError)
-            }
-        ) {
-            val treeId = uriPath.replace("${Environment.getExternalStorageDirectory()}/", "primary:")
-            val uri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", treeId)
-            uriPermsLauncher.launch(uri)
+
+            var introDialogShown by remember { mutableStateOf(false) }
+            if (introDialogShown) ChooseFolderIntroDialog(
+                permissionData = permissionData,
+                onDismissRequest = { introDialogShown = false },
+                onConfirm = {
+                    requestUriPermission()
+                    introDialogShown = false
+                }
+            )
+
+            PermissionCard(
+                title = stringResource(permissionData.titleId),
+                buttons = {
+                    Button(
+                        onClick = {
+                            if (permissionData.recommendedPath != null && permissionData.recommendedPathDescriptionId != null)
+                                introDialogShown = true
+                            else requestUriPermission()
+                        }
+                    ) {
+                        Text(stringResource(R.string.permissions_chooseFolder))
+                    }
+                },
+                content = permissionData.content
+            )
         }
+    }
+
+    unrecommendedPathWarningUri?.let { uri ->
+        NotRecommendedFolderDialog(
+            permissionData = activePermissionData!!,
+            onDismissRequest = { unrecommendedPathWarningUri = null },
+            onUseUnrecommendedFolderRequest = {
+                takePersistableUriPermissions(uri)
+                unrecommendedPathWarningUri = null
+            },
+            onChooseFolderRequest = {
+                activePermissionData?.let { openFolderPicker(it) }
+                unrecommendedPathWarningUri = null
+            }
+        )
     }
 }
 
 @Composable
-private fun ErrorColumn(visible: Boolean = true, title: String, content: @Composable () -> Unit, onClick: () -> Unit) {
-    FadeVisibility(visible) {
+private fun PermissionCard(
+    title: String,
+    buttons: @Composable () -> Unit,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            ),
+        shape = AppComponentShape
+    ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(AppComponentShape)
-                .clickableWithColor(MaterialTheme.colorScheme.onError) {
-                    onClick()
-                }
-                .background(MaterialTheme.colorScheme.error)
-                .padding(vertical = 8.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = title, color = MaterialTheme.colorScheme.onError, fontSize = 25.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Warning,
+                    contentDescription = null
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
             content()
-            Text(text = stringResource(R.string.info_permissionsHint), color = MaterialTheme.colorScheme.onError, fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+            ) {
+                buttons()
+            }
         }
     }
 }

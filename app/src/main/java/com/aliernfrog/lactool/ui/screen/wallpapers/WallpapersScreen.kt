@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.screen
+package com.aliernfrog.lactool.ui.screen.wallpapers
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

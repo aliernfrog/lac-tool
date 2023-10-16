@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -16,9 +17,9 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -28,12 +29,13 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 class ScreenshotsViewModel(
     context: Context,
-    prefs: PreferenceManager,
+    val prefs: PreferenceManager,
     private val topToastState: TopToastState,
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
-    val screenshotsDir = prefs.lacScreenshotsDir
+    
+    private val screenshotsDir : String get() = prefs.lacScreenshotsDir
     private lateinit var screenshotsFile: DocumentFileCompat
 
     val screenshotSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
@@ -42,8 +44,15 @@ class ScreenshotsViewModel(
     var screenshotSheetScreeenshot by mutableStateOf<ImageFile?>(null)
 
     fun getScreenshotsFile(context: Context): DocumentFileCompat {
-        if (!::screenshotsFile.isInitialized)
-            screenshotsFile = GeneralUtil.getDocumentFileFromPath(screenshotsDir, context)
+        val isUpToDate = if (!::screenshotsFile.isInitialized) false
+        else {
+            val updatedPath = screenshotsFile.uri.resolvePath()
+            val existingPath = Uri.parse(screenshotsDir).resolvePath()
+            updatedPath == existingPath
+        }
+        if (isUpToDate) return screenshotsFile
+        val treeUri = Uri.parse(screenshotsDir)
+        screenshotsFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
         return screenshotsFile
     }
 
