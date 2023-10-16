@@ -121,7 +121,7 @@ private fun PickFromDeviceButton(
     }
     Button(
         onClick = {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).setType("application/zip")
+            val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
             launcher.launch(intent)
         },
         modifier = Modifier
@@ -146,7 +146,7 @@ private fun Maps(
             stringResource(R.string.maps_pickMap_imported),
             stringResource(R.string.maps_pickMap_exported)
         ),
-        selectedOptionIndex = selectedSegment.ordinal,
+        selectedIndex = selectedSegment.ordinal,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)

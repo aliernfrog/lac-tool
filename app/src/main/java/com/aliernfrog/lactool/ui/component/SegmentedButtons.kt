@@ -34,7 +34,7 @@ import com.aliernfrog.lactool.ui.theme.AppComponentShape
 @Composable
 fun SegmentedButtons(
     options: List<String>,
-    selectedOptionIndex: Int,
+    selectedIndex: Int,
     modifier: Modifier = Modifier,
     onSelect: (Int) -> Unit
 ) {
@@ -50,7 +50,7 @@ fun SegmentedButtons(
             .width(IntrinsicSize.Max)
     ) {
         options.forEachIndexed { index, option ->
-            val selected = selectedOptionIndex == index
+            val selected = selectedIndex == index
             val containerColor = if (selected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
             val textColor = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface
             Row(
