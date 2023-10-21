@@ -3,12 +3,10 @@ package com.aliernfrog.lactool.ui.viewmodel
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +24,7 @@ import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class ScreenshotsViewModel(
     context: Context,
     val prefs: PreferenceManager,
@@ -38,7 +36,7 @@ class ScreenshotsViewModel(
     private val screenshotsDir : String get() = prefs.lacScreenshotsDir
     private lateinit var screenshotsFile: DocumentFileCompat
 
-    val screenshotSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val screenshotSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     var screenshots by mutableStateOf(emptyList<ImageFile>())
     var screenshotSheetScreeenshot by mutableStateOf<ImageFile?>(null)
@@ -80,7 +78,6 @@ class ScreenshotsViewModel(
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     suspend fun showScreenshotSheet(screenshot: ImageFile) {
         screenshotSheetScreeenshot = screenshot
         screenshotSheetState.show()

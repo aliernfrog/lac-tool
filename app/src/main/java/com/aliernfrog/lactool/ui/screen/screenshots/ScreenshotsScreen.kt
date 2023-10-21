@@ -22,6 +22,7 @@ import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.sheet.ScreenshotsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
@@ -68,4 +69,11 @@ fun ScreenshotsScreen(
             }
         }
     }
+
+    ScreenshotsSheet(
+        screenshot = screenshotsViewModel.screenshotSheetScreeenshot,
+        state = screenshotsViewModel.screenshotSheetState,
+        onShareRequest = { scope.launch { screenshotsViewModel.shareImportedScreenshot(it, context) } },
+        onDeleteRequest = { scope.launch { screenshotsViewModel.deleteImportedScreenshot(it) } }
+    )
 }

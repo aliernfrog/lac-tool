@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material.icons.rounded.Delete
@@ -15,8 +14,8 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.Upload
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.PickMapFileButton
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.theme.AppInnerComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
@@ -48,7 +48,7 @@ import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsScreen(
     mapsViewModel: MapsViewModel = getViewModel(),
@@ -76,7 +76,7 @@ fun MapsScreen(
                 mapsViewModel = mapsViewModel,
                 onNavigateRequest = onNavigateRequest
             )
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.surfaceVariant
@@ -88,6 +88,7 @@ fun MapsScreen(
             )
         }
     }
+
     mapsViewModel.pendingMapDelete?.let {
         DeleteConfirmationDialog(
             name = it,
@@ -100,6 +101,13 @@ fun MapsScreen(
             }
         )
     }
+
+    PickMapSheet(
+        onMapPick = {
+            mapsViewModel.chooseMap(it)
+            true
+        }
+    )
 }
 
 @Composable
@@ -128,7 +136,7 @@ private fun MapActions(
                 scope.launch { mapsViewModel.renameChosenMap() }
             }
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(0.7f),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant

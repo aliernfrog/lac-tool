@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material.icons.rounded.Build
@@ -38,11 +37,12 @@ import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
+import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMergeScreen(
     mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
@@ -50,6 +50,11 @@ fun MapsMergeScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        mapsMergeViewModel.loadMaps()
+    }
+
     AppScaffold(
         title = stringResource(R.string.mapsMerge),
         topAppBarState = mapsMergeViewModel.topAppBarState,
@@ -89,6 +94,7 @@ fun MapsMergeScreen(
             Spacer(Modifier.systemBarsPadding().height(70.dp))
         }
     }
+
     if (mapsMergeViewModel.mergeMapDialogShown) MergeMapDialog(
         isMerging = mapsMergeViewModel.isMerging,
         onDismissRequest = { mapsMergeViewModel.mergeMapDialogShown = false },
@@ -102,9 +108,16 @@ fun MapsMergeScreen(
             }
         }
     )
-    LaunchedEffect(Unit) {
-        mapsMergeViewModel.loadMaps()
-    }
+
+    PickMapSheet(
+        sheetState = mapsMergeViewModel.pickMapSheetState,
+        onMapPick = {
+            scope.launch {
+                mapsMergeViewModel.addMap(it, context)
+            }
+            true
+        }
+    )
 }
 
 @Composable

@@ -31,6 +31,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
+import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
@@ -43,10 +44,12 @@ fun WallpapersScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         wallpapersViewModel.getWallpapersFile(context)
         wallpapersViewModel.fetchImportedWallpapers()
     }
+
     AppScaffold(
         title = stringResource(R.string.wallpapers),
         topAppBarState = wallpapersViewModel.topAppBarState
@@ -85,6 +88,15 @@ fun WallpapersScreen(
             }
         }
     }
+
+    WallpaperSheet(
+        wallpaper = wallpapersViewModel.wallpaperSheetWallpaper,
+        wallpapersPath = wallpapersViewModel.wallpapersDir,
+        state = wallpapersViewModel.wallpaperSheetState,
+        topToastState = wallpapersViewModel.topToastState,
+        onShareRequest = { scope.launch { wallpapersViewModel.shareImportedWallpaper(it, context) } },
+        onDeleteRequest = { scope.launch { wallpapersViewModel.deleteImportedWallpaper(it) } }
+    )
 }
 
 @Composable

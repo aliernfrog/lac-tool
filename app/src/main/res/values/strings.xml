@@ -207,7 +207,7 @@
     <string name="settings_experimental_lastAlphaAck">Last alpha ACK</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
     <string name="settings_experimental_resetPrefs">Reset prefs</string>
-    <string name="settings_experimental_resetPrefsDone">Restored defaults values for experimental prefs</string>
+    <string name="settings_experimental_resetPrefsDone">Restored default values for experimental prefs</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>
     <string name="updates_error">Something went wrong while checking for updates</string>

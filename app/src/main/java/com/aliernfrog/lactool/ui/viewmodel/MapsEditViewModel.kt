@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Delete
@@ -14,6 +11,7 @@ import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -36,7 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
     val topToastState: TopToastState,
     context: Context
@@ -48,8 +46,8 @@ class MapsEditViewModel(
     val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val materialsLazyListState = LazyListState()
 
-    val addRoleSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context), isSkipHalfExpanded = true)
-    val materialSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val addRoleSheetState = SheetState(skipPartiallyExpanded = true, Density(context))
+    val materialSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
     var pendingRoleDelete by mutableStateOf<String?>(null)

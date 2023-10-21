@@ -7,13 +7,13 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,11 +45,11 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.getViewModel
 import java.io.File
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickMapSheet(
     mapsViewModel: MapsViewModel = getViewModel(),
-    sheetState: ModalBottomSheetState = mapsViewModel.pickMapSheetState,
+    sheetState: SheetState = mapsViewModel.pickMapSheetState,
     selectedSegment: PickMapSheetSegments = mapsViewModel.pickMapSheetSelectedSegment,
     getShowMapThumbnails: () -> Boolean = { mapsViewModel.prefs.showMapThumbnailsInList },
     onSelectedSegmentChange: (PickMapSheetSegments) -> Unit = {

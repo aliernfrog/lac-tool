@@ -3,14 +3,12 @@ package com.aliernfrog.lactool.ui.viewmodel
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class WallpapersViewModel(
     context: Context,
     val prefs: PreferenceManager,
@@ -42,7 +40,7 @@ class WallpapersViewModel(
     val wallpapersDir : String get() = prefs.lacWallpapersDir
     private lateinit var wallpapersFile: DocumentFileCompat
 
-    val wallpaperSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val wallpaperSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     var importedWallpapers by mutableStateOf(emptyList<ImageFile>())
     var pickedWallpaper by mutableStateOf<ImageFile?>(null)
@@ -121,7 +119,6 @@ class WallpapersViewModel(
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     suspend fun showWallpaperSheet(wallpaper: ImageFile) {
         wallpaperSheetWallpaper = wallpaper
         wallpaperSheetState.show()
