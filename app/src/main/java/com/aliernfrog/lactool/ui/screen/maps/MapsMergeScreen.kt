@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,14 +38,35 @@ import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
-import com.aliernfrog.lactool.ui.sheet.PickMapSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMergeScreen(
+    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    onNavigateBackRequest: () -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    AnimatedContent(mapsMergeViewModel.mapListShown) { showMapList ->
+        if (showMapList) MapsListScreen(
+            title = stringResource(R.string.mapsMerge_addMap),
+            onBackClick = { mapsMergeViewModel.mapListShown = false },
+            onMapPick = { scope.launch {
+                mapsMergeViewModel.addMap(it, context)
+                mapsMergeViewModel.mapListShown = false
+            } }
+        )
+        else MergeScreen(
+            onNavigateBackRequest = onNavigateBackRequest
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MergeScreen(
     mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
     onNavigateBackRequest: () -> Unit
 ) {
@@ -86,7 +108,7 @@ fun MapsMergeScreen(
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
             PickMapButton {
-                scope.launch { mapsMergeViewModel.pickMapSheetState.show() }
+                mapsMergeViewModel.mapListShown = true
             }
             MapsList(
                 maps = mapsMergeViewModel.mapMerger.mapsToMerge
@@ -106,16 +128,6 @@ fun MapsMergeScreen(
                     onNavigateBackRequest = onNavigateBackRequest
                 )
             }
-        }
-    )
-
-    PickMapSheet(
-        sheetState = mapsMergeViewModel.pickMapSheetState,
-        onMapPick = {
-            scope.launch {
-                mapsMergeViewModel.addMap(it, context)
-            }
-            true
         }
     )
 }

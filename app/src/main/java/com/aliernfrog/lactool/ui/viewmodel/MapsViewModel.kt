@@ -10,17 +10,14 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.MapImportedState
-import com.aliernfrog.lactool.enum.PickMapSheetSegments
 import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.resolveFile
@@ -37,12 +34,10 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
-    context: Context,
     val topToastState: TopToastState,
     val prefs: PreferenceManager,
     private val mapsEditViewModel: MapsEditViewModel
 ) : ViewModel() {
-    val pickMapSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
@@ -51,11 +46,14 @@ class MapsViewModel(
     private lateinit var mapsFile: DocumentFileCompat
     private lateinit var exportedMapsFile: DocumentFileCompat
 
+    var isLoadingMaps by mutableStateOf(true)
     var importedMaps by mutableStateOf(emptyList<LACMap>())
     var exportedMaps by mutableStateOf(emptyList<LACMap>())
-    var mapNameEdit by mutableStateOf("")
     var pendingMapDelete by mutableStateOf<String?>(null)
-    var pickMapSheetSelectedSegment by mutableStateOf(PickMapSheetSegments.IMPORTED)
+    var mapNameEdit by mutableStateOf("")
+    var mapListShown by mutableStateOf(true)
+    val mapListBackButtonShown
+        get() = chosenMap != null
 
     var chosenMap by mutableStateOf<LACMap?>(null)
 
@@ -185,6 +183,18 @@ class MapsViewModel(
         else mapsFile.findFile("$fileName.jpg")?.uri.toString()
     }
 
+    /**
+     * Loads all imported and exported maps. [isLoadingMaps] will be true while this is in action.
+     */
+    suspend fun loadMaps(context: Context) {
+        isLoadingMaps = true
+        getMapsFile(context)
+        getExportedMapsFile(context)
+        fetchImportedMaps()
+        fetchExportedMaps()
+        isLoadingMaps = false
+    }
+
     private fun getChosenMapFiles(): List<DocumentFileCompat> {
         val chosenMapName = chosenMap?.name ?: return listOf()
         val list = mutableListOf<DocumentFileCompat>()
@@ -210,7 +220,7 @@ class MapsViewModel(
         return mapsFile
     }
 
-    fun getExportedMapsFile(context: Context): DocumentFileCompat {
+    private fun getExportedMapsFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::exportedMapsFile.isInitialized) false
         else {
             val updatedPath = exportedMapsFile.uri.resolvePath()
