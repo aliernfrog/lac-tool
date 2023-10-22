@@ -9,6 +9,7 @@ const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 
 val externalStorageRoot = Environment.getExternalStorageDirectory().toString()+"/"
+val imeSupportsSyncAppContent = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 val folderPickerSupportsInitialUri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 object ConfigKey {

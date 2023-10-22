@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
@@ -39,5 +40,14 @@ fun InsetsObserver(
                 insetsViewModel.bottomPadding = toDp(it.height)
             }
             .navigationBarsPadding()
+    )
+
+    // IME
+    Spacer(
+        modifier = Modifier
+            .onSizeChanged {
+                insetsViewModel.imePadding = toDp(it.height)
+            }
+            .imePadding()
     )
 }
