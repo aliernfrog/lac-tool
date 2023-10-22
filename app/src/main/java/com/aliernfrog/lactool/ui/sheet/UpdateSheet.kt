@@ -22,6 +22,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,7 +108,7 @@ private fun Actions(
                 .weight(1f)
                 .horizontalFadingEdge(
                     scrollState = versionNameScrollState,
-                    edgeColor = MaterialTheme.colorScheme.surface,
+                    edgeColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     //TODO isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
                 )
         ) {
