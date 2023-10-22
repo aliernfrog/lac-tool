@@ -3,9 +3,6 @@ package com.aliernfrog.lactool.ui.viewmodel
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.ScrollState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
@@ -13,6 +10,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,14 +35,14 @@ import kotlinx.coroutines.withContext
 import org.koin.ext.getFullName
 import java.io.File
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     context: Context,
     val topToastState: TopToastState,
     val prefs: PreferenceManager,
     private val mapsEditViewModel: MapsEditViewModel
 ) : ViewModel() {
-    val pickMapSheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, density = Density(context))
+    val pickMapSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 

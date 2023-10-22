@@ -5,14 +5,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Report
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -32,12 +32,12 @@ import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.toptoast.state.TopToastState
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DownloadableMaterialSheet(
     material: LACMapDownloadableMaterial?,
     failed: Boolean,
-    state: ModalBottomSheetState,
+    state: SheetState,
     topToastState: TopToastState?,
     onDeleteRequest: (LACMapDownloadableMaterial) -> Unit,
     onError: () -> Unit
@@ -67,7 +67,7 @@ fun DownloadableMaterialSheet(
                 contentColor = MaterialTheme.colorScheme.error
             )
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.padding(8.dp).alpha(0.7f),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant

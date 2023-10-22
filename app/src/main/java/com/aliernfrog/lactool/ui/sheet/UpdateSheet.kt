@@ -1,29 +1,32 @@
 package com.aliernfrog.lactool.ui.sheet
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Update
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -34,37 +37,48 @@ import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.ui.component.BaseModalBottomSheet
+import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateSheet(
-    sheetState: ModalBottomSheetState,
+    sheetState: SheetState,
     latestVersionInfo: ReleaseInfo
 ) {
     val uriHandler = LocalUriHandler.current
     BaseModalBottomSheet(
-        sheetState = sheetState
-    ) {
+        sheetState = sheetState,
+        dragHandle = {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .size(32.dp, 4.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+            )
+        }
+    ) { bottomPadding ->
         Actions(
             versionName = latestVersionInfo.versionName,
             preRelease = latestVersionInfo.preRelease,
             onGithubClick = { uriHandler.openUri(latestVersionInfo.htmlUrl) },
             onUpdateClick = { uriHandler.openUri(latestVersionInfo.downloadLink) }
         )
-        Divider(
-            modifier = Modifier.fillMaxWidth(),
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        DividerRow(
+            alpha = 0.3f
         )
         MarkdownText(
             modifier = Modifier
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .navigationBarsPadding()
+                .padding(bottom = bottomPadding)
                 .padding(16.dp),
             markdown = latestVersionInfo.body,
             color = LocalContentColor.current,
+            linkColor = MaterialTheme.colorScheme.primary,
             style = LocalTextStyle.current,
             onLinkClicked = {
                 uriHandler.openUri(it)
@@ -85,14 +99,18 @@ private fun Actions(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .horizontalFadingEdge(versionNameScrollState, MaterialTheme.colorScheme.surface)
+                .horizontalFadingEdge(
+                    scrollState = versionNameScrollState,
+                    edgeColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                    //TODO isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
+                )
         ) {
             Row(
                 modifier = Modifier
@@ -120,16 +138,15 @@ private fun Actions(
         IconButton(onClick = onGithubClick) {
             Icon(
                 painter = painterResource(R.drawable.github),
-                contentDescription = stringResource(R.string.updates_openInGithub)
+                contentDescription = stringResource(R.string.updates_openInGithub),
+                modifier = Modifier.padding(6.dp)
             )
         }
         Button(
             onClick = onUpdateClick
         ) {
-            Icon(
-                painter = rememberVectorPainter(Icons.Rounded.Update),
-                contentDescription = null,
-                modifier = Modifier.padding(end = 4.dp)
+            ButtonIcon(
+                painter = rememberVectorPainter(Icons.Default.Update)
             )
             Text(stringResource(R.string.updates_update))
         }

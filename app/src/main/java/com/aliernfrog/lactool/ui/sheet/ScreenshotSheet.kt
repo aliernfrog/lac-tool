@@ -2,13 +2,13 @@ package com.aliernfrog.lactool.ui.sheet
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.IosShare
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,11 +26,11 @@ import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenshotsSheet(
     screenshot: ImageFile?,
-    state: ModalBottomSheetState,
+    state: SheetState,
     onShareRequest: (ImageFile) -> Unit,
     onDeleteRequest: (ImageFile) -> Unit
 ) {
@@ -49,7 +49,7 @@ fun ScreenshotsSheet(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             contentScale = ContentScale.Crop
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.padding(8.dp).alpha(0.7f),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant
@@ -68,6 +68,7 @@ fun ScreenshotsSheet(
             if (screenshot != null) deleteConfirmationShown = true
         }
     }
+
     if (deleteConfirmationShown) DeleteConfirmationDialog(
         name = screenshot?.name.toString(),
         onDismissRequest = { deleteConfirmationShown = false },

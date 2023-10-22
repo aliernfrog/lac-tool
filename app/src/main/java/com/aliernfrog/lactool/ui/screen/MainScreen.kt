@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,25 +24,17 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
 import com.aliernfrog.lactool.ui.screen.screenshots.ScreenshotsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
-import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
-import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
-import com.aliernfrog.lactool.ui.sheet.PickMapSheet
-import com.aliernfrog.lactool.ui.sheet.ScreenshotsSheet
 import com.aliernfrog.lactool.ui.sheet.UpdateSheet
-import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
-import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    mainViewModel: MainViewModel = getViewModel()
+) {
     val navController = rememberNavController()
     BaseScaffold(
         navController = navController
@@ -114,65 +104,11 @@ fun MainScreen() {
             }
         }
     }
-    ModalBottomSheets()
-    AlphaWarningDialog()
-}
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun ModalBottomSheets(
-    mainViewModel: MainViewModel = getViewModel(),
-    mapsViewModel: MapsViewModel = getViewModel(),
-    mapsEditViewModel: MapsEditViewModel = getViewModel(),
-    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
-    wallpapersViewModel: WallpapersViewModel = getViewModel(),
-    screenshotsViewModel: ScreenshotsViewModel = getViewModel()
-) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    PickMapSheet(
-        onMapPick = {
-            mapsViewModel.chooseMap(it)
-            true
-        }
-    )
-    PickMapSheet(
-        sheetState = mapsMergeViewModel.pickMapSheetState,
-        onMapPick = {
-            scope.launch {
-                mapsMergeViewModel.addMap(it, context)
-            }
-            true
-        }
-    )
-    AddRoleSheet(
-        state = mapsEditViewModel.addRoleSheetState,
-        onRoleAdd = { mapsEditViewModel.addRole(it, context) }
-    )
-    DownloadableMaterialSheet(
-        material = mapsEditViewModel.materialSheetChosenMaterial,
-        failed = mapsEditViewModel.materialSheetMaterialFailed,
-        state = mapsEditViewModel.materialSheetState,
-        topToastState = mapsEditViewModel.topToastState,
-        onDeleteRequest = { mapsEditViewModel.pendingMaterialDelete = it },
-        onError = { mapsEditViewModel.materialSheetMaterialFailed = true }
-    )
-    WallpaperSheet(
-        wallpaper = wallpapersViewModel.wallpaperSheetWallpaper,
-        wallpapersPath = wallpapersViewModel.wallpapersDir,
-        state = wallpapersViewModel.wallpaperSheetState,
-        topToastState = wallpapersViewModel.topToastState,
-        onShareRequest = { scope.launch { wallpapersViewModel.shareImportedWallpaper(it, context) } },
-        onDeleteRequest = { scope.launch { wallpapersViewModel.deleteImportedWallpaper(it) } }
-    )
-    ScreenshotsSheet(
-        screenshot = screenshotsViewModel.screenshotSheetScreeenshot,
-        state = screenshotsViewModel.screenshotSheetState,
-        onShareRequest = { scope.launch { screenshotsViewModel.shareImportedScreenshot(it, context) } },
-        onDeleteRequest = { scope.launch { screenshotsViewModel.deleteImportedScreenshot(it) } }
-    )
     UpdateSheet(
         sheetState = mainViewModel.updateSheetState,
         latestVersionInfo = mainViewModel.latestVersionInfo
     )
+
+    AlphaWarningDialog()
 }

@@ -1,13 +1,12 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Update
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,7 +28,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class MainViewModel(
     context: Context,
     val prefs: PreferenceManager,
@@ -37,11 +36,11 @@ class MainViewModel(
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
 
-    val updateSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val updateSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
     val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
-    val applicationIsPreRelease = applicationVersionName.contains("-alpha")
+    private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
 
     var latestVersionInfo by mutableStateOf(ReleaseInfo(
         versionName = applicationVersionName,
