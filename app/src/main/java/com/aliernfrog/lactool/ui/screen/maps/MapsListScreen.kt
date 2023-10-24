@@ -114,7 +114,7 @@ fun MapsListScreen(
             ExtendedFloatingActionButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = {
-                    val intent = Intent(Intent.ACTION_GET_CONTENT).setType("application/zip")
+                    val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
                     launcher.launch(intent)
                 }
             ) {
