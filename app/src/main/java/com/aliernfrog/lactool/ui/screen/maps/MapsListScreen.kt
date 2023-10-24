@@ -21,7 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SwapVert
-import androidx.compose.material.icons.outlined.FolderZip
+import androidx.compose.material.icons.outlined.SdCard
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
@@ -119,7 +119,7 @@ fun MapsListScreen(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.FolderZip,
+                    imageVector = Icons.Outlined.SdCard,
                     contentDescription = null,
                     modifier = Modifier.padding(end = 8.dp)
                 )
