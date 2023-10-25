@@ -41,10 +41,6 @@ class MapsMergeViewModel(
 
     val hasEnoughMaps get() = mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
 
-    suspend fun loadMaps() {
-        mapsViewModel.fetchAllMaps()
-    }
-
     suspend fun mergeMaps(
         context: Context,
         newMapName: String,

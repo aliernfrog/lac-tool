@@ -19,9 +19,11 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.enum.MapImportedState
 import com.aliernfrog.lactool.util.extension.cacheFile
+import com.aliernfrog.lactool.util.extension.getDetails
 import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.resolveFile
 import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -35,6 +37,7 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     val topToastState: TopToastState,
+    private val contextUtils: ContextUtils,
     val prefs: PreferenceManager,
     private val mapsEditViewModel: MapsEditViewModel
 ) : ViewModel() {
@@ -87,8 +90,7 @@ class MapsViewModel(
 
         val mapPath = mapToChoose?.resolvePath() ?: ""
         chosenMap = mapToChoose?.copy(
-            importedState = getMapImportedState(mapPath),
-            thumbnailModel = getMapThumbnailModel(mapPath)
+            importedState = getMapImportedState(mapPath)
         )
 
         mapToChoose?.name?.let {
@@ -96,8 +98,9 @@ class MapsViewModel(
         }
     }
 
-    suspend fun renameChosenMap() {
-        val newName = getMapNameEdit(false)
+    suspend fun renameChosenMap(
+        newName: String = resolveMapNameInput(false)
+    ) {
         val newNameTxt = "$newName.txt"
         val currentName = chosenMap?.name ?: return
         val output = mapsFile.findFile(newNameTxt)
@@ -108,8 +111,10 @@ class MapsViewModel(
                 file.renameTo(newFileName)
             }
             chooseMap(mapsFile.findFile(newNameTxt))
-            topToastState.showToast(R.string.maps_rename_done, Icons.Rounded.Edit)
-            fetchImportedMaps()
+            topToastState.showToast(
+                text = contextUtils.getString(R.string.maps_rename_done).replace("{NAME}", newName),
+                icon = Icons.Rounded.Edit
+            )
         }
     }
 
@@ -119,29 +124,34 @@ class MapsViewModel(
             is DocumentFileCompat -> file.uri.cacheFile(context)?.absolutePath
             else -> null
         } ?: return
-        val mapName = getMapNameEdit()
+        val mapName = resolveMapNameInput()
         var output = mapsFile.findFile(mapName)
         if (output?.exists() == true) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
             output = mapsFile.createFile("", mapName) ?: return@withContext
             FileUtil.copyFile(mapPath, output ?: return@withContext, context)
             chooseMap(output)
-            topToastState.showToast(R.string.maps_import_done, Icons.Rounded.Download)
-            fetchImportedMaps()
+            topToastState.showToast(
+                text = contextUtils.getString(R.string.maps_import_done).replace("{NAME}", mapName),
+                icon = Icons.Rounded.Download
+            )
         }
     }
 
     suspend fun exportChosenMap(context: Context) {
         val mapFile = chosenMap?.documentFile ?: return
-        val outputName = getMapNameEdit()
-        var output = exportedMapsFile.findFile(outputName)
+        val outputName = resolveMapNameInput(false)
+        val outputNameTxt = "$outputName.txt"
+        var output = exportedMapsFile.findFile(outputNameTxt)
         if (output?.exists() == true) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
-            output = exportedMapsFile.createFile("", outputName) ?: return@withContext
+            output = exportedMapsFile.createFile("", outputNameTxt) ?: return@withContext
             FileUtil.copyFile(mapFile, output ?: return@withContext, context)
             chooseMap(output)
-            topToastState.showToast(R.string.maps_export_done, Icons.Rounded.Upload)
-            fetchExportedMaps()
+            topToastState.showToast(
+                text = contextUtils.getString(R.string.maps_export_done).replace("{NAME}", outputName),
+                icon = Icons.Rounded.Upload
+            )
         }
     }
 
@@ -161,12 +171,14 @@ class MapsViewModel(
             map.file?.delete()
             map.documentFile?.delete()
             chooseMap(null)
-            topToastState.showToast(R.string.maps_delete_done, Icons.Rounded.Delete)
-            fetchAllMaps()
+            topToastState.showToast(
+                text = contextUtils.getString(R.string.maps_delete_done).replace("{NAME}", map.name),
+                icon = Icons.Rounded.Delete
+            )
         }
     }
 
-    fun getMapNameEdit(addTxtSuffix: Boolean = true): String {
+    fun resolveMapNameInput(addTxtSuffix: Boolean = true): String {
         val suffix = if (addTxtSuffix) ".txt" else ""
         return mapNameEdit.ifBlank { chosenMap?.name }+suffix
     }
@@ -175,12 +187,6 @@ class MapsViewModel(
         return if (path.startsWith(mapsDir)) MapImportedState.IMPORTED
         else if (path.startsWith(exportedMapsDir)) MapImportedState.EXPORTED
         else MapImportedState.NONE
-    }
-
-    private fun getMapThumbnailModel(path: String): String? {
-        val fileName = FileUtil.getFileName(path, removeExtension = true)
-        return if (!path.startsWith(mapsDir)) null
-        else mapsFile.findFile("$fileName.jpg")?.uri.toString()
     }
 
     /**
@@ -233,25 +239,24 @@ class MapsViewModel(
         return exportedMapsFile
     }
 
-    suspend fun fetchAllMaps() {
-        fetchImportedMaps()
-        fetchExportedMaps()
-    }
-
     private suspend fun fetchImportedMaps() {
         withContext(Dispatchers.IO) {
             importedMaps = mapsFile.listFiles()
                 .filter { it.isFile() && it.name.lowercase().endsWith(".txt") }
                 .sortedBy { it.name.lowercase() }
                 .map {
-                    LACMap(
+                    val map = LACMap(
                         name = FileUtil.removeExtension(it.name),
                         fileName = it.name,
                         fileSize = it.length,
                         lastModified = it.lastModified,
                         documentFile = it,
-                        thumbnailModel = getMapThumbnailModel("$mapsDir/${it.name}")
+                        thumbnailModel = mapsFile.findFile(it.nameWithoutExtension+".jpg")?.uri.toString()
                     )
+                    contextUtils.run { ctx ->
+                        map.getDetails(ctx)
+                    }
+                    map
                 }
         }
     }
@@ -262,13 +267,17 @@ class MapsViewModel(
                 .filter { it.isFile() && it.name.lowercase().endsWith(".txt") }
                 .sortedBy { it.name.lowercase() }
                 .map {
-                    LACMap(
+                    val map = LACMap(
                         name = it.nameWithoutExtension,
                         fileName = it.name,
                         fileSize = it.length,
                         lastModified = it.lastModified,
                         documentFile = it
                     )
+                    contextUtils.run { ctx ->
+                        map.getDetails(ctx)
+                    }
+                    map
                 }
         }
     }

@@ -22,10 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.form.FormHeader
@@ -34,14 +32,15 @@ import com.aliernfrog.lactool.util.extension.clickableWithColor
 import com.aliernfrog.lactool.util.extension.getDetails
 
 @Composable
-fun PickMapFileButton(
+fun PickMapButton(
     chosenMap: LACMap?,
     showMapThumbnail: Boolean,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    LaunchedEffect(chosenMap?.details?.value) {
-        if (chosenMap?.details?.value.isNullOrEmpty()) chosenMap?.getDetails(context)
+
+    LaunchedEffect(chosenMap) {
+        chosenMap?.getDetails(context)
     }
 
     Box(
@@ -78,8 +77,8 @@ fun PickMapFileButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             FormHeader(
-                title = chosenMap?.name ?: stringResource(R.string.maps_pickMap),
-                description = chosenMap?.getDetails(context),
+                title = chosenMap?.name ?: "",
+                description = chosenMap?.details?.value,
                 painter = rememberVectorPainter(Icons.Rounded.LocationOn),
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier

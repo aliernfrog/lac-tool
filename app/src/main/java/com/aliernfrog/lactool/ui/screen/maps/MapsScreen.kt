@@ -32,7 +32,7 @@ import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.TextField
 import com.aliernfrog.lactool.ui.component.VerticalSegmentedButtons
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
-import com.aliernfrog.lactool.ui.component.maps.PickMapFileButton
+import com.aliernfrog.lactool.ui.component.maps.PickMapButton
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
@@ -59,7 +59,7 @@ fun MapsScreen(
         topAppBarState = mapsViewModel.topAppBarState
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsViewModel.scrollState)) {
-            PickMapFileButton(
+            PickMapButton(
                 chosenMap = mapsViewModel.chosenMap,
                 showMapThumbnail = mapsViewModel.prefs.showChosenMapThumbnail
             ) {
@@ -96,7 +96,7 @@ private fun MapActions(
     val scope = rememberCoroutineScope()
     val isImported = mapsViewModel.chosenMap?.importedState == MapImportedState.IMPORTED
     val isExported = mapsViewModel.chosenMap?.importedState == MapImportedState.EXPORTED
-    val mapNameUpdated = mapsViewModel.getMapNameEdit(false) != mapsViewModel.chosenMap?.name
+    val mapNameUpdated = mapsViewModel.resolveMapNameInput(false) != mapsViewModel.chosenMap?.name
     TextField(
         value = mapsViewModel.mapNameEdit,
         onValueChange = { mapsViewModel.mapNameEdit = it },

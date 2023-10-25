@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -72,10 +71,6 @@ private fun MergeScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        mapsMergeViewModel.loadMaps()
-    }
 
     AppScaffold(
         title = stringResource(R.string.mapsMerge),
