@@ -124,11 +124,12 @@ class MapsViewModel(
             is DocumentFileCompat -> file.uri.cacheFile(context)?.absolutePath
             else -> null
         } ?: return
-        val mapName = resolveMapNameInput()
-        var output = mapsFile.findFile(mapName)
+        val mapName = resolveMapNameInput(false)
+        val mapNameTxt = "$mapName.txt"
+        var output = mapsFile.findFile(mapNameTxt)
         if (output?.exists() == true) fileAlreadyExists()
         else withContext(Dispatchers.IO) {
-            output = mapsFile.createFile("", mapName) ?: return@withContext
+            output = mapsFile.createFile("", mapNameTxt) ?: return@withContext
             FileUtil.copyFile(mapPath, output ?: return@withContext, context)
             chooseMap(output)
             topToastState.showToast(
