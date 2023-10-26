@@ -4,16 +4,19 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.LACMap
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 
-enum class PickMapSheetSegments(
+enum class MapsListSegment(
+    val labelId: Int,
     val noMapsTextId: Int,
     val getMaps: (MapsViewModel) -> List<LACMap>
 ) {
     IMPORTED(
-        noMapsTextId = R.string.maps_pickMap_noImportedMaps,
+        labelId = R.string.mapsList_imported,
+        noMapsTextId = R.string.mapsList_noImportedMaps,
         getMaps = { it.importedMaps }
     ),
     EXPORTED(
-        noMapsTextId = R.string.maps_pickMap_noExportedMaps,
+        labelId = R.string.mapsList_exported,
+        noMapsTextId = R.string.mapsList_noExportedMaps,
         getMaps = { it.exportedMaps }
     )
 }

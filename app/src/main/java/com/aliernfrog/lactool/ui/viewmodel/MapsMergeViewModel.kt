@@ -6,14 +6,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
@@ -29,24 +27,19 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsMergeViewModel(
-    context: Context,
     private val topToastState: TopToastState,
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
-    val pickMapSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
+    var isMerging by mutableStateOf(false)
     var mapMerger by mutableStateOf(LACMapMerger(), neverEqualPolicy())
     var optionsExpandedFor by mutableIntStateOf(0)
     var mergeMapDialogShown by mutableStateOf(false)
-    var isMerging by mutableStateOf(false)
+    var mapListShown by mutableStateOf(false)
 
     val hasEnoughMaps get() = mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
-
-    suspend fun loadMaps() {
-        mapsViewModel.fetchAllMaps()
-    }
 
     suspend fun mergeMaps(
         context: Context,
@@ -81,7 +74,10 @@ class MapsMergeViewModel(
         onNavigateBackRequest()
     }
 
-    suspend fun addMap(map: Any, context: Context) {
+    suspend fun addMap(
+        map: Any,
+        context: Context
+    ) {
         withContext(Dispatchers.IO) {
             val file = when (map) {
                 is LACMap -> map.documentFile ?: map.file ?: throw NullPointerException()

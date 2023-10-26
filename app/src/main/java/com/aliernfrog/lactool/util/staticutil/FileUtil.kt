@@ -16,14 +16,15 @@ class FileUtil {
             return path.substring(0, extensionIndex)
         }
 
-        fun getFileName(path: String, removeExtension: Boolean = false): String {
-            val name = path.split("/").last()
-            return if (removeExtension) removeExtension(name)
-            else name
-        }
-
-        fun lastModifiedFromLong(lastModified: Long, context: Context): String {
-            return DateUtils.getRelativeDateTimeString(context, lastModified, DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0).toString()
+        fun lastModifiedFromLong(lastModified: Long?, context: Context): String {
+            val lastModifiedTime = lastModified ?: System.currentTimeMillis()
+            return DateUtils.getRelativeDateTimeString(
+                /* c = */ context,
+                /* time = */ lastModifiedTime,
+                /* minResolution = */ DateUtils.SECOND_IN_MILLIS,
+                /* transitionResolution = */ DateUtils.DAY_IN_MILLIS,
+                /* flags = */ 0
+            ).toString()
         }
 
         fun copyFile(source: String, destination: DocumentFileCompat, context: Context) {

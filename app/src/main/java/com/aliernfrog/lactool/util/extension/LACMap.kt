@@ -23,7 +23,7 @@ fun LACMap.getDetails(context: Context): String? {
     if (this.fileSize != null) details.add(
         "${this.fileSize/1024} KB"
     )
-    if (this.lastModified != null) details.add(
+    details.add(
         FileUtil.lastModifiedFromLong(this.lastModified, context)
     )
     val result = if (details.isEmpty()) null else details.joinToString(" | ")
