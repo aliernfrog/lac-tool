@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -113,6 +114,7 @@ fun MapsListScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.systemBarsPadding(),
                 onClick = {
                     val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
                     launcher.launch(intent)
