@@ -8,6 +8,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
@@ -33,7 +34,7 @@ fun DeleteConfirmationDialog(
             }
         },
         dismissButton = {
-            Button(onClick = onDismissRequest) {
+            TextButton(onClick = onDismissRequest) {
                 Text(stringResource(R.string.action_cancel))
             }
         },
