@@ -45,7 +45,8 @@ fun MergeMapDialog(
     val canDismiss = !isMerging
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        confirmButton = {Crossfade(targetState = mapName.isNotBlank() && !isMerging) { enabled ->
+        confirmButton = {
+            Crossfade(targetState = mapName.isNotBlank() && !isMerging) { enabled ->
                 Button(
                     onClick = { if (!isMerging) onConfirm(mapName) },
                     enabled = enabled,
