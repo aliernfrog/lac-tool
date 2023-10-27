@@ -2,7 +2,6 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -30,7 +29,6 @@ import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
@@ -232,7 +230,6 @@ private fun FilterObjects(
             Icon(Icons.Default.Search, null)
         },
         singleLine = true,
-        shape = AppComponentShape,
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -248,9 +245,7 @@ private fun FilterObjects(
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             SuggestionChip(
                 onClick = { mapsEditViewModel.objectFilter = suggestion },
-                label = { Text(suggestion.filterName ?: "-") },
-                shape = AppComponentShape,
-                interactionSource = remember { MutableInteractionSource() }
+                label = { Text(suggestion.filterName ?: "-") }
             )
         }
     }

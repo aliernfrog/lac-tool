@@ -1,13 +1,31 @@
 package com.aliernfrog.lactool.ui.dialog
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -15,7 +33,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MergeMapDialog(
     isMerging: Boolean,
@@ -39,12 +56,19 @@ fun MergeMapDialog(
                     ),
                     modifier = Modifier.animateContentSize()
                 ) {
-                    Crossfade(targetState = isMerging) {
-                        if (it) {
-                            CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                        } else {
-                            Text(stringResource(R.string.mapsMerge_merge))
-                        }
+                    // Make the text invisible instead of removing, so it keeps the button width
+                    // stole from https://github.com/vendetta-mod/VendettaManager
+                    Box {
+                        Text(
+                            text = stringResource(R.string.mapsMerge_merge),
+                            color = if (isMerging) Color.Transparent else LocalContentColor.current
+                        )
+                        if (isMerging) CircularProgressIndicator(
+                            strokeWidth = 2.dp,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .align(Alignment.Center),
+                        )
                     }
                 }
             }
@@ -54,7 +78,7 @@ fun MergeMapDialog(
                 visible = canDismiss,
                 exit = fadeOut()
             ) {
-                OutlinedButton(
+                TextButton(
                     onClick = { if (canDismiss) onDismissRequest() }
                 ) {
                     Text(stringResource(R.string.action_cancel))
