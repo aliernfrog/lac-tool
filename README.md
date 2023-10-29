@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img alt="LAC Tool icon" src="app/src/main/res/drawable/lactool120.webp" width="120px"/>
+  <img alt="LAC Tool icon" src="images/icon.png" width="120px"/>
   
   # LAC Tool
   Do most [LAC](https://play.google.com/store/apps/details?id=com.MA.LAC) related stuff without having to mess with files
