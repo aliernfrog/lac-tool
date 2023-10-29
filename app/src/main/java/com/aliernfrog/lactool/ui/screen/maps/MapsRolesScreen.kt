@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Style
@@ -29,12 +28,13 @@ import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
+import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.extension.removeHtml
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsRolesScreen(
     mapsEditViewModel: MapsEditViewModel = getViewModel(),
@@ -107,4 +107,9 @@ fun MapsRolesScreen(
             mapsEditViewModel.deleteRole(it, context)
         }
     }
+
+    AddRoleSheet(
+        state = mapsEditViewModel.addRoleSheetState,
+        onRoleAdd = { mapsEditViewModel.addRole(it, context) }
+    )
 }

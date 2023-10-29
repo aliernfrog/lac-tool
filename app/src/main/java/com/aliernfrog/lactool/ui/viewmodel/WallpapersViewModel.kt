@@ -3,14 +3,12 @@ package com.aliernfrog.lactool.ui.viewmodel
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +17,10 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.lactool.util.staticutil.UriToFileUtil
+import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -30,18 +28,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class WallpapersViewModel(
     context: Context,
-    prefs: PreferenceManager,
+    val prefs: PreferenceManager,
     val topToastState: TopToastState
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
-    val wallpapersDir = prefs.lacWallpapersDir
+
+    val wallpapersDir : String get() = prefs.lacWallpapersDir
     private lateinit var wallpapersFile: DocumentFileCompat
 
-    val wallpaperSheetState = ModalBottomSheetState(ModalBottomSheetValue.Hidden, Density(context))
+    val wallpaperSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     var importedWallpapers by mutableStateOf(emptyList<ImageFile>())
     var pickedWallpaper by mutableStateOf<ImageFile?>(null)
@@ -49,12 +48,15 @@ class WallpapersViewModel(
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
-            val path = UriToFileUtil.getRealFilePath(uri, context)
-            if (path == null) {
-                topToastState.showToast(R.string.warning_couldntConvertToPath, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
+            val file = UriUtil.cacheFile(
+                uri = uri,
+                parentName = "wallpapers",
+                context = context
+            )
+            if (file == null) {
+                topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
             }
-            val file = File(path)
             pickedWallpaper = ImageFile(
                 name = file.nameWithoutExtension,
                 fileName = file.name,
@@ -93,8 +95,15 @@ class WallpapersViewModel(
     }
 
     fun getWallpapersFile(context: Context): DocumentFileCompat {
-        if (!::wallpapersFile.isInitialized)
-            wallpapersFile = GeneralUtil.getDocumentFileFromPath(wallpapersDir, context)
+        val isUpToDate = if (!::wallpapersFile.isInitialized) false
+        else {
+            val updatedPath = wallpapersFile.uri.resolvePath()
+            val existingPath = Uri.parse(wallpapersDir).resolvePath()
+            updatedPath == existingPath
+        }
+        if (isUpToDate) return wallpapersFile
+        val treeUri = Uri.parse(wallpapersDir)
+        wallpapersFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
         return wallpapersFile
     }
 
@@ -110,7 +119,6 @@ class WallpapersViewModel(
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     suspend fun showWallpaperSheet(wallpaper: ImageFile) {
         wallpaperSheetWallpaper = wallpaper
         wallpaperSheetState.show()

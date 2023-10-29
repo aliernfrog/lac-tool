@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material.icons.rounded.Build
@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +41,6 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MapsMergeScreen(
     mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
@@ -50,6 +48,30 @@ fun MapsMergeScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    AnimatedContent(mapsMergeViewModel.mapListShown) { showMapList ->
+        if (showMapList) MapsListScreen(
+            title = stringResource(R.string.mapsMerge_addMap),
+            onBackClick = { mapsMergeViewModel.mapListShown = false },
+            onMapPick = { scope.launch {
+                mapsMergeViewModel.addMap(it, context)
+                mapsMergeViewModel.mapListShown = false
+            } }
+        )
+        else MergeScreen(
+            onNavigateBackRequest = onNavigateBackRequest
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MergeScreen(
+    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    onNavigateBackRequest: () -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     AppScaffold(
         title = stringResource(R.string.mapsMerge),
         topAppBarState = mapsMergeViewModel.topAppBarState,
@@ -81,7 +103,7 @@ fun MapsMergeScreen(
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
             PickMapButton {
-                scope.launch { mapsMergeViewModel.pickMapSheetState.show() }
+                mapsMergeViewModel.mapListShown = true
             }
             MapsList(
                 maps = mapsMergeViewModel.mapMerger.mapsToMerge
@@ -89,6 +111,7 @@ fun MapsMergeScreen(
             Spacer(Modifier.systemBarsPadding().height(70.dp))
         }
     }
+
     if (mapsMergeViewModel.mergeMapDialogShown) MergeMapDialog(
         isMerging = mapsMergeViewModel.isMerging,
         onDismissRequest = { mapsMergeViewModel.mergeMapDialogShown = false },
@@ -102,9 +125,6 @@ fun MapsMergeScreen(
             }
         }
     )
-    LaunchedEffect(Unit) {
-        mapsMergeViewModel.loadMaps()
-    }
 }
 
 @Composable

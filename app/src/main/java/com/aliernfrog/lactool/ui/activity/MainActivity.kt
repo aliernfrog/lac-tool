@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalView
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.aliernfrog.lactool.ui.component.InsetsObserver
 import com.aliernfrog.lactool.ui.screen.MainScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
@@ -19,6 +21,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+
         setContent {
             AppContent()
         }
@@ -35,6 +39,7 @@ class MainActivity : ComponentActivity() {
             darkTheme = darkTheme,
             dynamicColors = mainViewModel.prefs.materialYou
         ) {
+            InsetsObserver()
             MainScreen()
             TopToastHost(mainViewModel.topToastState)
         }

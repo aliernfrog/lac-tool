@@ -10,15 +10,20 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 val supportsMaterialYou = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 @Composable
-fun LACToolTheme(darkTheme: Boolean = isSystemInDarkTheme(), dynamicColors: Boolean = true, content: @Composable () -> Unit) {
+fun LACToolTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    dynamicColors: Boolean = true,
+    content: @Composable () -> Unit
+) {
     val useDynamicColors = supportsMaterialYou && dynamicColors
     val colors = when {
         useDynamicColors && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
@@ -28,12 +33,22 @@ fun LACToolTheme(darkTheme: Boolean = isSystemInDarkTheme(), dynamicColors: Bool
     }
 
     val view = LocalView.current
-    val systemUiController = rememberSystemUiController()
     if (!view.isInEditMode) SideEffect {
-        val window = (view.context as Activity).window
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        systemUiController.systemBarsDarkContentEnabled = !darkTheme
-        systemUiController.isNavigationBarContrastEnforced = false
+        val activity = view.context as Activity
+        val insetsController = WindowCompat.getInsetsController(activity.window, view)
+        val transparentColor = Color.Transparent.toArgb()
+
+        WindowCompat.setDecorFitsSystemWindows(activity.window, false)
+
+        activity.window.statusBarColor = transparentColor
+        activity.window.navigationBarColor = transparentColor
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            activity.window.isNavigationBarContrastEnforced = false
+        }
+
+        insetsController.isAppearanceLightStatusBars = !darkTheme
+        insetsController.isAppearanceLightNavigationBars = !darkTheme
     }
 
     MaterialTheme(

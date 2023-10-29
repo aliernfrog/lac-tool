@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.TipsAndUpdates
@@ -37,11 +36,12 @@ import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
+import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMaterialsScreen(
     mapsEditViewModel: MapsEditViewModel = getViewModel(),
@@ -105,7 +105,21 @@ fun MapsMaterialsScreen(
             }
         }
     }
+
     MaterialsNoConnectionDialog()
+
+    DownloadableMaterialSheet(
+        material = mapsEditViewModel.materialSheetChosenMaterial,
+        failed = mapsEditViewModel.materialSheetMaterialFailed,
+        state = mapsEditViewModel.materialSheetState,
+        topToastState = mapsEditViewModel.topToastState,
+        onDeleteRequest = {
+            mapsEditViewModel.pendingMaterialDelete = it
+        },
+        onError = {
+            mapsEditViewModel.materialSheetMaterialFailed = true
+        }
+    )
 }
 
 @Composable
