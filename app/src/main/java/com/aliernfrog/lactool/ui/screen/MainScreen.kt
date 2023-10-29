@@ -110,5 +110,10 @@ fun MainScreen(
         latestVersionInfo = mainViewModel.latestVersionInfo
     )
 
-    AlphaWarningDialog()
+    if (mainViewModel.showAlphaWarningDialog) AlphaWarningDialog(
+        onDismissRequest = { acknowledged ->
+            if (acknowledged) mainViewModel.prefs.lastAlphaAck = mainViewModel.applicationVersionName
+            mainViewModel.showAlphaWarningDialog = false
+        }
+    )
 }
