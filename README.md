@@ -1,3 +1,14 @@
+> [!WARNING]
+> App may not work on devices using **October 2023 or newer security patches**, as those security patches prevent apps from requesting access to files inside `Android/data` folder.
+> 
+> If you are affected by this, please use the following methods until a solution is found:
+> - Connect your device to a PC with USB or use wireless debugging, you'll be able to manually manage files inside `Android/data/com.MA.LAC/files`
+>   - `editor` folder contains maps
+>   - `wallpaper` folder contains wallpapers
+>   - `screenshots` folder contains screenshots
+> - Copy map .txt link and paste it on map name field when creating the map in LAC, this will download the map
+> - Copy wallpaper link and paste it on in-game cellphone settings to download a wallpaper
+
 <div align="center">
 
   <img alt="LAC Tool icon" src="images/icon.png" width="120px"/>
