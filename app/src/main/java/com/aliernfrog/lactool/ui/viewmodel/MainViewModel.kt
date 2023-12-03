@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.githubRepoURL
+import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -55,6 +56,9 @@ class MainViewModel(
     ))
         private set
 
+    var updateAvailable by mutableStateOf(false)
+        private set
+
     suspend fun checkUpdates(
         manuallyTriggered: Boolean = false,
         ignoreVersion: Boolean = false
@@ -71,8 +75,8 @@ class MainViewModel(
                 val latestBody = json.getString("body")
                 val latestHtmlUrl = json.getString("htmlUrl")
                 val latestDownload = json.getString("downloadUrl")
-                val isUpToDate = !ignoreVersion && latestVersionCode <= applicationVersionCode
-                if (!isUpToDate) {
+                updateAvailable = ignoreVersion || latestVersionCode > applicationVersionCode
+                if (updateAvailable) {
                     latestVersionInfo = ReleaseInfo(
                         versionName = latestVersionName,
                         preRelease = latestIsPreRelease,
@@ -80,9 +84,11 @@ class MainViewModel(
                         htmlUrl = latestHtmlUrl,
                         downloadLink = latestDownload
                     )
-                    if (!manuallyTriggered) showUpdateToast()
-                    else coroutineScope {
+                    if (manuallyTriggered) coroutineScope {
                         updateSheetState.show()
+                    } else {
+                        showUpdateToast()
+                        Destination.SETTINGS.hasNotification.value = true
                     }
                 } else {
                     if (manuallyTriggered) topToastState.showToast(
