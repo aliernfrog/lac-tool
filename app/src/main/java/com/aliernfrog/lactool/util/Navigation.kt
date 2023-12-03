@@ -9,6 +9,8 @@ import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
 
@@ -21,7 +23,9 @@ enum class Destination(
     val labelId: Int,
     val vectorFilled: ImageVector? = null,
     val vectorOutlined: ImageVector? = null,
-    val isSubScreen: Boolean = false
+    val showInNavigationBar: Boolean = true,
+    val showNavigationBar: Boolean = showInNavigationBar,
+    val hasNotification: MutableState<Boolean> = mutableStateOf(false)
 ) {
     MAPS(
         route = "maps",
@@ -33,25 +37,25 @@ enum class Destination(
     MAPS_EDIT(
         route = "mapsEdit",
         labelId = R.string.mapsEdit,
-        isSubScreen = true
+        showInNavigationBar = false
     ),
 
     MAPS_ROLES(
         route = "mapsRoles",
         labelId = R.string.mapsRoles,
-        isSubScreen = true
+        showInNavigationBar = false
     ),
 
     MAPS_MATERIALS(
         route = "mapsMaterials",
         labelId = R.string.mapsMaterials,
-        isSubScreen = true
+        showInNavigationBar = false
     ),
 
     MAPS_MERGE(
         route = "mapsMerge",
         labelId = R.string.mapsMerge,
-        isSubScreen = true
+        showInNavigationBar = false
     ),
 
     WALLPAPERS(
