@@ -4,6 +4,7 @@
     <string name="action_done">Done</string>
     <string name="action_ok">Okay</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_dismiss">Dismiss</string>
     <string name="action_clear">Clear</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
@@ -13,6 +14,21 @@
     <string name="info_copiedToClipboard">Copied to clipboard</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
     <string name="permissions">Permissions</string>
+    <string name="permissions_filesApp">Files app updates</string>
+    <string name="permissions_filesApp_description">The Files app has received an update on September 2023 which prevents other apps from requesting access to files inside Android/data folder.\nIf you have this update, you may have to uninstall it. Click the button below for more info.</string>
+    <string name="permissions_filesApp_moreInfo">More info</string>
+    <string name="permissions_filesApp_moreInfo_text">
+        ## Am I affected by this?\n
+        Make sure you have started LAC at least once and try choosing the LAC folder in LAC Tool. If you can do that without issues, you are not affected.\n\n
+        ## What to do if I am affected by this?\n
+        You need to uninstall updates of the **Files** app. Follow the steps below, note that steps may vary depending on your device:\n\n
+        Device settings > Apps > All apps/Manage apps > Files (app name depends on your language) > Uninstall updates\n\n
+        ## Can\'t find the Files app in the list?\n
+        Look for an option which hides system apps from the list, this option may also be in a three-dot menu.\n\n
+        ## Uninstall updates option is disabled?\n
+        Try choosing the LAC folder in LAC Tool one more time. If you can\'t do that, unfortunately, there\'s nothing much you can do for now.\n\n
+        Check [this page]({MORE_INFO_URL}) for more info, possible workarounds and the new fix which is currently being worked on.
+    </string>
     <string name="permissions_chooseFolder">Choose folder</string>
     <string name="permissions_recommendedFolder">Recommended folder</string>
     <string name="permissions_recommendedFolder_a8Hint">After clicking \"Okay\", this folder will open in a new window. Ensure that you are at the correct folder and click \"USE THIS FOLDER\"</string>

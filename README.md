@@ -1,13 +1,7 @@
 > [!WARNING]
-> App may not work on devices using **October 2023 or newer security patches**, as those security patches prevent apps from requesting access to files inside `Android/data` folder.
-> 
-> If you are affected by this, please use the following methods until a solution is found:
-> - Connect your device to a PC with USB or use wireless debugging, you'll be able to manually manage files inside `Android/data/com.MA.LAC/files`
->   - `editor` folder contains maps
->   - `wallpaper` folder contains wallpapers
->   - `screenshots` folder contains screenshots
-> - Copy map .txt link and paste it on map name field when creating the map in LAC, this will download the map
-> - Copy wallpaper link and paste it on in-game cellphone settings to download a wallpaper
+> On Android 12 and above, September 2023 update of the Files app prevents other apps from requesting access to files in Android/data.
+>
+> Check [this page](https://aliernfrog.github.io/android-data-access) for more info, workarounds and the new fix which is currently being implemented in [this pull request in pf-tool repository](https://github.com/aliernfrog/pf-tool/pull/29).
 
 <div align="center">
 

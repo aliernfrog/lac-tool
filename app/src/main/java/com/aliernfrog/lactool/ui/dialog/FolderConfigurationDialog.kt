@@ -31,7 +31,9 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.externalStorageRoot
+import com.aliernfrog.lactool.filesAppMightBlockAndroidData
 import com.aliernfrog.lactool.folderPickerSupportsInitialUri
+import com.aliernfrog.lactool.ui.component.FilesDowngradeNotice
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
@@ -72,6 +74,7 @@ fun FolderConfigurationDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                if (filesAppMightBlockAndroidData) FilesDowngradeNotice()
                 folders.forEachIndexed { index, pref ->
                     FolderCard(
                         pref = pref,
