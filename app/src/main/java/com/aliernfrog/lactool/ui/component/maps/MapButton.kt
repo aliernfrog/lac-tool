@@ -3,7 +3,6 @@ package com.aliernfrog.lactool.ui.component.maps
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -74,23 +72,18 @@ fun MapButton(
             contentScale = ContentScale.Crop,
             alpha = 0.5f
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            FormHeader(
+        FormHeader(
                 title = map.name,
-                description = map.details.value ?: "",
-                painter = rememberVectorPainter(Icons.Outlined.PinDrop),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(Brush.horizontalGradient(
-                        invertIfRTL(
-                            listOf(containerColor, Color.Transparent)
-                        )
-                    ))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-        }
+        description = map.details.value ?: "",
+        painter = rememberVectorPainter(Icons.Outlined.PinDrop),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Brush.horizontalGradient(
+                invertIfRTL(
+                    listOf(containerColor, Color.Transparent)
+                )
+            ))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+        )
     }
 }

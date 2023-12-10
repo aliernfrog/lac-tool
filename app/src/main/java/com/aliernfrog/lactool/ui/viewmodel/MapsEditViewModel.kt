@@ -26,6 +26,7 @@ import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
@@ -167,12 +168,16 @@ class MapsEditViewModel(
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(onNavigateBackRequest: () -> Unit, context: Context) {
         withContext(Dispatchers.IO) {
+            val mapName = mapFile?.nameWithoutExtension ?: mapDocumentFile?.nameWithoutExtension
             val newContent = mapEditor?.applyChanges() ?: return@withContext
             val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
             outputStreamWriter.write(newContent)
             outputStreamWriter.flush()
             outputStreamWriter.close()
-            topToastState.showToast(R.string.maps_edit_saved, Icons.Rounded.Save)
+            topToastState.showToast(
+                text = context.getString(R.string.maps_edit_saved).replace("{NAME}", mapName.toString()),
+                icon = Icons.Rounded.Save
+            )
         }
         finishEditingWithoutSaving(onNavigateBackRequest)
     }

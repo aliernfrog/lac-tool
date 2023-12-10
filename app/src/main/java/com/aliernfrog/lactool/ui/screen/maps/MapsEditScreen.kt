@@ -16,8 +16,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
@@ -124,7 +126,7 @@ private fun GeneralActions(
                 description = stringResource(R.string.mapsRoles_description)
                     .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
                 expanded = false,
-                arrowRotation = 90f
+                arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
             ) {
                 onNavigateRequest(Destination.MAPS_ROLES)
             }
@@ -135,7 +137,7 @@ private fun GeneralActions(
                 description = stringResource(R.string.mapsMaterials_description)
                     .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
                 expanded = false,
-                arrowRotation = 90f
+                arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
             ) {
                 onNavigateRequest(Destination.MAPS_MATERIALS)
             }
@@ -240,7 +242,7 @@ private fun FilterObjects(
     )
     ScrollableRow(
         modifier = Modifier.padding(horizontal = 16.dp),
-        gradientColor = MaterialTheme.colorScheme.surfaceVariant
+        gradientColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             SuggestionChip(

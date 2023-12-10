@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
@@ -29,13 +30,14 @@ fun ExpandableRow(
     modifier: Modifier = Modifier,
     description: String? = null,
     painter: Painter? = null,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     minimizedHeaderColor: Color = Color.Transparent,
     minimizedHeaderContentColor: Color =
         if (minimizedHeaderColor == Color.Transparent) MaterialTheme.colorScheme.onSurface
         else contentColorFor(minimizedHeaderColor),
-    expandedHeaderColor: Color = MaterialTheme.colorScheme.secondary,
+    expandedHeaderColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     expandedHeaderContentColor: Color = contentColorFor(expandedHeaderColor),
-    expandedContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    expandedContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     expandedPadding: Dp = 8.dp,
     onClickHeader: () -> Unit,
     expandedContent: @Composable ColumnScope.() -> Unit
@@ -61,6 +63,7 @@ fun ExpandableRow(
                 onClick = onClickHeader
             )
         },
+        backgroundColor = backgroundColor,
         expandedContainerColor = expandedContainerColor,
         expandedPadding = expandedPadding,
         expandedContent = expandedContent
@@ -72,7 +75,8 @@ fun BaseExpandableRow(
     expanded: Boolean,
     headerContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
-    expandedContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    expandedContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     expandedPadding: Dp = 8.dp,
     expandedContent: @Composable ColumnScope.() -> Unit,
 ) {
@@ -82,20 +86,35 @@ fun BaseExpandableRow(
     val padding by animateDpAsState(
         if (expanded) expandedPadding else 0.dp
     )
+    val elevation by animateDpAsState(
+        if (expanded) 2.dp else 0.dp
+    )
     val containerColor by animateColorAsState(
         if (expanded) expandedContainerColor else Color.Transparent
     )
+    val contentColor = contentColorFor(containerColor)
+    val shape = RoundedCornerShape(roundness)
 
     Column(
         modifier = modifier
             .padding(padding)
-            .clip(RoundedCornerShape(roundness))
+            .shadow(
+                elevation = elevation,
+                shape = shape
+            )
+            .clip(shape)
+            // adding a fixed background so we don't see behind the scenes of .shadow()
+            .background(backgroundColor)
             .background(containerColor)
     ) {
         Row(content = headerContent)
-        FadeVisibilityColumn(
-            visible = expanded,
-            content = expandedContent
-        )
+        FadeVisibilityColumn(visible = expanded) {
+            DividerRow(
+                color = contentColor,
+                thickness = 0.5.dp,
+                alpha = 0.3f
+            )
+            expandedContent()
+        }
     }
 }

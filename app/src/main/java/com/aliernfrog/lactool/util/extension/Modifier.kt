@@ -27,12 +27,13 @@ fun Modifier.clickableWithColor(
 
 fun Modifier.horizontalFadingEdge(
     scrollState: ScrollState,
-    edgeColor: Color
+    edgeColor: Color,
+    isRTL: Boolean
 ): Modifier {
     return this.drawWithContent {
         val lengthPx = 100.dp.toPx()
-        val scrollFromStart = scrollState.value
-        val scrollFromEnd = scrollState.maxValue - scrollState.value
+        val scrollFromStart = if (isRTL) scrollState.maxValue - scrollState.value else scrollState.value
+        val scrollFromEnd = if (isRTL) scrollState.value else scrollState.maxValue - scrollState.value
         val startFadingEdgeStrength = lengthPx * (scrollFromStart / lengthPx).coerceAtMost(1f)
         val endFadingEdgeStrength = lengthPx * (scrollFromEnd / lengthPx).coerceAtMost(1f)
 

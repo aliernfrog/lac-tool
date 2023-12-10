@@ -1,31 +1,41 @@
 package com.aliernfrog.lactool.ui.screen
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.*
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.ui.component.*
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.FolderConfigurationDialog
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -37,13 +47,22 @@ import org.koin.androidx.compose.getViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    mainViewModel: MainViewModel = getViewModel(),
     settingsViewModel: SettingsViewModel = getViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     AppScaffold(
         title = stringResource(R.string.settings),
         topAppBarState = settingsViewModel.topAppBarState
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(settingsViewModel.scrollState)) {
+            UpdateNotification(
+                isShown = mainViewModel.updateAvailable,
+                versionInfo = mainViewModel.latestVersionInfo
+            ) { scope.launch {
+                mainViewModel.updateSheetState.show()
+            } }
+
             AppearanceOptions()
             GeneralOptions()
             AboutApp()
@@ -116,13 +135,14 @@ private fun GeneralOptions(
             title = stringResource(R.string.settings_general_folders),
             description = stringResource(R.string.settings_general_folders_description),
             expanded = false,
-            arrowRotation = 90f
+            arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
         ) {
             settingsViewModel.folderConfigurationDialogShown = true
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AboutApp(
     mainViewModel: MainViewModel = getViewModel(),
@@ -135,13 +155,12 @@ private fun AboutApp(
             title = stringResource(R.string.settings_about_version),
             description = version,
             trailingComponent = {
-                OutlinedButton(
-                    onClick = { scope.launch {
-                        mainViewModel.checkUpdates(manuallyTriggered = true)
-                    } }
-                ) {
-                    Text(stringResource(R.string.settings_about_checkUpdates))
-                }
+                UpdateButton(
+                    updateAvailable = mainViewModel.updateAvailable
+                ) { updateAvailable -> scope.launch {
+                    if (updateAvailable) mainViewModel.updateSheetState.show()
+                    else mainViewModel.checkUpdates(manuallyTriggered = true)
+                } }
             }
         ) {
             settingsViewModel.onAboutClick()
@@ -249,6 +268,70 @@ private fun ExperimentalSettings(
                 type = TopToastType.ANDROID
             )
             GeneralUtil.restartApp(context)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdateNotification(
+    isShown: Boolean,
+    versionInfo: ReleaseInfo,
+    onClick: () -> Unit
+) {
+    AnimatedVisibility(
+        visible = isShown,
+        enter = fadeIn() + expandVertically(),
+        exit = fadeOut() + shrinkVertically()
+    ) {
+        Card(
+            onClick = onClick,
+            shape = AppComponentShape,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Update, contentDescription = null)
+                Column {
+                    Text(
+                        text = stringResource(R.string.settings_updateNotification_updateAvailable)
+                            .replace("{VERSION}", versionInfo.versionName),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_updateNotification_description),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun UpdateButton(
+    updateAvailable: Boolean,
+    onClick: (updateAvailable: Boolean) -> Unit
+) {
+    AnimatedContent(updateAvailable) {
+        if (it) ElevatedButton(
+            onClick = { onClick(true) }
+        ) {
+            ButtonIcon(
+                rememberVectorPainter(Icons.Default.Update)
+            )
+            Text(stringResource(R.string.settings_about_update))
+        }
+        else OutlinedButton(
+            onClick = { onClick(false) }
+        ) {
+            Text(stringResource(R.string.settings_about_checkUpdates))
         }
     }
 }

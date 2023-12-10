@@ -23,13 +23,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.externalStorageRoot
+import com.aliernfrog.lactool.filesAppMightBlockAndroidData
 import com.aliernfrog.lactool.folderPickerSupportsInitialUri
+import com.aliernfrog.lactool.ui.component.FilesDowngradeNotice
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
@@ -70,6 +74,7 @@ fun FolderConfigurationDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                if (filesAppMightBlockAndroidData) FilesDowngradeNotice()
                 folders.forEachIndexed { index, pref ->
                     FolderCard(
                         pref = pref,
@@ -128,7 +133,7 @@ fun FolderCard(
                 .horizontalFadingEdge(
                     scrollState = buttonsScrollState,
                     edgeColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
-                    //TODO isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
+                    isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
                 )
         ) {
             Row(
