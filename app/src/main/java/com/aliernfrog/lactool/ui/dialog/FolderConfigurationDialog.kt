@@ -23,7 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
@@ -128,7 +130,7 @@ fun FolderCard(
                 .horizontalFadingEdge(
                     scrollState = buttonsScrollState,
                     edgeColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
-                    //TODO isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
+                    isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
                 )
         ) {
             Row(
