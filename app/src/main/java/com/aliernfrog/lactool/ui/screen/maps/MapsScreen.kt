@@ -41,12 +41,12 @@ import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.resolveFile
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsScreen(
-    mapsViewModel: MapsViewModel = getViewModel(),
+    mapsViewModel: MapsViewModel = koinViewModel(),
     onNavigateRequest: (Destination) -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -93,7 +93,7 @@ fun MapsScreen(
 
 @Composable
 private fun MapActions(
-    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
     mapsViewModel: MapsViewModel,
     onNavigateRequest: (Destination) -> Unit
 ) {

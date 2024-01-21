@@ -22,7 +22,7 @@ import com.aliernfrog.lactool.ui.theme.AppBottomSheetShape
 import com.aliernfrog.lactool.ui.viewmodel.InsetsViewModel
 import com.aliernfrog.lactool.util.extension.isAnyVisible
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +60,7 @@ fun AppModalBottomSheet(
 @Composable
 fun BaseModalBottomSheet(
     sheetState: SheetState,
-    insetsViewModel: InsetsViewModel = getViewModel(),
+    insetsViewModel: InsetsViewModel = koinViewModel(),
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     content: @Composable ColumnScope.(bottomPadding: Dp) -> Unit
 ) {

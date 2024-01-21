@@ -39,12 +39,12 @@ import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMaterialsScreen(
-    mapsEditViewModel: MapsEditViewModel = getViewModel(),
+    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -124,7 +124,7 @@ fun MapsMaterialsScreen(
 
 @Composable
 private fun Suggestions(
-    mapsEditViewModel: MapsEditViewModel = getViewModel()
+    mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()

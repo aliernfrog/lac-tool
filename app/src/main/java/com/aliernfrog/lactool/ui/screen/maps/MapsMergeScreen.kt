@@ -39,11 +39,11 @@ import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapsMergeScreen(
-    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -66,7 +66,7 @@ fun MapsMergeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MergeScreen(
-    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -168,7 +168,7 @@ private fun PickMapButton(
 
 @Composable
 private fun MapButtonWithActions(
-    mapsMergeViewModel: MapsMergeViewModel = getViewModel(),
+    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
     mapToMerge: LACMapToMerge,
     mapIndex: Int,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant

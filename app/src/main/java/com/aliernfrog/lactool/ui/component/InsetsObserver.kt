@@ -10,11 +10,11 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.aliernfrog.lactool.ui.viewmodel.InsetsViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun InsetsObserver(
-    insetsViewModel: InsetsViewModel = getViewModel()
+    insetsViewModel: InsetsViewModel = koinViewModel()
 ) {
     val density = LocalDensity.current
     fun toDp(pxs: Int): Dp {

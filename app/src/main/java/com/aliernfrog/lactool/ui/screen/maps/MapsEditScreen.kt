@@ -35,12 +35,12 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsEditScreen(
-    mapsEditViewModel: MapsEditViewModel = getViewModel(),
+    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
     onNavigateBackRequest: () -> Unit,
     onNavigateRequest: (Destination) -> Unit
 ) {
@@ -92,7 +92,7 @@ fun MapsEditScreen(
 
 @Composable
 private fun GeneralActions(
-    mapsEditViewModel: MapsEditViewModel = getViewModel(),
+    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
     onNavigateRequest: (Destination) -> Unit
 ) {
     FormSection(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
@@ -113,10 +113,10 @@ private fun GeneralActions(
                 }
             ) {
                 RadioButtons(
-                    options = LACMapType.values().map { it.getName() },
+                    options = LACMapType.entries.map { it.getName() },
                     selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    onSelect = { mapsEditViewModel.setMapType(LACMapType.values()[it]) }
+                    onSelect = { mapsEditViewModel.setMapType(LACMapType.entries[it]) }
                 )
             }
         }
@@ -147,7 +147,7 @@ private fun GeneralActions(
 
 @Composable
 private fun OptionsActions(
-    mapsEditViewModel: MapsEditViewModel = getViewModel()
+    mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     FadeVisibilityColumn(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
         FormSection(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
@@ -187,7 +187,7 @@ private fun OptionsActions(
 
 @Composable
 private fun MiscActions(
-    mapsEditViewModel: MapsEditViewModel = getViewModel()
+    mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
@@ -218,7 +218,7 @@ private fun MiscActions(
 
 @Composable
 private fun FilterObjects(
-    mapsEditViewModel: MapsEditViewModel = getViewModel()
+    mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val matches = mapsEditViewModel.getObjectFilterMatches().size

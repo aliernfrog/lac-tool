@@ -24,7 +24,7 @@ import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.toptoast.component.TopToastHost
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun AppContent(
-        mainViewModel: MainViewModel = getViewModel()
+        mainViewModel: MainViewModel = koinViewModel()
     ) {
         val view = LocalView.current
         val scope = rememberCoroutineScope()

@@ -11,12 +11,12 @@ import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.ui.screen.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.Destination
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapsPermissionsScreen(
     onNavigateRequest: (Destination) -> Unit,
-    mapsViewModel: MapsViewModel = getViewModel()
+    mapsViewModel: MapsViewModel = koinViewModel()
 ) {
     val permissions = remember { arrayOf(
         PermissionData(

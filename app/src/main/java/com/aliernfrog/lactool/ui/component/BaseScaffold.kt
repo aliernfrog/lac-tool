@@ -64,7 +64,7 @@ fun BaseScaffold(
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
 
-    val destinations = remember { Destination.values().toList() }
+    val destinations = remember { Destination.entries.toList() }
     val mainDestinations = remember { destinations.filter { it.showInNavigationBar } }
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentDestination = destinations.find { it.route == currentRoute }
