@@ -50,7 +50,12 @@ fun WallpapersScreen(
     }
 
     AppScaffold(
-        title = stringResource(R.string.wallpapers),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.wallpapers),
+                scrollBehavior = scrollBehavior
+            )
+        },
         topAppBarState = wallpapersViewModel.topAppBarState
     ) {
         LazyColumn(

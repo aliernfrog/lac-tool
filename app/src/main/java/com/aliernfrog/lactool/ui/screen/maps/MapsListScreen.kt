@@ -4,25 +4,30 @@ import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SwapVert
-import androidx.compose.material.icons.outlined.SdCard
+import androidx.compose.material.icons.outlined.FolderZip
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
@@ -35,14 +40,15 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -53,9 +59,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.enum.MapsListSortingType
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.form.DividerRow
@@ -72,15 +81,19 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MapsListScreen(
+    title: String = stringResource(R.string.mapsList_pickMap),
     mapsListViewModel: MapsListViewModel = koinViewModel(),
     mapsViewModel: MapsViewModel = koinViewModel(),
-    title: String = stringResource(R.string.mapsList_pickMap),
+    showMultiSelectionOptions: Boolean = true,
+    multiSelectFloatingActionButton: @Composable (selectedMaps: List<MapFile>, clearSelection: () -> Unit) -> Unit = { _, _ -> },
     onBackClick: (() -> Unit)?,
     onMapPick: (Any) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val mapsToShow = mapsListViewModel.mapsToShow
+    val isMultiSelecting = mapsListViewModel.selectedMaps.isNotEmpty()
+    var multiSelectionDropdownShown by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.data?.data != null) scope.launch {
@@ -104,48 +117,90 @@ fun MapsListScreen(
         mapsViewModel.loadMaps(context)
     }
 
-    onBackClick?.let {
-        BackHandler(onBack = it)
+    BackHandler(
+        enabled = isMultiSelecting || onBackClick != null
+    ) {
+        if (isMultiSelecting) mapsListViewModel.selectedMaps.clear()
+        else onBackClick?.invoke()
     }
 
     AppScaffold(
-        title = title,
-        topAppBarState = rememberTopAppBarState(),
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.systemBarsPadding(),
-                onClick = {
-                    val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
-                    launcher.launch(intent)
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.SdCard,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
+        topBar = { scrollBehavior ->
+            AnimatedContent(targetState = isMultiSelecting) { multiSelecting ->
+                AppTopBar(
+                    title = if (!multiSelecting) title
+                    else stringResource(R.string.mapsList_multiSelection)
+                        .replace("{COUNT}", mapsListViewModel.selectedMaps.size.toString()),
+                    scrollBehavior = scrollBehavior,
+                    navigationIcon = if (multiSelecting) Icons.Default.Close else Icons.AutoMirrored.Rounded.ArrowBack,
+                    onNavigationClick = if (multiSelecting) { {
+                        mapsListViewModel.selectedMaps.clear()
+                    } } else onBackClick,
+                    actions = {
+                        if (multiSelecting && showMultiSelectionOptions) Box {
+                            IconButton(
+                                onClick = {
+                                    multiSelectionDropdownShown = true
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = stringResource(R.string.action_more)
+                                )
+                            }
+                            MultiSelectionDropdown(
+                                expanded = multiSelectionDropdownShown,
+                                maps = mapsListViewModel.selectedMaps,
+                                actions = mapsListViewModel.selectedMapsActions,
+                                onDismissRequest = { clearSelection ->
+                                    multiSelectionDropdownShown = false
+                                    if (clearSelection) mapsListViewModel.selectedMaps.clear()
+                                }
+                            )
+                        } else Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
+                            if (showLoading) CircularProgressIndicator(
+                                modifier = Modifier.size(48.dp).padding(8.dp)
+                            )
+                            else IconButton(
+                                onClick = {
+                                    scope.launch {
+                                        mapsViewModel.loadMaps(context)
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = stringResource(R.string.mapsList_reload)
+                                )
+                            }
+                        }
+                    }
                 )
-                Text(stringResource(R.string.mapsList_storage))
             }
         },
-        topBarActions = {
-            Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
-                if (showLoading) CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp).padding(8.dp)
-                )
-                else IconButton(
-                    onClick = { scope.launch {
-                        mapsViewModel.loadMaps(context)
-                    } }
+        floatingActionButton = {
+            AnimatedContent(
+                targetState = !isMultiSelecting,
+                modifier = Modifier.navigationBarsPadding()
+            ) { showStorage ->
+                if (showStorage) ExtendedFloatingActionButton(
+                    shape = RoundedCornerShape(16.dp),
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("application/zip")
+                        launcher.launch(intent)
+                    }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = stringResource(R.string.mapsList_reload)
+                        imageVector = Icons.Outlined.FolderZip,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
                     )
+                    Text(stringResource(R.string.mapsList_storage))
+                } else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
+                    mapsListViewModel.selectedMaps.clear()
                 }
             }
-        },
-        onBackClick = onBackClick
+        }
     ) {
         LazyColumn(
             contentPadding = PaddingValues(bottom = 80.dp),
@@ -161,6 +216,7 @@ fun MapsListScreen(
                     onReversedChange = { mapsListViewModel.reverseList = it }
                 )
                 Filter(
+                    segments = remember { MapsListSegment.entries },
                     selectedSegment = mapsListViewModel.chosenSegment,
                     onSelectedSegmentChange = {
                         mapsListViewModel.chosenSegment = it
@@ -192,12 +248,32 @@ fun MapsListScreen(
             }
 
             items(mapsToShow) { map ->
+                val selected = mapsListViewModel.isMapSelected(map)
+                fun toggleSelection() {
+                    mapsListViewModel.selectedMaps.run {
+                        if (selected) remove(map) else add(map)
+                    }
+                }
+
                 MapButton(
                     map = map,
                     showMapThumbnail = mapsListViewModel.prefs.showMapThumbnailsInList,
-                    modifier = Modifier.animateItemPlacement()
+                    modifier = Modifier.animateItemPlacement(),
+                    trailingComponent = {
+                        if (isMultiSelecting) Checkbox(
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                            checked = selected,
+                            onCheckedChange = {
+                                toggleSelection()
+                            }
+                        )
+                    },
+                    onLongClick = {
+                        toggleSelection()
+                    }
                 ) {
-                    onMapPick(map)
+                    if (isMultiSelecting) toggleSelection()
+                    else onMapPick(map)
                 }
             }
         }
@@ -306,11 +382,12 @@ private fun Search(
 
 @Composable
 private fun Filter(
+    segments: List<MapsListSegment>,
     selectedSegment: MapsListSegment,
     onSelectedSegmentChange: (MapsListSegment) -> Unit
 ) {
     SegmentedButtons(
-        options = MapsListSegment.entries.map {
+        options = segments.map {
             stringResource(it.labelId)
         },
         selectedIndex = selectedSegment.ordinal,
@@ -318,6 +395,42 @@ private fun Filter(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        onSelectedSegmentChange(MapsListSegment.entries[it])
+        onSelectedSegmentChange(segments[it])
+    }
+}
+
+@Composable
+private fun MultiSelectionDropdown(
+    expanded: Boolean,
+    maps: List<MapFile>,
+    actions: List<MapAction>,
+    onDismissRequest: (clearSelection: Boolean) -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    if (maps.isNotEmpty()) DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { onDismissRequest(false) }
+    ) {
+        actions.forEach { action ->
+            DropdownMenuItem(
+                text = { Text(stringResource(action.shortLabelId)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = action.icon,
+                        contentDescription = null
+                    )
+                },
+                colors = if (action.destructive) MenuDefaults.itemColors(
+                    textColor = MaterialTheme.colorScheme.error,
+                    leadingIconColor = MaterialTheme.colorScheme.error
+                ) else MenuDefaults.itemColors(),
+                onClick = { scope.launch {
+                    onDismissRequest(false)
+                    action.execute(context = context, *maps.toTypedArray())
+                    onDismissRequest(true) // clear selection
+                } }
+            )
+        }
     }
 }

@@ -27,29 +27,19 @@ class FileUtil {
             ).toString()
         }
 
-        fun copyFile(source: String, destination: DocumentFileCompat, context: Context) {
-            val input = File(source).inputStream()
-            val output = context.contentResolver.openOutputStream(destination.uri)
-            if (output != null) input.copyTo(output)
-            input.close()
-            output?.close()
-        }
-
-        fun copyFile(source: DocumentFileCompat, destination: DocumentFileCompat, context: Context) {
-            val input = context.contentResolver.openInputStream(source.uri)
-            context.contentResolver.openOutputStream(destination.uri)?.use { output ->
-                input?.copyTo(output)
+        fun shareFiles(vararg files: Any, context: Context, title: String = context.getString(R.string.action_share)) {
+            val isSingle = files.size <= 1
+            val sharedFileUris = files.map {
+                FileProvider.getUriForFile(context, "${context.packageName}.provider", moveToSharedCache(it, context))
             }
-            input?.close()
-        }
-
-        fun shareFile(file: Any, context: Context, title: String = context.getString(R.string.action_share)) {
-            val sharedFile = moveToSharedCache(file, context)
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", sharedFile)
-            val intent = Intent(Intent.ACTION_SEND)
+            val firstUri = sharedFileUris.first()
+            val intent = Intent(
+                if (sharedFileUris.size > 1) Intent.ACTION_SEND_MULTIPLE else Intent.ACTION_SEND
+            )
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                .setDataAndType(uri, context.contentResolver.getType(uri))
-                .putExtra(Intent.EXTRA_STREAM, uri)
+                .setDataAndType(firstUri, context.contentResolver.getType(firstUri))
+            if (isSingle) intent.putExtra(Intent.EXTRA_STREAM, firstUri)
+            else intent.putExtra(Intent.EXTRA_STREAM, ArrayList(sharedFileUris))
             context.startActivity(Intent.createChooser(intent, title))
         }
 

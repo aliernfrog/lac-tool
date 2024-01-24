@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -64,11 +65,7 @@ fun MainScreen(
             ) }
         ) {
             composable(Destination.MAPS.route) {
-                MapsPermissionsScreen(
-                    onNavigateRequest = { destination ->
-                        navController.navigate(destination.route)
-                    }
-                )
+                MapsPermissionsScreen()
             }
             composable(Destination.MAPS_EDIT.route) {
                 MapsEditScreen(
@@ -109,6 +106,10 @@ fun MainScreen(
         sheetState = mainViewModel.updateSheetState,
         latestVersionInfo = mainViewModel.latestVersionInfo
     )
+
+    LaunchedEffect(navController) {
+        mainViewModel.navController = navController
+    }
 
     if (mainViewModel.showAlphaWarningDialog) AlphaWarningDialog(
         onDismissRequest = { acknowledged ->

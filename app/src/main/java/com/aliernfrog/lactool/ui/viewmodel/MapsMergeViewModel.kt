@@ -16,8 +16,7 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMap
-import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -28,8 +27,10 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsMergeViewModel(
     private val topToastState: TopToastState,
+    mainViewModel: MainViewModel,
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
+    val navController = mainViewModel.navController
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
@@ -43,8 +44,7 @@ class MapsMergeViewModel(
 
     suspend fun mergeMaps(
         context: Context,
-        newMapName: String,
-        onNavigateBackRequest: () -> Unit
+        newMapName: String
     ) {
         if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
         val mapsFile = mapsViewModel.getMapsFile(context)
@@ -67,35 +67,28 @@ class MapsMergeViewModel(
             mergeMapDialogShown = false
             isMerging = false
             mapMerger.mapsToMerge.clear()
-            // No need to update merger state here because it navigates back to maps screen after finishing
+            // No need to update merger state here because it navigates back after finishing
             mapsViewModel.chooseMap(newFile)
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
         }
-        onNavigateBackRequest()
+        navController.popBackStack()
     }
 
-    suspend fun addMap(
-        map: Any,
-        context: Context
+    suspend fun addMaps(
+        context: Context,
+        vararg maps: MapFile
     ) {
         withContext(Dispatchers.IO) {
-            val file = when (map) {
-                is LACMap -> map.documentFile ?: map.file ?: throw NullPointerException()
-                else -> map
+            maps.forEach { map ->
+                val inputStream = when (val file = map.file) {
+                    is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
+                    is File -> file.inputStream()
+                    else -> throw IllegalArgumentException()
+                } ?: return@withContext
+                val content = inputStream.bufferedReader().readText()
+                inputStream.close()
+                mapMerger.addMap(map.name, content)
             }
-            val mapName = when (file) {
-                is DocumentFileCompat -> FileUtil.removeExtension(file.name)
-                is File -> file.nameWithoutExtension
-                else -> throw IllegalArgumentException()
-            }
-            val inputStream = when (file) {
-                is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
-                is File -> file.inputStream()
-                else -> throw IllegalArgumentException()
-            } ?: return@withContext
-            val content = inputStream.bufferedReader().readText()
-            inputStream.close()
-            mapMerger.addMap(mapName, content)
             updateMergerState()
         }
     }

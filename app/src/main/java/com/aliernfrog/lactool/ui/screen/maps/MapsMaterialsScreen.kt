@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.ImageButton
@@ -57,11 +58,16 @@ fun MapsMaterialsScreen(
     }
 
     AppScaffold(
-        title = stringResource(R.string.mapsMaterials),
-        topAppBarState = mapsEditViewModel.materialsTopAppBarState,
-        onBackClick = {
-            onNavigateBackRequest()
-        }
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.mapsMaterials),
+                scrollBehavior = scrollBehavior,
+                onNavigationClick = {
+                    onNavigateBackRequest()
+                }
+            )
+        },
+        topAppBarState = mapsEditViewModel.materialsTopAppBarState
     ) {
         val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
         LazyColumn(

@@ -74,7 +74,7 @@ class ScreenshotsViewModel(
 
     suspend fun shareImportedScreenshot(screenshot: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
-            FileUtil.shareFile(screenshot.file ?: return@withContext, context)
+            FileUtil.shareFiles(screenshot.file ?: return@withContext, context = context)
         }
     }
 

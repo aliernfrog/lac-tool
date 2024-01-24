@@ -1,21 +1,26 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
+import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.screen.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import com.aliernfrog.lactool.util.Destination
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapsPermissionsScreen(
-    onNavigateRequest: (Destination) -> Unit,
     mapsViewModel: MapsViewModel = koinViewModel()
 ) {
     val permissions = remember { arrayOf(
@@ -42,6 +47,9 @@ fun MapsPermissionsScreen(
         )
     ) }
 
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     PermissionsScreen(*permissions) {
         AnimatedContent(mapsViewModel.mapListShown) { showMapList ->
             if (showMapList) MapsListScreen(
@@ -53,9 +61,28 @@ fun MapsPermissionsScreen(
                     mapsViewModel.mapListShown = false
                 }
             )
-            else MapsScreen(
-                onNavigateRequest = onNavigateRequest
-            )
+            else MapsScreen()
         }
+    }
+
+    mapsViewModel.customDialogTitleAndText?.let { (title, text) ->
+        CustomMessageDialog(
+            title = title,
+            text = text,
+            icon = Icons.Default.PriorityHigh,
+            onDismissRequest = {
+                mapsViewModel.customDialogTitleAndText = null
+            }
+        )
+    }
+
+    mapsViewModel.mapsPendingDelete?.let { maps ->
+        DeleteConfirmationDialog(
+            name = maps.joinToString(", ") { it.name },
+            onDismissRequest = { mapsViewModel.mapsPendingDelete = null },
+            onConfirmDelete = { scope.launch {
+                mapsViewModel.deletePendingMaps(context)
+            } }
+        )
     }
 }

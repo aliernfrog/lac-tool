@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
@@ -43,7 +44,15 @@ fun MapsRolesScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AppScaffold(
-        title = stringResource(R.string.mapsRoles),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.mapsRoles),
+                scrollBehavior = scrollBehavior,
+                onNavigationClick = {
+                    onNavigateBackRequest()
+                }
+            )
+        },
         topAppBarState = mapsEditViewModel.rolesTopAppBarState,
         floatingActionButton = {
             FloatingActionButton(
@@ -52,9 +61,6 @@ fun MapsRolesScreen(
             ) {
                 scope.launch { mapsEditViewModel.addRoleSheetState.show() }
             }
-        },
-        onBackClick = {
-            onNavigateBackRequest()
         }
     ) {
         val roles = mapsEditViewModel.mapEditor?.mapRoles ?: mutableListOf()

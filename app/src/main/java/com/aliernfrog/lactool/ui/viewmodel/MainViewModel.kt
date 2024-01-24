@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.githubRepoURL
@@ -37,6 +38,7 @@ class MainViewModel(
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
 
+    lateinit var navController: NavController
     val updateSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"

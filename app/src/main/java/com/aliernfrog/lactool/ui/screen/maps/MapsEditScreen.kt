@@ -47,7 +47,15 @@ fun MapsEditScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     AppScaffold(
-        title = stringResource(R.string.mapsEdit),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.mapsEdit),
+                scrollBehavior = scrollBehavior,
+                onNavigationClick = { scope.launch {
+                    mapsEditViewModel.onNavigationBack(onNavigateBackRequest)
+                } }
+            )
+        },
         topAppBarState = mapsEditViewModel.topAppBarState,
         floatingActionButton = {
             FloatingActionButton(
@@ -61,9 +69,6 @@ fun MapsEditScreen(
                     )
                 }
             }
-        },
-        onBackClick = {
-            scope.launch { mapsEditViewModel.onNavigationBack(onNavigateBackRequest) }
         }
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
