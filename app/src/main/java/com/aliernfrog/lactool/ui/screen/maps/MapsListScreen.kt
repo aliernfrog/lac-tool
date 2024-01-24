@@ -87,7 +87,7 @@ fun MapsListScreen(
     showMultiSelectionOptions: Boolean = true,
     multiSelectFloatingActionButton: @Composable (selectedMaps: List<MapFile>, clearSelection: () -> Unit) -> Unit = { _, _ -> },
     onBackClick: (() -> Unit)?,
-    onMapPick: (Any) -> Unit
+    onMapPick: (MapFile) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -103,7 +103,7 @@ fun MapsListScreen(
                     parentName = "maps",
                     context = context
                 )
-                if (cachedFile != null) onMapPick(cachedFile)
+                if (cachedFile != null) onMapPick(MapFile(cachedFile))
                 else mapsListViewModel.topToastState.showToast(
                     text = R.string.mapsList_pickMap_failed,
                     icon = Icons.Rounded.PriorityHigh,

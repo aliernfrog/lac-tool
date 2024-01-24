@@ -32,7 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ColumnRounded
@@ -73,7 +72,7 @@ fun MapsMergeScreen(
             },
             onBackClick = { mapsMergeViewModel.mapListShown = false },
             onMapPick = { scope.launch {
-                mapsMergeViewModel.addMaps(context, MapFile(it))
+                mapsMergeViewModel.addMaps(context, it)
                 mapsMergeViewModel.mapListShown = false
             } }
         )
