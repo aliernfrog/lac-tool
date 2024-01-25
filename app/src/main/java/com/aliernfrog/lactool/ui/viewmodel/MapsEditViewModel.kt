@@ -21,6 +21,7 @@ import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
@@ -42,7 +43,9 @@ class MapsEditViewModel(
     mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
-    private val navController = mainViewModel.navController
+    private val navController: NavController
+        get() = mainViewModel.navController
+    
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)

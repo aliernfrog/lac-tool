@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
@@ -30,7 +31,9 @@ class MapsMergeViewModel(
     mainViewModel: MainViewModel,
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
-    val navController = mainViewModel.navController
+    private val navController: NavController
+        get() = mainViewModel.navController
+    
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
