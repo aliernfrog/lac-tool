@@ -181,23 +181,31 @@ fun MapsListScreen(
         floatingActionButton = {
             AnimatedContent(
                 targetState = !isMultiSelecting,
-                modifier = Modifier.navigationBarsPadding()
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    // since we are adding 16.dp padding below, add offset to bring it back to where its supposed to be
+                    .offset(x = 16.dp, y = 16.dp)
             ) { showStorage ->
-                if (showStorage) ExtendedFloatingActionButton(
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
-                        launcher.launch(intent)
-                    }
+                Box(
+                    // padding so that FAB shadow doesnt get cropped
+                    modifier = Modifier.padding(16.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.SdCard,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(stringResource(R.string.mapsList_storage))
-                } else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
-                    mapsListViewModel.selectedMaps.clear()
+                    if (showStorage) ExtendedFloatingActionButton(
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
+                            launcher.launch(intent)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.SdCard,
+                            contentDescription = null,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        Text(stringResource(R.string.mapsList_storage))
+                    } else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
+                        mapsListViewModel.selectedMaps.clear()
+                    }
                 }
             }
         }
