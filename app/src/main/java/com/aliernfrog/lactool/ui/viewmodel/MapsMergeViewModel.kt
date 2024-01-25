@@ -68,7 +68,7 @@ class MapsMergeViewModel(
             isMerging = false
             mapMerger.mapsToMerge.clear()
             // No need to update merger state here because it navigates back after finishing
-            mapsViewModel.chooseMap(newFile)
+            mapsViewModel.chooseMap(mapsFile.findFile(newFileName))
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
         }
         navController.popBackStack()
