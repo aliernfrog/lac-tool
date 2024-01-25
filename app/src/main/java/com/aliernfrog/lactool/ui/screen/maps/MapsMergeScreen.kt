@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
@@ -51,9 +52,27 @@ fun MapsMergeScreen(
     AnimatedContent(mapsMergeViewModel.mapListShown) { showMapList ->
         if (showMapList) MapsListScreen(
             title = stringResource(R.string.mapsMerge_addMap),
+            showMultiSelectionOptions = false,
+            multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
+                ExtendedFloatingActionButton(
+                    shape = RoundedCornerShape(16.dp),
+                    onClick = { scope.launch {
+                        mapsMergeViewModel.addMaps(context, *selectedMaps.toTypedArray())
+                        mapsMergeViewModel.mapListShown = false
+                        clearSelection()
+                    } }
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.AddLocationAlt,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(stringResource(R.string.maps_merge_short))
+                }
+            },
             onBackClick = { mapsMergeViewModel.mapListShown = false },
             onMapPick = { scope.launch {
-                mapsMergeViewModel.addMap(it, context)
+                mapsMergeViewModel.addMaps(context, it)
                 mapsMergeViewModel.mapListShown = false
             } }
         )
@@ -73,7 +92,15 @@ private fun MergeScreen(
     val scope = rememberCoroutineScope()
 
     AppScaffold(
-        title = stringResource(R.string.mapsMerge),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.mapsMerge),
+                scrollBehavior = scrollBehavior,
+                onNavigationClick = {
+                    onNavigateBackRequest()
+                }
+            )
+        },
         topAppBarState = mapsMergeViewModel.topAppBarState,
         floatingActionButton = {
             AnimatedVisibility(
@@ -84,7 +111,7 @@ private fun MergeScreen(
             ) {
                 ExtendedFloatingActionButton(
                     onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(16.dp),
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
@@ -96,9 +123,6 @@ private fun MergeScreen(
                     Text(stringResource(R.string.mapsMerge_merge))
                 }
             }
-        },
-        onBackClick = {
-            onNavigateBackRequest()
         }
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
@@ -119,8 +143,7 @@ private fun MergeScreen(
             scope.launch {
                 mapsMergeViewModel.mergeMaps(
                     context = context,
-                    newMapName = newMapName,
-                    onNavigateBackRequest = onNavigateBackRequest
+                    newMapName = newMapName
                 )
             }
         }

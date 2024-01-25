@@ -1,13 +1,13 @@
 package com.aliernfrog.lactool.enum
 
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.LACMap
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 
 enum class MapsListSegment(
     val labelId: Int,
     val noMapsTextId: Int,
-    val getMaps: (MapsViewModel) -> List<LACMap>
+    val getMaps: (MapsViewModel) -> List<MapFile>
 ) {
     IMPORTED(
         labelId = R.string.mapsList_imported,

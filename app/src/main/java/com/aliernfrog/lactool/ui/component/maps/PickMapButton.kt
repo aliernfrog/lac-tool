@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,28 +20,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aliernfrog.lactool.data.LACMap
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.form.FormHeader
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
-import com.aliernfrog.lactool.util.extension.getDetails
 
 @Composable
 fun PickMapButton(
-    chosenMap: LACMap?,
+    chosenMap: MapFile?,
     showMapThumbnail: Boolean,
     onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-
-    LaunchedEffect(chosenMap) {
-        chosenMap?.getDetails(context)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +69,7 @@ fun PickMapButton(
         ) {
             FormHeader(
                 title = chosenMap?.name ?: "",
-                description = chosenMap?.details?.value,
+                description = chosenMap?.details,
                 painter = rememberVectorPainter(Icons.Rounded.LocationOn),
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier

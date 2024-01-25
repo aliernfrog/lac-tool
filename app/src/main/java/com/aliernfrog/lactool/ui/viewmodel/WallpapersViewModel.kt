@@ -82,7 +82,7 @@ class WallpapersViewModel(
 
     suspend fun shareImportedWallpaper(wallpaper: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
-            FileUtil.shareFile(wallpaper.file ?: return@withContext, context)
+            FileUtil.shareFiles(wallpaper.file ?: return@withContext, context = context)
         }
     }
 

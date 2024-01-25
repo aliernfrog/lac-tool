@@ -5,6 +5,8 @@ import android.os.Environment
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 
+const val TAG = "LACToolLogs"
+
 const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 

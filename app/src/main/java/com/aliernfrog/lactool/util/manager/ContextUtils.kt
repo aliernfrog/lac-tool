@@ -11,6 +11,9 @@ class ContextUtils(
     var getString: (id: Int) -> String
         private set
 
+    var stringFunction: (block: (Context) -> String) -> String
+        private set
+
     init {
         run = {
             it(context)
@@ -18,6 +21,10 @@ class ContextUtils(
 
         getString = {
             context.getString(it)
+        }
+
+        stringFunction = {
+            it(context)
         }
     }
 }

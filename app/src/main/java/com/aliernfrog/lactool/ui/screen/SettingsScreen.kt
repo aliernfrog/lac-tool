@@ -52,7 +52,12 @@ fun SettingsScreen(
 ) {
     val scope = rememberCoroutineScope()
     AppScaffold(
-        title = stringResource(R.string.settings),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.settings),
+                scrollBehavior = scrollBehavior
+            )
+        },
         topAppBarState = settingsViewModel.topAppBarState
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(settingsViewModel.scrollState)) {

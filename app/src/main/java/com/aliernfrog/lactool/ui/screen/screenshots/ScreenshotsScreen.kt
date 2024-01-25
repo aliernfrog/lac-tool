@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
@@ -38,7 +39,12 @@ fun ScreenshotsScreen(
         screenshotsViewModel.fetchScreenshots()
     }
     AppScaffold(
-        title = stringResource(R.string.screenshots),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.screenshots),
+                scrollBehavior = scrollBehavior
+            )
+        },
         topAppBarState = screenshotsViewModel.topAppBarState
     ) {
         LazyColumn(
