@@ -14,6 +14,7 @@
     <string name="warning_fileDoesntExist">File does not exist</string>
     <string name="warning_pickFile_failed">Failed to pick file</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
+    <string name="info_pleaseWait">Please wait..</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
     <string name="permissions">Permissions</string>
     <string name="permissions_filesApp">Files app updates</string>
@@ -56,14 +57,19 @@
     <string name="maps_mapName">Map name</string>
     <string name="maps_rename">Rename</string>
     <string name="maps_renamed">Renamed to {NAME}</string>
+    <string name="maps_renaming">Renaming {NAME} to {NEW_NAME}..</string>
     <string name="maps_import">Import this map</string>
     <string name="maps_import_short">Import</string>
     <string name="maps_imported_single">Imported as {NAME}</string>
     <string name="maps_imported_multiple">Imported {COUNT} maps</string>
+    <string name="maps_importing_single">Importing {NAME} as {NEW_NAME}..</string>
+    <string name="maps_importing_multiple">Importing {DONE}/{TOTAL} maps..</string>
     <string name="maps_export">Export this map</string>
     <string name="maps_export_short">Export</string>
     <string name="maps_exported_single">Exported as {NAME}</string>
     <string name="maps_exported_multiple">Exported {COUNT} maps</string>
+    <string name="maps_exporting_single">Exporting {NAME} as {NEW_NAME}..</string>
+    <string name="maps_exporting_multiple">Exporting {DONE}/{TOTAL} maps..</string>
     <string name="maps_share">Share this map</string>
     <string name="maps_share_short">Share</string>
     <string name="maps_edit">Edit this map</string>
@@ -76,6 +82,8 @@
     <string name="maps_delete_short">Delete</string>
     <string name="maps_deleted_single">Deleted {NAME}</string>
     <string name="maps_deleted_multiple">Deleted {COUNT} maps</string>
+    <string name="maps_deleting_single">Deleting {NAME}..</string>
+    <string name="maps_deleting_multiple">Deleting {DONE}/{TOTAL} maps..</string>
     <string name="mapsList_multiSelection">{COUNT} maps selected</string>
     <string name="mapsList_pickMap">Pick a map</string>
     <string name="mapsList_pickMap_failed">Failed to pick map</string>

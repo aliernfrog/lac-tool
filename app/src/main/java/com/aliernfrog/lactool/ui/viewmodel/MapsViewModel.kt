@@ -16,6 +16,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
 import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -28,6 +29,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     val topToastState: TopToastState,
+    private val mainViewModel: MainViewModel,
     private val contextUtils: ContextUtils,
     val prefs: PreferenceManager
 ) : ViewModel() {
@@ -46,6 +48,10 @@ class MapsViewModel(
     var mapNameEdit by mutableStateOf("")
     var mapListShown by mutableStateOf(true)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
+
+    var activeProgress: Progress?
+        get() = mainViewModel.activeProgress
+        set(value) { mainViewModel.activeProgress = value }
 
     val mapListBackButtonShown
         get() = chosenMap != null
@@ -74,9 +80,25 @@ class MapsViewModel(
             val total = maps.size
             val isSingle = total == 1
 
+            var passedProgress = 0
+            fun getProgress(): Progress {
+                return Progress(
+                    description = if (isSingle) context.getString(R.string.maps_deleting_single)
+                        .replace("{NAME}", first.name)
+                    else context.getString(R.string.maps_deleting_multiple)
+                        .replace("{DONE}", passedProgress.toString())
+                        .replace("{TOTAL}", total.toString()),
+                    totalProgress = total.toLong(),
+                    passedProgress = passedProgress.toLong()
+                )
+            }
+
+            activeProgress = getProgress()
             first.runInIOThreadSafe {
                 maps.forEach {
                     it.delete()
+                    passedProgress++
+                    activeProgress = getProgress()
                 }
                 topToastState.showToast(
                     text = if (isSingle) contextUtils.getString(R.string.maps_deleted_single).replace("{NAME}", first.name)
@@ -90,6 +112,7 @@ class MapsViewModel(
         }
         mapsPendingDelete = null
         loadMaps(context)
+        activeProgress = null
     }
 
     fun resolveMapNameInput(): String {
