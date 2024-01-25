@@ -111,7 +111,7 @@ private fun MergeScreen(
             ) {
                 ExtendedFloatingActionButton(
                     onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(16.dp),
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
