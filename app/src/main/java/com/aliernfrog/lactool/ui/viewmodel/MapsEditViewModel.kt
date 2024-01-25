@@ -40,7 +40,7 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
     val topToastState: TopToastState,
-    mainViewModel: MainViewModel,
+    private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
     private val navController: NavController

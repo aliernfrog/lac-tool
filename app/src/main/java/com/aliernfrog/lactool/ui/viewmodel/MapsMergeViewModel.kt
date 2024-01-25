@@ -28,10 +28,10 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsMergeViewModel(
     private val topToastState: TopToastState,
-    mainViewModel: MainViewModel,
+    private val mainViewModel: MainViewModel,
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
-    private val navController: NavController
+    val navController: NavController
         get() = mainViewModel.navController
     
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
