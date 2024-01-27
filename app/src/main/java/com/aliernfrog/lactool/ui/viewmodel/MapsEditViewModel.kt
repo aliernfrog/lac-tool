@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
@@ -27,9 +28,12 @@ import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.TAG
+import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.removeHtml
+import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -70,6 +74,10 @@ class MapsEditViewModel(
     var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
+
+    private var activeProgress: Progress?
+        get() = mainViewModel.activeProgress
+        set(value) { mainViewModel.activeProgress = value }
 
     @SuppressLint("Recycle")
     suspend fun openMap(file: Any, context: Context) {
@@ -174,10 +182,16 @@ class MapsEditViewModel(
 
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(onNavigateBackRequest: () -> Unit, context: Context) {
-        withContext(Dispatchers.IO) {
-            val mapName = mapFile?.nameWithoutExtension ?: mapDocumentFile?.nameWithoutExtension
+        val mapName = mapFile?.nameWithoutExtension ?: mapDocumentFile?.nameWithoutExtension
+        activeProgress = Progress(
+            context.getString(R.string.maps_edit_saving).replace("{NAME}", mapName.toString())
+        )
+        try { withContext(Dispatchers.IO) {
             val newContent = mapEditor?.applyChanges() ?: return@withContext
-            val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
+            val outputStreamWriter = (
+                if (mapFile != null) mapFile!!.outputStream()
+                else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!
+            ).writer(Charsets.UTF_8)
             outputStreamWriter.write(newContent)
             outputStreamWriter.flush()
             outputStreamWriter.close()
@@ -185,8 +199,12 @@ class MapsEditViewModel(
                 text = context.getString(R.string.maps_edit_saved).replace("{NAME}", mapName.toString()),
                 icon = Icons.Rounded.Save
             )
+        } } catch (e: Exception) {
+            topToastState.showErrorToast()
+            Log.e(TAG, "saveAndFinishEditing: ", e)
         }
         finishEditingWithoutSaving(onNavigateBackRequest)
+        activeProgress = null
     }
 
     suspend fun finishEditingWithoutSaving(onNavigateBackRequest: () -> Unit) {

@@ -74,6 +74,8 @@
     <string name="maps_share_short">Share</string>
     <string name="maps_edit">Edit this map</string>
     <string name="maps_edit_description">Edit options and roles of this map</string>
+    <string name="maps_edit_opening">Opening {NAME}</string>
+    <string name="maps_edit_saving">Saving {NAME}</string>
     <string name="maps_edit_saved">Saved changes to {NAME}</string>
     <string name="maps_merge">Merge this map</string>
     <string name="maps_merge_short">Merge</string>
@@ -187,13 +189,15 @@
     <string name="wallpapers_noWallpapers">You do not have any wallpapers</string>
     <string name="wallpapers_chosenWallpaper">Chosen wallpaper</string>
     <string name="wallpapers_chosen_import">Import this wallpaper</string>
-    <string name="wallpapers_chosen_imported">Imported the wallpaper!</string>
+    <string name="wallpapers_chosen_importing">Importing wallpaper</string>
+    <string name="wallpapers_chosen_imported">Imported the wallpaper</string>
     <string name="wallpapers_list_clickToViewActions">Click to view full image and actions</string>
     <string name="wallpapers_copyImportUrl">Copy import URL</string>
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
     <string name="wallpapers_share">Share wallpaper</string>
     <string name="wallpapers_delete">Delete wallpaper</string>
-    <string name="wallpapers_deleted">Deleted the wallpaper!</string>
+    <string name="wallpapers_deleting">Deleting wallpaper</string>
+    <string name="wallpapers_deleted">Deleted the wallpaper</string>
     <string name="screenshots">Screenshots</string>
     <string name="screenshots_permissions">LAC screenshots folder</string>
     <string name="screenshots_permissions_description">You need to choose the folder where your LAC screenshots are stored</string>
@@ -202,7 +206,8 @@
     <string name="screenshots_clickHint">Click screenshots to view more actions</string>
     <string name="screenshots_share">Share screnshot</string>
     <string name="screenshots_delete">Delete screenshot</string>
-    <string name="screenshots_deleted">Deleted the screenshot!</string>
+    <string name="screenshots_deleting">Deleting screenshot</string>
+    <string name="screenshots_deleted">Deleted the screenshot</string>
     <string name="settings">Settings</string>
     <string name="settings_updateNotification_updateAvailable">Update available: {VERSION}</string>
     <string name="settings_updateNotification_description">Click to view more details and actions</string>

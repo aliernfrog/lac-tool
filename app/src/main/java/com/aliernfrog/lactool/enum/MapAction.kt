@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.enum
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material.icons.rounded.Delete
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
@@ -162,9 +164,17 @@ enum class MapAction(
         }
     ) {
         override suspend fun execute(context: Context, vararg maps: MapFile) {
-            maps.first().let {
-                it.mapsEditViewModel.openMap(it.file, context)
+            val first = maps.first()
+            first.mapsViewModel.activeProgress = Progress(
+                context.getString(R.string.maps_edit_opening).replace("{NAME}", first.name)
+            )
+            try {
+                first.mapsEditViewModel.openMap(first.file, context)
+            } catch (e: Exception) {
+                first.topToastState.showErrorToast()
+                Log.e(TAG, "execute EDIT: ", e)
             }
+            first.mapsViewModel.activeProgress = null
         }
     },
 
