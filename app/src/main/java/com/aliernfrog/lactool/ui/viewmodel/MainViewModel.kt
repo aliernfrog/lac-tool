@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.githubRepoURL
+import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -45,6 +46,7 @@ class MainViewModel(
     val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
 
+    var activeProgress by mutableStateOf<Progress?>(null)
     var showAlphaWarningDialog by mutableStateOf(
         applicationIsPreRelease && prefs.lastAlphaAck != applicationVersionName
     )

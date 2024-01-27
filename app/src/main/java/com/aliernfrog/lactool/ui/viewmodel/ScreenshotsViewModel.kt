@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -26,9 +28,11 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ScreenshotsViewModel(
-    context: Context,
     val prefs: PreferenceManager,
     private val topToastState: TopToastState,
+    private val contextUtils: ContextUtils,
+    private val mainViewModel: MainViewModel,
+    context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
@@ -40,6 +44,10 @@ class ScreenshotsViewModel(
 
     var screenshots by mutableStateOf(emptyList<ImageFile>())
     var screenshotSheetScreeenshot by mutableStateOf<ImageFile?>(null)
+
+    private var activeProgress: Progress?
+        get() = mainViewModel.activeProgress
+        set(value) { mainViewModel.activeProgress = value }
 
     fun getScreenshotsFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::screenshotsFile.isInitialized) false
@@ -65,11 +73,15 @@ class ScreenshotsViewModel(
     }
 
     suspend fun deleteImportedScreenshot(screenshot: ImageFile) {
+        activeProgress = Progress(
+            contextUtils.getString(R.string.screenshots_deleting)
+        )
         withContext(Dispatchers.IO) {
             screenshotsFile.findFile(screenshot.fileName)?.delete()
             fetchScreenshots()
             topToastState.showToast(R.string.screenshots_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
+        activeProgress = null
     }
 
     suspend fun shareImportedScreenshot(screenshot: ImageFile, context: Context) {
