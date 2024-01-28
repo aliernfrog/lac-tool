@@ -34,7 +34,7 @@ import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
-import com.aliernfrog.lactool.ui.component.ColumnRounded
+import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
@@ -163,8 +163,10 @@ private fun MapsList(
         )
     }
     AnimatedVisibility(mapsToMerge.isNotEmpty()) {
-        ColumnRounded(
-            title = stringResource(R.string.mapsMerge_mapsToMerge)
+        FormSection(
+            title = stringResource(R.string.mapsMerge_mapsToMerge),
+            topDivider = true,
+            bottomDivider = false
         ) {
             mapsToMerge.forEachIndexed { index, map ->
                 MapButtonWithActions(
@@ -203,12 +205,11 @@ private fun MapButtonWithActions(
         mapToMerge = mapToMerge,
         isBaseMap = isBase,
         expanded = expanded || isBase,
-        showExpandedIndicator = !isBase,
         containerColor = containerColor,
         onUpdateState = { mapsMergeViewModel.updateMergerState() },
         onMakeBase = { mapsMergeViewModel.makeMapBase(mapIndex, mapToMerge.mapName, context) },
         onRemove = { mapsMergeViewModel.removeMap(mapIndex, mapToMerge.mapName, context) },
-        onClick = {
+        onClickHeader = {
             if (!isBase) {
                 mapsMergeViewModel.optionsExpandedFor = if (expanded) 0
                 else mapIndex

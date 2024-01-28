@@ -295,16 +295,27 @@ private fun FilterObjects(
 }
 
 @Composable
-private fun TextField(label: String, value: String, onValueChange: (String) -> Unit, placeholder: String? = null, numberOnly: Boolean = false) {
-    TextField(
+private fun TextField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String? = null,
+    numberOnly: Boolean = false
+) {
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
-        placeholder = { if (placeholder != null) { Text(placeholder) } },
-        keyboardOptions = if (numberOnly) KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
+        placeholder = if (placeholder != null) { { Text(placeholder) } } else null,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = if (numberOnly) KeyboardType.Number else KeyboardType.Text
+        ),
         singleLine = true,
-        containerColor = MaterialTheme.colorScheme.surface,
-        rounded = false,
-        modifier = Modifier.padding(horizontal = 8.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 4.dp
+            )
     )
 }

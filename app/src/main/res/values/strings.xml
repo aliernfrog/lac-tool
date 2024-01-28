@@ -181,9 +181,9 @@
     <string name="mapsMerge_map_includeSpawnpoints">Include spawnpoints</string>
     <string name="mapsMerge_map_includeRacingCheckpoints">Include racing checkpoints</string>
     <string name="mapsMerge_map_includeTDMSpawnpoints">Include team death-match spawnpoints</string>
-    <string name="mapsMerge_map_makeBase">Make this map base</string>
+    <string name="mapsMerge_map_makeBase">Make base</string>
     <string name="mapsMerge_map_madeBase">Made {MAP} base</string>
-    <string name="mapsMerge_map_remove">Remove this map</string>
+    <string name="mapsMerge_map_remove">Remove</string>
     <string name="mapsMerge_map_removed">Removed {MAP}</string>
     <string name="mapsMerge_merge">Merge</string>
     <string name="mapsMerge_merging">Merging..</string>
