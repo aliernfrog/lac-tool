@@ -15,6 +15,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // General options
     var showChosenMapThumbnail by booleanPreference(ConfigKey.KEY_SHOW_CHOSEN_MAP_THUMBNAIL, true)
     var showMapThumbnailsInList by booleanPreference(ConfigKey.KEY_SHOW_MAP_THUMBNAILS_LIST, true)
+    var language by stringPreference(ConfigKey.KEY_APP_LANGUAGE, "") // follow system if blank
 
     // Directory options
     var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)

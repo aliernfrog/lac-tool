@@ -20,6 +20,10 @@ android {
         vectorDrawables { useSupportLibrary = true }
     }
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -39,6 +43,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
@@ -52,6 +57,23 @@ android {
         }
     }
 }
+
+// Get available languages and save it in "LANGUAGES" field of BuildConfig.
+// https://stackoverflow.com/a/36047987
+val languages = mutableListOf<String>()
+fileTree("src/main/res").visit {
+    if (file.path.endsWith("strings.xml")) languages.add(
+        file.parentFile.name.let {
+            if (it == "values") "en-US"
+            else file.parentFile.name
+                .removePrefix("values-")
+                .replace("-r","-") // "zh-rCN" -> "zh-CN"
+        }
+    )
+}
+android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
+    languages.joinToString(",") { "\"$it\"" }
+}}")
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")

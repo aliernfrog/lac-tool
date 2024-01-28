@@ -244,6 +244,15 @@
     <string name="settings_general_folders_wallpapers">Wallpapers folder</string>
     <string name="settings_general_folders_screenshots">Screenshots folder</string>
     <string name="settings_general_folders_exportedMaps">Exported maps folder</string>
+    <string name="settings_general_language">Language</string>
+    <string name="settings_general_language_description">Select the language of PF Tool</string>
+    <string name="settings_general_language_select">Select language</string>
+    <string name="settings_general_language_help">Help translation of PF Tool</string>
+    <string name="settings_general_language_help_deviceNotAvailable">The language of your device is not yet available</string>
+    <string name="settings_general_language_help_description">You can contribute to translations on Crowdin by clicking this</string>
+    <string name="settings_general_language_system">Follow system</string>
+    <string name="settings_general_language_system_notAvailable">{SYSTEM_LANGUAGE} is not available</string>
+    <string name="settings_general_language_selected">Selected</string>
     <string name="settings_about">About</string>
     <string name="settings_about_version">LAC Tool version</string>
     <string name="settings_about_update">Update</string>
@@ -261,7 +270,7 @@
     <string name="settings_experimental_showUpdateToast">Show update toast</string>
     <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
-    <string name="settings_experimental_resetPrefs">Reset prefs</string>
+    <string name="settings_experimental_resetPrefs">Reset experimental prefs</string>
     <string name="settings_experimental_resetPrefsDone">Restored default values for experimental prefs</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>

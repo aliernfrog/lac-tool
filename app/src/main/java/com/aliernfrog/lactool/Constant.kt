@@ -4,19 +4,23 @@ import android.os.Build
 import android.os.Environment
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 const val TAG = "LACToolLogs"
 
 const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
+const val crowdinURL = "https://crowdin.com/project/lac-tool"
 
 val externalStorageRoot = Environment.getExternalStorageDirectory().toString()+"/"
+val supportsPerAppLanguagePreferences = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 val imeSupportsSyncAppContent = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 val folderPickerSupportsInitialUri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 val filesAppMightBlockAndroidData = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"
+    const val KEY_APP_LANGUAGE = "appLanguage"
     const val KEY_APP_THEME = "appTheme"
     const val KEY_APP_MATERIAL_YOU = "materialYou"
     const val KEY_APP_AUTO_UPDATES = "autoUpdates"
@@ -37,7 +41,8 @@ object ConfigKey {
 object SettingsConstant {
     val socials = listOf(
         Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
-        Social("LAC Tool GitHub", githubRepoURL)
+        Social("LAC Tool GitHub", githubRepoURL),
+        Social("LAC Tool Crowdin", crowdinURL)
     )
     val folders = listOf(
         PrefEditItem(
@@ -84,4 +89,8 @@ object SettingsConstant {
         ),
         *folders.toTypedArray()
     )
+}
+
+val languages = BuildConfig.LANGUAGES.sorted().map { langCode ->
+    GeneralUtil.getLanguageFromCode(langCode)!!
 }
