@@ -8,6 +8,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.EditLocationAlt
+import androidx.compose.material.icons.rounded.FileCopy
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -88,6 +89,38 @@ enum class MapAction(
                     text = context.getString(result.messageId ?: R.string.maps_renamed)
                         .replace("{NAME}", newName),
                     icon = Icons.Rounded.Edit
+                )
+            }
+            first.mapsViewModel.activeProgress = null
+        }
+    },
+
+    DUPLICATE(
+        shortLabelId = R.string.maps_duplicate,
+        icon = Icons.Rounded.FileCopy,
+        availableForMultiSelection = false,
+        availableFor = RENAME.availableFor
+    ) {
+        override suspend fun execute(context: Context, vararg maps: MapFile) {
+            val first = maps.first()
+            val newName = first.resolveMapNameInput()
+            first.mapsViewModel.activeProgress = Progress(
+                description = context.getString(R.string.maps_duplicating)
+                    .replace("{NAME}", first.name)
+                    .replace("{NEW_NAME}", newName)
+            )
+            first.runInIOThreadSafe {
+                val result = first.duplicate(newName)
+                if (!result.successful) return@runInIOThreadSafe first.topToastState.showErrorToast(
+                    text = result.messageId ?: R.string.warning_error
+                )
+                result.newFile?.let {
+                    first.mapsViewModel.chooseMap(it)
+                }
+                first.topToastState.showToast(
+                    text = context.getString(result.messageId ?: R.string.maps_duplicated)
+                        .replace("{NAME}", newName),
+                    icon = Icons.Rounded.FileCopy
                 )
             }
             first.mapsViewModel.activeProgress = null

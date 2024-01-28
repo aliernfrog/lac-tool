@@ -27,6 +27,28 @@ class FileUtil {
             ).toString()
         }
 
+        fun copyDirectory(source: File, target: File) {
+            if (!target.isDirectory) target.mkdirs()
+            source.listFiles()!!.forEach { file ->
+                val targetFile = File("${target.absolutePath}/${file.name}")
+                if (file.isDirectory) copyDirectory(file, targetFile)
+                else file.inputStream().use { inputStream ->
+                    targetFile.outputStream().use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+            }
+        }
+
+        fun copyDirectory(source: DocumentFileCompat, target: DocumentFileCompat) {
+            source.listFiles().forEach { file ->
+                val targetFile = if (file.isDirectory()) target.createDirectory(file.name)
+                else target.createFile("", file.name)
+                if (file.isDirectory()) copyDirectory(file, targetFile!!)
+                else file.copyTo(targetFile!!.uri)
+            }
+        }
+
         fun shareFiles(vararg files: Any, context: Context, title: String = context.getString(R.string.action_share)) {
             val isSingle = files.size <= 1
             val sharedFileUris = files.map {

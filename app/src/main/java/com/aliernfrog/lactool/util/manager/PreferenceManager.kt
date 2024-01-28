@@ -22,10 +22,9 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
     var exportedMapsDir by stringPreference(ConfigKey.KEY_EXPORTED_MAPS_DIR, ConfigKey.DEFAULT_EXPORTED_MAPS_DIR)
 
-    // Updates options
+    // Experimental (developer) options
+    var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
+    var lastAlphaAck by stringPreference(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "")
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
-
-    // Technical
-    var lastAlphaAck by stringPreference(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "")
 }
