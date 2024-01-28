@@ -224,7 +224,7 @@ fun MapsListScreen(
                     onReversedChange = { mapsListViewModel.reverseList = it }
                 )
                 Filter(
-                    segments = remember { MapsListSegment.entries },
+                    segments = mapsListViewModel.availableSegments,
                     selectedSegment = mapsListViewModel.chosenSegment,
                     onSelectedSegmentChange = {
                         mapsListViewModel.chosenSegment = it

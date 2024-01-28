@@ -1,6 +1,9 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PriorityHigh
@@ -10,14 +13,21 @@ import androidx.compose.material3.SheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.ReleaseInfo
+import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.githubRepoURL
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.extension.cacheFile
+import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -33,9 +43,11 @@ import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainViewModel(
-    context: Context,
     val prefs: PreferenceManager,
-    val topToastState: TopToastState
+    val topToastState: TopToastState,
+    private val mapsViewModel: MapsViewModel,
+    private val mapsListViewModel: MapsListViewModel,
+    context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
 
@@ -124,5 +136,38 @@ class MainViewModel(
                 scope.launch { updateSheetState.show() }
             }
         )
+    }
+
+    fun handleIntent(intent: Intent, context: Context) {
+        try {
+            val uris: MutableList<Uri> = intent.data?.let {
+                mutableListOf(it)
+            } ?: mutableListOf()
+            intent.clipData?.let { clipData ->
+                for (i in 0..<clipData.itemCount) {
+                    uris.add(clipData.getItemAt(i).uri)
+                }
+            }
+            if (uris.isEmpty()) return
+
+            activeProgress = Progress(context.getString(R.string.info_pleaseWait))
+            viewModelScope.launch(Dispatchers.IO) {
+                val cached = uris.map { uri ->
+                    MapFile(uri.cacheFile(context)!!)
+                }
+                if (cached.size <= 1) {
+                    mapsViewModel.chooseMap(cached.first())
+                    mapsViewModel.mapListShown = false
+                } else {
+                    mapsViewModel.sharedMaps = cached.toMutableStateList()
+                    mapsListViewModel.chosenSegment = MapsListSegment.SHARED
+                }
+                activeProgress = null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "handleIntent: $e")
+            topToastState.showErrorToast()
+            activeProgress = null
+        }
     }
 }

@@ -9,6 +9,8 @@
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="action_more">More</string>
+    <string name="intent_openMap">Open map</string>
+    <string name="intent_downloadMap">Download map</string>
     <string name="warning_alphaVersion">This version of LAC Tool is an alpha and things may be broken or missing. You can report issues on GitHub.</string>
     <string name="warning_error">Something went wrong</string>
     <string name="warning_fileDoesntExist">File does not exist</string>
@@ -101,8 +103,10 @@
     <string name="mapsList_storage">Storage</string>
     <string name="mapsList_imported">Your maps</string>
     <string name="mapsList_exported">Exported maps</string>
+    <string name="mapsList_shared">Shared</string>
     <string name="mapsList_noImportedMaps">You do not have any maps</string>
     <string name="mapsList_noExportedMaps">You have not exported any maps</string>
+    <string name="mapsList_noSharedMaps">You have not shared any maps to PF Tool</string>
     <string name="mapsList_searchNoMatches">No matching maps found</string>
     <string name="mapsEdit">Edit map</string>
     <string name="mapsEdit_general">General</string>

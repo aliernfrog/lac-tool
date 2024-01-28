@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.aliernfrog.lactool.ui.component.InsetsObserver
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
     private fun AppContent(
         mainViewModel: MainViewModel = koinViewModel()
     ) {
+        val context = LocalContext.current
         val view = LocalView.current
         val scope = rememberCoroutineScope()
         val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme)
@@ -59,6 +61,10 @@ class MainActivity : ComponentActivity() {
             mainViewModel.topToastState.setComposeView(view)
 
             if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkUpdates()
+
+            this@MainActivity.intent?.let {
+                mainViewModel.handleIntent(it, context = context)
+            }
         }
     }
 
