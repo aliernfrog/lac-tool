@@ -39,7 +39,6 @@ import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -274,17 +273,15 @@ private fun ExperimentalSettings(
             SettingsConstant.experimentalPrefOptions.forEach {
                 it.setValue(it.default, settingsViewModel.prefs)
             }
-            settingsViewModel.topToastState.showToast(
+            settingsViewModel.topToastState.showAndroidToast(
                 text = R.string.settings_experimental_resetPrefsDone,
-                icon = Icons.Rounded.Done,
-                type = TopToastType.ANDROID
+                icon = Icons.Rounded.Done
             )
             GeneralUtil.restartApp(context)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateNotification(
     isShown: Boolean,

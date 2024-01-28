@@ -46,10 +46,17 @@ class MainActivity : ComponentActivity() {
         val view = LocalView.current
         val scope = rememberCoroutineScope()
         val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme)
-        LACToolTheme(
-            darkTheme = darkTheme,
-            dynamicColors = mainViewModel.prefs.materialYou
-        ) {
+
+        @Composable
+        fun AppTheme(content: @Composable () -> Unit) {
+            LACToolTheme(
+                darkTheme = darkTheme,
+                dynamicColors = mainViewModel.prefs.materialYou,
+                content = content
+            )
+        }
+
+        AppTheme {
             InsetsObserver()
             AppContainer {
                 MainScreen()
@@ -59,6 +66,7 @@ class MainActivity : ComponentActivity() {
         LaunchedEffect(Unit) {
             mainViewModel.scope = scope
             mainViewModel.topToastState.setComposeView(view)
+            mainViewModel.topToastState.setAppTheme { AppTheme(it) }
 
             if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkUpdates()
 

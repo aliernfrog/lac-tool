@@ -126,7 +126,8 @@ class MainViewModel(
         topToastState.showToast(
             text = R.string.updates_updateAvailable,
             icon = Icons.Rounded.Update,
-            stayMs = 20000,
+            duration = 20000,
+            swipeToDismiss = true,
             dismissOnClick = true,
             onToastClick = {
                 scope.launch { updateSheetState.show() }

@@ -12,6 +12,10 @@ val appModule = module {
     singleOf(::PreferenceManager)
     singleOf(::ProgressState)
     single {
-        TopToastState(composeView = null)
+        TopToastState(
+            composeView = null,
+            appTheme = null,
+            allowSwipingByDefault = false
+        )
     }
 }
