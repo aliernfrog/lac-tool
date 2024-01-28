@@ -110,7 +110,7 @@ enum class MapAction(
                     .replace("{NEW_NAME}", newName)
             )
             first.runInIOThreadSafe {
-                val result = first.duplicate(newName)
+                val result = first.duplicate(context, newName = newName)
                 if (!result.successful) return@runInIOThreadSafe first.topToastState.showErrorToast(
                     text = result.messageId ?: R.string.warning_error
                 )

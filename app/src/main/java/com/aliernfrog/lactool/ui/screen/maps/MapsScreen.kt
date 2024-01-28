@@ -182,7 +182,7 @@ private fun Actions(
     )
 
     val actions: List<@Composable () -> Unit> = MapAction.entries.filter { action ->
-        action != MapAction.RENAME
+        action != MapAction.RENAME && action != MapAction.DUPLICATE
     }.map { action -> {
         FadeVisibility(visible = action.availableFor(chosenMap)) {
             ButtonRow(

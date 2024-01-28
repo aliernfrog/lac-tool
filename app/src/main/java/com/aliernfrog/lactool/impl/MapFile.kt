@@ -183,11 +183,7 @@ class MapFile(
                     successful = false,
                     messageId = R.string.maps_alreadyExists
                 )
-                file.inputStream().use { inputStream ->
-                    output.outputStream().use { outputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
-                }
+                FileUtil.copyFile(file, output)
                 File(output.absolutePath)
             }
             is DocumentFileCompat -> {
@@ -196,11 +192,7 @@ class MapFile(
                     messageId = R.string.maps_alreadyExists
                 )
                 val output = file.parentFile!!.createFile("", newFileName)!!
-                context.contentResolver.openInputStream(file.uri)?.use { inputStream ->
-                    context.contentResolver.openOutputStream(output.uri)?.use { outputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
-                }
+                FileUtil.copyFile(file, output, context)
                 file.parentFile!!.findFile(newFileName)!!
             }
             else -> throw IllegalArgumentException("File class was somehow unknown")
@@ -210,7 +202,7 @@ class MapFile(
                 val outputName = relatedFile.name.replaceFirst(name, newName)
                 val output = File((relatedFile.parent?.plus("/") ?: "") + outputName)
                 if (output.exists()) output.deleteRecursively()
-                if (relatedFile.isFile) relatedFile.copyTo(output)
+                if (relatedFile.isFile) FileUtil.copyFile(relatedFile, output)
                 else FileUtil.copyDirectory(relatedFile, output)
             }
             is DocumentFileCompat -> {
@@ -218,7 +210,7 @@ class MapFile(
                 val parentFile = relatedFile.parentFile!!
                 val check = parentFile.findFile(outputName)
                 if (check?.exists() == true) check.delete()
-                if (relatedFile.isFile()) relatedFile.copyTo(parentFile.createFile("", outputName)!!.uri)
+                if (relatedFile.isFile()) FileUtil.copyFile(relatedFile, parentFile.createFile("", outputName)!!, context)
                 else FileUtil.copyDirectory(relatedFile, parentFile.createDirectory(outputName)!!)
             }
         } }

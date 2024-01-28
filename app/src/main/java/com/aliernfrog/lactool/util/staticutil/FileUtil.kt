@@ -27,6 +27,22 @@ class FileUtil {
             ).toString()
         }
 
+        fun copyFile(source: File, target: File) {
+            source.inputStream().use { inputStream ->
+                target.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        }
+
+        fun copyFile(source: DocumentFileCompat, target: DocumentFileCompat, context: Context) {
+            context.contentResolver.openInputStream(source.uri)?.use { inputStream ->
+                context.contentResolver.openOutputStream(target.uri)?.use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        }
+
         fun copyDirectory(source: File, target: File) {
             if (!target.isDirectory) target.mkdirs()
             source.listFiles()!!.forEach { file ->
