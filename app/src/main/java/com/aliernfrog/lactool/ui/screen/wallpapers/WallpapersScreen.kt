@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,12 +34,12 @@ import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WallpapersScreen(
-    wallpapersViewModel: WallpapersViewModel = getViewModel()
+    wallpapersViewModel: WallpapersViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -51,7 +50,12 @@ fun WallpapersScreen(
     }
 
     AppScaffold(
-        title = stringResource(R.string.wallpapers),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.wallpapers),
+                scrollBehavior = scrollBehavior
+            )
+        },
         topAppBarState = wallpapersViewModel.topAppBarState
     ) {
         LazyColumn(

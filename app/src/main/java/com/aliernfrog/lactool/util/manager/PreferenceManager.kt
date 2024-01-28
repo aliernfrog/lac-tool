@@ -15,6 +15,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // General options
     var showChosenMapThumbnail by booleanPreference(ConfigKey.KEY_SHOW_CHOSEN_MAP_THUMBNAIL, true)
     var showMapThumbnailsInList by booleanPreference(ConfigKey.KEY_SHOW_MAP_THUMBNAILS_LIST, true)
+    var language by stringPreference(ConfigKey.KEY_APP_LANGUAGE, "") // follow system if blank
 
     // Directory options
     var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)
@@ -22,10 +23,8 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
     var exportedMapsDir by stringPreference(ConfigKey.KEY_EXPORTED_MAPS_DIR, ConfigKey.DEFAULT_EXPORTED_MAPS_DIR)
 
-    // Updates options
+    // Experimental (developer) options
+    var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
-
-    // Technical
-    var lastAlphaAck by stringPreference(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "")
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
@@ -35,24 +36,29 @@ import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.FolderConfigurationDialog
+import com.aliernfrog.lactool.ui.sheet.LanguageSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.toptoast.enum.TopToastType
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    mainViewModel: MainViewModel = getViewModel(),
-    settingsViewModel: SettingsViewModel = getViewModel()
+    mainViewModel: MainViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
     AppScaffold(
-        title = stringResource(R.string.settings),
+        topBar = { scrollBehavior ->
+            AppTopBar(
+                title = stringResource(R.string.settings),
+                scrollBehavior = scrollBehavior
+            )
+        },
         topAppBarState = settingsViewModel.topAppBarState
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(settingsViewModel.scrollState)) {
@@ -69,6 +75,11 @@ fun SettingsScreen(
             if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings()
         }
     }
+
+    LanguageSheet(
+        sheetState = settingsViewModel.languageSheetState
+    )
+
     if (settingsViewModel.folderConfigurationDialogShown) FolderConfigurationDialog(
         onDismissRequest = {
             settingsViewModel.folderConfigurationDialogShown = false
@@ -78,7 +89,7 @@ fun SettingsScreen(
 
 @Composable
 private fun AppearanceOptions(
-    settingsViewModel: SettingsViewModel = getViewModel()
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val themeOptions = listOf(
         stringResource(R.string.settings_appearance_theme_system),
@@ -111,10 +122,12 @@ private fun AppearanceOptions(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GeneralOptions(
-    settingsViewModel: SettingsViewModel = getViewModel()
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     FormSection(title = stringResource(R.string.settings_general)) {
         SwitchRow(
             title = stringResource(R.string.settings_general_showChosenMapThumbnail),
@@ -139,14 +152,22 @@ private fun GeneralOptions(
         ) {
             settingsViewModel.folderConfigurationDialogShown = true
         }
+        ButtonRow(
+            title = stringResource(R.string.settings_general_language),
+            description = stringResource(R.string.settings_general_language_description),
+            expanded = true,
+            arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
+        ) { scope.launch {
+            settingsViewModel.languageSheetState.show()
+        } }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AboutApp(
-    mainViewModel: MainViewModel = getViewModel(),
-    settingsViewModel: SettingsViewModel = getViewModel()
+    mainViewModel: MainViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val version = "${mainViewModel.applicationVersionName} (${mainViewModel.applicationVersionCode})"
@@ -197,6 +218,7 @@ private fun Links(
             val icon = when (it.url.split("/")[2]) {
                 "discord.gg" -> painterResource(id = R.drawable.discord)
                 "github.com" -> painterResource(id = R.drawable.github)
+                "crowdin.com" -> rememberVectorPainter(Icons.Default.Translate)
                 else -> null
             }
             ButtonRow(
@@ -215,8 +237,8 @@ private fun Links(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExperimentalSettings(
-    mainViewModel: MainViewModel = getViewModel(),
-    settingsViewModel: SettingsViewModel = getViewModel()
+    mainViewModel: MainViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -227,6 +249,13 @@ private fun ExperimentalSettings(
             checked = settingsViewModel.showMaterialYouOption,
             onCheckedChange = {
                 settingsViewModel.showMaterialYouOption = it
+            }
+        )
+        SwitchRow(
+            title = stringResource(R.string.settings_experimental_showMapNameFieldGuide),
+            checked = settingsViewModel.prefs.showMapNameFieldGuide,
+            onCheckedChange = {
+                settingsViewModel.prefs.showMapNameFieldGuide = it
             }
         )
         ButtonRow(
@@ -262,17 +291,15 @@ private fun ExperimentalSettings(
             SettingsConstant.experimentalPrefOptions.forEach {
                 it.setValue(it.default, settingsViewModel.prefs)
             }
-            settingsViewModel.topToastState.showToast(
+            settingsViewModel.topToastState.showAndroidToast(
                 text = R.string.settings_experimental_resetPrefsDone,
-                icon = Icons.Rounded.Done,
-                type = TopToastType.ANDROID
+                icon = Icons.Rounded.Done
             )
             GeneralUtil.restartApp(context)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateNotification(
     isShown: Boolean,

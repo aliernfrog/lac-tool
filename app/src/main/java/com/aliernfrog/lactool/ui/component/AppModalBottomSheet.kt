@@ -1,11 +1,14 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -22,7 +25,7 @@ import com.aliernfrog.lactool.ui.theme.AppBottomSheetShape
 import com.aliernfrog.lactool.ui.viewmodel.InsetsViewModel
 import com.aliernfrog.lactool.util.extension.isAnyVisible
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +63,7 @@ fun AppModalBottomSheet(
 @Composable
 fun BaseModalBottomSheet(
     sheetState: SheetState,
-    insetsViewModel: InsetsViewModel = getViewModel(),
+    insetsViewModel: InsetsViewModel = koinViewModel(),
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     content: @Composable ColumnScope.(bottomPadding: Dp) -> Unit
 ) {
@@ -83,4 +86,15 @@ fun BaseModalBottomSheet(
             + (if (imeSupportsSyncAppContent) 0.dp else insetsViewModel.imePadding)
         )
     }
+}
+
+@Composable
+fun SmallDragHandle() {
+    Box(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .size(32.dp, 4.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+    )
 }

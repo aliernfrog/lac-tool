@@ -2,8 +2,8 @@ package com.aliernfrog.lactool.ui.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.aliernfrog.lactool.ui.component.InsetsObserver
@@ -24,9 +25,9 @@ import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.toptoast.component.TopToastHost
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +40,23 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun AppContent(
-        mainViewModel: MainViewModel = getViewModel()
+        mainViewModel: MainViewModel = koinViewModel()
     ) {
+        val context = LocalContext.current
         val view = LocalView.current
         val scope = rememberCoroutineScope()
         val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme)
-        LACToolTheme(
-            darkTheme = darkTheme,
-            dynamicColors = mainViewModel.prefs.materialYou
-        ) {
+
+        @Composable
+        fun AppTheme(content: @Composable () -> Unit) {
+            LACToolTheme(
+                darkTheme = darkTheme,
+                dynamicColors = mainViewModel.prefs.materialYou,
+                content = content
+            )
+        }
+
+        AppTheme {
             InsetsObserver()
             AppContainer {
                 MainScreen()
@@ -57,8 +66,13 @@ class MainActivity : ComponentActivity() {
         LaunchedEffect(Unit) {
             mainViewModel.scope = scope
             mainViewModel.topToastState.setComposeView(view)
+            mainViewModel.topToastState.setAppTheme { AppTheme(it) }
 
             if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkUpdates()
+
+            this@MainActivity.intent?.let {
+                mainViewModel.handleIntent(it, context = context)
+            }
         }
     }
 

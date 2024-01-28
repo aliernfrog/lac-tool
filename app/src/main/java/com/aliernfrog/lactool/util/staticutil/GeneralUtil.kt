@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Environment
-import android.provider.DocumentsContract
+import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.di.appModules
 import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.util.extension.resolvePath
-import com.lazygeniouz.dfc.file.DocumentFileCompat
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
+import java.util.Locale
 
 @Suppress("DEPRECATION")
 class GeneralUtil {
@@ -27,6 +26,30 @@ class GeneralUtil {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
             return packageInfo.versionCode
+        }
+
+        /**
+         * Gets [Language] from given language code.
+         * [code] must either be a language code, or language and country code splitted by a "-" (e.g.: en-US, en)
+         *
+         * @return [Language] if [code] is valid, null if it is invalid
+         */
+        fun getLanguageFromCode(code: String): Language? {
+            val split = code.split("-")
+            val languageCode = split.getOrNull(0) ?: return null
+            val countryCode = split.getOrNull(1)
+            val locale = getLocale(languageCode, countryCode)
+            return Language(
+                languageCode = languageCode,
+                countryCode = countryCode,
+                fullCode = code,
+                localizedName = locale.getDisplayName(locale)
+            )
+        }
+
+        fun getLocale(language: String, country: String? = null): Locale {
+            return if (country != null) Locale(language, country)
+            else Locale(language)
         }
 
         fun isConnectedToInternet(context: Context): Boolean {
@@ -51,12 +74,6 @@ class GeneralUtil {
                 internalPath = Uri.parse(wallpapersPath).resolvePath() ?: wallpapersPath
             } catch (_: Exception) {}
             return "file://$internalPath/$fileName"
-        }
-
-        fun getDocumentFileFromPath(path: String, context: Context): DocumentFileCompat {
-            val treeId = path.replace("${Environment.getExternalStorageDirectory()}/", "primary:")
-            val treeUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", treeId)
-            return DocumentFileCompat.fromTreeUri(context, treeUri)!!
         }
     }
 }

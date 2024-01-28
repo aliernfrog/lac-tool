@@ -11,12 +11,13 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.ui.component.BaseScaffold
-import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
+import com.aliernfrog.lactool.ui.dialog.ProgressDialog
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
@@ -28,12 +29,12 @@ import com.aliernfrog.lactool.ui.sheet.UpdateSheet
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    mainViewModel: MainViewModel = getViewModel()
+    mainViewModel: MainViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
     BaseScaffold(
@@ -64,11 +65,7 @@ fun MainScreen(
             ) }
         ) {
             composable(Destination.MAPS.route) {
-                MapsPermissionsScreen(
-                    onNavigateRequest = { destination ->
-                        navController.navigate(destination.route)
-                    }
-                )
+                MapsPermissionsScreen()
             }
             composable(Destination.MAPS_EDIT.route) {
                 MapsEditScreen(
@@ -110,10 +107,11 @@ fun MainScreen(
         latestVersionInfo = mainViewModel.latestVersionInfo
     )
 
-    if (mainViewModel.showAlphaWarningDialog) AlphaWarningDialog(
-        onDismissRequest = { acknowledged ->
-            if (acknowledged) mainViewModel.prefs.lastAlphaAck = mainViewModel.applicationVersionName
-            mainViewModel.showAlphaWarningDialog = false
-        }
-    )
+    LaunchedEffect(navController) {
+        mainViewModel.navController = navController
+    }
+
+    mainViewModel.progressState.currentProgress?.let {
+        ProgressDialog(it) {}
+    }
 }

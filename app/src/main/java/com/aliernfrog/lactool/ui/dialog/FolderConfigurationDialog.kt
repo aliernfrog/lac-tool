@@ -40,12 +40,12 @@ import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 import com.aliernfrog.lactool.util.manager.PreferenceManager
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FolderConfigurationDialog(
     onDismissRequest: () -> Unit,
-    settingsViewModel: SettingsViewModel = getViewModel()
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val folders = remember { SettingsConstant.folders }

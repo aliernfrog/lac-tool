@@ -9,11 +9,11 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.ui.screen.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WallpapersPermissionsScreen(
-    wallpapersViewModel: WallpapersViewModel = getViewModel()
+    wallpapersViewModel: WallpapersViewModel = koinViewModel()
 ) {
     val permissions = remember { arrayOf(
         PermissionData(

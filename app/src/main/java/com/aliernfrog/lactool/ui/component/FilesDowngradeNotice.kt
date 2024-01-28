@@ -4,6 +4,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -54,8 +55,10 @@ fun FilesDowngradeNotice(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 markdown = stringResource(R.string.permissions_filesApp_moreInfo_text)
                     .replace("{MORE_INFO_URL}", "https://aliernfrog.github.io/android-data-access"),
-                color = LocalContentColor.current,
                 linkColor = MaterialTheme.colorScheme.primary,
+                style = LocalTextStyle.current.copy(
+                    color = LocalContentColor.current
+                ),
                 onLinkClicked = {
                     uriHandler.openUri(it)
                 }

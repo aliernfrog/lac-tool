@@ -1,14 +1,17 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
+import android.content.Context
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.experimentalSettingsRequiredClicks
@@ -20,10 +23,12 @@ import com.aliernfrog.toptoast.state.TopToastState
 @OptIn(ExperimentalMaterial3Api::class)
 class SettingsViewModel(
     val prefs: PreferenceManager,
-    val topToastState: TopToastState
+    val topToastState: TopToastState,
+    context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
+    val languageSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     var themeOptionsExpanded by mutableStateOf(false)
     var linksExpanded by mutableStateOf(false)

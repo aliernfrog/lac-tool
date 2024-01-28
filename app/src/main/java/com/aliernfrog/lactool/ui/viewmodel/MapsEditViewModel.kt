@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
@@ -21,13 +22,19 @@ import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.TAG
+import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.removeHtml
+import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -38,8 +45,13 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
     val topToastState: TopToastState,
+    private val progressState: ProgressState,
+    private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
+    private val navController: NavController
+        get() = mainViewModel.navController
+    
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -66,7 +78,7 @@ class MapsEditViewModel(
     var materialSheetMaterialFailed by mutableStateOf(false)
 
     @SuppressLint("Recycle")
-    suspend fun loadMap(file: Any, context: Context) {
+    suspend fun openMap(file: Any, context: Context) {
         when (file) {
             is File -> mapFile = file
             is DocumentFileCompat -> mapDocumentFile = file
@@ -78,6 +90,7 @@ class MapsEditViewModel(
             mapEditor = LACMapEditor(content)
             inputStream.close()
         }
+        navController.navigate(Destination.MAPS_EDIT.route)
     }
 
     fun updateMapEditorState() {
@@ -167,10 +180,16 @@ class MapsEditViewModel(
 
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(onNavigateBackRequest: () -> Unit, context: Context) {
-        withContext(Dispatchers.IO) {
-            val mapName = mapFile?.nameWithoutExtension ?: mapDocumentFile?.nameWithoutExtension
+        val mapName = mapFile?.nameWithoutExtension ?: mapDocumentFile?.nameWithoutExtension
+        progressState.currentProgress = Progress(
+            context.getString(R.string.maps_edit_saving).replace("{NAME}", mapName.toString())
+        )
+        try { withContext(Dispatchers.IO) {
             val newContent = mapEditor?.applyChanges() ?: return@withContext
-            val outputStreamWriter = (if (mapFile != null) mapFile!!.outputStream() else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!).writer(Charsets.UTF_8)
+            val outputStreamWriter = (
+                if (mapFile != null) mapFile!!.outputStream()
+                else context.contentResolver.openOutputStream(mapDocumentFile!!.uri)!!
+            ).writer(Charsets.UTF_8)
             outputStreamWriter.write(newContent)
             outputStreamWriter.flush()
             outputStreamWriter.close()
@@ -178,8 +197,12 @@ class MapsEditViewModel(
                 text = context.getString(R.string.maps_edit_saved).replace("{NAME}", mapName.toString()),
                 icon = Icons.Rounded.Save
             )
+        } } catch (e: Exception) {
+            topToastState.showErrorToast()
+            Log.e(TAG, "saveAndFinishEditing: ", e)
         }
         finishEditingWithoutSaving(onNavigateBackRequest)
+        progressState.currentProgress = null
     }
 
     suspend fun finishEditingWithoutSaving(onNavigateBackRequest: () -> Unit) {

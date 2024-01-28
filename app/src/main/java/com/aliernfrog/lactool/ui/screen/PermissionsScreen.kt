@@ -21,6 +21,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.filesAppMightBlockAndroidData
 import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.FilesDowngradeNotice
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
@@ -49,7 +50,12 @@ fun PermissionsScreen(
     Crossfade(targetState = missingPermissions.isEmpty()) { hasPermissions ->
         if (hasPermissions) content()
         else AppScaffold(
-            title = stringResource(R.string.permissions)
+            topBar = { scrollBehavior ->
+                AppTopBar(
+                    title = stringResource(R.string.permissions),
+                    scrollBehavior = scrollBehavior
+                )
+            }
         ) {
             PermissionsList(
                 missingPermissions = missingPermissions,

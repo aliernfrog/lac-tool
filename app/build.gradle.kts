@@ -3,12 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-// compose material 1.6.0-alpha08 has crashes with LazyColumn/Row
-// 1.6.0-beta01 - beta02 has IME issues (focused text fields do not open keyboard when clicked)
-// sticking to alpha07 (also alpha09 for material3) until these issues are fixed.
-val composeMaterialVersion = "1.6.0-alpha07"
-val composeMaterial3Version = "1.2.0-alpha09"
-val composeCompilerVersion = "1.5.5"
+val composeMaterialVersion = "1.6.0"
+val composeMaterial3Version = "1.2.0-rc01"
+val composeCompilerVersion = "1.5.8"
 
 android {
     namespace = "com.aliernfrog.lactool"
@@ -18,9 +15,13 @@ android {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 23
         targetSdk = 34
-        versionCode = 30010
-        versionName = "3.0.0"
+        versionCode = 31000
+        versionName = "3.1.0"
         vectorDrawables { useSupportLibrary = true }
+    }
+
+    androidResources {
+        generateLocaleConfig = true
     }
 
     buildTypes {
@@ -42,6 +43,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
@@ -56,6 +58,23 @@ android {
     }
 }
 
+// Get available languages and save it in "LANGUAGES" field of BuildConfig.
+// https://stackoverflow.com/a/36047987
+val languages = mutableListOf<String>()
+fileTree("src/main/res").visit {
+    if (file.path.endsWith("strings.xml")) languages.add(
+        file.parentFile.name.let {
+            if (it == "values") "en-US"
+            else file.parentFile.name
+                .removePrefix("values-")
+                .replace("-r","-") // "zh-rCN" -> "zh-CN"
+        }
+    )
+}
+android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
+    languages.joinToString(",") { "\"$it\"" }
+}}")
+
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
@@ -64,11 +83,11 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeMaterialVersion")
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.1")
-    implementation("androidx.navigation:navigation-compose:2.7.5")
-    implementation("io.insert-koin:koin-androidx-compose:3.5.0")
-    implementation("com.github.aliernfrog:top-toast-compose:1.3.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.3")
+    implementation("aliernfrog:top-toast-compose:1.4.0-alpha04")
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.8")
     implementation("io.coil-kt:coil-compose:2.5.0")

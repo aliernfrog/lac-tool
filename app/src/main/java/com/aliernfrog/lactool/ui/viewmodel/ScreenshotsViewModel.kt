@@ -15,7 +15,10 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -26,9 +29,11 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ScreenshotsViewModel(
-    context: Context,
     val prefs: PreferenceManager,
     private val topToastState: TopToastState,
+    private val progressState: ProgressState,
+    private val contextUtils: ContextUtils,
+    context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
@@ -65,16 +70,20 @@ class ScreenshotsViewModel(
     }
 
     suspend fun deleteImportedScreenshot(screenshot: ImageFile) {
+        progressState.currentProgress = Progress(
+            contextUtils.getString(R.string.screenshots_deleting)
+        )
         withContext(Dispatchers.IO) {
             screenshotsFile.findFile(screenshot.fileName)?.delete()
             fetchScreenshots()
             topToastState.showToast(R.string.screenshots_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
+        progressState.currentProgress = null
     }
 
     suspend fun shareImportedScreenshot(screenshot: ImageFile, context: Context) {
         withContext(Dispatchers.IO) {
-            FileUtil.shareFile(screenshot.file ?: return@withContext, context)
+            FileUtil.shareFiles(screenshot.file ?: return@withContext, context = context)
         }
     }
 

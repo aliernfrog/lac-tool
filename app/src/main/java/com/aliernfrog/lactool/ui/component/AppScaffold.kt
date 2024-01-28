@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
@@ -16,24 +17,15 @@ import com.aliernfrog.lactool.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold(
-    title: String,
+    topBar: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
     topAppBarState: TopAppBarState = TopAppBarState(0F,0F,0F),
     floatingActionButton: @Composable () -> Unit = {},
-    topBarActions: @Composable RowScope.() -> Unit = {},
-    onBackClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            AppTopBar(
-                title = title,
-                scrollBehavior = scrollBehavior,
-                onBackClick = onBackClick,
-                actions = topBarActions
-            )
-        },
+        topBar = { topBar(scrollBehavior) },
         floatingActionButton = floatingActionButton,
         contentWindowInsets = WindowInsets(0,0,0,0),
         content = {
@@ -46,20 +38,23 @@ fun AppScaffold(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppTopBar(
+fun AppTopBar(
     title: String,
     scrollBehavior: TopAppBarScrollBehavior,
     actions: @Composable RowScope.() -> Unit = {},
-    onBackClick: (() -> Unit)? = null
+    colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
+    navigationIcon: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+    onNavigationClick: (() -> Unit)? = null
 ) {
     LargeTopAppBar(
         title = { Text(title) },
         scrollBehavior = scrollBehavior,
+        colors = colors,
         navigationIcon = {
-            if (onBackClick != null) {
-                IconButton(onClick = onBackClick) {
+            onNavigationClick?.let {
+                IconButton(onClick = it) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        imageVector = navigationIcon,
                         contentDescription = stringResource(R.string.action_back)
                     )
                 }
