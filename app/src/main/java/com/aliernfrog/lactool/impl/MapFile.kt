@@ -152,7 +152,7 @@ class MapFile(
                 file.renameTo(newFileName)
                 file.parentFile!!.findFile(newFileName)!!
             }
-            else -> {}
+            else -> throw IllegalArgumentException("File class was somehow unknown")
         }
         relatedFiles.forEach { relatedFile ->
             when (relatedFile) {
@@ -162,6 +162,58 @@ class MapFile(
                 is DocumentFileCompat -> relatedFile.renameTo(relatedFile.name.replace(name, newName))
             }
         }
+        return MapActionResult(
+            successful = true,
+            newFile = newFile
+        )
+    }
+
+    /**
+     * Duplicates the map.
+     */
+    fun duplicate(
+        context: Context,
+        newName: String = mapsViewModel.resolveMapNameInput()
+    ): MapActionResult {
+        val newFileName = fileName.replaceFirst(name, newName)
+        val newFile: Any = when (file) {
+            is File -> {
+                val output = File((file.parent?.plus("/") ?: "") + newFileName)
+                if (output.exists()) return MapActionResult(
+                    successful = false,
+                    messageId = R.string.maps_alreadyExists
+                )
+                FileUtil.copyFile(file, output)
+                File(output.absolutePath)
+            }
+            is DocumentFileCompat -> {
+                if (file.parentFile!!.findFile(newFileName)?.exists() == true) return MapActionResult(
+                    successful = false,
+                    messageId = R.string.maps_alreadyExists
+                )
+                val output = file.parentFile!!.createFile("", newFileName)!!
+                FileUtil.copyFile(file, output, context)
+                file.parentFile!!.findFile(newFileName)!!
+            }
+            else -> throw IllegalArgumentException("File class was somehow unknown")
+        }
+        relatedFiles.forEach { relatedFile -> when (relatedFile) {
+            is File -> {
+                val outputName = relatedFile.name.replaceFirst(name, newName)
+                val output = File((relatedFile.parent?.plus("/") ?: "") + outputName)
+                if (output.exists()) output.deleteRecursively()
+                if (relatedFile.isFile) FileUtil.copyFile(relatedFile, output)
+                else FileUtil.copyDirectory(relatedFile, output)
+            }
+            is DocumentFileCompat -> {
+                val outputName = relatedFile.name.replaceFirst(name, newName)
+                val parentFile = relatedFile.parentFile!!
+                val check = parentFile.findFile(outputName)
+                if (check?.exists() == true) check.delete()
+                if (relatedFile.isFile()) FileUtil.copyFile(relatedFile, parentFile.createFile("", outputName)!!, context)
+                else FileUtil.copyDirectory(relatedFile, parentFile.createDirectory(outputName)!!)
+            }
+        } }
         return MapActionResult(
             successful = true,
             newFile = newFile

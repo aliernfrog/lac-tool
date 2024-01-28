@@ -5,6 +5,7 @@
     <string name="action_ok">Okay</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_dismiss">Dismiss</string>
+    <string name="action_tapToDismiss">Tap to dismiss</string>
     <string name="action_clear">Clear</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
@@ -57,9 +58,13 @@
     <string name="maps_alreadyExists">A map with this name already exists, choose another name</string>
     <string name="maps_actionFailed">{SUCCESSES} succeeded, {FAILS} failed</string>
     <string name="maps_mapName">Map name</string>
+    <string name="maps_mapName_guide">This text field can be used to rename and duplicate the map or set the output name when importing and exporting</string>
     <string name="maps_rename">Rename</string>
     <string name="maps_renamed">Renamed to {NAME}</string>
     <string name="maps_renaming">Renaming {NAME} to {NEW_NAME}..</string>
+    <string name="maps_duplicate">Duplicate</string>
+    <string name="maps_duplicated">Duplicated as {NAME}</string>
+    <string name="maps_duplicating">Duplicating {NAME} as {NEW_NAME}..</string>
     <string name="maps_import">Import this map</string>
     <string name="maps_import_short">Import</string>
     <string name="maps_imported_single">Imported as {NAME}</string>
@@ -251,6 +256,7 @@
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
     <string name="settings_experimental_showMaterialYouOption">Show Material You option</string>
+    <string name="settings_experimental_showMapNameFieldGuide">Show map name field guide</string>
     <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
     <string name="settings_experimental_showUpdateToast">Show update toast</string>
     <string name="settings_experimental_showUpdateDialog">Show update dialog</string>

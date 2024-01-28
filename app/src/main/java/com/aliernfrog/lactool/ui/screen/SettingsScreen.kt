@@ -234,6 +234,13 @@ private fun ExperimentalSettings(
                 settingsViewModel.showMaterialYouOption = it
             }
         )
+        SwitchRow(
+            title = stringResource(R.string.settings_experimental_showMapNameFieldGuide),
+            checked = settingsViewModel.prefs.showMapNameFieldGuide,
+            onCheckedChange = {
+                settingsViewModel.prefs.showMapNameFieldGuide = it
+            }
+        )
         ButtonRow(
             title = stringResource(R.string.settings_experimental_checkUpdates)
         ) {
