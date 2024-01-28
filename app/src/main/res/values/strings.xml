@@ -245,9 +245,9 @@
     <string name="settings_general_folders_screenshots">Screenshots folder</string>
     <string name="settings_general_folders_exportedMaps">Exported maps folder</string>
     <string name="settings_general_language">Language</string>
-    <string name="settings_general_language_description">Select the language of PF Tool</string>
+    <string name="settings_general_language_description">Select the language of LAC Tool</string>
     <string name="settings_general_language_select">Select language</string>
-    <string name="settings_general_language_help">Help translation of PF Tool</string>
+    <string name="settings_general_language_help">Help translation of LAC Tool</string>
     <string name="settings_general_language_help_deviceNotAvailable">The language of your device is not yet available</string>
     <string name="settings_general_language_help_description">You can contribute to translations on Crowdin by clicking this</string>
     <string name="settings_general_language_system">Follow system</string>
