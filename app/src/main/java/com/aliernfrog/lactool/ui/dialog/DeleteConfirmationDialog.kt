@@ -1,5 +1,7 @@
 package com.aliernfrog.lactool.ui.dialog
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material3.AlertDialog
@@ -10,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
@@ -46,8 +49,9 @@ fun DeleteConfirmationDialog(
         },
         text = {
             Text(
-                stringResource(R.string.info_deleteQuestion)
-                    .replace("{NAME}", name)
+                text = stringResource(R.string.info_deleteQuestion)
+                    .replace("{NAME}", name),
+                modifier = Modifier.verticalScroll(rememberScrollState())
             )
         }
     )

@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +28,7 @@ fun ProgressDialog(
     progress: Progress?,
     onDismissRequest: () -> Unit
 ) {
-    AlertDialog(
+    BasicAlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = Modifier
             .clip(AlertDialogDefaults.shape)
@@ -46,7 +46,7 @@ fun ProgressDialog(
             else progress.percentage.toFloat().let {
                 val animated by animateFloatAsState(it/100)
                 CircularProgressIndicator(
-                    progress = animated
+                    progress = { animated }
                 )
             }
             Text(
