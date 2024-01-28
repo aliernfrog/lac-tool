@@ -111,7 +111,7 @@
     <string name="mapsList_shared">Shared</string>
     <string name="mapsList_noImportedMaps">You do not have any maps</string>
     <string name="mapsList_noExportedMaps">You have not exported any maps</string>
-    <string name="mapsList_noSharedMaps">You have not shared any maps to PF Tool</string>
+    <string name="mapsList_noSharedMaps">You have not shared any maps to LAC Tool</string>
     <string name="mapsList_searchNoMatches">No matching maps found</string>
     <string name="mapsEdit">Edit map</string>
     <string name="mapsEdit_general">General</string>
