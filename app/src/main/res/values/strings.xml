@@ -256,6 +256,7 @@
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
     <string name="settings_experimental_showMaterialYouOption">Show Material You option</string>
+    <string name="settings_experimental_showMapNameFieldGuide">Show map name field guide</string>
     <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
     <string name="settings_experimental_showUpdateToast">Show update toast</string>
     <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
