@@ -24,7 +24,6 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
 
     // Experimental (developer) options
     var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
-    var lastAlphaAck by stringPreference(ConfigKey.KEY_APP_LAST_ALPHA_ACK, "")
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
 }

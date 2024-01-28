@@ -20,7 +20,6 @@ object ConfigKey {
     const val KEY_APP_THEME = "appTheme"
     const val KEY_APP_MATERIAL_YOU = "materialYou"
     const val KEY_APP_AUTO_UPDATES = "autoUpdates"
-    const val KEY_APP_LAST_ALPHA_ACK = "lastAlphaAck"
     const val KEY_APP_UPDATES_URL = "updatesUrl"
     const val KEY_SHOW_MAP_THUMBNAILS_LIST = "showMapThumbnailsList"
     const val KEY_SHOW_CHOSEN_MAP_THUMBNAIL = "chosenMapThumbnail"
@@ -75,13 +74,6 @@ object SettingsConstant {
         )
     )
     val experimentalPrefOptions = listOf(
-        PrefEditItem(
-            labelResourceId = R.string.settings_experimental_lastAlphaAck,
-            getValue = { it.lastAlphaAck },
-            setValue = { newValue, prefs ->
-                prefs.lastAlphaAck = newValue
-            }
-        ),
         PrefEditItem(
             labelResourceId = R.string.settings_experimental_updatesURL,
             getValue = { it.updatesURL },

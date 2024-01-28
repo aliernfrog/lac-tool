@@ -111,7 +111,7 @@
     <string name="mapsList_shared">Shared</string>
     <string name="mapsList_noImportedMaps">You do not have any maps</string>
     <string name="mapsList_noExportedMaps">You have not exported any maps</string>
-    <string name="mapsList_noSharedMaps">You have not shared any maps to PF Tool</string>
+    <string name="mapsList_noSharedMaps">You have not shared any maps to LAC Tool</string>
     <string name="mapsList_searchNoMatches">No matching maps found</string>
     <string name="mapsEdit">Edit map</string>
     <string name="mapsEdit_general">General</string>
@@ -181,9 +181,9 @@
     <string name="mapsMerge_map_includeSpawnpoints">Include spawnpoints</string>
     <string name="mapsMerge_map_includeRacingCheckpoints">Include racing checkpoints</string>
     <string name="mapsMerge_map_includeTDMSpawnpoints">Include team death-match spawnpoints</string>
-    <string name="mapsMerge_map_makeBase">Make this map base</string>
+    <string name="mapsMerge_map_makeBase">Make base</string>
     <string name="mapsMerge_map_madeBase">Made {MAP} base</string>
-    <string name="mapsMerge_map_remove">Remove this map</string>
+    <string name="mapsMerge_map_remove">Remove</string>
     <string name="mapsMerge_map_removed">Removed {MAP}</string>
     <string name="mapsMerge_merge">Merge</string>
     <string name="mapsMerge_merging">Merging..</string>
@@ -260,7 +260,6 @@
     <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
     <string name="settings_experimental_showUpdateToast">Show update toast</string>
     <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
-    <string name="settings_experimental_lastAlphaAck">Last alpha ACK</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
     <string name="settings_experimental_resetPrefs">Reset prefs</string>
     <string name="settings_experimental_resetPrefsDone">Restored default values for experimental prefs</string>
