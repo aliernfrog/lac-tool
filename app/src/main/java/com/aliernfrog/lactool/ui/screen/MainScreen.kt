@@ -112,7 +112,7 @@ fun MainScreen(
         mainViewModel.navController = navController
     }
 
-    mainViewModel.activeProgress?.let {
+    mainViewModel.progressState.currentProgress?.let {
         ProgressDialog(it) {}
     }
 

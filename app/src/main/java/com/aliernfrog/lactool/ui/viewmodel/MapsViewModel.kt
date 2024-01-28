@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,7 @@ import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -29,7 +31,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     val topToastState: TopToastState,
-    private val mainViewModel: MainViewModel,
+    private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
     val prefs: PreferenceManager
 ) : ViewModel() {
@@ -44,14 +46,15 @@ class MapsViewModel(
     var isLoadingMaps by mutableStateOf(true)
     var importedMaps by mutableStateOf(emptyList<MapFile>())
     var exportedMaps by mutableStateOf(emptyList<MapFile>())
+    var sharedMaps = mutableStateListOf<MapFile>()
     var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
     var mapNameEdit by mutableStateOf("")
     var mapListShown by mutableStateOf(true)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
 
     var activeProgress: Progress?
-        get() = mainViewModel.activeProgress
-        set(value) { mainViewModel.activeProgress = value }
+        get() = progressState.currentProgress
+        set(value) { progressState.currentProgress = value }
 
     val mapListBackButtonShown
         get() = chosenMap != null

@@ -24,6 +24,11 @@ class MapsListViewModel(
     var reverseList by mutableStateOf(false)
     var selectedMaps = mutableStateListOf<MapFile>()
 
+    val availableSegments: List<MapsListSegment>
+        get() = MapsListSegment.entries.filter {
+            !(mapsViewModel.sharedMaps.isEmpty() && it == MapsListSegment.SHARED)
+        }
+
     val selectedMapsActions: List<MapAction>
         get() = MapAction.entries.filter { action ->
             action.availableForMultiSelection && !selectedMaps.any { map ->

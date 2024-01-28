@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -30,8 +31,8 @@ import kotlinx.coroutines.withContext
 class ScreenshotsViewModel(
     val prefs: PreferenceManager,
     private val topToastState: TopToastState,
+    private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
-    private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -44,10 +45,6 @@ class ScreenshotsViewModel(
 
     var screenshots by mutableStateOf(emptyList<ImageFile>())
     var screenshotSheetScreeenshot by mutableStateOf<ImageFile?>(null)
-
-    private var activeProgress: Progress?
-        get() = mainViewModel.activeProgress
-        set(value) { mainViewModel.activeProgress = value }
 
     fun getScreenshotsFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::screenshotsFile.isInitialized) false
@@ -73,7 +70,7 @@ class ScreenshotsViewModel(
     }
 
     suspend fun deleteImportedScreenshot(screenshot: ImageFile) {
-        activeProgress = Progress(
+        progressState.currentProgress = Progress(
             contextUtils.getString(R.string.screenshots_deleting)
         )
         withContext(Dispatchers.IO) {
@@ -81,7 +78,7 @@ class ScreenshotsViewModel(
             fetchScreenshots()
             topToastState.showToast(R.string.screenshots_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
-        activeProgress = null
+        progressState.currentProgress = null
     }
 
     suspend fun shareImportedScreenshot(screenshot: ImageFile, context: Context) {
