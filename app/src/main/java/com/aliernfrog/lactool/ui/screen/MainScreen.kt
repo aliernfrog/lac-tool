@@ -17,7 +17,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.ui.component.BaseScaffold
-import com.aliernfrog.lactool.ui.dialog.AlphaWarningDialog
 import com.aliernfrog.lactool.ui.dialog.ProgressDialog
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
@@ -115,11 +114,4 @@ fun MainScreen(
     mainViewModel.progressState.currentProgress?.let {
         ProgressDialog(it) {}
     }
-
-    if (mainViewModel.showAlphaWarningDialog) AlphaWarningDialog(
-        onDismissRequest = { acknowledged ->
-            if (acknowledged) mainViewModel.prefs.lastAlphaAck = mainViewModel.applicationVersionName
-            mainViewModel.showAlphaWarningDialog = false
-        }
-    )
 }

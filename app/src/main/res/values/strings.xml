@@ -260,7 +260,6 @@
     <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
     <string name="settings_experimental_showUpdateToast">Show update toast</string>
     <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
-    <string name="settings_experimental_lastAlphaAck">Last alpha ACK</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
     <string name="settings_experimental_resetPrefs">Reset prefs</string>
     <string name="settings_experimental_resetPrefsDone">Restored default values for experimental prefs</string>

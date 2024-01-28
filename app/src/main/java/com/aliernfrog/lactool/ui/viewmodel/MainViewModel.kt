@@ -59,10 +59,6 @@ class MainViewModel(
     val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
 
-    var showAlphaWarningDialog by mutableStateOf(
-        applicationIsPreRelease && prefs.lastAlphaAck != applicationVersionName
-    )
-
     var latestVersionInfo by mutableStateOf(ReleaseInfo(
         versionName = applicationVersionName,
         preRelease = applicationIsPreRelease,
