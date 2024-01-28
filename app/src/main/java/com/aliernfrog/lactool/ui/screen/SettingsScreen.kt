@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
@@ -35,6 +36,7 @@ import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.FolderConfigurationDialog
+import com.aliernfrog.lactool.ui.sheet.LanguageSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
@@ -73,6 +75,11 @@ fun SettingsScreen(
             if (settingsViewModel.experimentalSettingsShown) ExperimentalSettings()
         }
     }
+
+    LanguageSheet(
+        sheetState = settingsViewModel.languageSheetState
+    )
+
     if (settingsViewModel.folderConfigurationDialogShown) FolderConfigurationDialog(
         onDismissRequest = {
             settingsViewModel.folderConfigurationDialogShown = false
@@ -115,10 +122,12 @@ private fun AppearanceOptions(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GeneralOptions(
     settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     FormSection(title = stringResource(R.string.settings_general)) {
         SwitchRow(
             title = stringResource(R.string.settings_general_showChosenMapThumbnail),
@@ -143,6 +152,14 @@ private fun GeneralOptions(
         ) {
             settingsViewModel.folderConfigurationDialogShown = true
         }
+        ButtonRow(
+            title = stringResource(R.string.settings_general_language),
+            description = stringResource(R.string.settings_general_language_description),
+            expanded = true,
+            arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
+        ) { scope.launch {
+            settingsViewModel.languageSheetState.show()
+        } }
     }
 }
 
@@ -201,6 +218,7 @@ private fun Links(
             val icon = when (it.url.split("/")[2]) {
                 "discord.gg" -> painterResource(id = R.drawable.discord)
                 "github.com" -> painterResource(id = R.drawable.github)
+                "crowdin.com" -> rememberVectorPainter(Icons.Default.Translate)
                 else -> null
             }
             ButtonRow(
