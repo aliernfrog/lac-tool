@@ -172,6 +172,7 @@ class MapFile(
      * Duplicates the map.
      */
     fun duplicate(
+        context: Context,
         newName: String = mapsViewModel.resolveMapNameInput()
     ): MapActionResult {
         val newFileName = fileName.replaceFirst(name, newName)
@@ -182,7 +183,11 @@ class MapFile(
                     successful = false,
                     messageId = R.string.maps_alreadyExists
                 )
-                file.copyTo(output)
+                file.inputStream().use { inputStream ->
+                    output.outputStream().use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
                 File(output.absolutePath)
             }
             is DocumentFileCompat -> {
@@ -191,7 +196,11 @@ class MapFile(
                     messageId = R.string.maps_alreadyExists
                 )
                 val output = file.parentFile!!.createFile("", newFileName)!!
-                file.copyTo(output.uri)
+                context.contentResolver.openInputStream(file.uri)?.use { inputStream ->
+                    context.contentResolver.openOutputStream(output.uri)?.use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
                 file.parentFile!!.findFile(newFileName)!!
             }
             else -> throw IllegalArgumentException("File class was somehow unknown")
