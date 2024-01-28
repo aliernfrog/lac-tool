@@ -30,6 +30,7 @@ import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.removeHtml
@@ -44,6 +45,7 @@ import java.io.File
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
     val topToastState: TopToastState,
+    private val progressState: ProgressState,
     private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
@@ -74,10 +76,6 @@ class MapsEditViewModel(
     var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
-
-    private var activeProgress: Progress?
-        get() = mainViewModel.activeProgress
-        set(value) { mainViewModel.activeProgress = value }
 
     @SuppressLint("Recycle")
     suspend fun openMap(file: Any, context: Context) {
@@ -183,7 +181,7 @@ class MapsEditViewModel(
     @SuppressLint("Recycle")
     suspend fun saveAndFinishEditing(onNavigateBackRequest: () -> Unit, context: Context) {
         val mapName = mapFile?.nameWithoutExtension ?: mapDocumentFile?.nameWithoutExtension
-        activeProgress = Progress(
+        progressState.currentProgress = Progress(
             context.getString(R.string.maps_edit_saving).replace("{NAME}", mapName.toString())
         )
         try { withContext(Dispatchers.IO) {
@@ -204,7 +202,7 @@ class MapsEditViewModel(
             Log.e(TAG, "saveAndFinishEditing: ", e)
         }
         finishEditingWithoutSaving(onNavigateBackRequest)
-        activeProgress = null
+        progressState.currentProgress = null
     }
 
     suspend fun finishEditingWithoutSaving(onNavigateBackRequest: () -> Unit) {

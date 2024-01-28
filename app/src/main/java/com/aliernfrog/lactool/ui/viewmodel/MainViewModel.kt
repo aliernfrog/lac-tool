@@ -21,10 +21,12 @@ import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.ReleaseInfo
+import com.aliernfrog.lactool.di.get
 import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.githubRepoURL
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -45,8 +47,7 @@ import java.net.URL
 class MainViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
-    private val mapsViewModel: MapsViewModel,
-    private val mapsListViewModel: MapsListViewModel,
+    val progressState: ProgressState,
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
@@ -58,7 +59,6 @@ class MainViewModel(
     val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
 
-    var activeProgress by mutableStateOf<Progress?>(null)
     var showAlphaWarningDialog by mutableStateOf(
         applicationIsPreRelease && prefs.lastAlphaAck != applicationVersionName
     )
@@ -139,6 +139,9 @@ class MainViewModel(
     }
 
     fun handleIntent(intent: Intent, context: Context) {
+        val mapsViewModel = get<MapsViewModel>()
+        val mapsListViewModel = get<MapsListViewModel>()
+
         try {
             val uris: MutableList<Uri> = intent.data?.let {
                 mutableListOf(it)
@@ -150,7 +153,7 @@ class MainViewModel(
             }
             if (uris.isEmpty()) return
 
-            activeProgress = Progress(context.getString(R.string.info_pleaseWait))
+            progressState.currentProgress = Progress(context.getString(R.string.info_pleaseWait))
             viewModelScope.launch(Dispatchers.IO) {
                 val cached = uris.map { uri ->
                     MapFile(uri.cacheFile(context)!!)
@@ -162,12 +165,12 @@ class MainViewModel(
                     mapsViewModel.sharedMaps = cached.toMutableStateList()
                     mapsListViewModel.chosenSegment = MapsListSegment.SHARED
                 }
-                activeProgress = null
+                progressState.currentProgress = null
             }
         } catch (e: Exception) {
             Log.e(TAG, "handleIntent: $e")
             topToastState.showErrorToast()
-            activeProgress = null
+            progressState.currentProgress = null
         }
     }
 }

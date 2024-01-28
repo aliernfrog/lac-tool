@@ -1,5 +1,13 @@
 package com.aliernfrog.lactool.impl
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+class ProgressState() {
+    var currentProgress by mutableStateOf<Progress?>(null)
+}
+
 class Progress(
     val description: String,
     totalProgress: Long,

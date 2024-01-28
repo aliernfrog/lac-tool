@@ -18,6 +18,7 @@ import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -30,7 +31,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     val topToastState: TopToastState,
-    private val mainViewModel: MainViewModel,
+    private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
     val prefs: PreferenceManager
 ) : ViewModel() {
@@ -52,8 +53,8 @@ class MapsViewModel(
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
 
     var activeProgress: Progress?
-        get() = mainViewModel.activeProgress
-        set(value) { mainViewModel.activeProgress = value }
+        get() = progressState.currentProgress
+        set(value) { progressState.currentProgress = value }
 
     val mapListBackButtonShown
         get() = chosenMap != null

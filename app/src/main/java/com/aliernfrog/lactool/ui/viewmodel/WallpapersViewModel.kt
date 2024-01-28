@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -34,8 +35,8 @@ import java.io.File
 class WallpapersViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
+    private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
-    private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -49,10 +50,6 @@ class WallpapersViewModel(
     var importedWallpapers by mutableStateOf(emptyList<ImageFile>())
     var pickedWallpaper by mutableStateOf<ImageFile?>(null)
     var wallpaperSheetWallpaper by mutableStateOf<ImageFile?>(null)
-
-    private var activeProgress: Progress?
-        get() = mainViewModel.activeProgress
-        set(value) { mainViewModel.activeProgress = value }
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
@@ -75,7 +72,7 @@ class WallpapersViewModel(
 
     suspend fun importPickedWallpaper(context: Context) {
         val wallpaper = pickedWallpaper ?: return
-        activeProgress = Progress(
+        progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_chosen_importing)
         )
         withContext(Dispatchers.IO) {
@@ -89,7 +86,7 @@ class WallpapersViewModel(
             fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
         }
-        activeProgress = null
+        progressState.currentProgress = null
     }
 
     suspend fun shareImportedWallpaper(wallpaper: ImageFile, context: Context) {
@@ -99,7 +96,7 @@ class WallpapersViewModel(
     }
 
     suspend fun deleteImportedWallpaper(wallpaper: ImageFile) {
-        activeProgress = Progress(
+        progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_deleting)
         )
         withContext(Dispatchers.IO) {
@@ -107,7 +104,7 @@ class WallpapersViewModel(
             fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
-        activeProgress = null
+        progressState.currentProgress = null
     }
 
     fun getWallpapersFile(context: Context): DocumentFileCompat {
