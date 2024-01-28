@@ -198,16 +198,19 @@ class MapFile(
         }
         relatedFiles.forEach { relatedFile -> when (relatedFile) {
             is File -> {
-                val outputName = relatedFile.name.replaceFirst(relatedFile.name, newName)
+                val outputName = relatedFile.name.replaceFirst(name, newName)
                 val output = File((relatedFile.parent?.plus("/") ?: "") + outputName)
+                if (output.exists()) output.deleteRecursively()
                 if (relatedFile.isFile) relatedFile.copyTo(output)
                 else FileUtil.copyDirectory(relatedFile, output)
             }
             is DocumentFileCompat -> {
-                val outputName = relatedFile.name.replaceFirst(relatedFile.name, newName)
-                val output = relatedFile.parentFile!!.createFile("", outputName)!!
-                if (relatedFile.isFile()) relatedFile.copyTo(output.uri)
-                else FileUtil.copyDirectory(relatedFile, output)
+                val outputName = relatedFile.name.replaceFirst(name, newName)
+                val parentFile = relatedFile.parentFile!!
+                val check = parentFile.findFile(outputName)
+                if (check?.exists() == true) check.delete()
+                if (relatedFile.isFile()) relatedFile.copyTo(parentFile.createFile("", outputName)!!.uri)
+                else FileUtil.copyDirectory(relatedFile, parentFile.createDirectory(outputName)!!)
             }
         } }
         return MapActionResult(
