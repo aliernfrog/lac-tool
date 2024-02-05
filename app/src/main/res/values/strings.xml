@@ -12,7 +12,6 @@
     <string name="action_more">More</string>
     <string name="intent_openMap">Open map</string>
     <string name="intent_downloadMap">Download map</string>
-    <string name="warning_alphaVersion">This version of LAC Tool is an alpha and things may be broken or missing. You can report issues on GitHub.</string>
     <string name="warning_error">Something went wrong</string>
     <string name="warning_fileDoesntExist">File does not exist</string>
     <string name="warning_pickFile_failed">Failed to pick file</string>

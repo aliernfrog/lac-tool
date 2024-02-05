@@ -15,8 +15,8 @@ android {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 23
         targetSdk = 34
-        versionCode = 31000
-        versionName = "3.1.0"
+        versionCode = 31100
+        versionName = "3.1.1"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -87,7 +87,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("io.insert-koin:koin-androidx-compose:3.5.3")
-    implementation("aliernfrog:top-toast-compose:1.4.0-alpha04")
+    implementation("aliernfrog:top-toast-compose:1.4.0-alpha05")
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.8")
     implementation("io.coil-kt:coil-compose:2.5.0")

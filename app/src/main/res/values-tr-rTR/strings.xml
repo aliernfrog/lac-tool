@@ -13,7 +13,6 @@
     <string name="action_more">Daha fazla</string>
     <string name="intent_openMap">Harita aç</string>
     <string name="intent_downloadMap">Harita indir</string>
-    <string name="warning_alphaVersion">LAC Tool\'un bu sürümü bir alpha\'dır ve bazı şeyler bozuk ya da eksik olabilir. Sorunları GitHub\'da bildirebilirsiniz.</string>
     <string name="warning_error">Bir şeyler ters gitti</string>
     <string name="warning_fileDoesntExist">Dosya mevcut değil</string>
     <string name="warning_pickFile_failed">Dosya seçilemedi</string>
@@ -42,7 +41,7 @@ Daha fazla bilgi, çözümler ve şu an üzerinde çalışılan yeni düzeltme i
     <string name="permissions_recommendedFolder_doesNotExist">Böyle bir klasör yok mu?</string>
     <string name="permissions_recommendedFolder_manuallyCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilirsiniz</string>
     <string name="permissions_recommendedFolder_openLACToCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilir veya LAC\'ı bir defa başlatarak klasörü oluşturmasını sağlayabilirsiniz</string>
-    <string name="permissions_recommendedFolder_importWallpaperToCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilir ya da LAC\'ın klasörü oluşturmasını sağlamak için için LAC\'ı başlatın, herhangi bir haritaya girin, oyun içi cep telefonunu açın, ayarlardaki \"Custom wallpaper link\" alanına rastgele bir yazı yazıp klavyeyi kapatın ve \"FAIL\" ya da \"SUCCESS\" yazana kadar bekleyin</string>
+    <string name="permissions_recommendedFolder_importWallpaperToCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilir ya da LAC\'ın klasörü oluşturmasını sağlamak için LAC\'ı başlatın, herhangi bir haritaya girin, oyun içi cep telefonunu açın, ayarlardaki \"Custom wallpaper link\" alanına rastgele bir yazı yazıp klavyeyi kapatın ve \"FAIL\" ya da \"SUCCESS\" yazana kadar bekleyin</string>
     <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilir veya LAC\'ın klasörü oluşturmasını sağlamak için oyun içi cep telefonuyla fotoğraf çekebilirsiniz</string>
     <string name="permissions_notRecommendedFolder_description">Aşağıdaki klasör önerilir:</string>
     <string name="permissions_notRecommendedFolder_question">Geri gidip önerilen klasörü seçmek mi istersiniz, yoksa önerilmeyen klasörü kullanmak mı?</string>
