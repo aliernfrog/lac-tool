@@ -13,7 +13,6 @@
     <string name="action_more">Daha fazla</string>
     <string name="intent_openMap">Harita aç</string>
     <string name="intent_downloadMap">Harita indir</string>
-    <string name="warning_alphaVersion">LAC Tool\'un bu sürümü bir alpha\'dır ve bazı şeyler bozuk ya da eksik olabilir. Sorunları GitHub\'da bildirebilirsiniz.</string>
     <string name="warning_error">Bir şeyler ters gitti</string>
     <string name="warning_fileDoesntExist">Dosya mevcut değil</string>
     <string name="warning_pickFile_failed">Dosya seçilemedi</string>
