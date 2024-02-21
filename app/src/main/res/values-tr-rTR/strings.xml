@@ -223,7 +223,7 @@ Daha fazla bilgi, çözümler ve şu an üzerinde çalışılan yeni düzeltme i
     <string name="settings_appearance_theme">Tema</string>
     <string name="settings_appearance_theme_description">Karanlık mod tercihi</string>
     <string name="settings_appearance_theme_system">Sistem teması</string>
-    <string name="settings_appearance_theme_light">Açık</string>
+    <string name="settings_appearance_theme_light">Aydınlık</string>
     <string name="settings_appearance_theme_dark">Karanlık</string>
     <string name="settings_appearance_materialYou">Material You</string>
     <string name="settings_appearance_materialYou_description">Cihazınızdaki renklere göre bir tema</string>
