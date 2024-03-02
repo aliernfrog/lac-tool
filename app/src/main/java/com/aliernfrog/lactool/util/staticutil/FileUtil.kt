@@ -2,6 +2,9 @@ package com.aliernfrog.lactool.util.staticutil
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
@@ -14,6 +17,13 @@ class FileUtil {
             val extensionIndex = path.lastIndexOf(".")
             if (extensionIndex == -1) return path
             return path.substring(0, extensionIndex)
+        }
+
+        fun getUriForPath(path: String): Uri {
+            return DocumentsContract.buildDocumentUri(
+                "com.android.externalstorage.documents",
+                "primary:"+path.removePrefix("${Environment.getExternalStorageDirectory()}/")
+            )
         }
 
         fun lastModifiedFromLong(lastModified: Long?, context: Context): String {

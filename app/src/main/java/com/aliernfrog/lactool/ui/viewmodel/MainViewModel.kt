@@ -89,7 +89,7 @@ class MainViewModel(
     var latestVersionInfo by mutableStateOf(ReleaseInfo(
         versionName = applicationVersionName,
         preRelease = applicationIsPreRelease,
-        body = context.getString(R.string.updates_noUpdates),
+        body = context.getString(R.string.settings_about_changelog_noChangelog),
         htmlUrl = githubRepoURL,
         downloadLink = githubRepoURL
     ))
@@ -112,23 +112,19 @@ class MainViewModel(
             try {
                 val updatesURL = prefs.updatesURL
                 val responseJson = JSONObject(URL(updatesURL).readText())
-                val branchKey = if (applicationIsPreRelease && responseJson.has("preRelease")) "preRelease" else "stable"
-                val json = responseJson.getJSONObject(branchKey)
+                val json = responseJson.getJSONObject(
+                    if (applicationIsPreRelease && responseJson.has("preRelease")) "preRelease" else "stable"
+                )
                 val latestVersionCode = json.getInt("versionCode")
-                val latestVersionName = json.getString("versionName")
-                val latestIsPreRelease = json.getBoolean("preRelease")
-                val latestBody = json.getString("body")
-                val latestHtmlUrl = json.getString("htmlUrl")
-                val latestDownload = json.getString("downloadUrl")
+                latestVersionInfo = ReleaseInfo(
+                    versionName = json.getString("versionName"),
+                    preRelease = json.getBoolean("preRelease"),
+                    body = json.getString("body"),
+                    htmlUrl = json.getString("htmlUrl"),
+                    downloadLink = json.getString("downloadUrl")
+                )
                 updateAvailable = ignoreVersion || latestVersionCode > applicationVersionCode
                 if (updateAvailable) {
-                    latestVersionInfo = ReleaseInfo(
-                        versionName = latestVersionName,
-                        preRelease = latestIsPreRelease,
-                        body = latestBody,
-                        htmlUrl = latestHtmlUrl,
-                        downloadLink = latestDownload
-                    )
                     if (manuallyTriggered) coroutineScope {
                         updateSheetState.show()
                     } else {

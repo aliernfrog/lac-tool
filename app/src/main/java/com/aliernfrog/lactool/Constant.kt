@@ -2,6 +2,9 @@ package com.aliernfrog.lactool
 
 import android.os.Build
 import android.os.Environment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Translate
+import com.aliernfrog.lactool.data.CreditsData
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -40,13 +43,26 @@ object ConfigKey {
 
 object SettingsConstant {
     val socials = listOf(
-        Social("LAC Discord", "https://discord.gg/aQhGqHSc3W"),
-        Social("LAC Tool GitHub", githubRepoURL),
-        Social("LAC Tool Crowdin", crowdinURL)
+        Social(
+            label = "LAC",
+            icon = R.drawable.discord,
+            url = "https://discord.gg/aQhGqHSc3W"
+        ),
+        Social(
+            label = "LAC Tool",
+            icon = R.drawable.github,
+            url = githubRepoURL
+        ),
+        Social(
+            label = "Crowdin",
+            icon = Icons.Default.Translate,
+            url = crowdinURL
+        )
     )
+
     val folders = listOf(
         PrefEditItem(
-            labelResourceId = R.string.settings_general_folders_maps,
+            labelResourceId = R.string.settings_storage_folders_maps,
             getValue = { it.lacMapsDir },
             setValue = { newValue, prefs ->
                 prefs.lacMapsDir = newValue
@@ -54,7 +70,7 @@ object SettingsConstant {
             default = ConfigKey.DEFAULT_MAPS_DIR
         ),
         PrefEditItem(
-            labelResourceId = R.string.settings_general_folders_wallpapers,
+            labelResourceId = R.string.settings_storage_folders_wallpapers,
             getValue = { it.lacWallpapersDir },
             setValue = { newValue, prefs ->
                 prefs.lacWallpapersDir = newValue
@@ -62,7 +78,7 @@ object SettingsConstant {
             default = ConfigKey.DEFAULT_WALLPAPERS_DIR
         ),
         PrefEditItem(
-            labelResourceId = R.string.settings_general_folders_screenshots,
+            labelResourceId = R.string.settings_storage_folders_screenshots,
             getValue = { it.lacScreenshotsDir },
             setValue = { newValue, prefs ->
                 prefs.lacScreenshotsDir = newValue
@@ -70,7 +86,7 @@ object SettingsConstant {
             default = ConfigKey.DEFAULT_SCREENSHOTS_DIR
         ),
         PrefEditItem(
-            labelResourceId = R.string.settings_general_folders_exportedMaps,
+            labelResourceId = R.string.settings_storage_folders_exportedMaps,
             getValue = { it.exportedMapsDir },
             setValue = { newValue, prefs ->
               prefs.exportedMapsDir = newValue
@@ -78,6 +94,40 @@ object SettingsConstant {
             default = ConfigKey.DEFAULT_EXPORTED_MAPS_DIR,
         )
     )
+
+    val credits = listOf(
+        CreditsData(
+            name = "Mohammad Alizadeh",
+            description = R.string.settings_about_credits_gameDev,
+            url = "https://discord.gg/X6WzGpCgDJ"
+        ),
+        CreditsData(
+            name = "alieRN",
+            description = R.string.settings_about_credits_appDev,
+            url = "https://github.com/aliernfrog"
+        ),
+        CreditsData(
+            name = "infini0083",
+            description = R.string.settings_about_credits_ui,
+            url = "https://github.com/infini0083"
+        ),
+        CreditsData(
+            name = R.string.settings_about_credits_crowdin,
+            description = R.string.settings_about_credits_translations,
+            url = "https://crowdin.com/project/pf-tool"
+        ),
+        CreditsData(
+            name = "Vendetta Manager",
+            description = R.string.settings_about_credits_inspiration,
+            url = "https://github.com/vendetta-mod/VendettaManager"
+        ),
+        CreditsData(
+            name = "ReVanced Manager",
+            description = R.string.settings_about_credits_inspiration,
+            url = "https://github.com/ReVanced/revanced-manager"
+        )
+    )
+
     val experimentalPrefOptions = listOf(
         PrefEditItem(
             labelResourceId = R.string.settings_experimental_updatesURL,

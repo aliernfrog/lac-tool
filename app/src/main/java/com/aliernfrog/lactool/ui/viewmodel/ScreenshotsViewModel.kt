@@ -17,7 +17,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -49,8 +49,8 @@ class ScreenshotsViewModel(
     fun getScreenshotsFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::screenshotsFile.isInitialized) false
         else {
-            val updatedPath = screenshotsFile.uri.resolvePath()
-            val existingPath = Uri.parse(screenshotsDir).resolvePath()
+            val updatedPath = screenshotsFile.uri.toPath()
+            val existingPath = Uri.parse(screenshotsDir).toPath()
             updatedPath == existingPath
         }
         if (isUpToDate) return screenshotsFile

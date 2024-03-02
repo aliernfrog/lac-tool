@@ -13,7 +13,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ScreenshotsPermissionsScreen(
-    screenshotsViewModel: ScreenshotsViewModel = koinViewModel()
+    screenshotsViewModel: ScreenshotsViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     val permissions = remember { arrayOf(
         PermissionData(
@@ -29,7 +30,12 @@ fun ScreenshotsPermissionsScreen(
         )
     ) }
 
-    PermissionsScreen(*permissions) {
-        ScreenshotsScreen()
+    PermissionsScreen(
+        *permissions,
+        onNavigateSettingsRequest = onNavigateSettingsRequest
+    ) {
+        ScreenshotsScreen(
+            onNavigateSettingsRequest = onNavigateSettingsRequest
+        )
     }
 }

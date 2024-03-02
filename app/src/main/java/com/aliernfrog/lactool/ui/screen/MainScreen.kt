@@ -24,6 +24,7 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
 import com.aliernfrog.lactool.ui.screen.screenshots.ScreenshotsPermissionsScreen
+import com.aliernfrog.lactool.ui.screen.settings.SettingsScreen
 import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.sheet.UpdateSheet
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
@@ -37,6 +38,13 @@ fun MainScreen(
     mainViewModel: MainViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
+    val onNavigateSettingsRequest: () -> Unit = {
+        navController.navigate(Destination.SETTINGS.route)
+    }
+    val onNavigateBackRequest: () -> Unit = {
+        navController.popBackStack()
+    }
+
     BaseScaffold(
         navController = navController
     ) {
@@ -65,11 +73,13 @@ fun MainScreen(
             ) }
         ) {
             composable(Destination.MAPS.route) {
-                MapsPermissionsScreen()
+                MapsPermissionsScreen(
+                    onNavigateSettingsRequest = onNavigateSettingsRequest
+                )
             }
             composable(Destination.MAPS_EDIT.route) {
                 MapsEditScreen(
-                    onNavigateBackRequest = { navController.popBackStack() },
+                    onNavigateBackRequest = onNavigateBackRequest,
                     onNavigateRequest = { destination ->
                         navController.navigate(destination.route)
                     }
@@ -77,27 +87,33 @@ fun MainScreen(
             }
             composable(Destination.MAPS_ROLES.route) {
                 MapsRolesScreen(
-                    onNavigateBackRequest = { navController.popBackStack() }
+                    onNavigateBackRequest = onNavigateBackRequest
                 )
             }
             composable(Destination.MAPS_MATERIALS.route) {
                 MapsMaterialsScreen(
-                    onNavigateBackRequest = { navController.popBackStack() }
+                    onNavigateBackRequest = onNavigateBackRequest
                 )
             }
             composable(Destination.MAPS_MERGE.route) {
                 MapsMergeScreen(
-                    onNavigateBackRequest = { navController.popBackStack() }
+                    onNavigateBackRequest = onNavigateBackRequest
                 )
             }
             composable(Destination.WALLPAPERS.route) {
-                WallpapersPermissionsScreen()
+                WallpapersPermissionsScreen(
+                    onNavigateSettingsRequest = onNavigateSettingsRequest
+                )
             }
             composable(Destination.SCREENSHOTS.route) {
-                ScreenshotsPermissionsScreen()
+                ScreenshotsPermissionsScreen(
+                    onNavigateSettingsRequest = onNavigateSettingsRequest
+                )
             }
             composable(Destination.SETTINGS.route) {
-                SettingsScreen()
+                SettingsScreen(
+                    onNavigateBackRequest = onNavigateBackRequest
+                )
             }
         }
     }
