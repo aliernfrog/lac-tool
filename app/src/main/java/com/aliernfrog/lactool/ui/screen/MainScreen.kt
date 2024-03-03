@@ -30,6 +30,7 @@ import com.aliernfrog.lactool.ui.sheet.UpdateSheet
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
+import com.aliernfrog.lactool.util.extension.popBackStackSafe
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,7 @@ fun MainScreen(
         navController.navigate(Destination.SETTINGS.route)
     }
     val onNavigateBackRequest: () -> Unit = {
-        navController.popBackStack()
+        navController.popBackStackSafe()
     }
 
     BaseScaffold(
