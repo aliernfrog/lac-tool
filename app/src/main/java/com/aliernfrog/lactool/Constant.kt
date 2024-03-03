@@ -114,7 +114,7 @@ object SettingsConstant {
         CreditsData(
             name = R.string.settings_about_credits_crowdin,
             description = R.string.settings_about_credits_translations,
-            url = "https://crowdin.com/project/pf-tool"
+            url = crowdinURL
         ),
         CreditsData(
             name = "Vendetta Manager",
