@@ -26,7 +26,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.data.ReleaseInfo
-import com.aliernfrog.lactool.di.get
+import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.githubRepoURL
 import com.aliernfrog.lactool.impl.MapFile
@@ -165,8 +165,8 @@ class MainViewModel(
     }
 
     fun handleIntent(intent: Intent, context: Context) {
-        val mapsViewModel = get<MapsViewModel>()
-        val mapsListViewModel = get<MapsListViewModel>()
+        val mapsViewModel = getKoinInstance<MapsViewModel>()
+        val mapsListViewModel = getKoinInstance<MapsListViewModel>()
 
         try {
             val uris: MutableList<Uri> = intent.data?.let {
