@@ -99,7 +99,7 @@ object SettingsConstant {
         CreditsData(
             name = "Mohammad Alizadeh",
             description = R.string.settings_about_credits_gameDev,
-            url = "https://discord.gg/X6WzGpCgDJ"
+            url = "https://discord.gg/aQhGqHSc3W"
         ),
         CreditsData(
             name = "alieRN",
