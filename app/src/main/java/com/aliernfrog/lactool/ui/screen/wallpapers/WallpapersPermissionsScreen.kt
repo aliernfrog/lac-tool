@@ -13,7 +13,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WallpapersPermissionsScreen(
-    wallpapersViewModel: WallpapersViewModel = koinViewModel()
+    wallpapersViewModel: WallpapersViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     val permissions = remember { arrayOf(
         PermissionData(
@@ -29,7 +30,12 @@ fun WallpapersPermissionsScreen(
         )
     ) }
 
-    PermissionsScreen(*permissions) {
-        WallpapersScreen()
+    PermissionsScreen(
+        *permissions,
+        onNavigateSettingsRequest = onNavigateSettingsRequest
+    ) {
+        WallpapersScreen(
+            onNavigateSettingsRequest = onNavigateSettingsRequest
+        )
     }
 }

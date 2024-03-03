@@ -19,7 +19,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ImageFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -110,8 +110,8 @@ class WallpapersViewModel(
     fun getWallpapersFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::wallpapersFile.isInitialized) false
         else {
-            val updatedPath = wallpapersFile.uri.resolvePath()
-            val existingPath = Uri.parse(wallpapersDir).resolvePath()
+            val updatedPath = wallpapersFile.uri.toPath()
+            val existingPath = Uri.parse(wallpapersDir).toPath()
             updatedPath == existingPath
         }
         if (isUpToDate) return wallpapersFile

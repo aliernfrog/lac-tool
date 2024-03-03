@@ -19,8 +19,8 @@ import com.aliernfrog.lactool.data.MapActionResult
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.util.extension.resolvePath
 import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
@@ -145,8 +145,8 @@ class MapsViewModel(
     fun getMapsFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::mapsFile.isInitialized) false
         else {
-            val updatedPath = mapsFile.uri.resolvePath()
-            val existingPath = Uri.parse(mapsDir).resolvePath()
+            val updatedPath = mapsFile.uri.toPath()
+            val existingPath = Uri.parse(mapsDir).toPath()
             updatedPath == existingPath
         }
         if (isUpToDate) return mapsFile
@@ -158,8 +158,8 @@ class MapsViewModel(
     private fun getExportedMapsFile(context: Context): DocumentFileCompat {
         val isUpToDate = if (!::exportedMapsFile.isInitialized) false
         else {
-            val updatedPath = exportedMapsFile.uri.resolvePath()
-            val existingPath = Uri.parse(exportedMapsDir).resolvePath()
+            val updatedPath = exportedMapsFile.uri.toPath()
+            val existingPath = Uri.parse(exportedMapsDir).toPath()
             updatedPath == existingPath
         }
         if (isUpToDate) return exportedMapsFile

@@ -8,7 +8,7 @@ import android.net.Uri
 import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.di.appModules
 import com.aliernfrog.lactool.ui.activity.MainActivity
-import com.aliernfrog.lactool.util.extension.resolvePath
+import com.aliernfrog.lactool.util.extension.toPath
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import java.util.Locale
@@ -71,7 +71,7 @@ class GeneralUtil {
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
             var internalPath = wallpapersPath
             try {
-                internalPath = Uri.parse(wallpapersPath).resolvePath() ?: wallpapersPath
+                internalPath = Uri.parse(wallpapersPath).toPath() ?: wallpapersPath
             } catch (_: Exception) {}
             return "file://$internalPath/$fileName"
         }

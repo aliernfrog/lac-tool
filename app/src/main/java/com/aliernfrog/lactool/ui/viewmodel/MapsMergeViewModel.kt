@@ -18,6 +18,7 @@ import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.util.extension.popBackStackSafe
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -74,7 +75,7 @@ class MapsMergeViewModel(
             mapsViewModel.chooseMap(mapsFile.findFile(newFileName))
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
         }
-        navController.popBackStack()
+        navController.popBackStackSafe()
     }
 
     suspend fun addMaps(

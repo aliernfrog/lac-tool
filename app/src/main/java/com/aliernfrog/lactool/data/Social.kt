@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.data
 
 data class Social(
-    val name: String,
+    val label: String,
+    val icon: Any,
     val url: String
 )

@@ -12,14 +12,11 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
@@ -41,7 +38,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -62,7 +58,6 @@ fun BaseScaffold(
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
-    val layoutDirection = LocalLayoutDirection.current
 
     val destinations = remember { Destination.entries.toList() }
     val mainDestinations = remember { destinations.filter { it.showInNavigationBar } }
@@ -70,7 +65,8 @@ fun BaseScaffold(
     val currentDestination = destinations.find { it.route == currentRoute }
 
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
-    val showNavigationRail = currentDestination?.showNavigationBar != false && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
+    val showNavigationRail: Boolean? = if (mainDestinations.size <= 1) null
+    else currentDestination?.showNavigationBar != false && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
     var sideBarWidth by remember { mutableStateOf(0.dp) }
 
     fun isDestinationSelected(destination: Destination): Boolean {
@@ -92,10 +88,10 @@ fun BaseScaffold(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(
-                start = if (showNavigationRail) sideBarWidth else 0.dp
+                start = if (showNavigationRail == true) sideBarWidth else 0.dp
             ),
         bottomBar = {
-            if (!showNavigationRail) BottomBar(
+            if (showNavigationRail == false) BottomBar(
                 destinations = mainDestinations,
                 currentDestination = currentDestination,
                 isDestinationSelected = ::isDestinationSelected,
@@ -104,17 +100,10 @@ fun BaseScaffold(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
-        val paddingValues = if (showNavigationRail || currentDestination?.showNavigationBar != false) it
-        else PaddingValues(
-            start = it.calculateStartPadding(layoutDirection),
-            top = it.calculateTopPadding(),
-            end = it.calculateEndPadding(layoutDirection),
-            bottom = 0.dp
-        )
-        content(paddingValues)
+        content(it)
     }
 
-    if (showNavigationRail) SideBarRail(
+    if (showNavigationRail == true) SideBarRail(
         destinations = mainDestinations,
         currentDestination = currentDestination,
         isDestinationSelected = ::isDestinationSelected,
@@ -203,7 +192,6 @@ private fun SideBarRail(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NavigationItemIcon(
     destination: Destination,

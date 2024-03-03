@@ -22,6 +22,7 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.sheet.ScreenshotsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import kotlinx.coroutines.launch
@@ -30,7 +31,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenshotsScreen(
-    screenshotsViewModel: ScreenshotsViewModel = koinViewModel()
+    screenshotsViewModel: ScreenshotsViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -42,7 +44,10 @@ fun ScreenshotsScreen(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.screenshots),
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    SettingsButton(onClick = onNavigateSettingsRequest)
+                }
             )
         },
         topAppBarState = screenshotsViewModel.topAppBarState

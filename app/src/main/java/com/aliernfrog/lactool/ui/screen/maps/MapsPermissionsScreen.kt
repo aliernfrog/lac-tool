@@ -21,7 +21,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapsPermissionsScreen(
-    mapsViewModel: MapsViewModel = koinViewModel()
+    mapsViewModel: MapsViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     val permissions = remember { arrayOf(
         PermissionData(
@@ -50,9 +51,13 @@ fun MapsPermissionsScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    PermissionsScreen(*permissions) {
+    PermissionsScreen(
+        *permissions,
+        onNavigateSettingsRequest = onNavigateSettingsRequest
+    ) {
         AnimatedContent(mapsViewModel.mapListShown) { showMapList ->
             if (showMapList) MapsListScreen(
+                onNavigateSettingsRequest = onNavigateSettingsRequest,
                 onBackClick = if (mapsViewModel.mapListBackButtonShown) {
                     { mapsViewModel.mapListShown = false }
                 } else null,
@@ -61,7 +66,9 @@ fun MapsPermissionsScreen(
                     mapsViewModel.mapListShown = false
                 }
             )
-            else MapsScreen()
+            else MapsScreen(
+                onNavigateSettingsRequest = onNavigateSettingsRequest
+            )
         }
     }
 

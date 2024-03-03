@@ -9,7 +9,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     prefs = context.getSharedPreferences(ConfigKey.PREF_NAME, Context.MODE_PRIVATE)
 ) {
     // Appearance options
-    var theme by intPreference(ConfigKey.KEY_APP_THEME, Theme.SYSTEM.int)
+    var theme by intPreference(ConfigKey.KEY_APP_THEME, Theme.SYSTEM.ordinal)
     var materialYou by booleanPreference(ConfigKey.KEY_APP_MATERIAL_YOU, true)
 
     // General options
