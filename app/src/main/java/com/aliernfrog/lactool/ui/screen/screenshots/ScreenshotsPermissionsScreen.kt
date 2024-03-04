@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
-import com.aliernfrog.lactool.ui.screen.PermissionsScreen
+import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -18,10 +18,11 @@ fun ScreenshotsPermissionsScreen(
 ) {
     val permissions = remember { arrayOf(
         PermissionData(
-            titleId = R.string.screenshots_permissions,
-            recommendedPath = ConfigKey.DEFAULT_SCREENSHOTS_DIR,
-            recommendedPathDescriptionId = R.string.screenshots_permissions_recommendedPath_description,
-            doesntExistHintId = R.string.permissions_recommendedFolder_takeInGameScreenshotToCreate,
+            title = R.string.screenshots_permissions,
+            recommendedPath = ConfigKey.RECOMMENDED_SCREENSHOTS_DIR,
+            recommendedPathDescription = R.string.screenshots_permissions_recommendedPath_description,
+            createFolderHint = R.string.permissions_recommendedFolder_takeInGameScreenshotToCreate,
+            useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
             getUri = { screenshotsViewModel.prefs.lacScreenshotsDir },
             onUriUpdate = { screenshotsViewModel.prefs.lacScreenshotsDir = it.toString() },
             content = {
@@ -32,6 +33,7 @@ fun ScreenshotsPermissionsScreen(
 
     PermissionsScreen(
         *permissions,
+        title = stringResource(R.string.screenshots),
         onNavigateSettingsRequest = onNavigateSettingsRequest
     ) {
         ScreenshotsScreen(

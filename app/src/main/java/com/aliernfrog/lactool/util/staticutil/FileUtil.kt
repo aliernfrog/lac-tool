@@ -8,6 +8,7 @@ import android.provider.DocumentsContract
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.util.extension.toPath
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import java.io.File
 
@@ -19,8 +20,20 @@ class FileUtil {
             return path.substring(0, extensionIndex)
         }
 
+        fun getFilePath(path: String): String? {
+            return if (path.startsWith("/")) path
+            else Uri.parse(path).toPath()
+        }
+
         fun getUriForPath(path: String): Uri {
             return DocumentsContract.buildDocumentUri(
+                "com.android.externalstorage.documents",
+                "primary:"+path.removePrefix("${Environment.getExternalStorageDirectory()}/")
+            )
+        }
+
+        fun getTreeUriForPath(path: String): Uri {
+            return DocumentsContract.buildTreeDocumentUri(
                 "com.android.externalstorage.documents",
                 "primary:"+path.removePrefix("${Environment.getExternalStorageDirectory()}/")
             )

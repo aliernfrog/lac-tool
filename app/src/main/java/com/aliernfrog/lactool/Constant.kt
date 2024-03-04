@@ -19,7 +19,7 @@ val externalStorageRoot = Environment.getExternalStorageDirectory().toString()+"
 val supportsPerAppLanguagePreferences = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 val imeSupportsSyncAppContent = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 val folderPickerSupportsInitialUri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-val filesAppMightBlockAndroidData = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+val hasAndroidDataRestrictions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"
@@ -35,10 +35,10 @@ object ConfigKey {
     const val KEY_SCREENSHOTS_DIR = "screenshotsDir"
     const val KEY_EXPORTED_MAPS_DIR = "mapsExportDir"
     const val DEFAULT_UPDATES_URL = "https://aliernfrog.github.io/lactool/latest.json"
-    val DEFAULT_MAPS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/editor"
-    val DEFAULT_WALLPAPERS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/wallpaper"
-    val DEFAULT_SCREENSHOTS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/screenshots"
-    val DEFAULT_EXPORTED_MAPS_DIR = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/LACTool/exported"
+    val RECOMMENDED_MAPS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/editor"
+    val RECOMMENDED_WALLPAPERS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/wallpaper"
+    val RECOMMENDED_SCREENSHOTS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/screenshots"
+    val RECOMMENDED_EXPORTED_MAPS_DIR = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/LACTool/exported"
 }
 
 object SettingsConstant {
@@ -67,7 +67,7 @@ object SettingsConstant {
             setValue = { newValue, prefs ->
                 prefs.lacMapsDir = newValue
             },
-            default = ConfigKey.DEFAULT_MAPS_DIR
+            default = ConfigKey.RECOMMENDED_MAPS_DIR
         ),
         PrefEditItem(
             labelResourceId = R.string.settings_storage_folders_wallpapers,
@@ -75,7 +75,7 @@ object SettingsConstant {
             setValue = { newValue, prefs ->
                 prefs.lacWallpapersDir = newValue
             },
-            default = ConfigKey.DEFAULT_WALLPAPERS_DIR
+            default = ConfigKey.RECOMMENDED_WALLPAPERS_DIR
         ),
         PrefEditItem(
             labelResourceId = R.string.settings_storage_folders_screenshots,
@@ -83,7 +83,7 @@ object SettingsConstant {
             setValue = { newValue, prefs ->
                 prefs.lacScreenshotsDir = newValue
             },
-            default = ConfigKey.DEFAULT_SCREENSHOTS_DIR
+            default = ConfigKey.RECOMMENDED_SCREENSHOTS_DIR
         ),
         PrefEditItem(
             labelResourceId = R.string.settings_storage_folders_exportedMaps,
@@ -91,7 +91,7 @@ object SettingsConstant {
             setValue = { newValue, prefs ->
               prefs.exportedMapsDir = newValue
             },
-            default = ConfigKey.DEFAULT_EXPORTED_MAPS_DIR,
+            default = ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR,
         )
     )
 

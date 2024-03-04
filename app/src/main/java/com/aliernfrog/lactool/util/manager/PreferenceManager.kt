@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
 import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
 
@@ -18,10 +19,11 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     var language by stringPreference(ConfigKey.KEY_APP_LANGUAGE, "") // follow system if blank
 
     // Directory options
-    var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.DEFAULT_MAPS_DIR)
-    var lacWallpapersDir by stringPreference(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.DEFAULT_WALLPAPERS_DIR)
-    var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.DEFAULT_SCREENSHOTS_DIR)
-    var exportedMapsDir by stringPreference(ConfigKey.KEY_EXPORTED_MAPS_DIR, ConfigKey.DEFAULT_EXPORTED_MAPS_DIR)
+    var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.RECOMMENDED_MAPS_DIR)
+    var lacWallpapersDir by stringPreference(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.RECOMMENDED_WALLPAPERS_DIR)
+    var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.RECOMMENDED_SCREENSHOTS_DIR)
+    var exportedMapsDir by stringPreference(ConfigKey.KEY_EXPORTED_MAPS_DIR, ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR)
+    var storageAccessType by intPreference("storageAccessType", StorageAccessType.SAF.ordinal)
 
     // Experimental (developer) options
     var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
