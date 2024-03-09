@@ -27,6 +27,12 @@ class FileService : IFileService.Stub() {
         else FileUtil.copyDirectory(source, output)
     }
 
+    override fun createNewFile(path: String) {
+        val file = File(path)
+        if (file.parentFile?.exists() == false) file.parentFile?.mkdirs()
+        file.createNewFile()
+    }
+
     override fun delete(path: String) {
         File(path).deleteRecursively()
     }
@@ -50,7 +56,17 @@ class FileService : IFileService.Stub() {
         }.toTypedArray()
     }
 
+    override fun mkdirs(path: String) {
+        File(path).mkdirs()
+    }
+
     override fun renameFile(oldPath: String, newPath: String) {
         File(oldPath).renameTo(File(newPath))
+    }
+
+    override fun writeFile(path: String, text: String) {
+        File(path).outputStream().use {
+            FileUtil.writeFile(it, text)
+        }
     }
 }

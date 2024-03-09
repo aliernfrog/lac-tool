@@ -11,6 +11,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.extension.toPath
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import java.io.File
+import java.io.OutputStream
 
 class FileUtil {
     companion object {
@@ -50,22 +51,6 @@ class FileUtil {
             ).toString()
         }
 
-        fun copyFile(source: File, target: File) {
-            source.inputStream().use { inputStream ->
-                target.outputStream().use { outputStream ->
-                    inputStream.copyTo(outputStream)
-                }
-            }
-        }
-
-        fun copyFile(source: DocumentFileCompat, target: DocumentFileCompat, context: Context) {
-            context.contentResolver.openInputStream(source.uri)?.use { inputStream ->
-                context.contentResolver.openOutputStream(target.uri)?.use { outputStream ->
-                    inputStream.copyTo(outputStream)
-                }
-            }
-        }
-
         fun copyDirectory(source: File, target: File) {
             if (!target.isDirectory) target.mkdirs()
             source.listFiles()!!.forEach { file ->
@@ -79,13 +64,11 @@ class FileUtil {
             }
         }
 
-        fun copyDirectory(source: DocumentFileCompat, target: DocumentFileCompat) {
-            source.listFiles().forEach { file ->
-                val targetFile = if (file.isDirectory()) target.createDirectory(file.name)
-                else target.createFile("", file.name)
-                if (file.isDirectory()) copyDirectory(file, targetFile!!)
-                else file.copyTo(targetFile!!.uri)
-            }
+        fun writeFile(outputStream: OutputStream, content: String) {
+            val writer = outputStream.writer(Charsets.UTF_8)
+            writer.write(content)
+            writer.flush()
+            writer.close()
         }
 
         fun shareFiles(vararg files: Any, context: Context, title: String = context.getString(R.string.action_share)) {

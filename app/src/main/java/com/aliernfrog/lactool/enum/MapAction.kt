@@ -202,7 +202,7 @@ enum class MapAction(
                 context.getString(R.string.maps_edit_opening).replace("{NAME}", first.name)
             )
             try {
-                first.mapsEditViewModel.openMap(first.file, context)
+                first.mapsEditViewModel.openMap(first, context)
             } catch (e: Exception) {
                 first.topToastState.showErrorToast()
                 Log.e(TAG, "execute EDIT: ", e)

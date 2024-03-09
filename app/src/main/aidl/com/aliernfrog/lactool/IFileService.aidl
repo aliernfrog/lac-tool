@@ -9,15 +9,21 @@ interface IFileService {
 
     void copy(String sourcePath, String targetPath) = 2;
 
-    void delete(String path) = 3;
+    void createNewFile(String path) = 3;
 
-    boolean exists(String path) = 4;
+    void delete(String path) = 4;
 
-    byte[] getByteArray(String path) = 5;
+    boolean exists(String path) = 5;
 
-    ServiceFile getFile(String path) = 6;
+    byte[] getByteArray(String path) = 6;
 
-    ServiceFile[] listFiles(String path) = 7;
+    ServiceFile getFile(String path) = 7;
 
-    void renameFile(String oldPath, String newPath) = 8;
+    ServiceFile[] listFiles(String path) = 8;
+
+    void mkdirs(String path) = 9;
+
+    void renameFile(String oldPath, String newPath) = 10;
+
+    void writeFile(String path, String text) = 11;
 }

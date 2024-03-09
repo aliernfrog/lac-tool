@@ -16,11 +16,13 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
+import com.aliernfrog.lactool.di.getKoinInstance
+import com.aliernfrog.lactool.enum.StorageAccessType
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.extension.showErrorToast
-import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
@@ -28,6 +30,7 @@ import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     val topToastState: TopToastState,
@@ -40,8 +43,10 @@ class MapsViewModel(
 
     val mapsDir: String get() { return prefs.lacMapsDir }
     val exportedMapsDir: String get() { return prefs.exportedMapsDir }
-    lateinit var mapsFile: DocumentFileCompat
-    lateinit var exportedMapsFile: DocumentFileCompat
+    lateinit var mapsFile: FileWrapper
+    lateinit var exportedMapsFile: FileWrapper
+
+    private var lastKnownStorageAccessType = prefs.storageAccessType
 
     var isLoadingMaps by mutableStateOf(true)
     var importedMaps by mutableStateOf(emptyList<MapFile>())
@@ -65,9 +70,9 @@ class MapsViewModel(
         try {
             val mapToChoose = when (map) {
                 is MapFile -> map
-                else -> if (map == null) null else MapFile(map)
+                is FileWrapper -> MapFile(map)
+                else -> if (map == null) null else MapFile(FileWrapper(map))
             }
-
             if (mapToChoose != null) mapNameEdit = mapToChoose.name
             chosenMap = mapToChoose
         } catch (e: Exception) {
@@ -142,36 +147,50 @@ class MapsViewModel(
         isLoadingMaps = false
     }
 
-    fun getMapsFile(context: Context): DocumentFileCompat {
+    fun getMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::mapsFile.isInitialized) false
-        else {
-            val updatedPath = mapsFile.uri.toPath()
-            val existingPath = Uri.parse(mapsDir).toPath()
-            updatedPath == existingPath
-        }
+        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else mapsDir == mapsFile.path
         if (isUpToDate) return mapsFile
-        val treeUri = Uri.parse(mapsDir)
-        mapsFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
+        val storageAccessType = prefs.storageAccessType
+        lastKnownStorageAccessType = storageAccessType
+        mapsFile = when (StorageAccessType.entries[storageAccessType]) {
+            StorageAccessType.SAF -> {
+                val treeUri = Uri.parse(mapsDir)
+                DocumentFileCompat.fromTreeUri(context, treeUri)!!
+            }
+            StorageAccessType.SHIZUKU -> {
+                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+                shizukuViewModel.fileService!!.getFile(mapsDir)!!
+            }
+        }.let { FileWrapper(it) }
         return mapsFile
     }
 
-    private fun getExportedMapsFile(context: Context): DocumentFileCompat {
+    private fun getExportedMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::exportedMapsFile.isInitialized) false
-        else {
-            val updatedPath = exportedMapsFile.uri.toPath()
-            val existingPath = Uri.parse(exportedMapsDir).toPath()
-            updatedPath == existingPath
-        }
+        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else exportedMapsDir == exportedMapsFile.path
         if (isUpToDate) return exportedMapsFile
-        val treeUri = Uri.parse(exportedMapsDir)
-        exportedMapsFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
+        val storageAccessType = prefs.storageAccessType
+        lastKnownStorageAccessType = storageAccessType
+        exportedMapsFile = when (StorageAccessType.entries[storageAccessType]) {
+            StorageAccessType.SAF -> {
+                val treeUri = Uri.parse(exportedMapsDir)
+                DocumentFileCompat.fromTreeUri(context, treeUri)!!
+            }
+            StorageAccessType.SHIZUKU -> {
+                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+                shizukuViewModel.fileService!!.getFile(exportedMapsDir)!!
+            }
+        }.let { FileWrapper(it) }
         return exportedMapsFile
     }
 
     private suspend fun fetchImportedMaps() {
         withContext(Dispatchers.IO) {
             importedMaps = mapsFile.listFiles()
-                .filter { it.isFile() && it.name.lowercase().endsWith(".txt") }
+                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
                 .sortedBy { it.name.lowercase() }
                 .map {
                     MapFile(it)
@@ -182,7 +201,7 @@ class MapsViewModel(
     private suspend fun fetchExportedMaps() {
         withContext(Dispatchers.IO) {
             exportedMaps = exportedMapsFile.listFiles()
-                .filter { it.isFile() && it.name.lowercase().endsWith(".txt") }
+                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
                 .sortedBy { it.name.lowercase() }
                 .map {
                     MapFile(it)

@@ -29,6 +29,7 @@ import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.githubRepoURL
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
@@ -182,7 +183,7 @@ class MainViewModel(
             progressState.currentProgress = Progress(context.getString(R.string.info_pleaseWait))
             viewModelScope.launch(Dispatchers.IO) {
                 val cached = uris.map { uri ->
-                    MapFile(uri.cacheFile(context)!!)
+                    MapFile(FileWrapper(uri.cacheFile(context)!!))
                 }
                 if (cached.size <= 1) {
                     mapsViewModel.chooseMap(cached.first())

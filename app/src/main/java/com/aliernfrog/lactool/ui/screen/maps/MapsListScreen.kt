@@ -62,6 +62,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.enum.MapsListSortingType
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
@@ -105,7 +106,7 @@ fun MapsListScreen(
                     parentName = "maps",
                     context = context
                 )
-                if (cachedFile != null) onMapPick(MapFile(cachedFile))
+                if (cachedFile != null) onMapPick(MapFile(FileWrapper(cachedFile)))
                 else mapsListViewModel.topToastState.showToast(
                     text = R.string.mapsList_pickMap_failed,
                     icon = Icons.Rounded.PriorityHigh,
