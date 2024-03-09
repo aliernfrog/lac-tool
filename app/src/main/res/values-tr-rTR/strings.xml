@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">LAC Tool</string>
     <string name="action_back">Geri</string>
-    <string name="action_done">Bitti</string>
     <string name="action_ok">Tamam</string>
     <string name="action_cancel">İptal</string>
     <string name="action_dismiss">Kapat</string>
@@ -14,26 +13,10 @@
     <string name="intent_openMap">Harita aç</string>
     <string name="intent_downloadMap">Harita indir</string>
     <string name="warning_error">Bir şeyler ters gitti</string>
-    <string name="warning_fileDoesntExist">Dosya mevcut değil</string>
     <string name="warning_pickFile_failed">Dosya seçilemedi</string>
     <string name="info_copiedToClipboard">Panoya kopyalandı</string>
     <string name="info_pleaseWait">Lütfen bekleyin..</string>
     <string name="info_deleteQuestion">{NAME}\'yi silmek istediğinizden emin misiniz?\nBu işlem geri alınamaz!</string>
-    <string name="permissions">İzinler</string>
-    <string name="permissions_filesApp">Dosyalar uygulaması güncellemeleri</string>
-    <string name="permissions_filesApp_description">Dosyalar uygulaması, Eylül 2023\'te diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni istemesini engelleyen bir güncelleme aldı.\nEğer bu güncellemeye sahipseniz, onu kaldırmanız gerekebilir. Daha fazla bilgi için aşağıdaki tuşa tıklayın.</string>
-    <string name="permissions_filesApp_moreInfo">Daha fazla bilgi</string>
-    <string name="permissions_filesApp_moreInfo_text">## Bundan etkileniyor muyum?\n
-LAC\'ı en az bir kere başlattığınızdan emin olun ve LAC Tool\'dan LAC klasörünü seçmeyi deneyin. Eğer bunu sıkıntısız bir şekilde yapabiliyorsanız, bundan etkilenmiyorsunuz.\n\n
-## Bundan etkileniyorsam ne yapmalıyım?\n
-**Dosyalar** uygulamasının güncellemelerini kaldırmanız gerekiyor. Aşağıdaki adımları takip edin, adımlar cihazınıza göre değişiklik gösterebilir:\n\n
-Cihaz ayarları &gt; Uygulamalar &gt; Tüm uygulamalar / Uygulamaları yönet &gt; Dosyalar (uygulama adı cihaz diline bağlıdır) &gt; Güncellemeleri kaldır\n\n
-## Listede Dosyalar uygulaması yok mu?\n
-Listedeki sistem uygulamalarını gizleyen bir seçenek bulmaya çalışın, bu seçenek üç nokta menüsünde de olabilir.\n\n
-## Güncellemeleri kaldır seçeneği kapalı mı?\n
-LAC Tool\'dan LAC klasörünü seçmeyi bir daha deneyin. Eğer çalışmıyorsa, maalesef şu an için yapabileceğiniz fazla bir şey yok.\n\n
-Daha fazla bilgi, çözümler ve şu an üzerinde çalışılan yeni düzeltme için [bu sayfa]({MORE_INFO_URL})yı kontrol edin.
-    </string>
     <string name="permissions_chooseFolder">Klasör seç</string>
     <string name="permissions_recommendedFolder">Önerilen klasör</string>
     <string name="permissions_recommendedFolder_a8Hint">\"Tamam\"a tıkladıktan sonra, bu klasör yeni bir pencerede açılacak. Doğru klasör olduğundan emin olun ve \"BU KLASÖRÜ KULLAN\" tuşuna tıklayın</string>
@@ -43,9 +26,7 @@ Daha fazla bilgi, çözümler ve şu an üzerinde çalışılan yeni düzeltme i
     <string name="permissions_recommendedFolder_importWallpaperToCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilir ya da LAC\'ın klasörü oluşturmasını sağlamak için LAC\'ı başlatın, herhangi bir haritaya girin, oyun içi cep telefonunu açın, ayarlardaki \"Custom wallpaper link\" alanına rastgele bir yazı yazıp klavyeyi kapatın ve \"FAIL\" ya da \"SUCCESS\" yazana kadar bekleyin</string>
     <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">* Eğer bu klasör yoksa, kendiniz oluşturabilir veya LAC\'ın klasörü oluşturmasını sağlamak için oyun içi cep telefonuyla fotoğraf çekebilirsiniz</string>
     <string name="permissions_notRecommendedFolder_description">Aşağıdaki klasör önerilir:</string>
-    <string name="permissions_notRecommendedFolder_question">Geri gidip önerilen klasörü seçmek mi istersiniz, yoksa önerilmeyen klasörü kullanmak mı?</string>
     <string name="permissions_notRecommendedFolder_chooseRecommendedFolder">Önerilen klasörü seç</string>
-    <string name="permissions_notRecommendedFolder_useUnrecommendedFolder">Önerilmeyen klasörü kullan</string>
     <string name="maps">Haritalar</string>
     <string name="maps_permissions">LAC haritaları klasörü</string>
     <string name="maps_permissions_description">LAC haritalarınızın saklandığı klasörü seçmeniz gerekiyor</string>
@@ -84,7 +65,6 @@ Daha fazla bilgi, çözümler ve şu an üzerinde çalışılan yeni düzeltme i
     <string name="maps_edit_saved">{NAME} kaydedildi</string>
     <string name="maps_merge">Bu haritayı birleştir</string>
     <string name="maps_merge_short">Birleştir</string>
-    <string name="maps_merge_description">Haritayı başka haritalarla birleştirin</string>
     <string name="maps_delete">Bu haritayı sil</string>
     <string name="maps_delete_short">Sil</string>
     <string name="maps_deleted_single">{NAME} silindi</string>

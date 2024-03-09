@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ColumnRounded
@@ -92,7 +92,7 @@ fun WallpapersScreen(
             items(wallpapersViewModel.importedWallpapers) {
                 ImageButton(
                     model = it.painterModel,
-                    title = it.name,
+                    title = it.nameWithoutExtension,
                     description = stringResource(R.string.wallpapers_list_clickToViewActions)
                 ) {
                     scope.launch {
@@ -136,7 +136,7 @@ private fun PickImageButton(
 
 @Composable
 private fun PickedWallpaper(
-    pickedWallpaper: ImageFile?,
+    pickedWallpaper: FileWrapper?,
     onImport: () -> Unit
 ) {
     FadeVisibility(pickedWallpaper != null) {
