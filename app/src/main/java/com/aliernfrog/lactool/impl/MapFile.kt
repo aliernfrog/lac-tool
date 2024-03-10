@@ -22,7 +22,7 @@ import java.io.File
 
 class MapFile(
     /**
-     * Map file. Can be a [File] or [DocumentFileCompat].
+     * Map file.
      */
     val file: FileWrapper
 ): KoinComponent {
