@@ -80,7 +80,7 @@ class MapFile(
                 "$name.jpg" // Thumbnail file
             ).forEach { relatedFileName ->
                 file.parentFile?.findFile(relatedFileName)?.let {
-                    files.add(it)
+                    if (it.exists()) files.add(it)
                 }
             }
             return files
