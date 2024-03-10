@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">ابزار لک/LAC</string>
     <string name="action_back">برگشت</string>
-    <string name="action_done">انجام</string>
     <string name="action_ok">اوکی</string>
     <string name="action_cancel">کنسل</string>
     <string name="action_dismiss">نادیده گرفتن</string>
@@ -14,29 +13,15 @@
     <string name="intent_openMap">باز کردن نقشه</string>
     <string name="intent_downloadMap">دانلود مپ</string>
     <string name="warning_error">مشکلی پیش آمده است</string>
-    <string name="warning_fileDoesntExist">فایل وجود ندارد</string>
     <string name="warning_pickFile_failed">دریافت فایل انجام نشد</string>
     <string name="info_copiedToClipboard">کپی به کلیپ‌بورد</string>
     <string name="info_pleaseWait">لطفا صبر کنید..</string>
     <string name="info_deleteQuestion">آیا مطمئنید که می‌خواهید {NAME} را حذف کنید؟\nاین کار قابل واگرد نیست!</string>
-    <string name="permissions">مجوزها</string>
-    <string name="permissions_filesApp">به روز رسانی برنامه فایل ها</string>
-    <string name="permissions_filesApp_description">برنامه Files در سپتامبر 2023 به‌روزرسانی دریافت کرده است که از درخواست دسترسی سایر برنامه‌ها به فایل‌های داخل پوشه Android/data جلوگیری می‌کند.\nاگر این به‌روزرسانی را دارید، ممکن است مجبور شوید آن را حذف کنید. </string>
-    <string name="permissions_filesApp_moreInfo">اطلاعات بیشتر</string>
-    <string name="permissions_filesApp_moreInfo_text">## آیا من تحت تأثیر این موضوع هستم؟\n مطمئن شوید که حداقل یک بار LAC را شروع کرده اید و سعی کنید پوشه LAC را در ابزار LAC انتخاب کنید. اگر بتوانید بدون مشکل این کار را انجام دهید، تحت تأثیر قرار نمی‌گیرید.\n\n ## اگر تحت تأثیر این موضوع قرار گرفتم چه کار کنم؟\n باید به‌روزرسانی‌های برنامه Files را حذف نصب کنید. مراحل زیر را دنبال کنید، توجه داشته باشید که مراحل ممکن است بسته به دستگاه شما متفاوت باشد:\n\n تنظیمات دستگاه > برنامه‌ها > همه برنامه‌ها/مدیریت برنامه‌ها > فایل‌ها (نام برنامه به زبان شما بستگی دارد) > حذف نصب به‌روزرسانی‌ها\n\n ## می‌توان آیا برنامه Files را در لیست پیدا نمی‌کنید؟\n به دنبال گزینه‌ای باشید که برنامه‌های سیستم را از لیست پنهان می‌کند، این گزینه ممکن است در یک منوی سه نقطه‌ای نیز باشد.\n\n گزینه ## Uninstall updates غیرفعال است؟\n سعی کنید یک بار دیگر پوشه LAC را در ابزار LAC انتخاب کنید. اگر نمی‌توانید این کار را انجام دهید، متأسفانه، در حال حاضر کار زیادی نمی‌توانید انجام دهید.\n\n برای اطلاعات بیشتر، راه‌حل‌های احتمالی و اصلاح جدیدی که در حال حاضر روی آن کار می‌شود، [این صفحه]({MORE_INFO_URL}) را بررسی کنید.    </string>
     <string name="permissions_chooseFolder">انتخاب پوشه</string>
     <string name="permissions_recommendedFolder">پوشه پیشنهادی</string>
     <string name="permissions_recommendedFolder_a8Hint">پس از کلیک بر روی \"Okay\"، این پوشه در پنجره جدیدی باز می شود. اطمینان حاصل کنید که در پوشه صحیح قرار دارید و روی \"USE THIS FOLDER\" کلیک کنید.</string>
     <string name="permissions_recommendedFolder_a7Hint">پس از کلیک بر روی \"Okay\" به این پوشه بروید و روی \"USE THIS FOLDER\" کلیک کنید.</string>
-    <string name="permissions_recommendedFolder_doesNotExist">این پوشه وجود ندارد؟</string>
-    <string name="permissions_recommendedFolder_manuallyCreate">* اگر این پوشه وجود ندارد، می توانید آن را به صورت دستی ایجاد کنید</string>
-    <string name="permissions_recommendedFolder_openLACToCreate">* اگر این پوشه وجود ندارد، می توانید آن را به صورت دستی ایجاد کنید یا یک بار LAC را راه اندازی کنید تا به طور خودکار پوشه را ایجاد کنید.</string>
-    <string name="permissions_recommendedFolder_importWallpaperToCreate">* اگر این پوشه وجود ندارد، می توانید آن را به صورت دستی ایجاد کنید یا LAC را راه اندازی کنید، هر نقشه را وارد کنید، تلفن همراه داخل بازی را باز کنید، روی تنظیمات کلیک کنید، یک متن تصادفی را در قسمت \"پیوند تصویر زمینه سفارشی\" قرار دهید، صفحه کلید را ببندید و منتظر بمانید. تا زمانی که بگوید \"FAIL\" یا \"SUCCESS\" تا باعث شود که پوشه به طور خودکار ایجاد شود</string>
-    <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">* اگر این پوشه وجود ندارد، می توانید آن را به صورت دستی ایجاد کنید یا با استفاده از تلفن همراه درون بازی در LAC یک اسکرین شات بگیرید تا آن را مجبور کنید به طور خودکار پوشه را ایجاد کند.</string>
-    <string name="permissions_notRecommendedFolder_description">پوشه زیر توصیه می شود:</string>
-    <string name="permissions_notRecommendedFolder_question">آیا می‌خواهید به عقب برگردید و مورد توصیه‌شده را انتخاب کنید یا از مورد توصیه نشده استفاده کنید؟</string>
     <string name="permissions_notRecommendedFolder_chooseRecommendedFolder">پوشه توصیه شده را انتخاب کنید</string>
-    <string name="permissions_notRecommendedFolder_useUnrecommendedFolder">پوشه توصیه شده را انتخاب کنید</string>
     <string name="maps">نقشه ها - مپ ها</string>
     <string name="maps_permissions">پوشه‌ی مپ‌های LAC</string>
     <string name="maps_permissions_description">باید پوشه ای را انتخاب کنید که نقشه های LAC شما در آن ذخیره می شوند</string>
@@ -75,7 +60,6 @@
     <string name="maps_edit_saved">تغییرات در {NAME} ذخیره شد</string>
     <string name="maps_merge">این مپ را ادغام کنید</string>
     <string name="maps_merge_short">ادغام</string>
-    <string name="maps_merge_description">این مپ را با مپی دیگر ادغام کنید</string>
     <string name="maps_delete">پاک کردن این مپ</string>
     <string name="maps_delete_short">حذف</string>
     <string name="maps_deleted_single">{NAME} حذف شد</string>
