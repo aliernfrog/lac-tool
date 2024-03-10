@@ -75,7 +75,7 @@ class FileWrapper(
         }?.let { FileWrapper(it) }
 
     val painterModel: Any? = when (file) {
-        is File, DocumentFileCompat -> path
+        is File, is DocumentFileCompat -> path
         is ServiceFile -> if (isFile) file.getByteArray() else null
         else -> throw invalidFileClassException
     }
