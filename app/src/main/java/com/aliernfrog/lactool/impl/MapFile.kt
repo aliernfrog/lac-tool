@@ -13,7 +13,6 @@ import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.state.TopToastState
-import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -67,7 +66,7 @@ class MapFile(
     /**
      * Thumbnail model of the map.
      */
-    val thumbnailModel: Any? = file.painterModel
+    val thumbnailModel: Any? = file.parentFile?.findFile("$name.jpg")?.painterModel
 
     /**
      * Files related to the map (thumbnail file, data folder).
@@ -100,14 +99,18 @@ class MapFile(
     fun rename(
         newName: String = resolveMapNameInput()
     ): MapActionResult {
-        val newFileName = fileName.replaceFirst(name, newName)
-        val newFile = file.rename(newFileName)
-        relatedFiles.forEach { relatedFile ->
+        val outputName = fileName.replaceFirst(name, newName)
+        if (file.parentFile?.findFile(outputName)?.exists() == true) return MapActionResult(
+            successful = false,
+            messageId = R.string.maps_alreadyExists
+        )
+        relatedFiles.plus(file).forEach { relatedFile ->
+            val newFileName = relatedFile.name.replaceFirst(name, newName)
             relatedFile.rename(newFileName)
         }
         return MapActionResult(
             successful = true,
-            newFile = newFile
+            newFile = file.parentFile!!.findFile(outputName)
         )
     }
 
@@ -118,16 +121,20 @@ class MapFile(
         context: Context,
         newName: String = mapsViewModel.resolveMapNameInput()
     ): MapActionResult {
-        val newFileName = fileName.replaceFirst(name, newName)
+        val outputName = fileName.replaceFirst(name, newName)
+        if (file.parentFile?.findFile(outputName)?.exists() == true) return MapActionResult(
+            successful = false,
+            messageId = R.string.maps_alreadyExists
+        )
         relatedFiles.plus(file).forEach { relatedFile ->
-            val outputName = relatedFile.name.replaceFirst(name, newName)
-            val relatedFileOutput = if (relatedFile.isFile) file.parentFile!!.createFile(outputName)
-            else file.parentFile!!.createDirectory(outputName)
+            val newFileName = relatedFile.name.replaceFirst(name, newName)
+            val relatedFileOutput = if (relatedFile.isFile) file.parentFile!!.createFile(newFileName)
+            else file.parentFile!!.createDirectory(newFileName)
             relatedFile.copyTo(relatedFileOutput!!, context)
         }
         return MapActionResult(
             successful = true,
-            newFile = file.parentFile!!.findFile(newFileName)
+            newFile = file.parentFile!!.findFile(outputName)
         )
     }
 
