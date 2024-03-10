@@ -21,10 +21,8 @@ import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.extension.popBackStackSafe
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsMergeViewModel(
@@ -61,13 +59,7 @@ class MapsMergeViewModel(
             val newMapContent = mapMerger.mergeMaps(
                 onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_noEnoughMaps) }
             ) ?: return@withContext
-            val newFile = mapsFile.createFile("", newFileName)
-            val outputStream = context.contentResolver.openOutputStream(newFile!!.uri)!!
-            val outputStreamWriter = outputStream.writer(Charsets.UTF_8)
-            outputStreamWriter.write(newMapContent)
-            outputStreamWriter.flush()
-            outputStreamWriter.close()
-            outputStream.close()
+            mapsFile.createFile(newFileName)!!.writeFile(newMapContent, context)
             mergeMapDialogShown = false
             isMerging = false
             mapMerger.mapsToMerge.clear()
@@ -84,11 +76,7 @@ class MapsMergeViewModel(
     ) {
         withContext(Dispatchers.IO) {
             maps.forEach { map ->
-                val inputStream = when (val file = map.file) {
-                    is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
-                    is File -> file.inputStream()
-                    else -> throw IllegalArgumentException()
-                } ?: return@withContext
+                val inputStream =  map.file.inputStream(context)!!
                 val content = inputStream.bufferedReader().readText()
                 inputStream.close()
                 mapMerger.addMap(map.name, content)

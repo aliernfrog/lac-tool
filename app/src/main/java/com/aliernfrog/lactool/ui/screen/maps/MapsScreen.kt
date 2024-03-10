@@ -191,8 +191,8 @@ private fun Actions(
     }.map { action -> {
         FadeVisibility(visible = action.availableFor(chosenMap)) {
             ButtonRow(
-                title = stringResource(action.longLabelId),
-                description = action.descriptionId?.let { stringResource(it) },
+                title = stringResource(action.longLabel),
+                description = action.description?.let { stringResource(it) },
                 painter = rememberVectorPainter(action.icon),
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = if (action.destructive) MaterialTheme.colorScheme.error

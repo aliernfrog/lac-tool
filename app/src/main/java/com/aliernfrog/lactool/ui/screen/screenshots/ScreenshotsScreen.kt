@@ -69,7 +69,7 @@ fun ScreenshotsScreen(
             items(screenshotsViewModel.screenshots) {
                 ImageButton(
                     model = it.painterModel,
-                    title = it.name,
+                    title = it.nameWithoutExtension,
                     showDetails = false
                 ) {
                     scope.launch {

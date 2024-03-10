@@ -16,10 +16,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.di.getKoinInstance
+import com.aliernfrog.lactool.enum.StorageAccessType
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -29,8 +30,8 @@ import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
 class WallpapersViewModel(
     val prefs: PreferenceManager,
@@ -43,13 +44,15 @@ class WallpapersViewModel(
     val lazyListState = LazyListState()
 
     val wallpapersDir : String get() = prefs.lacWallpapersDir
-    private lateinit var wallpapersFile: DocumentFileCompat
+    private lateinit var wallpapersFile: FileWrapper
 
     val wallpaperSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
-    var importedWallpapers by mutableStateOf(emptyList<ImageFile>())
-    var pickedWallpaper by mutableStateOf<ImageFile?>(null)
-    var wallpaperSheetWallpaper by mutableStateOf<ImageFile?>(null)
+    private var lastKnownStorageAccessType = prefs.storageAccessType
+
+    var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
+    var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
+    var wallpaperSheetWallpaper by mutableStateOf<FileWrapper?>(null)
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
@@ -62,11 +65,7 @@ class WallpapersViewModel(
                 topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
             }
-            pickedWallpaper = ImageFile(
-                name = file.nameWithoutExtension,
-                fileName = file.name,
-                painterModel = file.absolutePath
-            )
+            pickedWallpaper = FileWrapper(file)
         }
     }
 
@@ -76,12 +75,8 @@ class WallpapersViewModel(
             contextUtils.getString(R.string.wallpapers_chosen_importing)
         )
         withContext(Dispatchers.IO) {
-            val outputFile = wallpapersFile.createFile("", wallpaper.name+".jpg") ?: return@withContext
-            val inputStream = File(wallpaper.painterModel).inputStream()
-            val outputStream = context.contentResolver.openOutputStream(outputFile.uri)!!
-            inputStream.copyTo(outputStream)
-            inputStream.close()
-            outputStream.close()
+            val outputFile = wallpapersFile.createFile(wallpaper.nameWithoutExtension+".jpg") ?: return@withContext
+            outputFile.copyFrom(wallpaper, context)
             pickedWallpaper = null
             fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
@@ -89,50 +84,53 @@ class WallpapersViewModel(
         progressState.currentProgress = null
     }
 
-    suspend fun shareImportedWallpaper(wallpaper: ImageFile, context: Context) {
+    suspend fun shareImportedWallpaper(wallpaper: FileWrapper, context: Context) {
         withContext(Dispatchers.IO) {
-            FileUtil.shareFiles(wallpaper.file ?: return@withContext, context = context)
+            FileUtil.shareFiles(wallpaper, context = context)
         }
     }
 
-    suspend fun deleteImportedWallpaper(wallpaper: ImageFile) {
+    suspend fun deleteImportedWallpaper(wallpaper: FileWrapper) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_deleting)
         )
         withContext(Dispatchers.IO) {
-            wallpapersFile.findFile(wallpaper.fileName)?.delete()
+            wallpaper.delete()
             fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
         progressState.currentProgress = null
     }
 
-    fun getWallpapersFile(context: Context): DocumentFileCompat {
+    fun getWallpapersFile(context: Context): FileWrapper {
         val isUpToDate = if (!::wallpapersFile.isInitialized) false
-        else {
-            val updatedPath = wallpapersFile.uri.toPath()
-            val existingPath = Uri.parse(wallpapersDir).toPath()
-            updatedPath == existingPath
-        }
+        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else wallpapersDir == wallpapersFile.path
         if (isUpToDate) return wallpapersFile
-        val treeUri = Uri.parse(wallpapersDir)
-        wallpapersFile = DocumentFileCompat.fromTreeUri(context, treeUri)!!
+        val storageAccessType = prefs.storageAccessType
+        lastKnownStorageAccessType = storageAccessType
+        wallpapersFile = when (StorageAccessType.entries[storageAccessType]) {
+            StorageAccessType.SAF -> {
+                val treeUri = Uri.parse(wallpapersDir)
+                DocumentFileCompat.fromTreeUri(context, treeUri)!!
+            }
+            StorageAccessType.SHIZUKU -> {
+                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+                shizukuViewModel.fileService!!.getFile(wallpapersDir)!!
+            }
+        }.let { FileWrapper(it) }
         return wallpapersFile
     }
 
     suspend fun fetchImportedWallpapers() {
         withContext(Dispatchers.IO) {
-            val files = wallpapersFile.listFiles()
-                .filter { it.isFile() && it.name.lowercase().endsWith(".jpg") }
+            importedWallpapers = wallpapersFile.listFiles()
+                .filter { it.isFile && it.name.lowercase().endsWith(".jpg") }
                 .sortedBy { it.name.lowercase() }
-            importedWallpapers = files.map {
-                val nameWithoutExtension = FileUtil.removeExtension(it.name)
-                ImageFile(nameWithoutExtension, it.name, wallpapersFile.findFile(it.name))
-            }
         }
     }
 
-    suspend fun showWallpaperSheet(wallpaper: ImageFile) {
+    suspend fun showWallpaperSheet(wallpaper: FileWrapper) {
         wallpaperSheetWallpaper = wallpaper
         wallpaperSheetState.show()
     }

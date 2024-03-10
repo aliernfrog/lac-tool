@@ -1,8 +1,3 @@
-> [!WARNING]
-> On Android 12 and above, September 2023 update of the Files app prevents other apps from requesting access to files in Android/data.
->
-> Check [this page](https://aliernfrog.github.io/android-data-access) for more info, workarounds and the new fix which is currently being implemented in [this pull request in pf-tool repository](https://github.com/aliernfrog/pf-tool/pull/29).
-
 <div align="center">
 
   <img alt="LAC Tool icon" src="images/icon.png" width="120px"/>
@@ -34,7 +29,39 @@
 - Import LAC in game cellphone wallpapers without internet connection
 - LAC in game screenshot management
 
+## 🦝 Shizuku support
+[Shizuku](https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api) is an app which lets other apps elevate their permissions using wireless debugging (or root, if you have one).
+
+Shizuku method in LAC Tool can be enabled or disabled anytime from settings.
+
+Shizuku method will automatically be enabled if there is no other way for the app to access LAC data. The app will guide you to setup Shizuku if this mode is enabled.
+
 ## 🔧 Building
-- Clone the repository
-- Do your changes
-- `./gradlew assembleRelease`
+<details>
+  <summary>Using GitHub Actions</summary>
+
+  - Fork the repository
+  - Add environment variables required for signing from **Repository settings > Secrets and variables > Actions > Repository secrets**:
+    - `KEYSTORE_ALIAS`
+    - `KEYSTORE_BASE64` this can be obtained using `openssl base64 keystore.jks`
+    - `KEYSTORE_PASSWORD`
+    - `KEY_PASSWORD`
+  - Enable workflows
+  - Trigger a build workflow and wait for it to build a release variant APK
+</details>
+<details>
+  <summary>Locally</summary>
+
+  - Clone the repository
+  - Add a signing config (unless you only want to build debug variant or sign manually)
+  - Obtain a GitHub PAT with `read:packages` scope
+  - Put the PAT and your GitHub username in global/project `gradle.properties`:
+    ```
+    gpr.user=MyUserName
+    gpr.key=MyPAT
+    ```
+    or supply `GITHUB_ACTOR` (username) and `GITHUB_TOKEN` (PAT) in environment variables
+  - Build APK:
+    - Release variant: `./gradlew assembleRelease`
+    - Debug variant: `./gradlew assembleDebug`
+</details>

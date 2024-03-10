@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">LAC Tool</string>
     <string name="action_back">Back</string>
-    <string name="action_done">Done</string>
     <string name="action_ok">Okay</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_dismiss">Dismiss</string>
@@ -13,40 +12,42 @@
     <string name="intent_openMap">Open map</string>
     <string name="intent_downloadMap">Download map</string>
     <string name="warning_error">Something went wrong</string>
-    <string name="warning_fileDoesntExist">File does not exist</string>
     <string name="warning_pickFile_failed">Failed to pick file</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
     <string name="info_pleaseWait">Please wait..</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
-    <string name="permissions">Permissions</string>
-    <string name="permissions_filesApp">Files app updates</string>
-    <string name="permissions_filesApp_description">The Files app has received an update on September 2023 which prevents other apps from requesting access to files inside Android/data folder.\nIf you have this update, you may have to uninstall it. Click the button below for more info.</string>
-    <string name="permissions_filesApp_moreInfo">More info</string>
-    <string name="permissions_filesApp_moreInfo_text">
-        ## Am I affected by this?\n
-        Make sure you have started LAC at least once and try choosing the LAC folder in LAC Tool. If you can do that without issues, you are not affected.\n\n
-        ## What to do if I am affected by this?\n
-        You need to uninstall updates of the **Files** app. Follow the steps below, note that steps may vary depending on your device:\n\n
-        Device settings > Apps > All apps/Manage apps > Files (app name depends on your language) > Uninstall updates\n\n
-        ## Can\'t find the Files app in the list?\n
-        Look for an option which hides system apps from the list, this option may also be in a three-dot menu.\n\n
-        ## Uninstall updates option is disabled?\n
-        Try choosing the LAC folder in LAC Tool one more time. If you can\'t do that, unfortunately, there\'s nothing much you can do for now.\n\n
-        Check [this page]({MORE_INFO_URL}) for more info, possible workarounds and the new fix which is currently being worked on.
-    </string>
+    <string name="info_shizuku_startingFileService">Starting file service..</string>
+    <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
+    <string name="info_useUnrecommendedAnyway_description">Only do this if you are sure that your LAC data is stored in a different folder, or if you are experimenting</string>
     <string name="permissions_chooseFolder">Choose folder</string>
     <string name="permissions_recommendedFolder">Recommended folder</string>
     <string name="permissions_recommendedFolder_a8Hint">After clicking \"Okay\", this folder will open in a new window. Ensure that you are at the correct folder and click \"USE THIS FOLDER\"</string>
     <string name="permissions_recommendedFolder_a7Hint">After clicking \"Okay\", navigate to this folder and click \"USE THIS FOLDER\"</string>
-    <string name="permissions_recommendedFolder_doesNotExist">This folder does not exist?</string>
-    <string name="permissions_recommendedFolder_manuallyCreate">* If this folder doesn\'t exist, you can create it manually</string>
-    <string name="permissions_recommendedFolder_openLACToCreate">* If this folder doesn\'t exist, you can either create it manually or start LAC once to make it create the folder automatically</string>
-    <string name="permissions_recommendedFolder_importWallpaperToCreate">* If this folder doesn\'t exist, you can either create it manually or start LAC, enter any map, open the in-game cellphone, click settings, put a random text in \"Custom wallpaper link\" field, close the keyboard and wait until it says \"FAIL\" or \"SUCCESS\" to make it create the folder automatically</string>
-    <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">* If this folder doesn\'t exist, you can either create it manually or take a screenshot using the in-game cellphone in LAC to make it create the folder automatically</string>
-    <string name="permissions_notRecommendedFolder_description">The folder below is recommended:</string>
-    <string name="permissions_notRecommendedFolder_question">Do you want to go back and choose the recommended one, or use the unrecommended one?</string>
+    <string name="permissions_recommendedFolder_doesNotExist">This folder is not there?</string>
+    <string name="permissions_recommendedFolder_openLACToCreate">Make sure to start LAC once to make it create this folder</string>
+    <string name="permissions_recommendedFolder_importWallpaperToCreate">You can either create this folder manually or start LAC, enter any map, open the in-game cellphone, click settings, put a random text in \"Custom wallpaper link\" field, close the keyboard and wait until it says \"FAIL\" or \"SUCCESS\" to make it create the folder automatically</string>
+    <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">Make sure to take a screenshot using the in-game cellphone once to make it create this folder</string>
+    <string name="permissions_notRecommendedFolder_description">You have not chosen the recommended folder below:</string>
     <string name="permissions_notRecommendedFolder_chooseRecommendedFolder">Choose recommended folder</string>
-    <string name="permissions_notRecommendedFolder_useUnrecommendedFolder">Use unrecommended folder</string>
+    <string name="permissions_notRecommendedFolder_advanced_show">Show advanced options</string>
+    <string name="permissions_notRecommendedFolder_advanced_hide">Hide advanced options</string>
+    <string name="permissions_notRecommendedFolder_useAnyway">Use the selected folder anyway</string>
+    <string name="permissions_uninstallFilesAppUpdates">Try uninstalling updates of the Files app</string>
+    <string name="permissions_uninstallFilesAppUpdates_description">Files app on your device might have an update which prevents LAC Tool from requesting access to LAC maps</string>
+    <string name="permissions_uninstallFilesAppUpdates_uninstall">Uninstall updates</string>
+    <string name="permissions_uninstallFilesAppUpdates_guide">Find an option to uninstall updates and click it. If unable to do return to PF Tool</string>
+    <string name="permissions_setupShizuku">Use Shizuku</string>
+    <string name="permissions_setupShizuku_description">You need to use Shizuku to let LAC Tool access LAC folders.\nThis is because the Files app on your device does not allow apps to get access to files inside Android/data.\nYou can disable Shizuku mode anytime from settings.</string>
+    <string name="permissions_shizuku_introduction">Shizuku is an app which lets apps use shell permissions by making use of wireless debugging.\nLAC Tool can also use it to access LAC folders</string>
+    <string name="permissions_shizuku_warning">Shizuku mode is enabled. If you were unable to grant LAC Tool access to LAC folders, this is the only solution for now.\nClick to return to normal mode</string>
+    <string name="permissions_shizuku_install_title">Install Shizuku to get started</string>
+    <string name="permissions_shizuku_install_install">Install</string>
+    <string name="permissions_shizuku_notRunning">Shizuku is not running</string>
+    <string name="permissions_shizuku_notRunning_description">Start Shizuku service to proceed</string>
+    <string name="permissions_shizuku_notRunning_openShizuku">Open Shizuku</string>
+    <string name="permissions_shizuku_permission">Permission needed</string>
+    <string name="permissions_shizuku_permission_description">LAC Tool does not have permissions to use Shizuku</string>
+    <string name="permissions_shizuku_permission_grant">Grant permission</string>
     <string name="maps">Maps</string>
     <string name="maps_permissions">LAC maps folder</string>
     <string name="maps_permissions_description">You need to choose the folder where your LAC maps are stored</string>
@@ -85,7 +86,6 @@
     <string name="maps_edit_saved">Saved changes to {NAME}</string>
     <string name="maps_merge">Merge this map</string>
     <string name="maps_merge_short">Merge</string>
-    <string name="maps_merge_description">Merge this map with others</string>
     <string name="maps_delete">Delete this map</string>
     <string name="maps_delete_short">Delete</string>
     <string name="maps_deleted_single">Deleted {NAME}</string>
@@ -236,6 +236,11 @@
     <string name="settings_maps_showMapThumbnailsInList_description">Easily identify the maps you have</string>
     <string name="settings_storage">Storage</string>
     <string name="settings_storage_description">Configure how LAC Tool interacts with the storage</string>
+    <string name="settings_storage_storageAccessType">Storage access type</string>
+    <string name="settings_storage_storageAccessType_saf">Scoped storage</string>
+    <string name="settings_storage_storageAccessType_saf_description">Only access the directories LAC Tool needs. Might not work on Android 12 and above</string>
+    <string name="settings_storage_storageAccessType_shizuku">Shizuku</string>
+    <string name="settings_storage_storageAccessType_shizuku_description">Use Shizuku to access storage</string>
     <string name="settings_storage_folders">Folders</string>
     <string name="settings_storage_folders_default">Default: %s</string>
     <string name="settings_storage_folders_notSet">Not configured</string>
