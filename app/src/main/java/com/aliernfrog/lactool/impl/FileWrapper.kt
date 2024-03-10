@@ -140,7 +140,7 @@ class FileWrapper(
             }
             is DocumentFileCompat -> {
                 file.renameTo(newName)
-                parentFile?.findFile(newName)
+                file.parentFile?.findFile(newName)
             }
             is ServiceFile -> {
                 val newPath = (file.parentPath?.plus("/") ?: "")+newName

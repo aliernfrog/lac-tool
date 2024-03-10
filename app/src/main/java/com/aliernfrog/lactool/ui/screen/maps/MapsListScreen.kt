@@ -433,7 +433,7 @@ private fun MultiSelectionDropdown(
     ) {
         actions.forEach { action ->
             DropdownMenuItem(
-                text = { Text(stringResource(action.shortLabelId)) },
+                text = { Text(stringResource(action.shortLabel)) },
                 leadingIcon = {
                     Icon(
                         imageVector = action.icon,

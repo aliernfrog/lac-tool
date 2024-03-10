@@ -131,7 +131,7 @@ class MapsViewModel(
         customDialogTitleAndText = contextUtils.getString(R.string.maps_actionFailed)
             .replace("{SUCCESSES}", successes.size.toString())
             .replace("{FAILS}", fails.size.toString()) to fails.joinToString("\n\n") {
-            "${it.first}: ${contextUtils.getString(it.second.messageId ?: R.string.warning_error)}"
+            "${it.first}: ${contextUtils.getString(it.second.message ?: R.string.warning_error)}"
         }
     }
 

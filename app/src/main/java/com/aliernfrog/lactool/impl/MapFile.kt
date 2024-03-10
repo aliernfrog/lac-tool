@@ -102,7 +102,7 @@ class MapFile(
         val outputName = fileName.replaceFirst(name, newName)
         if (file.parentFile?.findFile(outputName)?.exists() == true) return MapActionResult(
             successful = false,
-            messageId = R.string.maps_alreadyExists
+            message = R.string.maps_alreadyExists
         )
         relatedFiles.plus(file).forEach { relatedFile ->
             val newFileName = relatedFile.name.replaceFirst(name, newName)
@@ -124,7 +124,7 @@ class MapFile(
         val outputName = fileName.replaceFirst(name, newName)
         if (file.parentFile?.findFile(outputName)?.exists() == true) return MapActionResult(
             successful = false,
-            messageId = R.string.maps_alreadyExists
+            message = R.string.maps_alreadyExists
         )
         relatedFiles.plus(file).forEach { relatedFile ->
             val newFileName = relatedFile.name.replaceFirst(name, newName)
@@ -149,7 +149,7 @@ class MapFile(
         val newFileName = "$withName.txt"
         if (mapsViewModel.mapsFile.findFile(newFileName)?.exists() == true) return MapActionResult(
             successful = false,
-            messageId = R.string.maps_alreadyExists
+            message = R.string.maps_alreadyExists
         )
         mapsViewModel.mapsFile.createFile(newFileName)!!.copyFrom(file, context)
         return MapActionResult(
@@ -169,7 +169,7 @@ class MapFile(
         val newFileName = "$withName.txt"
         if (mapsViewModel.exportedMapsFile.findFile(newFileName)?.exists() == true) return MapActionResult(
             successful = false,
-            messageId = R.string.maps_alreadyExists
+            message = R.string.maps_alreadyExists
         )
         mapsViewModel.exportedMapsFile.createFile(newFileName)!!.copyFrom(file, context)
         return MapActionResult(
