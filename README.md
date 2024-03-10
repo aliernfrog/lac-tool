@@ -3,7 +3,7 @@
   <img alt="LAC Tool icon" src="images/icon.png" width="120px"/>
   
   # LAC Tool
-  Do most [LAC](https://play.google.com/store/apps/details?id=com.MA.LAC) related stuff without having to mess with files
+  Easily manage [LAC](https://play.google.com/store/apps/details?id=com.MA.LAC) maps, wallpapers and screenshots
 
   <br>
 
