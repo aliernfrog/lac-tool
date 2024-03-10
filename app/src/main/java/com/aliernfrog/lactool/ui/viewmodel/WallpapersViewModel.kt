@@ -85,9 +85,13 @@ class WallpapersViewModel(
     }
 
     suspend fun shareImportedWallpaper(wallpaper: FileWrapper, context: Context) {
+        progressState.currentProgress = Progress(
+            contextUtils.getString(R.string.info_sharing)
+        )
         withContext(Dispatchers.IO) {
             FileUtil.shareFiles(wallpaper, context = context)
         }
+        progressState.currentProgress = null
     }
 
     suspend fun deleteImportedWallpaper(wallpaper: FileWrapper) {

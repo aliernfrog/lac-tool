@@ -91,9 +91,13 @@ class ScreenshotsViewModel(
     }
 
     suspend fun shareImportedScreenshot(screenshot: FileWrapper, context: Context) {
+        progressState.currentProgress = Progress(
+            contextUtils.getString(R.string.info_sharing)
+        )
         withContext(Dispatchers.IO) {
             FileUtil.shareFiles(screenshot, context = context)
         }
+        progressState.currentProgress = null
     }
 
     suspend fun showScreenshotSheet(screenshot: FileWrapper) {

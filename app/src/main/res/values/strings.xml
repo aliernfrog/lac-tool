@@ -15,6 +15,7 @@
     <string name="warning_pickFile_failed">Failed to pick file</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
     <string name="info_pleaseWait">Please wait..</string>
+    <string name="info_sharing">Sharing..</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
     <string name="info_shizuku_startingFileService">Starting file service..</string>
     <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
