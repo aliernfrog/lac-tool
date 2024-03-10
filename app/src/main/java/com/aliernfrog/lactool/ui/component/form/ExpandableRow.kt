@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +32,7 @@ fun ExpandableRow(
     modifier: Modifier = Modifier,
     description: String? = null,
     painter: Painter? = null,
+    trailingButtonText: String? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     minimizedHeaderColor: Color = Color.Transparent,
     minimizedHeaderContentColor: Color =
@@ -57,7 +60,14 @@ fun ExpandableRow(
                 title = title,
                 description = description,
                 painter = painter,
-                expanded = expanded,
+                expanded = if (trailingButtonText == null) expanded else null,
+                trailingComponent = trailingButtonText?.let { {
+                    FilledTonalButton(
+                        onClick = onClickHeader
+                    ) {
+                        Text(text = trailingButtonText)
+                    }
+                } },
                 containerColor = headerColor,
                 contentColor = headerContentColor,
                 onClick = onClickHeader

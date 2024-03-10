@@ -41,6 +41,7 @@ import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.VerticalSegmentedButtons
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.maps.PickMapButton
@@ -52,7 +53,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsScreen(
-    mapsViewModel: MapsViewModel = koinViewModel()
+    mapsViewModel: MapsViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     LaunchedEffect(mapsViewModel.chosenMap) {
         if (mapsViewModel.chosenMap == null) mapsViewModel.mapListShown = true
@@ -65,7 +67,10 @@ fun MapsScreen(
     AppScaffold(
         topBar = { AppTopBar(
             title = stringResource(R.string.maps),
-            scrollBehavior = it
+            scrollBehavior = it,
+            actions = {
+                SettingsButton(onClick = onNavigateSettingsRequest)
+            }
         ) },
         topAppBarState = mapsViewModel.topAppBarState
     ) {
@@ -186,8 +191,8 @@ private fun Actions(
     }.map { action -> {
         FadeVisibility(visible = action.availableFor(chosenMap)) {
             ButtonRow(
-                title = stringResource(action.longLabelId),
-                description = action.descriptionId?.let { stringResource(it) },
+                title = stringResource(action.longLabel),
+                description = action.description?.let { stringResource(it) },
                 painter = rememberVectorPainter(action.icon),
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = if (action.destructive) MaterialTheme.colorScheme.error

@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.ImageFile
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
@@ -34,19 +34,19 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WallpaperSheet(
-    wallpaper: ImageFile?,
+    wallpaper: FileWrapper?,
     wallpapersPath: String,
     state: SheetState,
     topToastState: TopToastState? = null,
-    onShareRequest: (ImageFile) -> Unit,
-    onDeleteRequest: (ImageFile) -> Unit
+    onShareRequest: (FileWrapper) -> Unit,
+    onDeleteRequest: (FileWrapper) -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
     var deleteConfirmationShown by remember { mutableStateOf(false) }
     AppModalBottomSheet(sheetState = state) {
         Text(
-            text = wallpaper?.fileName.toString(),
+            text = wallpaper?.name.toString(),
             modifier = Modifier.padding(top = 8.dp).padding(horizontal = 8.dp),
             color = MaterialTheme.colorScheme.onSurface,
             fontFamily = FontFamily.Monospace
@@ -67,7 +67,7 @@ fun WallpaperSheet(
             description = stringResource(R.string.wallpapers_copyImportUrlDescription),
             painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
         ) {
-            clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper?.fileName.toString(), wallpapersPath)))
+            clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper?.name.toString(), wallpapersPath)))
             topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
             scope.launch { state.hide() }
         }
