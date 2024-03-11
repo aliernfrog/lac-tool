@@ -181,10 +181,15 @@ enum class MapAction(
         }
     ) {
         override suspend fun execute(context: Context, vararg maps: MapFile) {
+            val first = maps.first()
             val files = maps.map { it.file }
-            maps.first().runInIOThreadSafe {
+            first.mapsViewModel.activeProgress = Progress(
+                description = context.getString(R.string.info_sharing)
+            )
+            first.runInIOThreadSafe {
                 FileUtil.shareFiles(*files.toTypedArray(), context = context)
             }
+            first.mapsViewModel.activeProgress = null
         }
     },
 
