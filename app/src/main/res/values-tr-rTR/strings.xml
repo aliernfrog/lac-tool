@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LAC Tool</string>
     <string name="action_back">Geri</string>
     <string name="action_done">Bitti</string>
     <string name="action_ok">Tamam</string>
@@ -225,7 +224,6 @@ Daha fazla bilgi, çözümler ve şu an üzerinde çalışılan yeni düzeltme i
     <string name="settings_appearance_theme_system">Sistem teması</string>
     <string name="settings_appearance_theme_light">Açık</string>
     <string name="settings_appearance_theme_dark">Karanlık</string>
-    <string name="settings_appearance_materialYou">Material You</string>
     <string name="settings_appearance_materialYou_description">Cihazınızdaki renklere göre bir tema</string>
     <string name="settings_general">Genel</string>
     <string name="settings_general_showChosenMapThumbnail">Seçilen haritanın resmini göster</string>
