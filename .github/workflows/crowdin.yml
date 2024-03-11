@@ -1,0 +1,29 @@
+name: Sync Crowdin
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 17 * * 5"
+
+jobs:
+  sync-crowdin:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Sync translations from Crowdin
+        uses: crowdin/github-action@v1.19.0
+        with:
+          create_pull_request: true
+          pull_request_title: "feat(l10n): update translations"
+          pull_request_base_branch_name: "dev"
+          localization_branch_name: "l10n"
+          commit_message: "feat(l10n): update translations"
+          upload_sources: true
+          upload_translations: true
+          download_translations: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

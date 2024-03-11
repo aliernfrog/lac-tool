@@ -1,6 +1,5 @@
-pull_request_title: 'feat(l10n): update translations'
-commit_message: 'feat(l10n): update translations [skip ci]'
-append_commit_message: false
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
 
 files:
   - source: /app/src/main/res/values/strings.xml
