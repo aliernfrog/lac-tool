@@ -62,9 +62,7 @@ fun MapsMaterialsScreen(
             AppTopBar(
                 title = stringResource(R.string.mapsMaterials),
                 scrollBehavior = scrollBehavior,
-                onNavigationClick = {
-                    onNavigateBackRequest()
-                }
+                onNavigationClick = onNavigateBackRequest
             )
         },
         topAppBarState = mapsEditViewModel.materialsTopAppBarState

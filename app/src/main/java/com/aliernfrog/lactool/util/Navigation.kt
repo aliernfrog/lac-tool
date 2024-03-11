@@ -76,6 +76,7 @@ enum class Destination(
         route = "settings",
         labelId = R.string.settings,
         vectorFilled = Icons.Default.Settings,
-        vectorOutlined = Icons.Outlined.Settings
+        vectorOutlined = Icons.Outlined.Settings,
+        showInNavigationBar = false
     )
 }

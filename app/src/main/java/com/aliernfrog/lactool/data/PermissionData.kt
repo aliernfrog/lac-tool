@@ -1,15 +1,23 @@
 package com.aliernfrog.lactool.data
 
 import android.net.Uri
+import android.os.Environment
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import com.aliernfrog.lactool.R
 
 data class PermissionData(
-    val titleId: Int,
+    @StringRes val title: Int,
     val recommendedPath: String?,
-    val recommendedPathDescriptionId: Int?,
-    val doesntExistHintId: Int? = R.string.permissions_recommendedFolder_manuallyCreate,
+    @StringRes val recommendedPathDescription: Int?,
+    @StringRes val createFolderHint: Int? = null,
+    @StringRes val useUnrecommendedAnywayDescription: Int? = null,
+    val forceRecommendedPath: Boolean = true,
     val getUri: () -> String,
     val onUriUpdate: (Uri) -> Unit,
     val content: @Composable () -> Unit
 )
+
+val PermissionData.requiresAndroidData: Boolean
+    get() = forceRecommendedPath && recommendedPath?.startsWith(
+        "${Environment.getExternalStorageDirectory()}/Android/data"
+    ) == true

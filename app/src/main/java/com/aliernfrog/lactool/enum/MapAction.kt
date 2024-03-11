@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.enum
 
 import android.content.Context
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material.icons.rounded.Delete
@@ -29,17 +30,17 @@ enum class MapAction(
     /**
      * Resource ID to use as a short label. This can be used for one or multiple maps.
      */
-    val shortLabelId: Int,
+    @StringRes val shortLabel: Int,
 
     /**
      * Resource ID to use as a long label. This should be used for only one map.
      */
-    val longLabelId: Int = shortLabelId,
+    @StringRes val longLabel: Int = shortLabel,
 
     /**
      * Resource ID to use as a description. This should be used for only one map.
      */
-    val descriptionId: Int? = null,
+    @StringRes val description: Int? = null,
 
     /**
      * Icon of the action.
@@ -62,7 +63,7 @@ enum class MapAction(
     val availableFor: (map: MapFile) -> Boolean
 ) {
     RENAME(
-        shortLabelId = R.string.maps_rename,
+        shortLabel = R.string.maps_rename,
         icon = Icons.Rounded.Edit,
         availableForMultiSelection = false,
         availableFor = {
@@ -80,13 +81,13 @@ enum class MapAction(
             first.runInIOThreadSafe {
                 val result = first.rename(newName = newName)
                 if (!result.successful) return@runInIOThreadSafe first.topToastState.showErrorToast(
-                    text = result.messageId ?: R.string.warning_error
+                    text = result.message ?: R.string.warning_error
                 )
                 result.newFile?.let {
                     first.mapsViewModel.chooseMap(it)
                 }
                 first.topToastState.showToast(
-                    text = context.getString(result.messageId ?: R.string.maps_renamed)
+                    text = context.getString(result.message ?: R.string.maps_renamed)
                         .replace("{NAME}", newName),
                     icon = Icons.Rounded.Edit
                 )
@@ -96,7 +97,7 @@ enum class MapAction(
     },
 
     DUPLICATE(
-        shortLabelId = R.string.maps_duplicate,
+        shortLabel = R.string.maps_duplicate,
         icon = Icons.Rounded.FileCopy,
         availableForMultiSelection = false,
         availableFor = RENAME.availableFor
@@ -112,13 +113,13 @@ enum class MapAction(
             first.runInIOThreadSafe {
                 val result = first.duplicate(context, newName = newName)
                 if (!result.successful) return@runInIOThreadSafe first.topToastState.showErrorToast(
-                    text = result.messageId ?: R.string.warning_error
+                    text = result.message ?: R.string.warning_error
                 )
                 result.newFile?.let {
                     first.mapsViewModel.chooseMap(it)
                 }
                 first.topToastState.showToast(
-                    text = context.getString(result.messageId ?: R.string.maps_duplicated)
+                    text = context.getString(result.message ?: R.string.maps_duplicated)
                         .replace("{NAME}", newName),
                     icon = Icons.Rounded.FileCopy
                 )
@@ -128,8 +129,8 @@ enum class MapAction(
     },
 
     IMPORT(
-        shortLabelId = R.string.maps_import_short,
-        longLabelId = R.string.maps_import,
+        shortLabel = R.string.maps_import_short,
+        longLabel = R.string.maps_import,
         icon = Icons.Rounded.Download,
         availableFor = {
             it.importedState != MapImportedState.IMPORTED
@@ -150,8 +151,8 @@ enum class MapAction(
     },
 
     EXPORT(
-        shortLabelId = R.string.maps_export_short,
-        longLabelId = R.string.maps_export,
+        shortLabel = R.string.maps_export_short,
+        longLabel = R.string.maps_export,
         icon = Icons.Rounded.Upload,
         availableFor = {
             it.importedState == MapImportedState.IMPORTED
@@ -172,24 +173,29 @@ enum class MapAction(
     },
 
     SHARE(
-        shortLabelId = R.string.maps_share_short,
-        longLabelId = R.string.maps_share,
+        shortLabel = R.string.maps_share_short,
+        longLabel = R.string.maps_share,
         icon = Icons.Rounded.Share,
         availableFor = {
             true
         }
     ) {
         override suspend fun execute(context: Context, vararg maps: MapFile) {
+            val first = maps.first()
             val files = maps.map { it.file }
-            maps.first().runInIOThreadSafe {
+            first.mapsViewModel.activeProgress = Progress(
+                description = context.getString(R.string.info_sharing)
+            )
+            first.runInIOThreadSafe {
                 FileUtil.shareFiles(*files.toTypedArray(), context = context)
             }
+            first.mapsViewModel.activeProgress = null
         }
     },
 
     EDIT(
-        shortLabelId = R.string.maps_edit,
-        descriptionId = R.string.maps_edit_description,
+        shortLabel = R.string.maps_edit,
+        description = R.string.maps_edit_description,
         icon = Icons.Rounded.EditLocationAlt,
         availableForMultiSelection = false,
         availableFor = {
@@ -202,7 +208,7 @@ enum class MapAction(
                 context.getString(R.string.maps_edit_opening).replace("{NAME}", first.name)
             )
             try {
-                first.mapsEditViewModel.openMap(first.file, context)
+                first.mapsEditViewModel.openMap(first, context)
             } catch (e: Exception) {
                 first.topToastState.showErrorToast()
                 Log.e(TAG, "execute EDIT: ", e)
@@ -212,8 +218,8 @@ enum class MapAction(
     },
 
     MERGE(
-        shortLabelId = R.string.maps_merge_short,
-        longLabelId = R.string.maps_merge,
+        shortLabel = R.string.maps_merge_short,
+        longLabel = R.string.maps_merge,
         icon = Icons.Rounded.AddLocationAlt,
         availableFor = {
             true
@@ -227,8 +233,8 @@ enum class MapAction(
     },
 
     DELETE(
-        shortLabelId = R.string.maps_delete_short,
-        longLabelId = R.string.maps_delete,
+        shortLabel = R.string.maps_delete_short,
+        longLabel = R.string.maps_delete,
         icon = Icons.Rounded.Delete,
         destructive = true,
         availableFor = {
@@ -287,7 +293,7 @@ private suspend fun runIOAction(
                 text = context.getString(singleSuccessMessageId).replace("{NAME}", mapName),
                 icon = successIcon
             ) else first.topToastState.showErrorToast(
-                text = context.getString(result.messageId ?: R.string.warning_error)
+                text = context.getString(result.message ?: R.string.warning_error)
             )
             result.newFile?.let { first.mapsViewModel.chooseMap(it) }
         } else {

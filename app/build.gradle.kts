@@ -1,11 +1,13 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
-val composeMaterialVersion = "1.6.0"
-val composeMaterial3Version = "1.2.0-rc01"
-val composeCompilerVersion = "1.5.8"
+val composeMaterialVersion = "1.6.3"
+val composeMaterial3Version = "1.2.1"
+val composeCompilerVersion = "1.5.10"
+val shizukuVersion = "13.1.5"
 
 android {
     namespace = "com.aliernfrog.lactool"
@@ -15,8 +17,8 @@ android {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 23
         targetSdk = 34
-        versionCode = 31100
-        versionName = "3.1.1"
+        versionCode = 32000
+        versionName = "3.2.0"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -35,6 +37,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -43,6 +46,7 @@ android {
     }
 
     buildFeatures {
+        aidl = true
         buildConfig = true
         compose = true
     }
@@ -85,11 +89,14 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.insert-koin:koin-androidx-compose:3.5.3")
-    implementation("aliernfrog:top-toast-compose:1.4.0-alpha05")
+    implementation("aliernfrog:top-toast-compose:2.0.0")
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.8")
-    implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation("com.github.jeziellago:compose-markdown:0.3.7")
+    implementation("dev.rikka.shizuku:api:$shizukuVersion")
+    implementation("dev.rikka.shizuku:provider:$shizukuVersion")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("com.github.jeziellago:compose-markdown:0.4.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

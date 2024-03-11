@@ -7,20 +7,22 @@ import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.ConfigKey
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
-import com.aliernfrog.lactool.ui.screen.PermissionsScreen
+import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WallpapersPermissionsScreen(
-    wallpapersViewModel: WallpapersViewModel = koinViewModel()
+    wallpapersViewModel: WallpapersViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     val permissions = remember { arrayOf(
         PermissionData(
-            titleId = R.string.wallpapers_permissions,
-            recommendedPath = ConfigKey.DEFAULT_WALLPAPERS_DIR,
-            recommendedPathDescriptionId = R.string.wallpapers_permissions_recommendedPath_description,
-            doesntExistHintId = R.string.permissions_recommendedFolder_importWallpaperToCreate,
+            title = R.string.wallpapers_permissions,
+            recommendedPath = ConfigKey.RECOMMENDED_WALLPAPERS_DIR,
+            recommendedPathDescription = R.string.wallpapers_permissions_recommendedPath_description,
+            createFolderHint = R.string.permissions_recommendedFolder_importWallpaperToCreate,
+            useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
             getUri = { wallpapersViewModel.prefs.lacWallpapersDir },
             onUriUpdate = { wallpapersViewModel.prefs.lacWallpapersDir = it.toString() },
             content = {
@@ -29,7 +31,13 @@ fun WallpapersPermissionsScreen(
         )
     ) }
 
-    PermissionsScreen(*permissions) {
-        WallpapersScreen()
+    PermissionsScreen(
+        *permissions,
+        title = stringResource(R.string.wallpapers),
+        onNavigateSettingsRequest = onNavigateSettingsRequest
+    ) {
+        WallpapersScreen(
+            onNavigateSettingsRequest = onNavigateSettingsRequest
+        )
     }
 }

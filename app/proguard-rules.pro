@@ -20,6 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn org.bouncycastle.**
--dontwarn org.conscrypt.**
--dontwarn org.openjsse.**
+-keepclassmembers class com.aliernfrog.lactool.service.FileService {
+    public <init>(...);
+}

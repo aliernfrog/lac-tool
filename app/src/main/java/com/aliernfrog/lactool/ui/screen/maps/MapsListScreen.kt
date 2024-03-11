@@ -9,7 +9,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -62,11 +62,13 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
 import com.aliernfrog.lactool.enum.MapsListSortingType
+import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
+import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.maps.MapButton
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
@@ -86,6 +88,7 @@ fun MapsListScreen(
     mapsViewModel: MapsViewModel = koinViewModel(),
     showMultiSelectionOptions: Boolean = true,
     multiSelectFloatingActionButton: @Composable (selectedMaps: List<MapFile>, clearSelection: () -> Unit) -> Unit = { _, _ -> },
+    onNavigateSettingsRequest: (() -> Unit)? = null,
     onBackClick: (() -> Unit)?,
     onMapPick: (MapFile) -> Unit
 ) {
@@ -103,7 +106,7 @@ fun MapsListScreen(
                     parentName = "maps",
                     context = context
                 )
-                if (cachedFile != null) onMapPick(MapFile(cachedFile))
+                if (cachedFile != null) onMapPick(MapFile(FileWrapper(cachedFile)))
                 else mapsListViewModel.topToastState.showToast(
                     text = R.string.mapsList_pickMap_failed,
                     icon = Icons.Rounded.PriorityHigh,
@@ -157,21 +160,26 @@ fun MapsListScreen(
                                     if (clearSelection) mapsListViewModel.selectedMaps.clear()
                                 }
                             )
-                        } else Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
-                            if (showLoading) CircularProgressIndicator(
-                                modifier = Modifier.size(48.dp).padding(8.dp)
-                            )
-                            else IconButton(
-                                onClick = {
-                                    scope.launch {
-                                        mapsViewModel.loadMaps(context)
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Refresh,
-                                    contentDescription = stringResource(R.string.mapsList_reload)
+                        } else {
+                            Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
+                                if (showLoading) CircularProgressIndicator(
+                                    modifier = Modifier.size(48.dp).padding(8.dp)
                                 )
+                                else IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            mapsViewModel.loadMaps(context)
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = stringResource(R.string.mapsList_reload)
+                                    )
+                                }
+                            }
+                            onNavigateSettingsRequest?.let {
+                                SettingsButton(onClick = it)
                             }
                         }
                     }
@@ -211,7 +219,6 @@ fun MapsListScreen(
         }
     ) {
         LazyColumn(
-            contentPadding = PaddingValues(bottom = 80.dp),
             modifier = Modifier.fillMaxSize()
         ) {
             item {
@@ -283,6 +290,10 @@ fun MapsListScreen(
                     if (isMultiSelecting) toggleSelection()
                     else onMapPick(map)
                 }
+            }
+
+            item {
+                Spacer(Modifier.navigationBarsPadding().padding(bottom = 80.dp))
             }
         }
     }
@@ -422,7 +433,7 @@ private fun MultiSelectionDropdown(
     ) {
         actions.forEach { action ->
             DropdownMenuItem(
-                text = { Text(stringResource(action.shortLabelId)) },
+                text = { Text(stringResource(action.shortLabel)) },
                 leadingIcon = {
                     Icon(
                         imageVector = action.icon,

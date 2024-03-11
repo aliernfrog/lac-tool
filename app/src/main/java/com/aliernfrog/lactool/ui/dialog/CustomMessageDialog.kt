@@ -14,27 +14,36 @@ import com.aliernfrog.lactool.R
 
 @Composable
 fun CustomMessageDialog(
-    title: String,
-    text: String,
+    title: String?,
+    text: String?,
     icon: ImageVector? = null,
+    confirmButton: (@Composable () -> Unit)? = null,
     onDismissRequest: () -> Unit
 ) {
+    @Composable
+    fun DismissButton() {
+        TextButton(onClick = onDismissRequest) {
+            Text(stringResource(R.string.action_dismiss))
+        }
+    }
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text(stringResource(R.string.action_dismiss))
-            }
+            confirmButton?.invoke() ?: DismissButton()
         },
-        title = {
+        dismissButton = if (confirmButton != null) { {
+            DismissButton()
+        } } else null,
+        title = title?.let { {
             Text(title)
-        },
-        text = {
+        } },
+        text = text?.let { {
             Text(
                 text = text,
                 modifier = Modifier.verticalScroll(rememberScrollState())
             )
-        },
+        } },
         icon = icon?.let { {
             Icon(
                 imageVector = it,

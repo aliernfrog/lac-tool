@@ -27,8 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.ImageFile
-import com.aliernfrog.lactool.ui.component.*
+import com.aliernfrog.lactool.impl.FileWrapper
+import com.aliernfrog.lactool.ui.component.AppScaffold
+import com.aliernfrog.lactool.ui.component.AppTopBar
+import com.aliernfrog.lactool.ui.component.ColumnRounded
+import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
@@ -39,7 +45,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WallpapersScreen(
-    wallpapersViewModel: WallpapersViewModel = koinViewModel()
+    wallpapersViewModel: WallpapersViewModel = koinViewModel(),
+    onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -53,7 +60,10 @@ fun WallpapersScreen(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.wallpapers),
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    SettingsButton(onClick = onNavigateSettingsRequest)
+                }
             )
         },
         topAppBarState = wallpapersViewModel.topAppBarState
@@ -82,7 +92,7 @@ fun WallpapersScreen(
             items(wallpapersViewModel.importedWallpapers) {
                 ImageButton(
                     model = it.painterModel,
-                    title = it.name,
+                    title = it.nameWithoutExtension,
                     description = stringResource(R.string.wallpapers_list_clickToViewActions)
                 ) {
                     scope.launch {
@@ -126,7 +136,7 @@ private fun PickImageButton(
 
 @Composable
 private fun PickedWallpaper(
-    pickedWallpaper: ImageFile?,
+    pickedWallpaper: FileWrapper?,
     onImport: () -> Unit
 ) {
     FadeVisibility(pickedWallpaper != null) {
