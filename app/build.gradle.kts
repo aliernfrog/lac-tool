@@ -17,8 +17,8 @@ android {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 23
         targetSdk = 34
-        versionCode = 31100
-        versionName = "3.1.1"
+        versionCode = 32000
+        versionName = "3.2.0"
         vectorDrawables { useSupportLibrary = true }
     }
 
