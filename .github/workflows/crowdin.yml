@@ -1,7 +1,11 @@
-name: Sync Crowdin
+name: Crowdin sync
 
 on:
   workflow_dispatch:
+  
+  push:
+    branches: [ "dev" ]
+  
   schedule:
     - cron: "0 17 * * 5"
 
@@ -12,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Sync translations from Crowdin
+      - name: Crowdin sync
         uses: crowdin/github-action@v1.19.0
         with:
           create_pull_request: true
@@ -23,6 +27,7 @@ jobs:
           upload_sources: true
           upload_translations: true
           download_translations: true
+          skip_untranslated_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
