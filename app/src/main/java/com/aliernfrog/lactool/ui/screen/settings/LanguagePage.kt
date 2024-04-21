@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Translate
@@ -18,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -66,12 +66,12 @@ fun LanguagePage(
             title = title,
             description = description,
             painter = painter,
-            trailingComponent = if (selected) { {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.CheckCircle),
-                    contentDescription = stringResource(R.string.settings_language_selected)
+            trailingComponent = {
+                RadioButton(
+                    selected = selected,
+                    onClick = onClick
                 )
-            } } else null,
+            },
             onClick = onClick
         )
     }
