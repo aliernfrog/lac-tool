@@ -67,7 +67,8 @@ fun MapToMerge(
             )) },
             isError = !isCoordsValid,
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Decimal
+                keyboardType = KeyboardType.Decimal,
+                autoCorrectEnabled = false
             ),
             singleLine = true,
             modifier = Modifier

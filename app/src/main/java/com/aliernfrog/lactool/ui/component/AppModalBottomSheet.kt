@@ -1,14 +1,15 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -79,22 +80,10 @@ fun BaseModalBottomSheet(
         windowInsets = WindowInsets(0.dp)
     ) {
         content(
-            // Adding top padding since Modifier.padding causes an offset on the bottom sheet
-            insetsViewModel.topPadding + insetsViewModel.bottomPadding
+            insetsViewModel.bottomPadding
             // If IME does not sync app content, keyboard will show over the bottom sheet
             // Add IME padding to workaround this
             + (if (imeSupportsSyncAppContent) 0.dp else insetsViewModel.imePadding)
         )
     }
-}
-
-@Composable
-fun SmallDragHandle() {
-    Box(
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .size(32.dp, 4.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
-    )
 }

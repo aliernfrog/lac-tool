@@ -9,7 +9,7 @@ data class PermissionData(
     @StringRes val title: Int,
     val recommendedPath: String?,
     @StringRes val recommendedPathDescription: Int?,
-    @StringRes val createFolderHint: Int? = null,
+    @StringRes val recommendedPathWarning: Int? = null,
     @StringRes val useUnrecommendedAnywayDescription: Int? = null,
     val forceRecommendedPath: Boolean = true,
     val getUri: () -> String,

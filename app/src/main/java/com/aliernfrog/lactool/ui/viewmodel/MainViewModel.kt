@@ -2,9 +2,7 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.icons.Icons
@@ -18,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.unit.Density
+import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -70,11 +69,7 @@ class MainViewModel(
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
 
     private val defaultLanguage = GeneralUtil.getLanguageFromCode("en-US")!!
-    val deviceLanguage = Resources.getSystem().configuration?.let {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= 24) it.locales[0]
-        else it.locale
-    }?.toLanguage() ?: defaultLanguage
+    val deviceLanguage = LocaleManagerCompat.getSystemLocales(context)[0]?.toLanguage() ?: defaultLanguage
 
     private var _appLanguage by mutableStateOf<Language?>(null)
     var appLanguage: Language?

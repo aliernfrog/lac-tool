@@ -308,7 +308,8 @@ private fun TextField(
         label = { Text(label) },
         placeholder = if (placeholder != null) { { Text(placeholder) } } else null,
         keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = if (numberOnly) KeyboardType.Number else KeyboardType.Text
+            keyboardType = if (numberOnly) KeyboardType.Number else KeyboardType.Text,
+            autoCorrectEnabled = null
         ),
         singleLine = true,
         modifier = Modifier
