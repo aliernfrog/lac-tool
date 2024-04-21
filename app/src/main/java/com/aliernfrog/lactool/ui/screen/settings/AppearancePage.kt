@@ -36,7 +36,7 @@ fun AppearancePage(
                 selectedIndex = settingsViewModel.prefs.theme,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 settingsViewModel.prefs.theme = it
             }
