@@ -21,6 +21,11 @@
     <string name="info_shizuku_startingFileService">Dosya hizmeti başlatılıyor..</string>
     <string name="info_shizuku_disconnected">Shizuku bağlantısı kesildi</string>
     <string name="info_useUnrecommendedAnyway_description">Bunu sadece LAC\'ın verilerinizi başka bir klasörde sakladığından eminseniz veya deneme yapıyorsanız yapın</string>
+    <string name="permissions_downgradeFilesApp">Dosyalar uygulaması güncellemeleri</string>
+    <string name="permissions_downgradeFilesApp_description">Cihazınızdaki Dosyalar uygulaması LAC Tool\'un LAC verilerine erişim izni almasını engelliyor. Bu sorun, Dosyalar uygulamasının güncellemelerinin kaldırılmasıyla çözülebilir</string>
+    <string name="permissions_downgradeFilesApp_uninstall">Güncellemeleri kaldır</string>
+    <string name="permissions_downgradeFilesApp_cant">Kaldırılamıyor mu?</string>
+    <string name="permissions_downgradeFilesApp_guide">Bir sonraki ekranda Dosyalar uygulamasının güncellemelerini kaldırmak için bir seçenek arayın.\nEğer güncellemeleri kaldıramıyorsanız veya kaldırdıktan sonra hâlâ çalışmıyorsa, \"{CANT_UNINSTALL_TEXT}\" tuşuna tıklayın</string>
     <string name="permissions_chooseFolder">Klasör seç</string>
     <string name="permissions_recommendedFolder">Önerilen klasör</string>
     <string name="permissions_recommendedFolder_a8Hint">\"Tamam\"a tıkladıktan sonra, bu klasör yeni bir pencerede açılacak. Doğru klasör olduğundan emin olun ve \"BU KLASÖRÜ KULLAN\" tuşuna tıklayın</string>
@@ -34,8 +39,8 @@
     <string name="permissions_notRecommendedFolder_advanced_hide">Gelişmiş seçenekleri gizle</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Yine de seçilen klasörü kullan</string>
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
-    <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan devre dışı bırakabilirsiniz.</string>
-    <string name="permissions_shizuku_introduction">Shizuku, kablosuz hata ayıklamayı kullanarak uygulamaların daha fazla izin almasını sağlayan bir uygulamadır.\nLAC Tool da Shizuku\'yu kullanarak LAC klasörlerine erişebilir</string>
+    <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan açıp kapatabilirsiniz.</string>
+    <string name="permissions_shizuku_introduction">Shizuku, kablosuz hata ayıklamayı kullanarak diğer uygulamaların kabuk (shell) izinlerini kullanmasını sağlayan bir uygulamadır.\nShizuku modu Ayarlar &gt; Depolama &gt; Depolama erişimi tipi kısmından devre dışı bırakılabilir</string>
     <string name="permissions_shizuku_install_title">Başlamak için Shizuku\'yu yükleyin</string>
     <string name="permissions_shizuku_install_install">Yükle</string>
     <string name="permissions_shizuku_notRunning">Shizuku çalışmıyor</string>
@@ -204,7 +209,7 @@
     <string name="wallpapers_deleted">Duvar kağıdı silindi</string>
     <string name="screenshots">Fotoğraflar</string>
     <string name="screenshots_permissions">LAC ekran görüntüleri klasörü</string>
-    <string name="screenshots_permissions_description">LAC duvar kağıtlarının saklandığı klasörü seçmeniz gerekiyor</string>
+    <string name="screenshots_permissions_description">LAC ekran görüntülerinin saklandığı klasörü seçmeniz gerekiyor</string>
     <string name="screenshots_permissions_recommendedPath_description">LAC ekran görüntüleri bu klasörde saklanır</string>
     <string name="screenshots_noScreenshots">Oyun içi cep telefonunu kullanarak bir fotoğraf çekmediniz</string>
     <string name="screenshots_clickHint">Daha fazla işlem için fotoğraflara tıklayın</string>
@@ -218,11 +223,15 @@
     <string name="settings_appearance">Görünüm</string>
     <string name="settings_appearance_description">LAC Tool\'un görünümünü özelleştirin</string>
     <string name="settings_appearance_theme">Tema</string>
-    <string name="settings_appearance_theme_system">Sistem teması</string>
+    <string name="settings_appearance_theme_system">Sistem</string>
     <string name="settings_appearance_theme_light">Aydınlık</string>
     <string name="settings_appearance_theme_dark">Karanlık</string>
+    <string name="settings_appearance_colors">Renkler</string>
     <string name="settings_appearance_materialYou">Material You</string>
     <string name="settings_appearance_materialYou_description">Cihazınızdaki renklere göre bir tema</string>
+    <string name="settings_appearance_materialYou_unavailable">Sadece Android 12 ve üzerinde kullanılabilir</string>
+    <string name="settings_appearance_pitchBlack">Zifiri karanlık</string>
+    <string name="settings_appearance_pitchBlack_description">Karanlık mod etkinken zifiri karanlık arka plan</string>
     <string name="settings_maps">Harita resimleri</string>
     <string name="settings_maps_description">Harita resimlerinin ne zaman gösterileceğini ayarlayın</string>
     <string name="settings_maps_showChosenMapThumbnail">Seçilen haritanın resmini göster</string>
@@ -233,7 +242,7 @@
     <string name="settings_storage_description">LAC Tool\'un depolamayla nasıl etkileşime gireceğini ayarlayın</string>
     <string name="settings_storage_storageAccessType">Depolama erişimi tipi</string>
     <string name="settings_storage_storageAccessType_saf">Kapsamlı depolama</string>
-    <string name="settings_storage_storageAccessType_saf_description">Sadece LAC Tool\'un ihtiyaç duyduğu klasörlere erişin. Android 12 ve üzerinde çalışmayabilir</string>
+    <string name="settings_storage_storageAccessType_saf_description">Sadece LAC Tool\'un ihtiyaç duyduğu klasörlere erişin</string>
     <string name="settings_storage_storageAccessType_shizuku">Shizuku</string>
     <string name="settings_storage_storageAccessType_shizuku_description">Depolamaya erişmek için Shizuku kullanın</string>
     <string name="settings_storage_folders">Klasörler</string>
@@ -271,7 +280,7 @@
     <string name="settings_about_changelog_noChangelog">Değişiklik günlüğünü görmek için güncellemeleri denetleyin</string>
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
-    <string name="settings_experimental_description">Bu ayarlar normal kullanım için değildir ve yanlış kullanıldığında LAC Tool\'u bozabilir</string>
+    <string name="settings_experimental_description">Normal kullanım için değildir, yanlış kullanıldığında uygulamayı bozabilir</string>
     <string name="settings_experimental_updatesURL">Güncellemeler için URL</string>
     <string name="updates_updateAvailable">LAC Tool güncellemesi mevcut! Daha fazla detay için tıklayın</string>
     <string name="updates_noUpdates">Güncelleme yok</string>
