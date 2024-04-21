@@ -222,10 +222,10 @@
     <string name="settings_appearance">Appearance</string>
     <string name="settings_appearance_description">Customize the look of LAC Tool</string>
     <string name="settings_appearance_theme">Theme</string>
-    <string name="settings_appearance_theme_description">Dark mode preference</string>
-    <string name="settings_appearance_theme_system">Follow system</string>
+    <string name="settings_appearance_theme_system">System</string>
     <string name="settings_appearance_theme_light">Light</string>
     <string name="settings_appearance_theme_dark">Dark</string>
+    <string name="settings_appearance_colors">Colors</string>
     <string name="settings_appearance_materialYou">Material You</string>
     <string name="settings_appearance_materialYou_description">Theme based on colors of your device</string>
     <string name="settings_appearance_pitchBlack">Pitch black</string>

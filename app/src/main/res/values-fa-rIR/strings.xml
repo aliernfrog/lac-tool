@@ -218,7 +218,6 @@
     <string name="settings_appearance">ظاهر</string>
     <string name="settings_appearance_description">ظاهر ابزار LAC را سفارشی کنید</string>
     <string name="settings_appearance_theme">تم</string>
-    <string name="settings_appearance_theme_description">ترجیح حالت تاریک</string>
     <string name="settings_appearance_theme_system">همگام با سیستم</string>
     <string name="settings_appearance_theme_light">روشن</string>
     <string name="settings_appearance_theme_dark">تاریک</string>
