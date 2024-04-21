@@ -12,6 +12,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // Appearance options
     var theme by intPreference(ConfigKey.KEY_APP_THEME, Theme.SYSTEM.ordinal)
     var materialYou by booleanPreference(ConfigKey.KEY_APP_MATERIAL_YOU, true)
+    var pitchBlack by booleanPreference("pitchBlack", false)
 
     // General options
     var showChosenMapThumbnail by booleanPreference(ConfigKey.KEY_SHOW_CHOSEN_MAP_THUMBNAIL, true)

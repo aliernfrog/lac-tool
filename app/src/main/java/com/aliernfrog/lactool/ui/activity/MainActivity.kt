@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             LACToolTheme(
                 darkTheme = darkTheme,
                 dynamicColors = mainViewModel.prefs.materialYou,
+                pitchBlack = mainViewModel.prefs.pitchBlack,
                 content = content
             )
         }

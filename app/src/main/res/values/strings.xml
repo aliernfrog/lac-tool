@@ -228,6 +228,8 @@
     <string name="settings_appearance_theme_dark">Dark</string>
     <string name="settings_appearance_materialYou">Material You</string>
     <string name="settings_appearance_materialYou_description">Theme based on colors of your device</string>
+    <string name="settings_appearance_pitchBlack">Pitch black</string>
+    <string name="settings_appearance_pitchBlack_description">Pitch black background when dark mode is enabled</string>
     <string name="settings_maps">Map thumbnails</string>
     <string name="settings_maps_description">Configure when map thumbnails will be shown</string>
     <string name="settings_maps_showChosenMapThumbnail">Show thumbnail of selected map</string>

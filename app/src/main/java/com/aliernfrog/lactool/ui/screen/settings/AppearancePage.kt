@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.screen.settings
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Brush
+import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -55,6 +56,14 @@ fun AppearancePage(
             checked = settingsViewModel.prefs.materialYou
         ) {
             settingsViewModel.prefs.materialYou = it
+        }
+        SwitchRow(
+            title = stringResource(R.string.settings_appearance_pitchBlack),
+            description = stringResource(R.string.settings_appearance_pitchBlack_description),
+            painter = rememberVectorPainter(Icons.Outlined.Contrast),
+            checked = settingsViewModel.prefs.pitchBlack
+        ) {
+            settingsViewModel.prefs.pitchBlack = it
         }
     }
 }
