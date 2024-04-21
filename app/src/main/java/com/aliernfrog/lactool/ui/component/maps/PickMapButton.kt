@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.FadeVisibility
-import com.aliernfrog.lactool.ui.component.form.FormHeader
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 
@@ -67,7 +66,7 @@ fun PickMapButton(
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            FormHeader(
+            MapHeader(
                 title = chosenMap?.name ?: "",
                 description = chosenMap?.details,
                 painter = rememberVectorPainter(Icons.Rounded.LocationOn),
