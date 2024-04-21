@@ -80,8 +80,7 @@ fun BaseModalBottomSheet(
         windowInsets = WindowInsets(0.dp)
     ) {
         content(
-            // Adding top padding since Modifier.padding causes an offset on the bottom sheet
-            insetsViewModel.topPadding + insetsViewModel.bottomPadding
+            insetsViewModel.bottomPadding
             // If IME does not sync app content, keyboard will show over the bottom sheet
             // Add IME padding to workaround this
             + (if (imeSupportsSyncAppContent) 0.dp else insetsViewModel.imePadding)

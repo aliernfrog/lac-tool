@@ -27,8 +27,7 @@ fun InsetsObserver(
     Spacer(
         modifier = Modifier
             .onSizeChanged {
-                // no idea why height is doubled
-                insetsViewModel.topPadding = toDp(it.height/2)
+                insetsViewModel.topPadding = toDp(it.height)
             }
             .statusBarsPadding()
     )

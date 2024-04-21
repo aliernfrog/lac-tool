@@ -4,9 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.remember
+import androidx.compose.material3.ripple
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
@@ -21,8 +19,8 @@ fun Modifier.clickableWithColor(
     onClick: () -> Unit
 ): Modifier = composed {
     this.clickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = rememberRipple(color = color),
+        interactionSource = null,
+        indication = ripple(color = color),
         onClick = onClick
     )
 }
@@ -34,8 +32,8 @@ fun Modifier.combinedClickableWithColor(
     onClick: () -> Unit
 ): Modifier = composed {
     this.combinedClickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = rememberRipple(color = color),
+        interactionSource = null,
+        indication = ripple(color = color),
         onLongClick = onLongClick,
         onClick = onClick
     )
