@@ -25,7 +25,6 @@
     <string name="permissions_recommendedFolder">Önerilen klasör</string>
     <string name="permissions_recommendedFolder_a8Hint">\"Tamam\"a tıkladıktan sonra, bu klasör yeni bir pencerede açılacak. Doğru klasör olduğundan emin olun ve \"BU KLASÖRÜ KULLAN\" tuşuna tıklayın</string>
     <string name="permissions_recommendedFolder_a7Hint">\"Tamam\"a tıkladıktan sonra, bu klasöre gidin ve \"BU KLASÖRÜ KULLAN\" tuşuna tıklayın</string>
-    <string name="permissions_recommendedFolder_doesNotExist">Bu klasör yok mu?</string>
     <string name="permissions_recommendedFolder_openLACToCreate">LAC\'ın bu klasörü oluşturmasını sağlamak için en az bir kere başlattığınızdan emin olun</string>
     <string name="permissions_recommendedFolder_importWallpaperToCreate">Bu klasörü kendiniz oluşturabilir veya LAC\'ı başlatıp, herhangi bir haritaya girip, oyun içi cep telefonunu açıp, ayarlara tıklayıp, \"Custom wallpaper link\" alanına rastgele bir şey yazıp, klavyeyi kapatıp, \"FAIL\" ya da \"SUCCESS\" yazana kadar bekleyip klasörün otomatik olarak oluşmasını sağlayabilirsiniz</string>
     <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">Bu klasörün oluşturulması için oyun içi cep telefonunu kullanarak en az bir kere fotoğraf çektiğinizden emin olun</string>
@@ -34,14 +33,9 @@
     <string name="permissions_notRecommendedFolder_advanced_show">Gelişmiş seçenekleri göster</string>
     <string name="permissions_notRecommendedFolder_advanced_hide">Gelişmiş seçenekleri gizle</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Yine de seçilen klasörü kullan</string>
-    <string name="permissions_uninstallFilesAppUpdates">Dosyalar uygulamasının güncellemelerini kaldırmayı deneyin</string>
-    <string name="permissions_uninstallFilesAppUpdates_description">Cihazınızdaki Dosyalar uygulaması, LAC Tool\'un LAC klasörlerine erişim istemesini engelleyen bir güncelleme almış olabilir</string>
-    <string name="permissions_uninstallFilesAppUpdates_uninstall">Güncellemeleri kaldır</string>
-    <string name="permissions_uninstallFilesAppUpdates_guide">Güncellemeleri kaldırmak için bir seçenek bulun ve tıklayın. Yapamazsanız LAC Tool\'a geri dönün</string>
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
     <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan devre dışı bırakabilirsiniz.</string>
     <string name="permissions_shizuku_introduction">Shizuku, kablosuz hata ayıklamayı kullanarak uygulamaların daha fazla izin almasını sağlayan bir uygulamadır.\nLAC Tool da Shizuku\'yu kullanarak LAC klasörlerine erişebilir</string>
-    <string name="permissions_shizuku_warning">Shizuku modu etkin. Eğer LAC Tool\'a LAC klasörlerine erişim iznini veremiyorsanız, şu an için tek çözüm budur.\nNormal moda dönmek için tıklayın</string>
     <string name="permissions_shizuku_install_title">Başlamak için Shizuku\'yu yükleyin</string>
     <string name="permissions_shizuku_install_install">Yükle</string>
     <string name="permissions_shizuku_notRunning">Shizuku çalışmıyor</string>

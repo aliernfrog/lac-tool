@@ -21,7 +21,7 @@ fun ScreenshotsPermissionsScreen(
             title = R.string.screenshots_permissions,
             recommendedPath = ConfigKey.RECOMMENDED_SCREENSHOTS_DIR,
             recommendedPathDescription = R.string.screenshots_permissions_recommendedPath_description,
-            createFolderHint = R.string.permissions_recommendedFolder_takeInGameScreenshotToCreate,
+            recommendedPathWarning = R.string.permissions_recommendedFolder_takeInGameScreenshotToCreate,
             useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
             getUri = { screenshotsViewModel.prefs.lacScreenshotsDir },
             onUriUpdate = { screenshotsViewModel.prefs.lacScreenshotsDir = it.toString() },

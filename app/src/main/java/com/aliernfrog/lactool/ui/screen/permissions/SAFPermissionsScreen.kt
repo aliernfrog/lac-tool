@@ -1,13 +1,11 @@
 package com.aliernfrog.lactool.ui.screen.permissions
 
 import android.net.Uri
-import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,11 +13,13 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +33,8 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.data.requiresAndroidData
-import com.aliernfrog.lactool.enum.SAFWorkaroundLevel
+import com.aliernfrog.lactool.enum.StorageAccessType
+import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
@@ -41,10 +42,61 @@ import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
 import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SAFPermissionsScreen(
+    vararg permissionsData: PermissionData,
+    onUpdateStateRequest: () -> Unit
+) {
+    val context = LocalContext.current
+    val requiresAndroidData = permissionsData.any { it.requiresAndroidData }
+    val needsToDowngradeFiles = requiresAndroidData && GeneralUtil.filesAppRestrictsAndroidData(context)
+
+    AnimatedContent(needsToDowngradeFiles) {
+        if (it) DowngradeFiles()
+        else SAFPermissionsList(
+            *permissionsData, onUpdateStateRequest = onUpdateStateRequest
+        )
+    }
+}
+
+@Composable
+private fun DowngradeFiles(
+    permissionsViewModel: PermissionsViewModel = koinViewModel()
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        CardWithActions(
+            modifier = Modifier.padding(8.dp),
+            title = stringResource(R.string.permissions_downgradeFilesApp),
+            buttons = {
+                TextButton(
+                    onClick = {
+                        permissionsViewModel.showShizukuIntroDialog = true
+                        StorageAccessType.SHIZUKU.enable(permissionsViewModel.prefs)
+                    }
+                ) {
+                    Text(stringResource(R.string.permissions_downgradeFilesApp_cant))
+                }
+                Button(
+                    onClick = { permissionsViewModel.showFilesDowngradeDialog = true }
+                ) {
+                    Text(stringResource(R.string.permissions_downgradeFilesApp_uninstall))
+                }
+            }
+        ) {
+            Text(stringResource(R.string.permissions_downgradeFilesApp_description))
+        }
+    }
+}
+
+@Composable
+private fun SAFPermissionsList(
     vararg permissionsData: PermissionData,
     permissionsViewModel: PermissionsViewModel = koinViewModel(),
     onUpdateStateRequest: () -> Unit
@@ -116,12 +168,14 @@ fun SAFPermissionsScreen(
                     Column(Modifier.fillMaxWidth()) {
                         permissionData.content()
 
-                        val isAndroidData = permissionData.forceRecommendedPath && permissionData.recommendedPath
-                            ?.startsWith("${Environment.getExternalStorageDirectory()}/Android/data") == true
-                        if (isAndroidData) Guide(
-                            level = permissionsViewModel.safWorkaroundLevel,
-                            permissionData = permissionData
-                        )
+                        permissionData.recommendedPathWarning?.let { warning ->
+                            Card(Modifier.padding(vertical = 8.dp)) {
+                                Text(
+                                    text = stringResource(warning),
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
+                            }
+                        }
 
                         Button(
                             onClick = ::onClick,
@@ -147,11 +201,6 @@ fun SAFPermissionsScreen(
             permissionData = activePermissionData!!,
             chosenUri = uri,
             onDismissRequest = { unrecommendedPathWarningUri = null },
-            onFolderDoesNotExist = {
-                unrecommendedPathWarningUri = null
-                permissionsViewModel.pushSAFWorkaroundLevel()
-                permissionsViewModel.showSAFWorkaroundDialog = true
-            },
             onUseUnrecommendedFolderRequest = {
                 takePersistableUriPermissions(uri)
                 unrecommendedPathWarningUri = null
@@ -161,44 +210,5 @@ fun SAFPermissionsScreen(
                 unrecommendedPathWarningUri = null
             }
         )
-    }
-}
-
-@Composable
-private fun Guide(
-    level: SAFWorkaroundLevel,
-    permissionData: PermissionData
-) {
-    val title = level.title
-    val description = if (level == SAFWorkaroundLevel.MAKE_SURE_FOLDER_EXISTS) permissionData.createFolderHint
-    else level.description
-
-    if (title != null || description != null) Card(
-        modifier = Modifier.padding(vertical = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            title?.let {
-                Text(
-                    text = stringResource(it),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-            description?.let {
-                Text(
-                    text = stringResource(it)
-                )
-            }
-            level.button?.let { button ->
-                Row(
-                    horizontalArrangement = Arrangement.aligned(Alignment.End),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    button()
-                }
-            }
-        }
     }
 }
