@@ -83,6 +83,7 @@
     </application>
 
     <queries>
+        <package android:name="com.google.android.documentsui"/>
         <package android:name="moe.shizuku.privileged.api"/>
     </queries>
 </manifest>

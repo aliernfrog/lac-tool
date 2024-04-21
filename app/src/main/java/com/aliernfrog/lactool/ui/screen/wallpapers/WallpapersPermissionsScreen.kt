@@ -21,7 +21,7 @@ fun WallpapersPermissionsScreen(
             title = R.string.wallpapers_permissions,
             recommendedPath = ConfigKey.RECOMMENDED_WALLPAPERS_DIR,
             recommendedPathDescription = R.string.wallpapers_permissions_recommendedPath_description,
-            createFolderHint = R.string.permissions_recommendedFolder_importWallpaperToCreate,
+            recommendedPathWarning = R.string.permissions_recommendedFolder_importWallpaperToCreate,
             useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
             getUri = { wallpapersViewModel.prefs.lacWallpapersDir },
             onUriUpdate = { wallpapersViewModel.prefs.lacWallpapersDir = it.toString() },

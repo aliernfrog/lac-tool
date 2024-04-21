@@ -29,7 +29,7 @@ fun MapsPermissionsScreen(
             title = R.string.maps_permissions,
             recommendedPath = ConfigKey.RECOMMENDED_MAPS_DIR,
             recommendedPathDescription = R.string.maps_permissions_recommendedPath_description,
-            createFolderHint = R.string.permissions_recommendedFolder_openLACToCreate,
+            recommendedPathWarning = R.string.permissions_recommendedFolder_openLACToCreate,
             useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
             getUri = { mapsViewModel.prefs.lacMapsDir },
             onUriUpdate = { mapsViewModel.prefs.lacMapsDir = it.toString() },

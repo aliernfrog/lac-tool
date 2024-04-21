@@ -25,7 +25,6 @@
     <string name="permissions_recommendedFolder">پوشه پیشنهادی</string>
     <string name="permissions_recommendedFolder_a8Hint">پس از کلیک بر روی \"Okay\"، این پوشه در پنجره جدیدی باز می شود. اطمینان حاصل کنید که در پوشه صحیح قرار دارید و روی \"USE THIS FOLDER\" کلیک کنید.</string>
     <string name="permissions_recommendedFolder_a7Hint">پس از کلیک بر روی \"Okay\" به این پوشه بروید و روی \"USE THIS FOLDER\" کلیک کنید.</string>
-    <string name="permissions_recommendedFolder_doesNotExist">این پوشه اونجا نیست?</string>
     <string name="permissions_recommendedFolder_openLACToCreate">مطمئن شوید که LAC را یک بار راه اندازی کرده اید تا این پوشه را ایجاد کنید</string>
     <string name="permissions_recommendedFolder_importWallpaperToCreate">می توانید این پوشه را به صورت دستی ایجاد کنید یا LAC را راه‌اندازی کنید، هر نقشه ای را وارد کنید، تلفن همراه داخل بازی را باز کنید، روی تنظیمات کلیک کنید، یک متن تصادفی را در قسمت \"پیوند کاغذ دیواری سفارشی\" قرار دهید، صفحه کلید را ببندید و منتظر بمانید تا \"FAIL\" یا \"فایل\" نوشته شود. </string>
     <string name="permissions_recommendedFolder_takeInGameScreenshotToCreate">حتماً یک بار با استفاده از تلفن همراه درون بازی اسکرین شات بگیرید تا این پوشه را ایجاد کنید</string>
@@ -34,14 +33,9 @@
     <string name="permissions_notRecommendedFolder_advanced_show">نمایش گزینه های پیشرفته</string>
     <string name="permissions_notRecommendedFolder_advanced_hide">گزینه های پیشرفته را مخفی کنید</string>
     <string name="permissions_notRecommendedFolder_useAnyway">به هر حال از پوشه انتخاب شده استفاده کنید</string>
-    <string name="permissions_uninstallFilesAppUpdates">به‌روزرسانی‌های برنامه Files را حذف نصب کنید</string>
-    <string name="permissions_uninstallFilesAppUpdates_description">برنامه Files در دستگاه شما ممکن است به‌روزرسانی داشته باشد که از درخواست دسترسی به نقشه‌های LAC Tool جلوگیری می‌کند</string>
-    <string name="permissions_uninstallFilesAppUpdates_uninstall">حذف نصب نسخه‌های به روز</string>
-    <string name="permissions_uninstallFilesAppUpdates_guide">گزینه‌ای برای حذف به‌روزرسانی‌ها پیدا کنید و روی آن کلیک کنید</string>
     <string name="permissions_setupShizuku">از Shizuku استفاده کنید</string>
     <string name="permissions_setupShizuku_description">باید از Shizuku استفاده کنید تا به ابزار LAC اجازه دهید به پوشه‌های LAC دسترسی پیدا کند\nبه این دلیل است که برنامه Files در دستگاه شما به برنامه‌ها اجازه دسترسی به فایل‌های داخل Android/داده را نمی‌دهد\nشما می‌توانید حالت Shizuku را در هر زمان از تنظیمات غیرفعال کنید.</string>
     <string name="permissions_shizuku_introduction">Shizuku برنامه‌ای است که به برنامه‌ها اجازه می‌دهد با استفاده از اشکال‌زدایی بی‌سیم از مجوزهای پوسته استفاده کنند.\nابزار LAC همچنین می‌تواند از آن برای دسترسی به پوشه‌های LAC استفاده کند.</string>
-    <string name="permissions_shizuku_warning">حالت Shizuku فعال است اگر نتوانستید به ابزار LAC دسترسی به پوشه های LAC بدهید، این تنها راه حل در حال حاضر است.\nبرای بازگشت به حالت عادی کلیک کنید</string>
     <string name="permissions_shizuku_install_title">برای شروع Shizuku را نصب کنید</string>
     <string name="permissions_shizuku_install_install">نصب</string>
     <string name="permissions_shizuku_notRunning">شیزوکو در حال اجرا نیست</string>
