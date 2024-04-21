@@ -82,7 +82,6 @@ fun AddRoleSheet(
                 )
             },
             singleLine = true,
-            shape = AppComponentShape,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -101,7 +100,6 @@ fun AddRoleSheet(
                 )
             },
             singleLine = true,
-            shape = AppComponentShape,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

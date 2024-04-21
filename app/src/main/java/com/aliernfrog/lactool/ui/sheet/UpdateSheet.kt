@@ -36,7 +36,6 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.ui.component.BaseModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.SmallDragHandle
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -49,8 +48,7 @@ fun UpdateSheet(
 ) {
     val uriHandler = LocalUriHandler.current
     BaseModalBottomSheet(
-        sheetState = sheetState,
-        dragHandle = { SmallDragHandle() }
+        sheetState = sheetState
     ) { bottomPadding ->
         Actions(
             versionName = latestVersionInfo.versionName,
