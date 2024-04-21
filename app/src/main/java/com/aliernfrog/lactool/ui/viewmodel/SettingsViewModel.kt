@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
@@ -17,14 +16,14 @@ class SettingsViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState
 ) : ViewModel() {
-    var experimentalSettingsShown by mutableStateOf(false)
     private var aboutClickCount by mutableIntStateOf(0)
 
     fun onAboutClick() {
-        if (aboutClickCount > experimentalSettingsRequiredClicks) return
+        if (prefs.experimentalOptionsEnabled) return
         aboutClickCount++
         if (aboutClickCount == experimentalSettingsRequiredClicks) {
-            experimentalSettingsShown = true
+            aboutClickCount = 0
+            prefs.experimentalOptionsEnabled = true
             topToastState.showToast(
                 text = R.string.settings_experimental_enabled,
                 icon = Icons.Rounded.Build,

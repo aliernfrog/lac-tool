@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
@@ -23,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -45,8 +43,6 @@ import androidx.core.graphics.drawable.toBitmap
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.FadeVisibility
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
@@ -54,7 +50,6 @@ import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import com.aliernfrog.lactool.util.extension.resolveString
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -174,10 +169,6 @@ fun AboutPage(
             settingsViewModel.prefs.autoCheckUpdates = it
         }
 
-        FadeVisibility(settingsViewModel.experimentalSettingsShown) {
-            ExperimentalSettings()
-        }
-
         FormSection(
             title = stringResource(R.string.settings_about_changelog),
             topDivider = true,
@@ -200,80 +191,6 @@ fun AboutPage(
                     onLinkClicked = { uriHandler.openUri(it) }
                 )
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ExperimentalSettings(
-    mainViewModel: MainViewModel = koinViewModel(),
-    settingsViewModel: SettingsViewModel = koinViewModel()
-) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    FormSection(
-        title = stringResource(R.string.settings_experimental),
-        bottomDivider = false,
-        topDivider = true
-    ) {
-        Text(
-            text = stringResource(R.string.settings_experimental_description),
-            color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        SwitchRow(
-            title = stringResource(R.string.settings_experimental_showMapNameFieldGuide),
-            checked = settingsViewModel.prefs.showMapNameFieldGuide,
-            onCheckedChange = {
-                settingsViewModel.prefs.showMapNameFieldGuide = it
-            }
-        )
-        ButtonRow(
-            title = stringResource(R.string.settings_experimental_checkUpdates)
-        ) {
-            scope.launch {
-                mainViewModel.checkUpdates(ignoreVersion = true)
-            }
-        }
-        ButtonRow(
-            title = stringResource(R.string.settings_experimental_showUpdateToast)
-        ) {
-            mainViewModel.showUpdateToast()
-        }
-        ButtonRow(
-            title = stringResource(R.string.settings_experimental_showUpdateDialog)
-        ) {
-            scope.launch {
-                mainViewModel.updateSheetState.show()
-            }
-        }
-        SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
-            OutlinedTextField(
-                value = prefEdit.getValue(settingsViewModel.prefs),
-                onValueChange = {
-                    prefEdit.setValue(it, settingsViewModel.prefs)
-                },
-                label = {
-                    Text(stringResource(prefEdit.labelResourceId))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-        }
-        ButtonRow(
-            title = stringResource(R.string.settings_experimental_resetPrefs),
-            contentColor = MaterialTheme.colorScheme.error
-        ) {
-            SettingsConstant.experimentalPrefOptions.forEach {
-                it.setValue(it.default, settingsViewModel.prefs)
-            }
-            settingsViewModel.topToastState.showAndroidToast(
-                text = R.string.settings_experimental_resetPrefsDone,
-                icon = Icons.Rounded.Done
-            )
-            GeneralUtil.restartApp(context)
         }
     }
 }

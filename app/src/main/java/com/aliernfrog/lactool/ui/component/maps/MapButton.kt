@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.ui.component.form.FormHeader
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.combinedClickableWithColor
 
@@ -77,7 +76,7 @@ fun MapButton(
                 )
             ))
         ) {
-            FormHeader(
+            MapHeader(
                 title = map.name,
                 description = map.details,
                 painter = rememberVectorPainter(Icons.Outlined.PinDrop),

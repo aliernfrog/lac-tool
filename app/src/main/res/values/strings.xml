@@ -21,7 +21,7 @@
     <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
     <string name="info_useUnrecommendedAnyway_description">Only do this if you are sure that your LAC data is stored in a different folder, or if you are experimenting</string>
     <string name="permissions_downgradeFilesApp">Files app updates</string>
-    <string name="permissions_downgradeFilesApp_description">Files app on your device prevents PF Tool from requesting access to Polyfield data. This may be resolvable by uninstalling updates of the Files app</string>
+    <string name="permissions_downgradeFilesApp_description">Files app on your device prevents LAC Tool from requesting access to LAC data. This may be resolvable by uninstalling updates of the Files app</string>
     <string name="permissions_downgradeFilesApp_uninstall">Uninstall updates</string>
     <string name="permissions_downgradeFilesApp_cant">Can\'t uninstall?</string>
     <string name="permissions_downgradeFilesApp_guide">Look for an option to uninstall updates of the Files app in the next screen.\nIf you are not able to uninstall updates or it still won\'t work after uninstalling updates, click \"{CANT_UNINSTALL_TEXT}\"</string>
@@ -279,14 +279,8 @@
     <string name="settings_about_changelog_noChangelog">Check updates to view changelog</string>
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
-    <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
-    <string name="settings_experimental_showMapNameFieldGuide">Show map name field guide</string>
-    <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
-    <string name="settings_experimental_showUpdateToast">Show update toast</string>
-    <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
+    <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
-    <string name="settings_experimental_resetPrefs">Reset experimental prefs</string>
-    <string name="settings_experimental_resetPrefsDone">Restored default values for experimental prefs</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>
     <string name="updates_error">Something went wrong while checking for updates</string>

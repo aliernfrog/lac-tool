@@ -27,6 +27,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     var storageAccessType by intPreference("storageAccessType", StorageAccessType.SAF.ordinal)
 
     // Experimental (developer) options
+    var experimentalOptionsEnabled by booleanPreference("experimentalOptionsEnabled", false)
     var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)

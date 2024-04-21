@@ -1,7 +1,6 @@
 package com.aliernfrog.lactool.ui.component.form
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -26,7 +25,6 @@ fun FormRow(
     description: String? = null,
     painter: Painter? = null,
     shape: Shape = RectangleShape,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     containerColor: Color = Color.Transparent,
     contentColor: Color = if (containerColor == Color.Transparent)
         MaterialTheme.colorScheme.onSurface else contentColorFor(containerColor),
@@ -35,16 +33,15 @@ fun FormRow(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
             .heightIn(56.dp)
+            .fillMaxWidth()
             .clip(shape)
             .background(containerColor)
             .clickableWithColor(
                 color = contentColor,
                 onClick = onClick
             )
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .padding(contentPadding),
+            .padding(end = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         FormHeader(
@@ -55,6 +52,10 @@ fun FormRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .padding(
+                    vertical = 8.dp,
+                    horizontal = 18.dp
+                )
         )
         content()
     }
