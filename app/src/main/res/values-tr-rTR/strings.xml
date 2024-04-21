@@ -218,7 +218,6 @@
     <string name="settings_appearance">Görünüm</string>
     <string name="settings_appearance_description">LAC Tool\'un görünümünü özelleştirin</string>
     <string name="settings_appearance_theme">Tema</string>
-    <string name="settings_appearance_theme_description">Karanlık mod tercihi</string>
     <string name="settings_appearance_theme_system">Sistem teması</string>
     <string name="settings_appearance_theme_light">Aydınlık</string>
     <string name="settings_appearance_theme_dark">Karanlık</string>
@@ -273,7 +272,6 @@
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
     <string name="settings_experimental_description">Bu ayarlar normal kullanım için değildir ve yanlış kullanıldığında LAC Tool\'u bozabilir</string>
-    <string name="settings_experimental_showMaterialYouOption">Material You seçeneğini göster</string>
     <string name="settings_experimental_showMapNameFieldGuide">Harita isim alanı rehberini göster</string>
     <string name="settings_experimental_checkUpdates">Güncellemeleri denetle (sürümü yoksay)</string>
     <string name="settings_experimental_showUpdateToast">Güncelleme mesajını göster</string>

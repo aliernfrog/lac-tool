@@ -9,7 +9,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.experimentalSettingsRequiredClicks
-import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
@@ -19,7 +18,6 @@ class SettingsViewModel(
     val topToastState: TopToastState
 ) : ViewModel() {
     var experimentalSettingsShown by mutableStateOf(false)
-    var showMaterialYouOption by mutableStateOf(supportsMaterialYou)
     private var aboutClickCount by mutableIntStateOf(0)
 
     fun onAboutClick() {

@@ -27,6 +27,7 @@ val supportsMaterialYou = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 fun LACToolTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColors: Boolean = true,
+    pitchBlack: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val useDynamicColors = supportsMaterialYou && dynamicColors
@@ -35,6 +36,9 @@ fun LACToolTheme(
         useDynamicColors && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
         darkTheme -> darkColorScheme()
         else -> lightColorScheme()
+    }.let {
+        if (darkTheme && pitchBlack) it.copy(background = Color.Black, surface = Color.Black)
+        else it
     }
 
     val view = LocalView.current
