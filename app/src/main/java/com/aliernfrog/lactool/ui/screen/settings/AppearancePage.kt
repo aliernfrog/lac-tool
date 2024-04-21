@@ -15,6 +15,7 @@ import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.theme.Theme
+import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -44,11 +45,15 @@ fun AppearancePage(
             title = stringResource(R.string.settings_appearance_colors),
             bottomDivider = false
         ) {
-            if (settingsViewModel.showMaterialYouOption) SwitchRow(
+            SwitchRow(
                 title = stringResource(R.string.settings_appearance_materialYou),
-                description = stringResource(R.string.settings_appearance_materialYou_description),
+                description = stringResource(
+                    if (supportsMaterialYou) R.string.settings_appearance_materialYou_description
+                    else R.string.settings_appearance_materialYou_unavailable
+                ),
                 painter = rememberVectorPainter(Icons.Outlined.Brush),
-                checked = settingsViewModel.prefs.materialYou
+                checked = settingsViewModel.prefs.materialYou,
+                enabled = supportsMaterialYou
             ) {
                 settingsViewModel.prefs.materialYou = it
             }

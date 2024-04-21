@@ -272,7 +272,6 @@
     <string name="settings_experimental">تنظیمات آزمایشی</string>
     <string name="settings_experimental_enabled">تنظیمات آزمایشی فعال شد!</string>
     <string name="settings_experimental_description">این تنظیمات برای استفاده معمولی در نظر گرفته نشده اند و ممکن است در صورت استفاده نادرست ابزار LAC را خراب کنند</string>
-    <string name="settings_experimental_showMaterialYouOption">گزینه دیدن متریال های شما</string>
     <string name="settings_experimental_showMapNameFieldGuide">نمایش راهنمای میدان نام مپ</string>
     <string name="settings_experimental_checkUpdates">به‌روزرسانی ها را بررسی کنید (نسخه را نادیده بگیرید)</string>
     <string name="settings_experimental_showUpdateToast">نمایش آپدیت تستی</string>

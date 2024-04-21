@@ -18,6 +18,7 @@ fun SwitchRow(
     modifier: Modifier = Modifier,
     description: String? = null,
     painter: Painter? = null,
+    enabled: Boolean = true,
     shape: Shape = RectangleShape,
     containerColor: Color = Color.Transparent,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -30,14 +31,17 @@ fun SwitchRow(
         painter = painter,
         shape = shape,
         containerColor = containerColor,
-        contentColor = contentColor,
+        contentColor = contentColor.let {
+            if (enabled) it else it.copy(alpha = 0.7f)
+        },
         onClick = {
-            onCheckedChange(!checked)
+            if (enabled) onCheckedChange(!checked)
         }
     ) {
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            enabled = enabled,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
     }

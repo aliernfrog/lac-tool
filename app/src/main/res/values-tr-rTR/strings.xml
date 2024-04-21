@@ -272,7 +272,6 @@
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
     <string name="settings_experimental_description">Bu ayarlar normal kullanım için değildir ve yanlış kullanıldığında LAC Tool\'u bozabilir</string>
-    <string name="settings_experimental_showMaterialYouOption">Material You seçeneğini göster</string>
     <string name="settings_experimental_showMapNameFieldGuide">Harita isim alanı rehberini göster</string>
     <string name="settings_experimental_checkUpdates">Güncellemeleri denetle (sürümü yoksay)</string>
     <string name="settings_experimental_showUpdateToast">Güncelleme mesajını göster</string>

@@ -223,13 +223,6 @@ private fun ExperimentalSettings(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         SwitchRow(
-            title = stringResource(R.string.settings_experimental_showMaterialYouOption),
-            checked = settingsViewModel.showMaterialYouOption,
-            onCheckedChange = {
-                settingsViewModel.showMaterialYouOption = it
-            }
-        )
-        SwitchRow(
             title = stringResource(R.string.settings_experimental_showMapNameFieldGuide),
             checked = settingsViewModel.prefs.showMapNameFieldGuide,
             onCheckedChange = {
