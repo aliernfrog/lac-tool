@@ -41,11 +41,7 @@ fun FormRow(
                 color = contentColor,
                 onClick = onClick
             )
-            .padding(vertical = 8.dp)
-            .padding(
-                start = 18.dp,
-                end = 9.dp
-            ),
+            .padding(end = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         FormHeader(
@@ -56,6 +52,10 @@ fun FormRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .padding(
+                    vertical = 8.dp,
+                    horizontal = 18.dp
+                )
         )
         content()
     }

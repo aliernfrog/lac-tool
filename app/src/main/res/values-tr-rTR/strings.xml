@@ -272,13 +272,7 @@
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
     <string name="settings_experimental_description">Bu ayarlar normal kullanım için değildir ve yanlış kullanıldığında LAC Tool\'u bozabilir</string>
-    <string name="settings_experimental_showMapNameFieldGuide">Harita isim alanı rehberini göster</string>
-    <string name="settings_experimental_checkUpdates">Güncellemeleri denetle (sürümü yoksay)</string>
-    <string name="settings_experimental_showUpdateToast">Güncelleme mesajını göster</string>
-    <string name="settings_experimental_showUpdateDialog">Güncelleme diyaloğunu göster</string>
     <string name="settings_experimental_updatesURL">Güncellemeler için URL</string>
-    <string name="settings_experimental_resetPrefs">Deneysel tercihleri sıfırla</string>
-    <string name="settings_experimental_resetPrefsDone">Deneysel tercihlerin varsayılan değerleri geri yüklendi</string>
     <string name="updates_updateAvailable">LAC Tool güncellemesi mevcut! Daha fazla detay için tıklayın</string>
     <string name="updates_noUpdates">Güncelleme yok</string>
     <string name="updates_error">Güncellemeleri denetlerken bir şeyler ters gitti</string>

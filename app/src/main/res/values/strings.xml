@@ -279,14 +279,8 @@
     <string name="settings_about_changelog_noChangelog">Check updates to view changelog</string>
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
-    <string name="settings_experimental_description">These settings are not intended for normal usage and they might break LAC Tool when misused</string>
-    <string name="settings_experimental_showMapNameFieldGuide">Show map name field guide</string>
-    <string name="settings_experimental_checkUpdates">Check updates (ignore version)</string>
-    <string name="settings_experimental_showUpdateToast">Show update toast</string>
-    <string name="settings_experimental_showUpdateDialog">Show update dialog</string>
+    <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
-    <string name="settings_experimental_resetPrefs">Reset experimental prefs</string>
-    <string name="settings_experimental_resetPrefsDone">Restored default values for experimental prefs</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>
     <string name="updates_error">Something went wrong while checking for updates</string>
