@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">ابزار لک/LAC</string>
+    <string name="app_name">ابزار LAC</string>
     <string name="action_back">برگشت</string>
-    <string name="action_ok">اوکی</string>
+    <string name="action_ok">باشه</string>
     <string name="action_cancel">کنسل</string>
     <string name="action_dismiss">نادیده گرفتن</string>
     <string name="action_tapToDismiss">برای رد کردن ضربه بزنید</string>
@@ -21,6 +21,11 @@
     <string name="info_shizuku_startingFileService">شروع سرویس فایل</string>
     <string name="info_shizuku_disconnected">از شیزوکو قطع شده است</string>
     <string name="info_useUnrecommendedAnyway_description">فقط در صورتی این کار را انجام دهید که مطمئن باشید داده های LAC شما در پوشه دیگری ذخیره شده است یا در حال آزمایش هستید</string>
+    <string name="permissions_downgradeFilesApp">به روز رسانی برنامه فایل ها</string>
+    <string name="permissions_downgradeFilesApp_description">برنامه Files در دستگاه شما از درخواست دسترسی به داده های LAC Tool جلوگیری می کند. ممکن است این مشکل با حذف نصب به‌روزرسانی‌های برنامه Files قابل حل باشد</string>
+    <string name="permissions_downgradeFilesApp_uninstall">حذف به‌روزرسانی‌ها</string>
+    <string name="permissions_downgradeFilesApp_cant">حذف نمیشود?</string>
+    <string name="permissions_downgradeFilesApp_guide">به دنبال گزینه‌ای برای حذف به‌روزرسانی‌های برنامه Files در صفحه بعدی بگردید.\nاگر نمی‌توانید به‌روزرسانی‌ها را حذف نصب کنید یا بعد از حذف به‌روزرسانی‌ها همچنان کار نمی‌کند، روی \"{CANT_UNINSTALL_TEXT}\" کلیک کنید.</string>
     <string name="permissions_chooseFolder">انتخاب پوشه</string>
     <string name="permissions_recommendedFolder">پوشه پیشنهادی</string>
     <string name="permissions_recommendedFolder_a8Hint">پس از کلیک بر روی \"Okay\"، این پوشه در پنجره جدیدی باز می شود. اطمینان حاصل کنید که در پوشه صحیح قرار دارید و روی \"USE THIS FOLDER\" کلیک کنید.</string>
@@ -221,8 +226,12 @@
     <string name="settings_appearance_theme_system">همگام با سیستم</string>
     <string name="settings_appearance_theme_light">روشن</string>
     <string name="settings_appearance_theme_dark">تاریک</string>
+    <string name="settings_appearance_colors">رنگ ها</string>
     <string name="settings_appearance_materialYou">متریال شما</string>
     <string name="settings_appearance_materialYou_description">تم بر اساس رنگ دستگاه شما</string>
+    <string name="settings_appearance_materialYou_unavailable">فقط در اندروید 12 و بالاتر موجود است</string>
+    <string name="settings_appearance_pitchBlack">خیلی تاریک</string>
+    <string name="settings_appearance_pitchBlack_description">وقتی حالت تاریک فعال است، پس زمینه سیاه شود</string>
     <string name="settings_maps">تصاویر کوچک مپ</string>
     <string name="settings_maps_description">پیکربندی زمانی که تصاویر کوچک نقشه نشان داده می شوند</string>
     <string name="settings_maps_showChosenMapThumbnail">نمایش تصویر کوچک مپ انتخاب شده</string>
