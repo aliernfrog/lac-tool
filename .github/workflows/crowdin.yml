@@ -15,15 +15,14 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: dev
       
       - name: Crowdin sync
-        uses: crowdin/github-action@v1.19.0
+        uses: crowdin/github-action@v2.0.0
         with:
           create_pull_request: true
           pull_request_title: "feat(l10n): update translations"
           pull_request_base_branch_name: "dev"
+          crowdin_branch_name: "dev"
           localization_branch_name: "l10n"
           commit_message: "feat(l10n): update translations"
           upload_sources: true

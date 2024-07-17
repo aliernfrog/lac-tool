@@ -20,22 +20,14 @@ jobs:
           cache: gradle
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Sign APK
-        id: sign_apk
-        uses: ilharp/sign-android-release@v1
-        with:
-          releaseDir: ./app/build/outputs/apk/release/
-          signingKey: ${{ secrets.KEYSTORE_BASE64 }}
-          keyAlias: ${{ secrets.KEYSTORE_ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/key.jks
+          ./gradlew packageReleaseUniversalApk -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/key.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       - name: Rename signed APK
-        run: mv ${{steps.sign_apk.outputs.signedFile}} lactool.apk
+        run: mv app/build/outputs/apk_from_bundle/release/app-release-universal.apk lactool.apk
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
