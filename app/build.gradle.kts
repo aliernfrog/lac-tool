@@ -4,10 +4,10 @@ plugins {
     id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
-val composeMaterialVersion = "1.7.0-alpha07"
-val composeMaterial3Version = "1.3.0-alpha05"
-val composeCompilerVersion = "1.5.12"
-val lifecycleVersion = "2.7.0"
+val composeMaterialVersion = "1.7.0-beta06"
+val composeMaterial3Version = "1.3.0-beta05"
+val composeCompilerVersion = "1.5.14"
+val lifecycleVersion = "2.8.4"
 val shizukuVersion = "13.1.5"
 
 android {
@@ -81,7 +81,7 @@ android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
 }}")
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.compose.ui:ui:$composeMaterialVersion")
     implementation("androidx.compose.material:material:$composeMaterialVersion")
@@ -90,15 +90,15 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.1")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
-    implementation("aliernfrog:top-toast-compose:2.0.1-alpha01")
+    implementation("com.github.aliernfrog:top-toast-compose:2.1.0-alpha01")
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.8")
     implementation("dev.rikka.shizuku:api:$shizukuVersion")
     implementation("dev.rikka.shizuku:provider:$shizukuVersion")
-    implementation("io.coil-kt:coil-compose:2.6.0")
-    implementation("com.github.jeziellago:compose-markdown:0.4.1")
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("com.github.jeziellago:compose-markdown:0.5.2")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

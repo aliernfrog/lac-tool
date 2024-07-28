@@ -77,7 +77,7 @@ fun BaseModalBottomSheet(
             .padding(top = insetsViewModel.topPadding),
         sheetState = sheetState,
         dragHandle = dragHandle,
-        windowInsets = WindowInsets(0.dp)
+        contentWindowInsets = { WindowInsets(0.dp) }
     ) {
         content(
             insetsViewModel.bottomPadding

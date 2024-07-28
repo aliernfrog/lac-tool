@@ -54,13 +54,6 @@ Shizuku method will automatically be enabled if there is no other way for the ap
 
   - Clone the repository
   - Add a signing config (unless you only want to build debug variant or sign manually)
-  - Obtain a GitHub PAT with `read:packages` scope
-  - Put the PAT and your GitHub username in global/project `gradle.properties`:
-    ```
-    gpr.user=MyUserName
-    gpr.key=MyPAT
-    ```
-    or supply `GITHUB_ACTOR` (username) and `GITHUB_TOKEN` (PAT) in environment variables
   - Build APK:
     - Release variant: `./gradlew assembleRelease`
     - Debug variant: `./gradlew assembleDebug`
