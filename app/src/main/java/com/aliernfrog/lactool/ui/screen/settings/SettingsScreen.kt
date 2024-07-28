@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen.settings
 
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
@@ -127,7 +128,7 @@ private fun SettingsRootPage(
 
             SettingsPage.entries
                 .filter {
-                    it != SettingsPage.ROOT && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled)
+                    it.showInSettingsHome && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled)
                 }
                 .forEach { page ->
                     ButtonRow(
@@ -216,6 +217,7 @@ enum class SettingsPage(
     @StringRes val title: Int,
     @StringRes val description: Int,
     val icon: ImageVector,
+    val showInSettingsHome: Boolean = true,
     val content: @Composable (
         onNavigateBackRequest: () -> Unit,
         onNavigateRequest: (SettingsPage) -> Unit
@@ -226,6 +228,7 @@ enum class SettingsPage(
         title = R.string.settings,
         description = R.string.settings,
         icon = Icons.Outlined.Settings,
+        showInSettingsHome = false,
         content = { onNavigateBackRequest, onNavigateRequest ->
             SettingsRootPage(
                 onNavigateBackRequest = onNavigateBackRequest,
@@ -271,6 +274,7 @@ enum class SettingsPage(
         title = R.string.settings_language,
         description = R.string.settings_language_description,
         icon = Icons.Outlined.Translate,
+        showInSettingsHome = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N,
         content = { onNavigateBackRequest, _ ->
             LanguagePage(onNavigateBackRequest = onNavigateBackRequest)
         }
