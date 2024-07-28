@@ -51,7 +51,7 @@ fun LACToolTheme(
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
 
         activity.window.statusBarColor = transparentColor
-        activity.window.navigationBarColor = transparentColor
+        if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = transparentColor
 
         if (Build.VERSION.SDK_INT >= 29) {
             activity.window.isNavigationBarContrastEnforced = false
