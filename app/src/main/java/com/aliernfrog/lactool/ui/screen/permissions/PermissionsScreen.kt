@@ -81,6 +81,11 @@ fun PermissionsScreen(
                             permissionsGranted = hasPermissions()
                         }
                     )
+                    StorageAccessType.ALL_FILES -> AllFilesPermissionsScreen(
+                        onUpdateStateRequest = {
+                            permissionsGranted = hasPermissions()
+                        }
+                    )
                 }
             }
         }

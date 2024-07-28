@@ -1,18 +1,22 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.util.extension.appHasPermissions
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.toptoast.state.TopToastState
 
 class PermissionsViewModel(
-    val prefs: PreferenceManager
+    val prefs: PreferenceManager,
+    val topToastState: TopToastState
 ) : ViewModel() {
     private var storageAccessType: StorageAccessType
         get() = StorageAccessType.entries[prefs.storageAccessType]
@@ -31,6 +35,10 @@ class PermissionsViewModel(
                 *permissionsData, context = context
             ).isEmpty()
             StorageAccessType.SHIZUKU -> isShizukuFileServiceRunning
+            StorageAccessType.ALL_FILES -> {
+                val result = ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                result == PackageManager.PERMISSION_GRANTED
+            }
         }
     }
 

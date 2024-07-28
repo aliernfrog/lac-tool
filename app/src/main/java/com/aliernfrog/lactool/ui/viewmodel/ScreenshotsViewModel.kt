@@ -27,6 +27,7 @@ import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +66,11 @@ class ScreenshotsViewModel(
             StorageAccessType.SHIZUKU -> {
                 val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
                 shizukuViewModel.fileService!!.getFile(screenshotsDir)!!
+            }
+            StorageAccessType.ALL_FILES -> {
+                val file = File(screenshotsDir)
+                if (!file.isDirectory) file.mkdirs()
+                File(screenshotsDir)
             }
         }.let { FileWrapper(it) }
         return screenshotsFile

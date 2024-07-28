@@ -208,7 +208,7 @@ class FileWrapper(
 
     fun delete() {
         when (file) {
-            is File -> file.delete()
+            is File -> file.deleteRecursively()
             is DocumentFileCompat -> file.delete()
             is ServiceFile -> file.delete()
         }

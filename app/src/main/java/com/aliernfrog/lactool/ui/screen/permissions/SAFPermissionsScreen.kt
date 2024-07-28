@@ -34,8 +34,11 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.data.requiresAndroidData
 import com.aliernfrog.lactool.enum.StorageAccessType
+import com.aliernfrog.lactool.enum.isCompatible
 import com.aliernfrog.lactool.ui.component.CardWithActions
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.DividerRow
+import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
@@ -189,6 +192,21 @@ private fun SAFPermissionsList(
                 },
                 modifier = Modifier.clickable(onClick = ::onClick)
             )
+        }
+
+        if (StorageAccessType.ALL_FILES.isCompatible()) item {
+            FormSection(
+                title = stringResource(R.string.permissions_other),
+                topDivider = true,
+                bottomDivider = false
+            ) {
+                ButtonRow(
+                    title = stringResource(R.string.permissions_saf_allFiles),
+                    description = stringResource(R.string.permissions_saf_allFiles_description)
+                ) {
+                    StorageAccessType.ALL_FILES.enable(permissionsViewModel.prefs)
+                }
+            }
         }
 
         item {

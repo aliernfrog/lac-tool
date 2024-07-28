@@ -46,12 +46,13 @@ fun LACToolTheme(
         if (view.context !is MainActivity) return@SideEffect
         val activity = view.context as Activity
         val insetsController = WindowCompat.getInsetsController(activity.window, view)
-        val transparentColor = Color.Transparent.toArgb()
 
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
 
-        activity.window.statusBarColor = transparentColor
-        if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = transparentColor
+        if (Build.VERSION.SDK_INT >= 23) Color.Transparent.toArgb().let {
+            activity.window.statusBarColor = it
+            if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = it
+        }
 
         if (Build.VERSION.SDK_INT >= 29) {
             activity.window.isNavigationBarContrastEnforced = false

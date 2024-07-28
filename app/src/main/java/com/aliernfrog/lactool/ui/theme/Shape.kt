@@ -6,8 +6,6 @@ import androidx.compose.ui.unit.dp
 
 val AppRoundnessSize = 28.dp
 val AppComponentShape = RoundedCornerShape(AppRoundnessSize)
-val AppInnerComponentShape = RoundedCornerShape(6.dp)
-val AppBottomSheetShape = RoundedCornerShape(topStart = AppRoundnessSize, topEnd = AppRoundnessSize)
 
 val Shapes = Shapes(
     small = RoundedCornerShape(4.dp),
