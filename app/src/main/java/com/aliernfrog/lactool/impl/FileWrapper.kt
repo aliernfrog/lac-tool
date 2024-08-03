@@ -90,11 +90,12 @@ class FileWrapper(
         return cachedByteArray
     }
 
-    val painterModel: Any? = if (isFile) when (file) {
-        is File, is DocumentFileCompat -> path
-        is ServiceFile -> getByteArray()
-        else -> throw invalidFileClassException
-    } else null
+    val painterModel: Any?
+        get() =  if (isFile) when (file) {
+            is File, is DocumentFileCompat -> path
+            is ServiceFile -> getByteArray()
+            else -> throw invalidFileClassException
+        } else null
 
     fun listFiles(): List<FileWrapper> {
         val list: List<Any> = when (file) {
