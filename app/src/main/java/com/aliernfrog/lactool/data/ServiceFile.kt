@@ -29,11 +29,6 @@ fun ServiceFile.exists(): Boolean {
     return shizukuViewModel.fileService!!.exists(path)
 }
 
-fun ServiceFile.getByteArray(): ByteArray {
-    val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
-    return shizukuViewModel.fileService!!.getByteArray(path)
-}
-
 fun ServiceFile.listFiles(): Array<ServiceFile>? {
     val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
     return shizukuViewModel.fileService!!.listFiles(path)
