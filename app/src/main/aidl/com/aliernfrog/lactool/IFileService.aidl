@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool;
 
+import android.os.ParcelFileDescriptor;
 import com.aliernfrog.lactool.data.ServiceFile;
 
 interface IFileService {
@@ -15,8 +16,6 @@ interface IFileService {
 
     boolean exists(String path) = 5;
 
-    byte[] getByteArray(String path) = 6;
-
     ServiceFile getFile(String path) = 7;
 
     ServiceFile[] listFiles(String path) = 8;
@@ -26,4 +25,6 @@ interface IFileService {
     void renameFile(String oldPath, String newPath) = 10;
 
     void writeFile(String path, String text) = 11;
+
+    ParcelFileDescriptor getFd(String path) = 12;
 }
