@@ -21,6 +21,7 @@
     <string name="info_shizuku_startingFileService">Dosya hizmeti başlatılıyor..</string>
     <string name="info_shizuku_disconnected">Shizuku bağlantısı kesildi</string>
     <string name="info_useUnrecommendedAnyway_description">Bunu sadece LAC\'ın verilerinizi başka bir klasörde sakladığından eminseniz veya deneme yapıyorsanız yapın</string>
+    <string name="permissions_other">Diğer seçenekler</string>
     <string name="permissions_downgradeFilesApp">Dosyalar uygulaması güncellemeleri</string>
     <string name="permissions_downgradeFilesApp_description">Cihazınızdaki Dosyalar uygulaması LAC Tool\'un LAC verilerine erişim izni almasını engelliyor. Bu sorun, Dosyalar uygulamasının güncellemelerinin kaldırılmasıyla çözülebilir</string>
     <string name="permissions_downgradeFilesApp_uninstall">Güncellemeleri kaldır</string>
@@ -38,6 +39,8 @@
     <string name="permissions_notRecommendedFolder_advanced_show">Gelişmiş seçenekleri göster</string>
     <string name="permissions_notRecommendedFolder_advanced_hide">Gelişmiş seçenekleri gizle</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Yine de seçilen klasörü kullan</string>
+    <string name="permissions_saf_allFiles">Tüm dosyalara eriş</string>
+    <string name="permissions_saf_allFiles_description">LAC Tool\'un bütün dosyalara erişmesine izin verir, bunun kurulumu daha kolay olabilir</string>
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
     <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan açıp kapatabilirsiniz.</string>
     <string name="permissions_shizuku_introduction">Shizuku, kablosuz hata ayıklamayı kullanarak diğer uygulamaların kabuk (shell) izinlerini kullanmasını sağlayan bir uygulamadır.\nShizuku modu Ayarlar &gt; Depolama &gt; Depolama erişimi tipi kısmından devre dışı bırakılabilir</string>
@@ -49,6 +52,12 @@
     <string name="permissions_shizuku_permission">İzin gerekli</string>
     <string name="permissions_shizuku_permission_description">LAC Tool\'un Shizuku kullanması için gerekli izinleri yok</string>
     <string name="permissions_shizuku_permission_grant">İzin ver</string>
+    <string name="permissions_allFiles_title">Depolama izinleri</string>
+    <string name="permissions_allFiles_description">LAC Tool\'un LAC verilerine erişmesi için depolama izinleri gereklidir</string>
+    <string name="permissions_allFiles_grant">İzin ver</string>
+    <string name="permissions_allFiles_denied">İzin reddedildi</string>
+    <string name="permissions_allFiles_saf">Belirli klasörlere eriş</string>
+    <string name="permissions_allFiles_saf_description">LAC Tool\'un sadece ihtiyacı olan klasörlere erişmesine izin verir, bunun kurulumu karmaşık olabilir</string>
     <string name="maps">Haritalar</string>
     <string name="maps_permissions">LAC haritaları klasörü</string>
     <string name="maps_permissions_description">LAC haritalarınızın saklandığı klasörü seçmeniz gerekiyor</string>
@@ -245,6 +254,8 @@
     <string name="settings_storage_storageAccessType_saf_description">Sadece LAC Tool\'un ihtiyaç duyduğu klasörlere erişin</string>
     <string name="settings_storage_storageAccessType_shizuku">Shizuku</string>
     <string name="settings_storage_storageAccessType_shizuku_description">Depolamaya erişmek için Shizuku kullanın</string>
+    <string name="settings_storage_storageAccessType_allFiles">Bütün dosyalara erişim (eski)</string>
+    <string name="settings_storage_storageAccessType_allFiles_description">Bütün dosyalara eriş, bunun kurulumu daha kolay olabilir</string>
     <string name="settings_storage_folders">Klasörler</string>
     <string name="settings_storage_folders_default">Varsayılan: %s</string>
     <string name="settings_storage_folders_notSet">Ayarlanmadı</string>
@@ -266,16 +277,25 @@
     <string name="settings_language_system_notAvailable">{SYSTEM_LANGUAGE} mevcut değil</string>
     <string name="settings_language_selected">Seçili</string>
     <string name="settings_about">Hakkında</string>
+    <string name="settings_about_changelog">Değişiklik günlüğü</string>
     <string name="settings_about_update">Güncelle</string>
     <string name="settings_about_autoCheckUpdates">Güncellemeleri otomatik olarak denetle</string>
     <string name="settings_about_autoCheckUpdates_description">LAC Tool başlatıldığında güncellemeleri kontrol et</string>
+    <string name="settings_about_credits">Emeği geçenler</string>
+    <string name="settings_about_libs">Kütüphaneler</string>
+    <string name="settings_about_libs_description">LAC Tool\'u yapmak için kullanılan kütüphaneler</string>
+    <string name="settings_about_libs_website">Web sitesi</string>
+    <string name="settings_about_libs_organization">Organizasyon</string>
     <string name="settings_about_credits_gameDev">LAC geliştiricisi</string>
     <string name="settings_about_credits_appDev">LAC Tool geliştiricisi</string>
     <string name="settings_about_credits_ui">Arayüz</string>
     <string name="settings_about_credits_crowdin">Crowdin üyeleri</string>
     <string name="settings_about_credits_translations">Çeviriler</string>
     <string name="settings_about_credits_inspiration">İlham</string>
-    <string name="settings_about_changelog">Değişiklik günlüğü</string>
+    <string name="settings_about_other">Diğer</string>
+    <string name="settings_about_other_copyDebugInfo">Hata ayıklama bilgilerini kopyala</string>
+    <string name="settings_about_other_copyDebugInfo_description">Hata ayıklamak için kullanışlı bilgileri içerir. Bunun hata raporlarına dahil edilmesi önerilir</string>
+    <string name="settings_about_other_copyDebugInfo_copied">Hata ayıklama bilgileri kopyalandı</string>
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
     <string name="settings_experimental_description">Normal kullanım için değildir, yanlış kullanıldığında uygulamayı bozabilir</string>
@@ -287,4 +307,6 @@
     <string name="updates_preRelease">Ön sürüm</string>
     <string name="updates_openInGithub">GitHub\'da görüntüle</string>
     <string name="updates_update">Güncelle</string>
+    <string name="updates_checkUpdates">Güncellemeleri denetle</string>
+    <string name="updates_noChangelog">Değişiklik günlüğünü görmek için güncellemeleri denetleyin</string>
 </resources>
