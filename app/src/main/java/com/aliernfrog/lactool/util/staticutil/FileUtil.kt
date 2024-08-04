@@ -21,7 +21,7 @@ class FileUtil {
             return path.substring(0, extensionIndex)
         }
 
-        fun getFilePath(path: String): String? {
+        fun getFilePath(path: String): String {
             return if (path.startsWith("/")) path
             else Uri.parse(path).toPath()
         }

@@ -7,7 +7,7 @@
 
   <br>
 
-  [![Download (Android 6.0 or above)](https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Download%20(Android%206.0%2B)&labelColor=green&color=grey)](https://github.com/aliernfrog/lac-tool/releases/latest/download/lactool.apk)
+  [![Download (Android 5.0 or above)](https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Download%20(Android%205.0%2B)&labelColor=green&color=grey)](https://github.com/aliernfrog/lac-tool/releases/latest/download/lactool.apk)
   [![Download legacy (Android 4.3 or above)](https://img.shields.io/github/v/tag/aliernfrog/lac-tool-legacy?style=for-the-badge&label=Download%20legacy%20(Android%204.3%2B)&labelColor=blue&color=grey)](https://github.com/aliernfrog/lac-tool-legacy/releases/latest/download/lactool-legacy.apk)
 
   <br>

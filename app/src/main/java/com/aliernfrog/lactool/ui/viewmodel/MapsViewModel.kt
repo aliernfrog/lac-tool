@@ -29,6 +29,7 @@ import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,6 +164,11 @@ class MapsViewModel(
                 val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
                 shizukuViewModel.fileService!!.getFile(mapsDir)!!
             }
+            StorageAccessType.ALL_FILES -> {
+                val file = File(mapsDir)
+                if (!file.isDirectory) file.mkdirs()
+                File(mapsDir)
+            }
         }.let { FileWrapper(it) }
         return mapsFile
     }
@@ -182,6 +188,11 @@ class MapsViewModel(
             StorageAccessType.SHIZUKU -> {
                 val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
                 shizukuViewModel.fileService!!.getFile(exportedMapsDir)!!
+            }
+            StorageAccessType.ALL_FILES -> {
+                val file = File(exportedMapsDir)
+                if (!file.isDirectory) file.mkdirs()
+                File(exportedMapsDir)
             }
         }.let { FileWrapper(it) }
         return exportedMapsFile

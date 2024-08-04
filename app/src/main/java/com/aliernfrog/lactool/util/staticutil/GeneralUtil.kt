@@ -81,7 +81,7 @@ class GeneralUtil {
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
             var internalPath = wallpapersPath
             try {
-                internalPath = Uri.parse(wallpapersPath).toPath() ?: wallpapersPath
+                internalPath = Uri.parse(wallpapersPath).toPath()
             } catch (_: Exception) {}
             return "file://$internalPath/$fileName"
         }

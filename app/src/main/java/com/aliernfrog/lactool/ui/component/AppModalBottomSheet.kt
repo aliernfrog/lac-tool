@@ -17,12 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aliernfrog.lactool.imeSupportsSyncAppContent
-import com.aliernfrog.lactool.ui.theme.AppBottomSheetShape
 import com.aliernfrog.lactool.ui.viewmodel.InsetsViewModel
 import com.aliernfrog.lactool.util.extension.isAnyVisible
 import kotlinx.coroutines.launch
@@ -44,7 +41,6 @@ fun AppModalBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(AppBottomSheetShape)
                 .verticalScroll(sheetScrollState)
                 .padding(bottom = bottomPadding)
         ) {
@@ -79,11 +75,6 @@ fun BaseModalBottomSheet(
         dragHandle = dragHandle,
         contentWindowInsets = { WindowInsets(0.dp) }
     ) {
-        content(
-            insetsViewModel.bottomPadding
-            // If IME does not sync app content, keyboard will show over the bottom sheet
-            // Add IME padding to workaround this
-            + (if (imeSupportsSyncAppContent) 0.dp else insetsViewModel.imePadding)
-        )
+        content(insetsViewModel.bottomPadding)
     }
 }
