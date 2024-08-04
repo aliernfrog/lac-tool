@@ -38,3 +38,8 @@ fun ServiceFile.renameTo(newPath: String) {
     val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
     shizukuViewModel.fileService!!.renameFile(path, newPath)
 }
+
+fun ServiceFile.mkdirs() {
+    val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+    shizukuViewModel.fileService!!.mkdirs(path)
+}

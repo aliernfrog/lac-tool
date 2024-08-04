@@ -14,6 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.exists
+import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
@@ -65,6 +67,8 @@ class ScreenshotsViewModel(
             }
             StorageAccessType.SHIZUKU -> {
                 val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+                val file = shizukuViewModel.fileService!!.getFile(screenshotsDir)!!
+                if (!file.exists()) file.mkdirs()
                 shizukuViewModel.fileService!!.getFile(screenshotsDir)!!
             }
             StorageAccessType.ALL_FILES -> {

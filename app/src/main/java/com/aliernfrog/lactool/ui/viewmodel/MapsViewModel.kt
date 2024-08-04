@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
+import com.aliernfrog.lactool.data.exists
+import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
@@ -162,6 +164,8 @@ class MapsViewModel(
             }
             StorageAccessType.SHIZUKU -> {
                 val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+                val file = shizukuViewModel.fileService!!.getFile(mapsDir)!!
+                if (!file.exists()) file.mkdirs()
                 shizukuViewModel.fileService!!.getFile(mapsDir)!!
             }
             StorageAccessType.ALL_FILES -> {
@@ -187,6 +191,8 @@ class MapsViewModel(
             }
             StorageAccessType.SHIZUKU -> {
                 val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
+                val file = shizukuViewModel.fileService!!.getFile(exportedMapsDir)!!
+                if (!file.exists()) file.mkdirs()
                 shizukuViewModel.fileService!!.getFile(exportedMapsDir)!!
             }
             StorageAccessType.ALL_FILES -> {
