@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.CopyAll
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.outlined.CopyAll
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,11 +37,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -69,6 +73,7 @@ fun AboutPage(
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+    val clipboardManager = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
     val appIcon = remember {
         context.packageManager.getApplicationIcon(context.packageName).toBitmap().asImageBitmap()
@@ -163,7 +168,7 @@ fun AboutPage(
         FormSection(
             title = stringResource(R.string.settings_about_credits),
             topDivider = true,
-            bottomDivider = false
+            bottomDivider = true
         ) {
             LaunchedEffect(Unit) {
                 SettingsConstant.credits.forEach {
@@ -212,6 +217,23 @@ fun AboutPage(
                 expanded = false,
                 onClick = onNavigateLibsRequest
             )
+        }
+
+        FormSection(
+            title = stringResource(R.string.settings_about_other),
+            bottomDivider = false
+        ) {
+            ButtonRow(
+                title = stringResource(R.string.settings_about_other_copyDebugInfo),
+                description = stringResource(R.string.settings_about_other_copyDebugInfo_description),
+                painter = rememberVectorPainter(Icons.Outlined.CopyAll)
+            ) {
+                clipboardManager.setText(AnnotatedString(mainViewModel.debugInfo))
+                settingsViewModel.topToastState.showToast(
+                    text = R.string.settings_about_other_copyDebugInfo_copied,
+                    icon = Icons.Default.CopyAll
+                )
+            }
         }
     }
 }

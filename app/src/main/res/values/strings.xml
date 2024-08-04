@@ -291,6 +291,10 @@
     <string name="settings_about_credits_crowdin">Crowdin members</string>
     <string name="settings_about_credits_translations">Translations</string>
     <string name="settings_about_credits_inspiration">Inspiration</string>
+    <string name="settings_about_other">Other</string>
+    <string name="settings_about_other_copyDebugInfo">Copy debug information</string>
+    <string name="settings_about_other_copyDebugInfo_description">Includes information useful for debugging. Including this in bug reports is recommended</string>
+    <string name="settings_about_other_copyDebugInfo_copied">Copied debug information</string>
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>

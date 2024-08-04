@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.viewmodel
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.data.ReleaseInfo
@@ -38,6 +40,7 @@ import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.extension.toLanguage
+import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -57,6 +60,7 @@ class MainViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     val progressState: ProgressState,
+    private val contextUtils: ContextUtils,
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
@@ -93,6 +97,16 @@ class MainViewModel(
 
     var updateAvailable by mutableStateOf(false)
         private set
+
+    val debugInfo: String
+        get() = arrayOf(
+            "LAC Tool $applicationVersionName ($applicationVersionCode)",
+            "Android API ${Build.VERSION.SDK_INT}",
+            "Storage access type ${prefs.storageAccessType}",
+            SettingsConstant.experimentalPrefOptions.joinToString("\n") {
+                "${contextUtils.getString(it.labelResourceId)}: ${it.getValue(prefs)}"
+            }
+        ).joinToString("\n")
 
     init {
         if (!supportsPerAppLanguagePreferences && prefs.language.isNotBlank()) runBlocking {
