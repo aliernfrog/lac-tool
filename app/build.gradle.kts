@@ -92,7 +92,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.activity:activity-compose:1.9.1")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.navigation:navigation-compose:2.8.0-beta06")
     implementation("com.mikepenz:aboutlibraries-core:11.2.2")
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
     implementation("com.github.aliernfrog:top-toast-compose:2.1.0-alpha01")
