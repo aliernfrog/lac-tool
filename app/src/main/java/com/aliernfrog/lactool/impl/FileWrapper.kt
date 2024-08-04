@@ -76,9 +76,9 @@ class FileWrapper(
         }?.let { FileWrapper(it) }
 
     private var cachedByteArray: ByteArray? = null
-    private fun getByteArray(): ByteArray? {
+    private fun getByteArray(ignoreCache: Boolean = false): ByteArray? {
         if (file !is ServiceFile) return null
-        cachedByteArray?.let { return it }
+        if (!ignoreCache) cachedByteArray?.let { return it }
         val fd = shizukuViewModel.fileService!!.getFd(path)
         val input = ParcelFileDescriptor.AutoCloseInputStream(fd)
         val output = ByteArrayOutputStream()
@@ -181,7 +181,7 @@ class FileWrapper(
         return when (file) {
             is File -> file.inputStream()
             is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
-            is ServiceFile -> getByteArray()!!.inputStream()
+            is ServiceFile -> getByteArray(ignoreCache = true)!!.inputStream()
             else -> throw invalidFileClassException
         }
     }
@@ -219,7 +219,13 @@ class FileWrapper(
             is DocumentFileCompat -> context.contentResolver.openOutputStream(file.uri)?.use {
                 FileUtil.writeFile(it, content)
             }
-            is ServiceFile -> shizukuViewModel.fileService!!.writeFile(file.path, content)
+            is ServiceFile -> {
+                val fd = shizukuViewModel.fileService!!.getFd(path)
+                ParcelFileDescriptor.AutoCloseOutputStream(fd).use {
+                    FileUtil.writeFile(it, content)
+                }
+                fd.close()
+            }
         }
     }
 

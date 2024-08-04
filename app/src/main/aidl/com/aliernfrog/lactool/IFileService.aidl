@@ -24,7 +24,5 @@ interface IFileService {
 
     void renameFile(String oldPath, String newPath) = 10;
 
-    void writeFile(String path, String text) = 11;
-
     ParcelFileDescriptor getFd(String path) = 12;
 }

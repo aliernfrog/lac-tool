@@ -61,13 +61,7 @@ class FileService : IFileService.Stub() {
         File(oldPath).renameTo(File(newPath))
     }
 
-    override fun writeFile(path: String, text: String) {
-        File(path).outputStream().use {
-            FileUtil.writeFile(it, text)
-        }
-    }
-
     override fun getFd(path: String): ParcelFileDescriptor {
-        return ParcelFileDescriptor.open(File(path), ParcelFileDescriptor.MODE_READ_ONLY)
+        return ParcelFileDescriptor.open(File(path), ParcelFileDescriptor.MODE_READ_WRITE)
     }
 }
