@@ -12,6 +12,8 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
@@ -38,6 +40,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -58,6 +61,7 @@ fun BaseScaffold(
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
+    val layoutDirection = LocalLayoutDirection.current
 
     val destinations = remember { Destination.entries.toList() }
     val mainDestinations = remember { destinations.filter { it.showInNavigationBar } }
@@ -100,7 +104,14 @@ fun BaseScaffold(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
-        content(it)
+        val paddingValues = if (showNavigationRail == true || currentDestination?.showNavigationBar != false) it
+        else PaddingValues(
+            start = it.calculateStartPadding(layoutDirection),
+            top = it.calculateTopPadding(),
+            end = it.calculateEndPadding(layoutDirection),
+            bottom = 0.dp
+        )
+        content(paddingValues)
     }
 
     if (showNavigationRail == true) SideBarRail(
