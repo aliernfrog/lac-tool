@@ -32,6 +32,7 @@ fun Uri.cacheFile(context: Context): File? {
 }
 
 fun Uri.toPath(): String {
+    if (!toString().contains(":")) return toString()
     val pathSplit = pathSegments.last().split(":", limit = 2)
     val root = pathSplit.first()
     val filePath = pathSplit.last()

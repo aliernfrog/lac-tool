@@ -112,7 +112,7 @@ private fun GeneralActions(
             ExpandableRow(
                 expanded = mapsEditViewModel.mapTypesExpanded,
                 title = stringResource(R.string.mapsEdit_mapType),
-                description = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
+                trailingButtonText = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
                 onClickHeader = {
                     mapsEditViewModel.mapTypesExpanded = !mapsEditViewModel.mapTypesExpanded
                 }
