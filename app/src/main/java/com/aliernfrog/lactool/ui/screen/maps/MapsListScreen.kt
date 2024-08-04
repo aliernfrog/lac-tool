@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -43,6 +42,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,7 +80,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsListScreen(
     title: String = stringResource(R.string.mapsList_pickMap),
@@ -273,7 +273,7 @@ fun MapsListScreen(
                 MapButton(
                     map = map,
                     showMapThumbnail = mapsListViewModel.prefs.showMapThumbnailsInList,
-                    modifier = Modifier.animateItemPlacement(),
+                    modifier = Modifier.animateItem(),
                     trailingComponent = {
                         if (isMultiSelecting) Checkbox(
                             modifier = Modifier.padding(horizontal = 12.dp),
@@ -310,92 +310,98 @@ private fun Search(
     onReversedChange: (Boolean) -> Unit
 ) {
     SearchBar(
-        query = searchQuery,
-        onQueryChange = onSearchQueryChange,
-        onSearch = {},
-        active = false,
-        onActiveChange = {},
-        leadingIcon = {
-            if (searchQuery.isNotEmpty()) IconButton(
-                onClick = { onSearchQueryChange("") }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Clear,
-                    contentDescription = stringResource(R.string.mapsList_search_clear)
-                )
-            } else Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = null
-            )
-        },
-        trailingIcon = {
-            var sortingOptionsShown by rememberSaveable { mutableStateOf(false) }
-            IconButton(
-                onClick = { sortingOptionsShown = true }
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Sort,
-                    contentDescription = stringResource(R.string.mapsList_sorting)
-                )
-            }
-            DropdownMenu(
-                expanded = sortingOptionsShown,
-                onDismissRequest = { sortingOptionsShown = false }
-            ) {
-                Text(
-                    text = stringResource(R.string.mapsList_sorting),
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
-                DividerRow(Modifier.padding(vertical = 4.dp))
-                MapsListSortingType.entries.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(option.labelId)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = option.iconVector,
-                                contentDescription = null
-                            )
-                        },
-                        trailingIcon = {
-                            RadioButton(
-                                selected = option == sorting,
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = searchQuery,
+                onQueryChange = onSearchQueryChange,
+                onSearch = {},
+                expanded = false,
+                onExpandedChange = {},
+                leadingIcon = {
+                    if (searchQuery.isNotEmpty()) IconButton(
+                        onClick = { onSearchQueryChange("") }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.mapsList_search_clear)
+                        )
+                    } else Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = {
+                    var sortingOptionsShown by rememberSaveable { mutableStateOf(false) }
+                    IconButton(
+                        onClick = { sortingOptionsShown = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Sort,
+                            contentDescription = stringResource(R.string.mapsList_sorting)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = sortingOptionsShown,
+                        onDismissRequest = { sortingOptionsShown = false }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.mapsList_sorting),
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        )
+                        DividerRow(Modifier.padding(vertical = 4.dp))
+                        MapsListSortingType.entries.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(option.labelId)) },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = option.iconVector,
+                                        contentDescription = null
+                                    )
+                                },
+                                trailingIcon = {
+                                    RadioButton(
+                                        selected = option == sorting,
+                                        onClick = { onSortingChange(option) }
+                                    )
+                                },
                                 onClick = { onSortingChange(option) }
                             )
-                        },
-                        onClick = { onSortingChange(option) }
-                    )
+                        }
+                        DividerRow(Modifier.padding(vertical = 4.dp))
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.mapsList_sorting_reverse)) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.SwapVert,
+                                    contentDescription = null
+                                )
+                            },
+                            trailingIcon = {
+                                Checkbox(
+                                    checked = reversed,
+                                    onCheckedChange = { onReversedChange(it) }
+                                )
+                            },
+                            onClick = { onReversedChange(!reversed) }
+                        )
+                    }
+                },
+                placeholder = {
+                    Text(stringResource(R.string.mapsList_search))
                 }
-                DividerRow(Modifier.padding(vertical = 4.dp))
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.mapsList_sorting_reverse)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.SwapVert,
-                            contentDescription = null
-                        )
-                    },
-                    trailingIcon = {
-                        Checkbox(
-                            checked = reversed,
-                            onCheckedChange = { onReversedChange(it) }
-                        )
-                    },
-                    onClick = { onReversedChange(!reversed) }
-                )
-            }
+            )
         },
-        placeholder = {
-            Text(stringResource(R.string.mapsList_search))
-        },
+        expanded = false,
+        onExpandedChange = {},
+        content = {},
         modifier = Modifier
             .fillMaxWidth()
             .offset(y = (-12).dp)
             .padding(
                 start = 8.dp,
                 end = 8.dp
-            ),
-        content = {}
+            )
     )
 }
 

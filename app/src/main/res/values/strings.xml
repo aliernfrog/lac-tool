@@ -276,18 +276,21 @@
     <string name="settings_language_system_notAvailable">{SYSTEM_LANGUAGE} is not available</string>
     <string name="settings_language_selected">Selected</string>
     <string name="settings_about">About</string>
+    <string name="settings_about_changelog">Changelog</string>
     <string name="settings_about_update">Update</string>
-    <string name="settings_about_checkUpdates">Check for updates</string>
     <string name="settings_about_autoCheckUpdates">Check for updates automatically</string>
     <string name="settings_about_autoCheckUpdates_description">Check for LAC Tool updates automatically on launch</string>
+    <string name="settings_about_credits">Credits</string>
+    <string name="settings_about_libs">Libraries</string>
+    <string name="settings_about_libs_description">Libraries used to make LAC Tool</string>
+    <string name="settings_about_libs_website">Website</string>
+    <string name="settings_about_libs_organization">Organization</string>
     <string name="settings_about_credits_gameDev">LAC developer</string>
     <string name="settings_about_credits_appDev">LAC Tool developer</string>
     <string name="settings_about_credits_ui">UI</string>
     <string name="settings_about_credits_crowdin">Crowdin members</string>
     <string name="settings_about_credits_translations">Translations</string>
     <string name="settings_about_credits_inspiration">Inspiration</string>
-    <string name="settings_about_changelog">Changelog</string>
-    <string name="settings_about_changelog_noChangelog">Check updates to view changelog</string>
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>
@@ -299,4 +302,6 @@
     <string name="updates_preRelease">Pre-release</string>
     <string name="updates_openInGithub">View in GitHub</string>
     <string name="updates_update">Update</string>
+    <string name="updates_checkUpdates">Check updates</string>
+    <string name="updates_noChangelog">Check updates to view changelog</string>
 </resources>

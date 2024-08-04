@@ -267,7 +267,6 @@
     <string name="settings_language_selected">انتخاب‌شده</string>
     <string name="settings_about">درباره</string>
     <string name="settings_about_update">به‌روزرسانی</string>
-    <string name="settings_about_checkUpdates">بررسی به‌روزرسانی</string>
     <string name="settings_about_autoCheckUpdates">بررسی خودکار به‌روزرسانی‌ها</string>
     <string name="settings_about_autoCheckUpdates_description">به‌روزرسانی‌های ابزار LAC را به‌طور خودکار هنگام راه‌اندازی بررسی کنید</string>
     <string name="settings_about_credits_gameDev">توسعه دهنده‌ی LAC</string>
@@ -277,7 +276,6 @@
     <string name="settings_about_credits_translations">ترجمه‌ها</string>
     <string name="settings_about_credits_inspiration">الهام گرفتن از خدا</string>
     <string name="settings_about_changelog">تغییرات</string>
-    <string name="settings_about_changelog_noChangelog">برای مشاهده تغییرات ثبت شده، به روز رسانی ها را بررسی کنید</string>
     <string name="settings_experimental">تنظیمات آزمایشی</string>
     <string name="settings_experimental_enabled">تنظیمات آزمایشی فعال شد!</string>
     <string name="settings_experimental_description">این تنظیمات برای استفاده معمولی در نظر گرفته نشده اند و ممکن است در صورت استفاده نادرست ابزار LAC را خراب کنند</string>

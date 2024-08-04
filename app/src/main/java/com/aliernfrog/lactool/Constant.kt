@@ -4,9 +4,9 @@ import android.os.Build
 import android.os.Environment
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Translate
-import com.aliernfrog.lactool.data.CreditsData
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
+import com.aliernfrog.lactool.impl.CreditData
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 const val TAG = "LACToolLogs"
@@ -96,35 +96,39 @@ object SettingsConstant {
     )
 
     val credits = listOf(
-        CreditsData(
+        CreditData(
             name = "Mohammad Alizadeh",
+            githubUsername = "Alizadev",
             description = R.string.settings_about_credits_gameDev,
-            url = "https://discord.gg/aQhGqHSc3W"
+            link = "https://discord.gg/aQhGqHSc3W"
         ),
-        CreditsData(
+        CreditData(
             name = "alieRN",
-            description = R.string.settings_about_credits_appDev,
-            url = "https://github.com/aliernfrog"
+            githubUsername = "aliernfrog",
+            description = R.string.settings_about_credits_appDev
         ),
-        CreditsData(
+        CreditData(
             name = "infini0083",
-            description = R.string.settings_about_credits_ui,
-            url = "https://github.com/infini0083"
+            githubUsername = "infini0083",
+            description = R.string.settings_about_credits_ui
         ),
-        CreditsData(
+        CreditData(
             name = R.string.settings_about_credits_crowdin,
+            githubUsername = "crowdin",
             description = R.string.settings_about_credits_translations,
-            url = crowdinURL
+            link = crowdinURL
         ),
-        CreditsData(
+        CreditData(
             name = "Vendetta Manager",
+            githubUsername = "vendetta-mod",
             description = R.string.settings_about_credits_inspiration,
-            url = "https://github.com/vendetta-mod/VendettaManager"
+            link = "https://github.com/vendetta-mod/VendettaManager"
         ),
-        CreditsData(
+        CreditData(
             name = "ReVanced Manager",
+            githubUsername = "ReVanced",
             description = R.string.settings_about_credits_inspiration,
-            url = "https://github.com/ReVanced/revanced-manager"
+            link = "https://github.com/ReVanced/revanced-manager"
         )
     )
 

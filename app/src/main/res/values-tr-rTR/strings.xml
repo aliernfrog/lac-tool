@@ -267,7 +267,6 @@
     <string name="settings_language_selected">Seçili</string>
     <string name="settings_about">Hakkında</string>
     <string name="settings_about_update">Güncelle</string>
-    <string name="settings_about_checkUpdates">Güncellemeleri denetle</string>
     <string name="settings_about_autoCheckUpdates">Güncellemeleri otomatik olarak denetle</string>
     <string name="settings_about_autoCheckUpdates_description">LAC Tool başlatıldığında güncellemeleri kontrol et</string>
     <string name="settings_about_credits_gameDev">LAC geliştiricisi</string>
@@ -277,7 +276,6 @@
     <string name="settings_about_credits_translations">Çeviriler</string>
     <string name="settings_about_credits_inspiration">İlham</string>
     <string name="settings_about_changelog">Değişiklik günlüğü</string>
-    <string name="settings_about_changelog_noChangelog">Değişiklik günlüğünü görmek için güncellemeleri denetleyin</string>
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
     <string name="settings_experimental_description">Normal kullanım için değildir, yanlış kullanıldığında uygulamayı bozabilir</string>

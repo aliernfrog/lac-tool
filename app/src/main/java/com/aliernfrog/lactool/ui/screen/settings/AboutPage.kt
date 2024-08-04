@@ -2,33 +2,36 @@ package com.aliernfrog.lactool.ui.screen.settings
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -40,17 +43,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import coil.compose.rememberAsyncImagePainter
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.HorizontalSegmentor
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.form.FormHeader
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
-import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import com.aliernfrog.lactool.util.extension.resolveString
-import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,14 +64,14 @@ import org.koin.androidx.compose.koinViewModel
 fun AboutPage(
     mainViewModel: MainViewModel = koinViewModel(),
     settingsViewModel: SettingsViewModel = koinViewModel(),
+    onNavigateLibsRequest: () -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
     val appIcon = remember {
-        context.packageManager.getApplicationIcon(context.packageName)
-            .toBitmap().asImageBitmap()
+        context.packageManager.getApplicationIcon(context.packageName).toBitmap().asImageBitmap()
     }
     val appVersion = remember {
         "${mainViewModel.applicationVersionName} (${mainViewModel.applicationVersionCode})"
@@ -76,133 +81,149 @@ fun AboutPage(
         title = stringResource(R.string.settings_about),
         onNavigateBackRequest = onNavigateBackRequest
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.aligned(Alignment.CenterHorizontally),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        VerticalSegmentor({
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .padding(vertical = 8.dp)
             ) {
-                Image(
-                    bitmap = appIcon,
-                    contentDescription = stringResource(R.string.app_name),
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .size(72.dp)
-                )
-                Column {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        bitmap = appIcon,
+                        contentDescription = stringResource(R.string.app_name),
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(72.dp)
                     )
-                    Text(
-                        text = appVersion,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.clickable {
-                            settingsViewModel.onAboutClick()
-                        }
-                    )
+                    Column {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = appVersion,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.clickable {
+                                settingsViewModel.onAboutClick()
+                            }
+                        )
+                    }
                 }
+                ChangelogButton(
+                    updateAvailable = mainViewModel.updateAvailable
+                ) { scope.launch {
+                    mainViewModel.updateSheetState.show()
+                } }
             }
-            UpdateButton(
-                updateAvailable = mainViewModel.updateAvailable
-            ) { updateAvailable -> scope.launch {
-                if (updateAvailable) mainViewModel.updateSheetState.show()
-                else mainViewModel.checkUpdates(manuallyTriggered = true)
-            } }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                SettingsConstant.socials.forEach { social ->
-                    TextButton(
-                        onClick = { uriHandler.openUri(social.url) }
-                    ) {
-                        ButtonIcon(when (val icon = social.icon) {
+        }, {
+            val socialButtons: List<@Composable () -> Unit> = SettingsConstant.socials.map { social -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                        .clickable {
+                            uriHandler.openUri(social.url)
+                        }
+                        .padding(vertical = 8.dp)
+                ) {
+                    Icon(
+                        painter = when (val icon = social.icon) {
                             is Int -> painterResource(icon)
                             is ImageVector -> rememberVectorPainter(icon)
                             else -> throw IllegalArgumentException("unexpected class for social icon")
-                        })
-                        Text(social.label)
-                    }
-                }
-            }
-
-            val creditsScrollState = rememberScrollState()
-            Row(
-                modifier = Modifier
-                    .padding(top = 2.dp)
-                    .horizontalFadingEdge(
-                        scrollState = creditsScrollState,
-                        edgeColor = MaterialTheme.colorScheme.surface,
-                        isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
+                        },
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
                     )
-                    .horizontalScroll(creditsScrollState)
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                SettingsConstant.credits.forEach { data ->
-                    ElevatedCard(
-                        onClick = { uriHandler.openUri(data.url) }
-                    ) {
-                        Text(
-                            text = data.name.resolveString(),
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                        )
-                        Text(
-                            text = data.description.resolveString(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                        )
-                    }
+                    Text(social.label)
                 }
-            }
-        }
+            } }
+
+            HorizontalSegmentor(
+                *socialButtons.toTypedArray(),
+                shape = RectangleShape
+            )
+        }, modifier = Modifier.padding(horizontal = 16.dp))
 
         SwitchRow(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
             description = stringResource(R.string.settings_about_autoCheckUpdates_description),
-            checked = settingsViewModel.prefs.autoCheckUpdates
+            checked = settingsViewModel.prefs.autoCheckUpdates,
+            modifier = Modifier.padding(top = 8.dp)
         ) {
             settingsViewModel.prefs.autoCheckUpdates = it
         }
 
         FormSection(
-            title = stringResource(R.string.settings_about_changelog),
+            title = stringResource(R.string.settings_about_credits),
             topDivider = true,
             bottomDivider = false
         ) {
-            Card(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                shape = AppComponentShape,
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                )
-            ) {
-                MarkdownText(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    markdown = mainViewModel.latestVersionInfo.body,
-                    style = LocalTextStyle.current.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                    linkColor = MaterialTheme.colorScheme.primary,
-                    onLinkClicked = { uriHandler.openUri(it) }
-                )
+            LaunchedEffect(Unit) {
+                SettingsConstant.credits.forEach {
+                    it.fetchAvatar()
+                }
             }
+
+            SettingsConstant.credits.forEach { data ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(56.dp)
+                        .clickable {
+                            data.link?.let { uriHandler.openUri(it) }
+                        }
+                        .padding(
+                            vertical = 8.dp,
+                            horizontal = 14.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = data.avatarURL?.let {
+                            rememberAsyncImagePainter(model = it)
+                        } ?: rememberVectorPainter(Icons.Default.Face),
+                        contentDescription = null,
+                        colorFilter = if (data.avatarURL != null) null else ColorFilter.tint(
+                            MaterialTheme.colorScheme.onSurface
+                        ),
+                        modifier = Modifier
+                            .padding(end = 14.dp)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                    )
+                    FormHeader(
+                        title = data.name.resolveString(),
+                        description = data.description.resolveString()
+                    )
+                }
+            }
+            ButtonRow(
+                title = stringResource(R.string.settings_about_libs),
+                description = stringResource(R.string.settings_about_libs_description),
+                painter = rememberVectorPainter(Icons.Default.Book),
+                arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f,
+                expanded = false,
+                onClick = onNavigateLibsRequest
+            )
         }
     }
 }
 
 @Composable
-private fun UpdateButton(
+private fun ChangelogButton(
     updateAvailable: Boolean,
-    onClick: (updateAvailable: Boolean) -> Unit
+    onClick: () -> Unit
 ) {
     AnimatedContent(updateAvailable) {
         if (it) ElevatedButton(
-            onClick = { onClick(true) }
+            onClick = { onClick() }
         ) {
             ButtonIcon(
                 rememberVectorPainter(Icons.Default.Update)
@@ -210,12 +231,12 @@ private fun UpdateButton(
             Text(stringResource(R.string.settings_about_update))
         }
         else OutlinedButton(
-            onClick = { onClick(false) }
+            onClick = { onClick() }
         ) {
             ButtonIcon(
-                rememberVectorPainter(Icons.Default.Refresh)
+                rememberVectorPainter(Icons.Default.Description)
             )
-            Text(stringResource(R.string.settings_about_checkUpdates))
+            Text(stringResource(R.string.settings_about_changelog))
         }
     }
 }

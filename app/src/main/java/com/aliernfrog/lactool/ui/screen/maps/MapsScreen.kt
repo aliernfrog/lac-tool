@@ -42,7 +42,7 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.VerticalSegmentedButtons
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.maps.PickMapButton
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
@@ -203,7 +203,7 @@ private fun Actions(
         }
     } }
 
-    VerticalSegmentedButtons(
+    VerticalSegmentor(
         *actions.toTypedArray(),
         modifier = Modifier.padding(8.dp)
     )

@@ -8,17 +8,15 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Info
@@ -27,21 +25,16 @@ import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Science
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Translate
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -181,33 +174,16 @@ private fun UpdateNotification(
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically()
     ) {
-        Card(
-            onClick = onClick,
+        ButtonRow(
+            title = stringResource(R.string.settings_updateNotification_updateAvailable)
+                .replace("{VERSION}", versionInfo.versionName),
+            description = stringResource(R.string.settings_updateNotification_description),
+            painter = rememberVectorPainter(Icons.Default.Update),
             shape = AppComponentShape,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Icon(imageVector = Icons.Default.Update, contentDescription = null)
-                Column {
-                    Text(
-                        text = stringResource(R.string.settings_updateNotification_updateAvailable)
-                            .replace("{VERSION}", versionInfo.versionName),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_updateNotification_description),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-        }
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            onClick = onClick,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
@@ -290,13 +266,29 @@ enum class SettingsPage(
         }
     ),
 
+    LIBS(
+        id = "libs",
+        title = R.string.settings_about_libs,
+        description = R.string.settings_about_libs_description,
+        icon = Icons.Default.Book,
+        showInSettingsHome = false,
+        content = { onNavigateBackRequest, _ ->
+            LibsPage(onNavigateBackRequest = onNavigateBackRequest)
+        }
+    ),
+
     ABOUT(
         id = "about",
         title = R.string.settings_about,
         description = R.string.settings_about,
         icon = Icons.Outlined.Info,
-        content = { onNavigateBackRequest, _ ->
-            AboutPage(onNavigateBackRequest = onNavigateBackRequest)
+        content = { onNavigateBackRequest, onNavigateRequest ->
+            AboutPage(
+                onNavigateLibsRequest = {
+                    onNavigateRequest(LIBS)
+                },
+                onNavigateBackRequest = onNavigateBackRequest
+            )
         }
     )
 }

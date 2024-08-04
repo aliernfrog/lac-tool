@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +32,7 @@ import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.extension.popBackStackSafe
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreen(
     mainViewModel: MainViewModel = koinViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val onNavigateSettingsRequest: () -> Unit = {
         navController.navigate(Destination.SETTINGS.route)
@@ -121,7 +124,11 @@ fun MainScreen(
 
     UpdateSheet(
         sheetState = mainViewModel.updateSheetState,
-        latestVersionInfo = mainViewModel.latestVersionInfo
+        latestVersionInfo = mainViewModel.latestVersionInfo,
+        updateAvailable = mainViewModel.updateAvailable,
+        onCheckUpdatesRequest = { scope.launch {
+            mainViewModel.checkUpdates(manuallyTriggered = true)
+        } }
     )
 
     LaunchedEffect(navController) {

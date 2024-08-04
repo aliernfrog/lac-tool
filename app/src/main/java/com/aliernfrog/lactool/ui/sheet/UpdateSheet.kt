@@ -1,8 +1,8 @@
 package com.aliernfrog.lactool.ui.sheet
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -44,7 +45,9 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 @Composable
 fun UpdateSheet(
     sheetState: SheetState,
-    latestVersionInfo: ReleaseInfo
+    latestVersionInfo: ReleaseInfo,
+    updateAvailable: Boolean,
+    onCheckUpdatesRequest: () -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
     BaseModalBottomSheet(
@@ -53,8 +56,10 @@ fun UpdateSheet(
         Actions(
             versionName = latestVersionInfo.versionName,
             preRelease = latestVersionInfo.preRelease,
+            updateAvailable = updateAvailable,
             onGithubClick = { uriHandler.openUri(latestVersionInfo.htmlUrl) },
-            onUpdateClick = { uriHandler.openUri(latestVersionInfo.downloadLink) }
+            onUpdateClick = { uriHandler.openUri(latestVersionInfo.downloadLink) },
+            onCheckUpdatesRequest = onCheckUpdatesRequest
         )
         DividerRow(
             alpha = 0.3f
@@ -81,8 +86,10 @@ fun UpdateSheet(
 private fun Actions(
     versionName: String,
     preRelease: Boolean,
+    updateAvailable: Boolean,
     onGithubClick: () -> Unit,
     onUpdateClick: () -> Unit,
+    onCheckUpdatesRequest: () -> Unit
 ) {
     val versionNameScrollState = rememberScrollState()
     Row(
@@ -92,8 +99,8 @@ private fun Actions(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            Modifier
+        Row(
+            modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .horizontalFadingEdge(
@@ -101,29 +108,24 @@ private fun Actions(
                     edgeColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
                 )
+                .horizontalScroll(versionNameScrollState),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(versionNameScrollState),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = versionName,
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = stringResource(
-                        if (preRelease) R.string.updates_preRelease
-                        else R.string.updates_stable
-                    ),
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Light,
-                    color = LocalContentColor.current.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(horizontal = 6.dp)
-                )
-            }
+            Text(
+                text = versionName,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = stringResource(
+                    if (preRelease) R.string.updates_preRelease
+                    else R.string.updates_stable
+                ),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Light,
+                color = LocalContentColor.current.copy(alpha = 0.7f),
+                modifier = Modifier.padding(horizontal = 6.dp)
+            )
         }
         IconButton(onClick = onGithubClick) {
             Icon(
@@ -132,13 +134,23 @@ private fun Actions(
                 modifier = Modifier.padding(6.dp)
             )
         }
-        Button(
-            onClick = onUpdateClick
-        ) {
-            ButtonIcon(
-                painter = rememberVectorPainter(Icons.Default.Update)
-            )
-            Text(stringResource(R.string.updates_update))
+        AnimatedContent(updateAvailable) { showUpdate ->
+            if (showUpdate) Button(
+                onClick = onUpdateClick
+            ) {
+                ButtonIcon(
+                    painter = rememberVectorPainter(Icons.Default.Update)
+                )
+                Text(stringResource(R.string.updates_update))
+            }
+            else OutlinedButton(
+                onClick = onCheckUpdatesRequest
+            ) {
+                ButtonIcon(
+                    painter = rememberVectorPainter(Icons.Default.Update)
+                )
+                Text(stringResource(R.string.updates_checkUpdates))
+            }
         }
     }
 }
