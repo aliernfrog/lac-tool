@@ -1,10 +1,10 @@
 package com.aliernfrog.lactool.impl
 
 import android.content.Context
+import android.os.ParcelFileDescriptor
 import com.aliernfrog.lactool.data.ServiceFile
 import com.aliernfrog.lactool.data.delete
 import com.aliernfrog.lactool.data.exists
-import com.aliernfrog.lactool.data.getByteArray
 import com.aliernfrog.lactool.data.listFiles
 import com.aliernfrog.lactool.data.nameWithoutExtension
 import com.aliernfrog.lactool.data.renameTo
@@ -14,6 +14,7 @@ import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.size
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 
@@ -74,11 +75,27 @@ class FileWrapper(
             else -> throw invalidFileClassException
         }?.let { FileWrapper(it) }
 
-    val painterModel: Any? = when (file) {
-        is File, is DocumentFileCompat -> path
-        is ServiceFile -> if (isFile) file.getByteArray() else null
-        else -> throw invalidFileClassException
+    private var cachedByteArray: ByteArray? = null
+    private fun getByteArray(): ByteArray? {
+        if (file !is ServiceFile) return null
+        cachedByteArray?.let { return it }
+        val fd = shizukuViewModel.fileService!!.getFd(path)
+        val input = ParcelFileDescriptor.AutoCloseInputStream(fd)
+        val output = ByteArrayOutputStream()
+        input.copyTo(output)
+        cachedByteArray = output.toByteArray()
+        output.close()
+        input.close()
+        fd.close()
+        return cachedByteArray
     }
+
+    val painterModel: Any?
+        get() =  if (isFile) when (file) {
+            is File, is DocumentFileCompat -> path
+            is ServiceFile -> getByteArray()
+            else -> throw invalidFileClassException
+        } else null
 
     fun listFiles(): List<FileWrapper> {
         val list: List<Any> = when (file) {
@@ -164,7 +181,7 @@ class FileWrapper(
         return when (file) {
             is File -> file.inputStream()
             is DocumentFileCompat -> context.contentResolver.openInputStream(file.uri)
-            is ServiceFile -> file.getByteArray().inputStream()
+            is ServiceFile -> getByteArray()!!.inputStream()
             else -> throw invalidFileClassException
         }
     }

@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.service
 
+import android.os.ParcelFileDescriptor
 import com.aliernfrog.lactool.IFileService
 import com.aliernfrog.lactool.data.ServiceFile
 import com.aliernfrog.lactool.util.getServiceFile
@@ -41,10 +42,6 @@ class FileService : IFileService.Stub() {
         return File(path).exists()
     }
 
-    override fun getByteArray(path: String): ByteArray {
-        return File(path).readBytes()
-    }
-
     override fun getFile(path: String): ServiceFile {
         return getServiceFile(File(path))
     }
@@ -68,5 +65,9 @@ class FileService : IFileService.Stub() {
         File(path).outputStream().use {
             FileUtil.writeFile(it, text)
         }
+    }
+
+    override fun getFd(path: String): ParcelFileDescriptor {
+        return ParcelFileDescriptor.open(File(path), ParcelFileDescriptor.MODE_READ_ONLY)
     }
 }
