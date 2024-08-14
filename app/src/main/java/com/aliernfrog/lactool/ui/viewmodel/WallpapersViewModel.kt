@@ -23,6 +23,7 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -56,6 +57,9 @@ class WallpapersViewModel(
     var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
     var wallpaperSheetWallpaper by mutableStateOf<FileWrapper?>(null)
+    var wallpaperNameInputRaw by mutableStateOf("")
+    private val wallpaperNameInput: String
+        get() = wallpaperNameInputRaw.ifEmpty { pickedWallpaper?.nameWithoutExtension ?: "" }
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {
@@ -69,6 +73,7 @@ class WallpapersViewModel(
                 return@withContext
             }
             pickedWallpaper = FileWrapper(file)
+            wallpaperNameInputRaw = file.nameWithoutExtension
         }
     }
 
@@ -78,9 +83,15 @@ class WallpapersViewModel(
             contextUtils.getString(R.string.wallpapers_chosen_importing)
         )
         withContext(Dispatchers.IO) {
-            val outputFile = wallpapersFile.createFile(wallpaper.nameWithoutExtension+".jpg") ?: return@withContext
+            val outputName = "$wallpaperNameInput.jpg"
+            var outputFile = wallpapersFile.findFile(outputName)
+            if (outputFile?.exists() == true) return@withContext topToastState.showErrorToast(
+                text = R.string.wallpapers_alreadyExists
+            )
+            outputFile = wallpapersFile.createFile(outputName) ?: return@withContext
             outputFile.copyFrom(wallpaper, context)
             pickedWallpaper = null
+            wallpaperNameInputRaw = ""
             fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
         }
