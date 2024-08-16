@@ -34,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -70,9 +69,9 @@ fun MediaView(
     var offsetY by remember { mutableStateOf(0.dp) }
     val animatedOffsetY by animateDpAsState(offsetY)
 
-    LaunchedEffect(offsetY) {
+    LaunchedEffect(offsetY, isZoomedIn) {
         if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
-        (offsetY == 0.dp).let { show ->
+        (offsetY == 0.dp && !isZoomedIn).let { show ->
             if (show) bottomSheetState.partialExpand()
             else bottomSheetState.hide()
         }
@@ -111,29 +110,27 @@ fun MediaView(
                 visible = !isZoomedIn,
                 modifier = Modifier.zIndex(1f)
             ) {
-                Box(Modifier.blur(5.dp)) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Black.copy(alpha = 0.7f))
-                            .statusBarsPadding(),
-                        verticalAlignment = Alignment.CenterVertically
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.7f))
+                        .statusBarsPadding(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onDismissRequest,
+                        modifier = Modifier.padding(8.dp)
                     ) {
-                        IconButton(
-                            onClick = onDismissRequest,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = stringResource(R.string.action_close)
-                            )
-                        }
-                        data.title?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.action_close)
+                        )
+                    }
+                    data.title?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.titleLarge
+                        )
                     }
                 }
             }
