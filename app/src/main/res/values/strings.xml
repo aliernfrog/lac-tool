@@ -211,6 +211,7 @@
     <string name="wallpapers_chosen_import">Import</string>
     <string name="wallpapers_chosen_importing">Importing wallpaper</string>
     <string name="wallpapers_chosen_imported">Imported the wallpaper</string>
+    <string name="wallpapers_list_active">Current wallpaper</string>
     <string name="wallpapers_list_clickToViewActions">Click to view full image and actions</string>
     <string name="wallpapers_copyImportUrl">Copy import URL</string>
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
