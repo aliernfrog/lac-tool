@@ -4,18 +4,27 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Density
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
@@ -23,15 +32,19 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -41,24 +54,20 @@ class WallpapersViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     private val progressState: ProgressState,
-    private val contextUtils: ContextUtils,
-    context: Context
+    private val contextUtils: ContextUtils
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
-    val wallpapersDir : String get() = prefs.lacWallpapersDir
+    private val wallpapersDir : String get() = prefs.lacWallpapersDir
     private lateinit var wallpapersFile: FileWrapper
-
-    val wallpaperSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
     private var lastKnownStorageAccessType = prefs.storageAccessType
 
     var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
-    var wallpaperSheetWallpaper by mutableStateOf<FileWrapper?>(null)
     var wallpaperNameInputRaw by mutableStateOf("")
     private val wallpaperNameInput: String
         get() = wallpaperNameInputRaw.ifEmpty { pickedWallpaper?.nameWithoutExtension ?: "" }
@@ -100,7 +109,7 @@ class WallpapersViewModel(
         progressState.currentProgress = null
     }
 
-    suspend fun shareImportedWallpaper(wallpaper: FileWrapper, context: Context) {
+    private suspend fun shareImportedWallpaper(wallpaper: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.info_sharing)
         )
@@ -110,7 +119,7 @@ class WallpapersViewModel(
         progressState.currentProgress = null
     }
 
-    suspend fun deleteImportedWallpaper(wallpaper: FileWrapper) {
+    private suspend fun deleteImportedWallpaper(wallpaper: FileWrapper) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_deleting)
         )
@@ -162,8 +171,50 @@ class WallpapersViewModel(
         }
     }
 
-    suspend fun showWallpaperSheet(wallpaper: FileWrapper) {
-        wallpaperSheetWallpaper = wallpaper
-        wallpaperSheetState.show()
+    fun openWallpaperOptions(wallpaper: FileWrapper) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
+        mainViewModel.showMediaView(MediaViewData(
+            model = wallpaper.painterModel,
+            title = wallpaper.name,
+            options = {
+                val context = LocalContext.current
+                val clipboardManager = LocalClipboardManager.current
+                val scope = rememberCoroutineScope()
+                var deleteConfirmationShown by remember { mutableStateOf(false) }
+
+                ButtonRow(
+                    title = stringResource(R.string.wallpapers_copyImportUrl),
+                    description = stringResource(R.string.wallpapers_copyImportUrlDescription),
+                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
+                ) {
+                    clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)))
+                    topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                    mainViewModel.dismissMediaView()
+                }
+                ButtonRow(
+                    title = stringResource(R.string.wallpapers_share),
+                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
+                ) {
+                    scope.launch { shareImportedWallpaper(wallpaper, context) }
+                }
+                ButtonRow(
+                    title = stringResource(R.string.wallpapers_delete),
+                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                    contentColor = MaterialTheme.colorScheme.error
+                ) {
+                    deleteConfirmationShown = true
+                }
+
+                if (deleteConfirmationShown) DeleteConfirmationDialog(
+                    name = wallpaper.name,
+                    onDismissRequest = { deleteConfirmationShown = false },
+                    onConfirmDelete = {
+                        deleteConfirmationShown = false
+                        scope.launch { deleteImportedWallpaper(wallpaper) }
+                        mainViewModel.dismissMediaView()
+                    }
+                )
+            }
+        ))
     }
 }

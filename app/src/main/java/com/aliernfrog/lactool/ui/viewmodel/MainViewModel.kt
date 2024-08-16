@@ -26,6 +26,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.Language
+import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.MapsListSegment
@@ -108,6 +109,9 @@ class MainViewModel(
             }
         ).joinToString("\n")
 
+    var mediaViewData by mutableStateOf<MediaViewData?>(null)
+        private set
+
     init {
         if (!supportsPerAppLanguagePreferences && prefs.language.isNotBlank()) runBlocking {
             appLanguage = GeneralUtil.getLanguageFromCode(prefs.language)?.getAvailableLanguage()
@@ -176,6 +180,14 @@ class MainViewModel(
                 scope.launch { updateSheetState.show() }
             }
         )
+    }
+
+    fun showMediaView(data: MediaViewData) {
+        mediaViewData = data
+    }
+
+    fun dismissMediaView() {
+        mediaViewData = null
     }
 
     fun handleIntent(intent: Intent, context: Context) {

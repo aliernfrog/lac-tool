@@ -2,6 +2,7 @@
     <string name="app_name">LAC Tool</string>
     <string name="action_back">Back</string>
     <string name="action_ok">Okay</string>
+    <string name="action_close">Close</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_dismiss">Dismiss</string>
     <string name="action_tapToDismiss">Tap to dismiss</string>
