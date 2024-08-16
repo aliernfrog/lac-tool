@@ -104,6 +104,7 @@ fun WallpapersScreen(
                     error = stringResource(R.string.wallpapers_noWallpapers),
                     painter = rememberVectorPainter(Icons.Rounded.HideImage),
                     visible = wallpapersViewModel.importedWallpapers.isEmpty()
+                            && wallpapersViewModel.activeWallpaper == null
                 )
                 wallpapersViewModel.activeWallpaper?.let {
                     ImageButton(
