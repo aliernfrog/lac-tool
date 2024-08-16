@@ -47,6 +47,7 @@ class WallpapersViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
 
+    private val activeWallpaperFileName = "mywallpaper.jpg"
     val wallpapersDir : String get() = prefs.lacWallpapersDir
     private lateinit var wallpapersFile: FileWrapper
 
@@ -56,6 +57,7 @@ class WallpapersViewModel(
 
     var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
+    var activeWallpaper by mutableStateOf<FileWrapper?>(null)
     var wallpaperSheetWallpaper by mutableStateOf<FileWrapper?>(null)
     var wallpaperNameInputRaw by mutableStateOf("")
     private val wallpaperNameInput: String
@@ -79,11 +81,11 @@ class WallpapersViewModel(
 
     suspend fun importPickedWallpaper(context: Context) {
         val wallpaper = pickedWallpaper ?: return
+        val outputName = "$wallpaperNameInput.jpg"
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_chosen_importing)
         )
         withContext(Dispatchers.IO) {
-            val outputName = "$wallpaperNameInput.jpg"
             var outputFile = wallpapersFile.findFile(outputName)
             if (outputFile?.exists() == true) return@withContext topToastState.showErrorToast(
                 text = R.string.wallpapers_alreadyExists
@@ -149,8 +151,13 @@ class WallpapersViewModel(
 
     suspend fun fetchImportedWallpapers() {
         withContext(Dispatchers.IO) {
+            activeWallpaper = wallpapersFile.findFile(activeWallpaperFileName)?.let {
+                if (it.isFile) it else null
+            }
             importedWallpapers = wallpapersFile.listFiles()
-                .filter { it.isFile && it.name.lowercase().endsWith(".jpg") }
+                .filter {
+                    it.isFile && it.name.lowercase().endsWith(".jpg") && it.name.lowercase() != activeWallpaperFileName
+                }
                 .sortedBy { it.name.lowercase() }
         }
     }

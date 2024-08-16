@@ -104,7 +104,19 @@ fun WallpapersScreen(
                     error = stringResource(R.string.wallpapers_noWallpapers),
                     painter = rememberVectorPainter(Icons.Rounded.HideImage),
                     visible = wallpapersViewModel.importedWallpapers.isEmpty()
+                            && wallpapersViewModel.activeWallpaper == null
                 )
+                wallpapersViewModel.activeWallpaper?.let {
+                    ImageButton(
+                        model = it.painterModel,
+                        title = stringResource(R.string.wallpapers_list_active),
+                        description = stringResource(R.string.wallpapers_list_clickToViewActions)
+                    ) {
+                        scope.launch {
+                            wallpapersViewModel.showWallpaperSheet(it)
+                        }
+                    }
+                }
             }
             items(wallpapersViewModel.importedWallpapers) {
                 ImageButton(
