@@ -68,13 +68,12 @@ fun MediaView(
     var viewportHeight by remember { mutableStateOf(0.dp) }
     var offsetY by remember { mutableStateOf(0.dp) }
     val animatedOffsetY by animateDpAsState(offsetY)
+    val showOverlay = offsetY == 0.dp && !isZoomedIn
 
-    LaunchedEffect(offsetY, isZoomedIn) {
+    LaunchedEffect(showOverlay) {
         if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
-        (offsetY == 0.dp && !isZoomedIn).let { show ->
-            if (show && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
-            else if (!show && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
-        }
+        if (showOverlay && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
+        else if (!showOverlay && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
     }
 
     BottomSheetScaffold(
@@ -107,7 +106,7 @@ fun MediaView(
     ) {
         Box {
             AnimatedVisibility(
-                visible = !isZoomedIn,
+                visible = showOverlay,
                 modifier = Modifier.zIndex(1f)
             ) {
                 Row(
@@ -142,9 +141,9 @@ fun MediaView(
                     .zoomable(
                         zoomState = zoomState,
                         onTap = { _ ->
-                            if (!isZoomedIn) scope.launch {
+                            scope.launch {
                                 if (bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
-                                else bottomSheetState.partialExpand()
+                                else if (showOverlay) bottomSheetState.partialExpand()
                             }
                         }
                     )
