@@ -141,7 +141,7 @@ fun MediaView(
                     .zoomable(
                         zoomState = zoomState,
                         onTap = { _ ->
-                            scope.launch {
+                            if (showOverlay) scope.launch {
                                 if (bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
                                 else if (showOverlay) bottomSheetState.partialExpand()
                             }
