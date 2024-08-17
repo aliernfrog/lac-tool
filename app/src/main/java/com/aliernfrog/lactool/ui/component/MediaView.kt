@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,12 +58,10 @@ fun MediaView(
     onDismissRequest: () -> Unit
 ) {
     val density = LocalDensity.current
+    val scope = rememberCoroutineScope()
     val zoomState = rememberZoomState()
     val isZoomedIn = zoomState.scale > 1f
     val bottomSheetState = rememberStandardBottomSheetState(
-        confirmValueChange = {
-            !(it == SheetValue.Hidden && !isZoomedIn)
-        },
         skipHiddenState = false
     )
 
@@ -139,7 +139,15 @@ fun MediaView(
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
-                    .zoomable(zoomState)
+                    .zoomable(
+                        zoomState = zoomState,
+                        onTap = { _ ->
+                            if (!isZoomedIn) scope.launch {
+                                if (bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
+                                else bottomSheetState.partialExpand()
+                            }
+                        }
+                    )
                     .offset { IntOffset(x = 0, y = animatedOffsetY.roundToPx()) }
                     .pointerInput(Unit) {
                         if (!isZoomedIn) detectVerticalDragGestures(
