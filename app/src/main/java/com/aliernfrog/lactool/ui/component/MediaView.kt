@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -70,6 +71,11 @@ fun MediaView(
     var offsetY by remember { mutableStateOf(0.dp) }
     val animatedOffsetY by animateDpAsState(offsetY)
     val overlayCanBeShown = !isZoomedIn && offsetY == 0.dp
+    
+    BackHandler {
+        if (isZoomedIn) scope.launch { zoomState.reset() }
+        else onDismissRequest()
+    }
     
     LaunchedEffect(overlayCanBeShown) {
         showOverlay = overlayCanBeShown
