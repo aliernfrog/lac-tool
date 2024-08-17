@@ -73,6 +73,7 @@ fun MediaView(
     
     LaunchedEffect(overlayCanBeShown) {
         showOverlay = overlayCanBeShown
+        if (data.options != null && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
     }
     
     LaunchedEffect(showOverlay) {
