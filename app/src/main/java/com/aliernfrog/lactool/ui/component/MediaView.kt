@@ -73,7 +73,7 @@ fun MediaView(
         if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
         (offsetY == 0.dp && !isZoomedIn).let { show ->
             if (show && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
-            else if (hide && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
+            else if (!show && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
         }
     }
 
