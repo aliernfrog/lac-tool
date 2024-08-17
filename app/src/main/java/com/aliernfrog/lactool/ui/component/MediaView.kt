@@ -69,9 +69,17 @@ fun MediaView(
     var offsetY by remember { mutableStateOf(0.dp) }
     val animatedOffsetY by animateDpAsState(offsetY)
 
-    LaunchedEffect(offsetY, isZoomedIn) {
+    LaunchedEffect(offsetY) {
         if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
-        (offsetY == 0.dp && !isZoomedIn).let { show ->
+        (offsetY == 0.dp).let { show ->
+            if (show) bottomSheetState.partialExpand()
+            else bottomSheetState.hide()
+        }
+    }
+    
+    LaunchedEffect(isZoomedIn) {
+        if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
+        (!isZoomedIn).let { show ->
             if (show) bottomSheetState.partialExpand()
             else bottomSheetState.hide()
         }
