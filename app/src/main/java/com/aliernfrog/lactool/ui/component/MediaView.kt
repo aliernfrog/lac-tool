@@ -65,11 +65,15 @@ fun MediaView(
         skipHiddenState = false
     )
 
+    var showOverlay by remember { mutableStateOf(false) }
     var viewportHeight by remember { mutableStateOf(0.dp) }
     var offsetY by remember { mutableStateOf(0.dp) }
     val animatedOffsetY by animateDpAsState(offsetY)
-    val showOverlay = offsetY == 0.dp && !isZoomedIn
-
+    
+    LaunchedEffect(offsetY == 0.dp, isZoomedIn) {
+        showOverlay = !isZoomedIn && offsetY == 0.dp
+    }
+    
     LaunchedEffect(showOverlay) {
         if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
         if (showOverlay && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
@@ -141,10 +145,7 @@ fun MediaView(
                     .zoomable(
                         zoomState = zoomState,
                         onTap = { _ ->
-                            if (showOverlay) scope.launch {
-                                if (bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
-                                else if (showOverlay) bottomSheetState.partialExpand()
-                            }
+                            if (!isZoomedIn && offsetY == 0.dp) showOverlay = !showOverlay
                         }
                     )
                     .offset { IntOffset(x = 0, y = animatedOffsetY.roundToPx()) }
