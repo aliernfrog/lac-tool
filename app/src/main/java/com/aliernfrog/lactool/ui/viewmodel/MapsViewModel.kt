@@ -44,12 +44,12 @@ class MapsViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
-    val mapsDir: String get() { return prefs.lacMapsDir }
-    val exportedMapsDir: String get() { return prefs.exportedMapsDir }
+    val mapsDir: String get() { return prefs.lacMapsDir.value }
+    val exportedMapsDir: String get() { return prefs.exportedMapsDir.value }
     lateinit var mapsFile: FileWrapper
     lateinit var exportedMapsFile: FileWrapper
 
-    private var lastKnownStorageAccessType = prefs.storageAccessType
+    private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
     var isLoadingMaps by mutableStateOf(true)
     var importedMaps by mutableStateOf(emptyList<MapFile>())
@@ -152,10 +152,10 @@ class MapsViewModel(
 
     fun getMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::mapsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
         else mapsDir == mapsFile.path
         if (isUpToDate) return mapsFile
-        val storageAccessType = prefs.storageAccessType
+        val storageAccessType = prefs.storageAccessType.value
         lastKnownStorageAccessType = storageAccessType
         mapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
@@ -179,10 +179,10 @@ class MapsViewModel(
 
     private fun getExportedMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::exportedMapsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
         else exportedMapsDir == exportedMapsFile.path
         if (isUpToDate) return exportedMapsFile
-        val storageAccessType = prefs.storageAccessType
+        val storageAccessType = prefs.storageAccessType.value
         lastKnownStorageAccessType = storageAccessType
         exportedMapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {

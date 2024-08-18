@@ -157,7 +157,7 @@ fun MediaView(
                         }
                     }
                     IconButton(
-                        onClick = { mainViewModel.prefs.showMediaViewGuide = true },
+                        onClick = { mainViewModel.prefs.showMediaViewGuide.value = true },
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Icon(
@@ -196,9 +196,9 @@ fun MediaView(
         }
     }
 
-    if (mainViewModel.prefs.showMediaViewGuide) GuideDialog(
+    if (mainViewModel.prefs.showMediaViewGuide.value) GuideDialog(
         onDismissRequest = {
-            mainViewModel.prefs.showMediaViewGuide = false
+            mainViewModel.prefs.showMediaViewGuide.value = false
         }
     )
 }

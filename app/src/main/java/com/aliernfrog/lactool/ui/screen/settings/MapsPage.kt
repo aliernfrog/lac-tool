@@ -19,16 +19,16 @@ fun MapsPage(
         SwitchRow(
             title = stringResource(R.string.settings_maps_showChosenMapThumbnail),
             description = stringResource(R.string.settings_maps_showChosenMapThumbnail_description),
-            checked = settingsViewModel.prefs.showChosenMapThumbnail
+            checked = settingsViewModel.prefs.showChosenMapThumbnail.value
         ) {
-            settingsViewModel.prefs.showChosenMapThumbnail = it
+            settingsViewModel.prefs.showChosenMapThumbnail.value = it
         }
         SwitchRow(
             title = stringResource(R.string.settings_maps_showMapThumbnailsInList),
             description = stringResource(R.string.settings_maps_showMapThumbnailsInList_description),
-            checked = settingsViewModel.prefs.showMapThumbnailsInList
+            checked = settingsViewModel.prefs.showMapThumbnailsInList.value
         ) {
-            settingsViewModel.prefs.showMapThumbnailsInList = it
+            settingsViewModel.prefs.showMapThumbnailsInList.value = it
         }
     }
 }

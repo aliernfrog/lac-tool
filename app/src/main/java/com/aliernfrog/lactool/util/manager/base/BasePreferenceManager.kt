@@ -11,28 +11,31 @@ import kotlin.reflect.KProperty
 abstract class BasePreferenceManager(
     private val prefs: SharedPreferences
 ) {
-    fun getString(key: String, defaultValue: String?) = prefs.getString(key, defaultValue)!!
+    private fun getString(key: String, defaultValue: String?) = prefs.getString(key, defaultValue)!!
     private fun getBoolean(key: String, defaultValue: Boolean) = prefs.getBoolean(key, defaultValue)
     private fun getInt(key: String, defaultValue: Int) = prefs.getInt(key, defaultValue)
 
-    fun putString(key: String, value: String?) = prefs.edit { putString(key, value) }
+    private fun putString(key: String, value: String?) = prefs.edit { putString(key, value) }
     private fun putBoolean(key: String, value: Boolean) = prefs.edit { putBoolean(key, value) }
     private fun putInt(key: String, value: Int) = prefs.edit { putInt(key, value) }
 
 
-    protected class Preference<T>(
-        private val key: String,
-        defaultValue: T,
+    class Preference<T>(
+        val key: String,
+        val defaultValue: T,
         getter: (key: String, defaultValue: T) -> T,
         private val setter: (key: String, newValue: T) -> Unit
     ) {
         var value by mutableStateOf(getter(key, defaultValue))
-            private set
 
         operator fun getValue(thisRef: Any?, property: KProperty<*>) = value
         operator fun setValue(thisRef: Any?, property: KProperty<*>, newValue: T) {
             value = newValue
             setter(key, newValue)
+        }
+
+        fun resetValue() {
+            setValue(thisRef = null, property = ::key, newValue = defaultValue)
         }
     }
 

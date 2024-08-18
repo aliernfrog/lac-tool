@@ -25,11 +25,11 @@ class SettingsViewModel(
     val libraries = Libs.Builder().withContext(context).build().libraries
 
     fun onAboutClick() {
-        if (prefs.experimentalOptionsEnabled) return
+        if (prefs.experimentalOptionsEnabled.value) return
         aboutClickCount++
         if (aboutClickCount == experimentalSettingsRequiredClicks) {
             aboutClickCount = 0
-            prefs.experimentalOptionsEnabled = true
+            prefs.experimentalOptionsEnabled.value = true
             topToastState.showToast(
                 text = R.string.settings_experimental_enabled,
                 icon = Icons.Rounded.Build,

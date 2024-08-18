@@ -47,14 +47,14 @@ class MainActivity : AppCompatActivity() {
         val context = LocalContext.current
         val view = LocalView.current
         val scope = rememberCoroutineScope()
-        val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme)
+        val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme.value)
 
         @Composable
         fun AppTheme(content: @Composable () -> Unit) {
             LACToolTheme(
                 darkTheme = darkTheme,
-                dynamicColors = mainViewModel.prefs.materialYou,
-                pitchBlack = mainViewModel.prefs.pitchBlack,
+                dynamicColors = mainViewModel.prefs.materialYou.value,
+                pitchBlack = mainViewModel.prefs.pitchBlack.value,
                 content = content
             )
         }
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.topToastState.setComposeView(view)
             mainViewModel.topToastState.setAppTheme { AppTheme(it) }
 
-            if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkUpdates()
+            if (mainViewModel.prefs.autoCheckUpdates.value) mainViewModel.checkUpdates()
 
             this@MainActivity.intent?.let {
                 mainViewModel.handleIntent(it, context = context)

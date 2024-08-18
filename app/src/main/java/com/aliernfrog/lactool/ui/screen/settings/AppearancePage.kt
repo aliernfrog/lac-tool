@@ -33,12 +33,12 @@ fun AppearancePage(
         ) {
             SegmentedButtons(
                 options = Theme.entries.map { stringResource(it.label) },
-                selectedIndex = settingsViewModel.prefs.theme,
+                selectedIndex = settingsViewModel.prefs.theme.value,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                settingsViewModel.prefs.theme = it
+                settingsViewModel.prefs.theme.value = it
             }
         }
         FormSection(
@@ -52,18 +52,18 @@ fun AppearancePage(
                     else R.string.settings_appearance_materialYou_unavailable
                 ),
                 painter = rememberVectorPainter(Icons.Outlined.Brush),
-                checked = settingsViewModel.prefs.materialYou,
+                checked = settingsViewModel.prefs.materialYou.value,
                 enabled = supportsMaterialYou
             ) {
-                settingsViewModel.prefs.materialYou = it
+                settingsViewModel.prefs.materialYou.value = it
             }
             SwitchRow(
                 title = stringResource(R.string.settings_appearance_pitchBlack),
                 description = stringResource(R.string.settings_appearance_pitchBlack_description),
                 painter = rememberVectorPainter(Icons.Outlined.Contrast),
-                checked = settingsViewModel.prefs.pitchBlack
+                checked = settingsViewModel.prefs.pitchBlack.value
             ) {
-                settingsViewModel.prefs.pitchBlack = it
+                settingsViewModel.prefs.pitchBlack.value = it
             }
         }
     }

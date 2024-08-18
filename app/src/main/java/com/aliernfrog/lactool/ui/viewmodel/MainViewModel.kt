@@ -41,7 +41,6 @@ import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.extension.toLanguage
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -61,7 +60,6 @@ class MainViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     val progressState: ProgressState,
-    private val contextUtils: ContextUtils,
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
@@ -80,7 +78,7 @@ class MainViewModel(
     var appLanguage: Language?
         get() = _appLanguage ?: deviceLanguage.getAvailableLanguage() ?: defaultLanguage
         set(language) {
-            prefs.language = language?.fullCode ?: ""
+            prefs.language.value = language?.fullCode ?: ""
             val localeListCompat = if (language == null) LocaleListCompat.getEmptyLocaleList()
             else LocaleListCompat.forLanguageTags(language.languageCode)
             AppCompatDelegate.setApplicationLocales(localeListCompat)
@@ -103,9 +101,10 @@ class MainViewModel(
         get() = arrayOf(
             "LAC Tool $applicationVersionName ($applicationVersionCode)",
             "Android API ${Build.VERSION.SDK_INT}",
-            "Storage access type ${prefs.storageAccessType}",
+            "Storage access type ${prefs.storageAccessType.value}",
             SettingsConstant.experimentalPrefOptions.joinToString("\n") {
-                "${contextUtils.getString(it.labelResourceId)}: ${it.getValue(prefs)}"
+                val pref = it.preference(prefs)
+                "${pref.key}: ${pref.value}"
             }
         ).joinToString("\n")
 
@@ -113,8 +112,8 @@ class MainViewModel(
         private set
 
     init {
-        if (!supportsPerAppLanguagePreferences && prefs.language.isNotBlank()) runBlocking {
-            appLanguage = GeneralUtil.getLanguageFromCode(prefs.language)?.getAvailableLanguage()
+        if (!supportsPerAppLanguagePreferences && prefs.language.value.isNotBlank()) runBlocking {
+            appLanguage = GeneralUtil.getLanguageFromCode(prefs.language.value)?.getAvailableLanguage()
         }
     }
 
@@ -124,7 +123,7 @@ class MainViewModel(
     ) {
         withContext(Dispatchers.IO) {
             try {
-                val updatesURL = prefs.updatesURL
+                val updatesURL = prefs.updatesURL.value
                 val responseJson = JSONObject(URL(updatesURL).readText())
                 val json = responseJson.getJSONObject(
                     if (applicationIsPreRelease && responseJson.has("preRelease")) "preRelease" else "stable"

@@ -43,22 +43,22 @@ class ScreenshotsViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
     
-    private val screenshotsDir : String get() = prefs.lacScreenshotsDir
+    private val screenshotsDir : String get() = prefs.lacScreenshotsDir.value
     private lateinit var screenshotsFile: FileWrapper
 
     val screenshotSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
-    private var lastKnownStorageAccessType = prefs.storageAccessType
+    private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
     var screenshots by mutableStateOf(emptyList<FileWrapper>())
     var screenshotSheetScreeenshot by mutableStateOf<FileWrapper?>(null)
 
     fun getScreenshotsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::screenshotsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
         else screenshotsDir == screenshotsFile.path
         if (isUpToDate) return screenshotsFile
-        val storageAccessType = prefs.storageAccessType
+        val storageAccessType = prefs.storageAccessType.value
         lastKnownStorageAccessType = storageAccessType
         screenshotsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {

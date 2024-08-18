@@ -303,7 +303,6 @@
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>
-    <string name="settings_experimental_updatesURL">Updates URL</string>
     <string name="mediaView_guide">Help</string>
     <string name="mediaView_guide_toggleOverlay">Tap to view the image fully, tap again to show the options</string>
     <string name="mediaView_guide_toggleZoom">Rapidly tap twice to toggle zoom</string>
