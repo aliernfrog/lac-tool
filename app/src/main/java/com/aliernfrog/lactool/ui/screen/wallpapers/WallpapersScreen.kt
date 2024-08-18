@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.Button
@@ -200,7 +200,7 @@ private fun PickedWallpaper(
                 Button(
                     onClick = onImport
                 ) {
-                    ButtonIcon(rememberVectorPainter(Icons.Rounded.Download))
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Download))
                     Text(stringResource(R.string.wallpapers_chosen_import))
                 }
             }
