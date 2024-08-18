@@ -81,6 +81,14 @@ fun ExperimentalPage(
                 }
             )
 
+            SwitchRow(
+                title = "Show MediaView guide",
+                checked = mainViewModel.prefs.showMediaViewGuide,
+                onCheckedChange = {
+                    mainViewModel.prefs.showMediaViewGuide = it
+                }
+            )
+
             SettingsConstant.experimentalPrefOptions.forEach { prefEdit ->
                 OutlinedTextField(
                     value = prefEdit.getValue(mainViewModel.prefs),

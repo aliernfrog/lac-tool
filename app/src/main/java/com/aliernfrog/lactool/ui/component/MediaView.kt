@@ -16,7 +16,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Pinch
+import androidx.compose.material.icons.filled.TouchApp
+import androidx.compose.material.icons.filled.ZoomInMap
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -46,9 +52,12 @@ import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
+import com.aliernfrog.lactool.ui.component.form.DividerRow
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +66,7 @@ fun MediaView(
     data: MediaViewData,
     onDismissRequest: () -> Unit
 ) {
+    val mainViewModel = koinViewModel<MainViewModel>()
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
     val zoomState = rememberZoomState()
@@ -118,30 +128,41 @@ fun MediaView(
         Box {
             FadeVisibility(
                 visible = showOverlay && overlayCanBeShown,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .zIndex(1f)
+                modifier = Modifier.zIndex(1f)
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .background(Color.Black.copy(alpha = 0.7f))
                         .statusBarsPadding(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Row(
+                        modifier = Modifier.weight(1f).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick = onDismissRequest,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = stringResource(R.string.action_close)
+                            )
+                        }
+                        data.title?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
                     IconButton(
-                        onClick = onDismissRequest,
+                        onClick = { mainViewModel.prefs.showMediaViewGuide = true },
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.action_close)
-                        )
-                    }
-                    data.title?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.titleLarge
+                            imageVector = Icons.AutoMirrored.Filled.HelpOutline,
+                            contentDescription = stringResource(R.string.mediaView_guide)
                         )
                     }
                 }
@@ -174,4 +195,48 @@ fun MediaView(
             )
         }
     }
+
+    if (mainViewModel.prefs.showMediaViewGuide) GuideDialog(
+        onDismissRequest = {
+            mainViewModel.prefs.showMediaViewGuide = false
+        }
+    )
+}
+
+@Composable
+private fun GuideDialog(
+    onDismissRequest: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(R.string.action_ok))
+            }
+        },
+        text = {
+            Column {
+                listOf(
+                    Icons.Default.TouchApp to R.string.mediaView_guide_toggleOverlay,
+                    Icons.Default.ZoomInMap to R.string.mediaView_guide_toggleZoom,
+                    Icons.Default.Pinch to R.string.mediaView_guide_zoom
+                ).forEachIndexed { index, pair ->
+                    if (index != 0) DividerRow(Modifier.fillMaxWidth())
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    ) {
+                        Icon(
+                            imageVector = pair.first,
+                            contentDescription = null,
+                            modifier = Modifier.padding(end = 16.dp)
+                        )
+                        Text(stringResource(pair.second))
+                    }
+                }
+            }
+        }
+    )
 }

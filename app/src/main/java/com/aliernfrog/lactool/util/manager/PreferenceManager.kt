@@ -29,6 +29,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // Experimental (developer) options
     var experimentalOptionsEnabled by booleanPreference("experimentalOptionsEnabled", false)
     var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
+    var showMediaViewGuide by booleanPreference("showMediaViewGuide", true)
     var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
     var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
 }
