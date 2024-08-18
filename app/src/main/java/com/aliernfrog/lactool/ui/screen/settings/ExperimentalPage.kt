@@ -87,7 +87,16 @@ fun ExperimentalPage(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(Modifier.weight(1f)) { when (pref.defaultValue) {
+                    IconButton(
+                        onClick = { pref.resetValue() },
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Restore,
+                            contentDescription = "Reset"
+                        )
+                    }
+                    when (pref.defaultValue) {
                         is Boolean -> {
                             pref as BasePreferenceManager.Preference<Boolean>
                             SwitchRow(
@@ -108,15 +117,6 @@ fun ExperimentalPage(
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
                             )
                         }
-                    } }
-                    IconButton(
-                        onClick = { pref.resetValue() },
-                        modifier = Modifier.padding(end = 8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Restore,
-                            contentDescription = "Reset"
-                        )
                     }
                 }
             }
