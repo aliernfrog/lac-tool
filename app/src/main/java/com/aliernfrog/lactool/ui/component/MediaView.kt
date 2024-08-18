@@ -77,9 +77,14 @@ fun MediaView(
 
     var showOverlay by remember { mutableStateOf(false) }
     var viewportHeight by remember { mutableStateOf(0.dp) }
+    var optionsHeight by remember { mutableStateOf(viewportHeight/3) }
     var offsetY by remember { mutableStateOf(0.dp) }
     val animatedOffsetY by animateDpAsState(offsetY)
     val overlayCanBeShown = !isZoomedIn && offsetY == 0.dp
+    val sheetPeekHeight = (viewportHeight/3).let { maxPeekHeight ->
+        if (optionsHeight == 0.dp || optionsHeight > maxPeekHeight) maxPeekHeight
+        else optionsHeight
+    }
     
     BackHandler {
         if (isZoomedIn) scope.launch { zoomState.reset() }
@@ -102,6 +107,11 @@ fun MediaView(
             data.options?.let {
                 Column(
                     modifier = Modifier
+                        .onSizeChanged {
+                            with(density) {
+                                optionsHeight = it.height.toDp()+48.dp // 48dp drag handle height
+                            }
+                        }
                         .navigationBarsPadding()
                         .verticalScroll(rememberScrollState())
                 ) {
@@ -109,7 +119,7 @@ fun MediaView(
                 }
             }
         },
-        sheetPeekHeight = viewportHeight/3,
+        sheetPeekHeight = sheetPeekHeight,
         scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = bottomSheetState
         ),
