@@ -1,7 +1,6 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -117,9 +116,11 @@ fun MediaView(
         contentColor = Color.White
     ) {
         Box {
-            AnimatedVisibility(
+            FadeVisibility(
                 visible = showOverlay && overlayCanBeShown,
-                modifier = Modifier.zIndex(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .zIndex(1f)
             ) {
                 Row(
                     modifier = Modifier

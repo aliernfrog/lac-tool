@@ -9,17 +9,20 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 @Composable
 fun FadeVisibility(
     visible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable (AnimatedVisibilityScope.() -> Unit)
 ) {
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically(),
-        content = content
+        content = content,
+        modifier = modifier
     )
 }
 
