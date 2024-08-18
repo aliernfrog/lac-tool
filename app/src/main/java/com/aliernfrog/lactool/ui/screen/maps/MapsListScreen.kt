@@ -272,7 +272,7 @@ fun MapsListScreen(
 
                 MapButton(
                     map = map,
-                    showMapThumbnail = mapsListViewModel.prefs.showMapThumbnailsInList,
+                    showMapThumbnail = mapsListViewModel.prefs.showMapThumbnailsInList.value,
                     modifier = Modifier.animateItem(),
                     trailingComponent = {
                         if (isMultiSelecting) Checkbox(

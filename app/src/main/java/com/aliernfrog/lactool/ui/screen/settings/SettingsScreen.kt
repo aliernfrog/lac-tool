@@ -121,7 +121,7 @@ private fun SettingsRootPage(
 
             SettingsPage.entries
                 .filter {
-                    it.showInSettingsHome && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled)
+                    it.showInSettingsHome && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled.value)
                 }
                 .forEach { page ->
                     ButtonRow(

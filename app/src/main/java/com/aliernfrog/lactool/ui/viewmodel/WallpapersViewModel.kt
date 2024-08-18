@@ -60,10 +60,10 @@ class WallpapersViewModel(
     val lazyListState = LazyListState()
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
-    private val wallpapersDir : String get() = prefs.lacWallpapersDir
+    private val wallpapersDir : String get() = prefs.lacWallpapersDir.value
     private lateinit var wallpapersFile: FileWrapper
 
-    private var lastKnownStorageAccessType = prefs.storageAccessType
+    private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
     var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
@@ -133,10 +133,10 @@ class WallpapersViewModel(
 
     fun getWallpapersFile(context: Context): FileWrapper {
         val isUpToDate = if (!::wallpapersFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
         else wallpapersDir == wallpapersFile.path
         if (isUpToDate) return wallpapersFile
-        val storageAccessType = prefs.storageAccessType
+        val storageAccessType = prefs.storageAccessType.value
         lastKnownStorageAccessType = storageAccessType
         wallpapersFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {

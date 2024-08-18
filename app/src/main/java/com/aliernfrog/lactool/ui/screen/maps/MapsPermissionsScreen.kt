@@ -31,8 +31,8 @@ fun MapsPermissionsScreen(
             recommendedPathDescription = R.string.maps_permissions_recommendedPath_description,
             recommendedPathWarning = R.string.permissions_recommendedFolder_openLACToCreate,
             useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
-            getUri = { mapsViewModel.prefs.lacMapsDir },
-            onUriUpdate = { mapsViewModel.prefs.lacMapsDir = it.toString() },
+            getUri = { mapsViewModel.prefs.lacMapsDir.value },
+            onUriUpdate = { mapsViewModel.prefs.lacMapsDir.value = it.toString() },
             content = {
                 Text(stringResource(R.string.maps_permissions_description))
             }
@@ -42,8 +42,8 @@ fun MapsPermissionsScreen(
             recommendedPath = ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR,
             recommendedPathDescription = R.string.maps_permissions_exported_recommendedPath_description,
             forceRecommendedPath = false,
-            getUri = { mapsViewModel.prefs.exportedMapsDir },
-            onUriUpdate = { mapsViewModel.prefs.exportedMapsDir = it.toString() },
+            getUri = { mapsViewModel.prefs.exportedMapsDir.value },
+            onUriUpdate = { mapsViewModel.prefs.exportedMapsDir.value = it.toString() },
             content = {
                 Text(stringResource(R.string.maps_permissions_exported_description))
             }

@@ -55,9 +55,11 @@ import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
+import com.aliernfrog.lactool.util.extension.resolveString
 import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -71,7 +73,7 @@ fun StoragePage(
         mutableStateOf(false)
     }
 
-    val selectedStorageAccessType = StorageAccessType.entries[settingsViewModel.prefs.storageAccessType]
+    val selectedStorageAccessType = StorageAccessType.entries[settingsViewModel.prefs.storageAccessType.value]
 
     SettingsPageContainer(
         title = stringResource(R.string.settings_storage),
@@ -85,7 +87,7 @@ fun StoragePage(
             onClickHeader = { storageAccessTypesExpanded = !storageAccessTypesExpanded }
         ) {
             StorageAccessType.entries.filter { it.isCompatible() }.forEach { type ->
-                val selected = settingsViewModel.prefs.storageAccessType == type.ordinal
+                val selected = settingsViewModel.prefs.storageAccessType.value == type.ordinal
                 fun onSelect() {
                     if (!selected) type.enable(settingsViewModel.prefs)
                 }
@@ -126,32 +128,32 @@ private fun FolderConfiguration(
     useRawPathInputs: Boolean
 ) {
     val context = LocalContext.current
-    var activePref: PrefEditItem? = remember { null }
+    var activePref: PrefEditItem<String>? = remember { null }
     val openFolderLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree(), onResult = {
         if (it == null) return@rememberLauncherForActivityResult
         val pref = activePref ?: return@rememberLauncherForActivityResult
         it.takePersistablePermissions(context)
-        pref.setValue(it.toString(), prefs)
+        pref.preference(prefs).value = it.toString()
     })
 
     AnimatedContent(useRawPathInputs) { rawPathInput ->
         Column {
-            SettingsConstant.folders.forEach { pref ->
+            SettingsConstant.folders.forEach { prefEditItem ->
+                val pref = prefEditItem.preference(prefs)
+                val label = prefEditItem.label(prefs).resolveString()
                 if (rawPathInput) RawPathInput(
+                    label = label,
                     pref = pref,
-                    prefs = prefs,
                     onPickFolderRequest = {
                         openFolderLauncher.launch(null)
                     }
                 )
                 else FolderCard(
+                    label = label,
                     pref = pref,
-                    path = getFolderDescription(
-                        folder = pref,
-                        prefs = prefs
-                    ),
+                    path = getFolderDescription(pref.value),
                     onPickFolderRequest = { uri ->
-                        activePref = pref
+                        activePref = prefEditItem
                         openFolderLauncher.launch(uri)
                     }
                 )
@@ -162,24 +164,24 @@ private fun FolderConfiguration(
 
 @Composable
 fun RawPathInput(
-    pref: PrefEditItem,
-    prefs: PreferenceManager,
+    label: String,
+    pref: BasePreferenceManager.Preference<String>,
     onPickFolderRequest: () -> Unit
 ) {
-    val currentPath = pref.getValue(prefs)
-    val isDefault = pref.default == currentPath
+    val currentPath = pref.value
+    val isDefault = pref.defaultValue == currentPath
     OutlinedTextField(
         value = currentPath,
         onValueChange = {
-            pref.setValue(it, prefs)
+            pref.value = it
         },
         label = {
-            Text(stringResource(pref.labelResourceId))
+            Text(label)
         },
         supportingText = {
             FadeVisibility(!isDefault) {
                 Text(
-                    stringResource(R.string.settings_storage_folders_default).replace("%s", pref.default)
+                    stringResource(R.string.settings_storage_folders_default).replace("%s", pref.defaultValue)
                 )
             }
         },
@@ -187,7 +189,7 @@ fun RawPathInput(
             Row {
                 Crossfade(!isDefault) { enabled ->
                     IconButton(
-                        onClick = { pref.setValue(pref.default, prefs) },
+                        onClick = { pref.value = pref.defaultValue },
                         enabled = enabled
                     ) {
                         Icon(
@@ -215,12 +217,13 @@ fun RawPathInput(
 
 @Composable
 fun FolderCard(
-    pref: PrefEditItem,
+    label: String,
+    pref: BasePreferenceManager.Preference<String>,
     path: String,
     onPickFolderRequest: (Uri?) -> Unit
 ) {
     val buttonsScrollState = rememberScrollState()
-    val recommendedPath = remember { pref.default.removePrefix(externalStorageRoot) }
+    val recommendedPath = remember { pref.defaultValue.removePrefix(externalStorageRoot) }
     val dataFolderPath = remember { externalStorageRoot+"Android/data" }
     val usingRecommendedPath = path.equals(recommendedPath, ignoreCase = true)
     Card(
@@ -237,7 +240,7 @@ fun FolderCard(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         ) {
             Text(
-                text = stringResource(pref.labelResourceId),
+                text = label,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(path)
@@ -263,7 +266,7 @@ fun FolderCard(
             ) {
                 if (folderPickerSupportsInitialUri) AssistChip(
                     onClick = {
-                        onPickFolderRequest(FileUtil.getUriForPath(pref.default))
+                        onPickFolderRequest(FileUtil.getUriForPath(pref.defaultValue))
                     },
                     label = {
                         Text(stringResource(R.string.settings_storage_folders_openRecommended))
@@ -291,11 +294,8 @@ fun FolderCard(
 }
 
 @Composable
-private fun getFolderDescription(
-    folder: PrefEditItem,
-    prefs: PreferenceManager
-): String {
-    var text = folder.getValue(prefs)
+private fun getFolderDescription(path: String): String {
+    var text = path
     if (text.isNotEmpty()) try {
         text = Uri.parse(text).toPath().removePrefix(externalStorageRoot)
     } catch (_: Exception) {}

@@ -23,8 +23,8 @@ fun WallpapersPermissionsScreen(
             recommendedPathDescription = R.string.wallpapers_permissions_recommendedPath_description,
             recommendedPathWarning = R.string.permissions_recommendedFolder_importWallpaperToCreate,
             useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
-            getUri = { wallpapersViewModel.prefs.lacWallpapersDir },
-            onUriUpdate = { wallpapersViewModel.prefs.lacWallpapersDir = it.toString() },
+            getUri = { wallpapersViewModel.prefs.lacWallpapersDir.value },
+            onUriUpdate = { wallpapersViewModel.prefs.lacWallpapersDir.value = it.toString() },
             content = {
                 Text(stringResource(R.string.wallpapers_permissions_description))
             }

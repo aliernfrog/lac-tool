@@ -56,7 +56,7 @@ fun PermissionsScreen(
     }
 
     AnimatedContent(
-        StorageAccessType.entries[permissionsViewModel.prefs.storageAccessType]
+        StorageAccessType.entries[permissionsViewModel.prefs.storageAccessType.value]
     ) { method ->
         AnimatedContent(permissionsGranted) { showContent ->
             if (showContent) content()

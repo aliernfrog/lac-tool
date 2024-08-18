@@ -23,8 +23,8 @@ fun ScreenshotsPermissionsScreen(
             recommendedPathDescription = R.string.screenshots_permissions_recommendedPath_description,
             recommendedPathWarning = R.string.permissions_recommendedFolder_takeInGameScreenshotToCreate,
             useUnrecommendedAnywayDescription = R.string.info_useUnrecommendedAnyway_description,
-            getUri = { screenshotsViewModel.prefs.lacScreenshotsDir },
-            onUriUpdate = { screenshotsViewModel.prefs.lacScreenshotsDir = it.toString() },
+            getUri = { screenshotsViewModel.prefs.lacScreenshotsDir.value },
+            onUriUpdate = { screenshotsViewModel.prefs.lacScreenshotsDir.value = it.toString() },
             content = {
                 Text(stringResource(R.string.screenshots_permissions_description))
             }

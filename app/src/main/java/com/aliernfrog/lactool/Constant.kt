@@ -23,17 +23,6 @@ val hasAndroidDataRestrictions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
 object ConfigKey {
     const val PREF_NAME = "APP_CONFIG"
-    const val KEY_APP_LANGUAGE = "appLanguage"
-    const val KEY_APP_THEME = "appTheme"
-    const val KEY_APP_MATERIAL_YOU = "materialYou"
-    const val KEY_APP_AUTO_UPDATES = "autoUpdates"
-    const val KEY_APP_UPDATES_URL = "updatesUrl"
-    const val KEY_SHOW_MAP_THUMBNAILS_LIST = "showMapThumbnailsList"
-    const val KEY_SHOW_CHOSEN_MAP_THUMBNAIL = "chosenMapThumbnail"
-    const val KEY_MAPS_DIR = "mapsDir"
-    const val KEY_WALLPAPERS_DIR = "wallpapersDir"
-    const val KEY_SCREENSHOTS_DIR = "screenshotsDir"
-    const val KEY_EXPORTED_MAPS_DIR = "mapsExportDir"
     const val DEFAULT_UPDATES_URL = "https://aliernfrog.github.io/lactool/latest.json"
     val RECOMMENDED_MAPS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/editor"
     val RECOMMENDED_WALLPAPERS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/wallpaper"
@@ -62,36 +51,20 @@ object SettingsConstant {
 
     val folders = listOf(
         PrefEditItem(
-            labelResourceId = R.string.settings_storage_folders_maps,
-            getValue = { it.lacMapsDir },
-            setValue = { newValue, prefs ->
-                prefs.lacMapsDir = newValue
-            },
-            default = ConfigKey.RECOMMENDED_MAPS_DIR
+            preference = { it.lacMapsDir },
+            label = { R.string.settings_storage_folders_maps }
         ),
         PrefEditItem(
-            labelResourceId = R.string.settings_storage_folders_wallpapers,
-            getValue = { it.lacWallpapersDir },
-            setValue = { newValue, prefs ->
-                prefs.lacWallpapersDir = newValue
-            },
-            default = ConfigKey.RECOMMENDED_WALLPAPERS_DIR
+            preference = { it.lacWallpapersDir },
+            label = { R.string.settings_storage_folders_wallpapers }
         ),
         PrefEditItem(
-            labelResourceId = R.string.settings_storage_folders_screenshots,
-            getValue = { it.lacScreenshotsDir },
-            setValue = { newValue, prefs ->
-                prefs.lacScreenshotsDir = newValue
-            },
-            default = ConfigKey.RECOMMENDED_SCREENSHOTS_DIR
+            preference = { it.lacScreenshotsDir },
+            label = { R.string.settings_storage_folders_screenshots }
         ),
         PrefEditItem(
-            labelResourceId = R.string.settings_storage_folders_exportedMaps,
-            getValue = { it.exportedMapsDir },
-            setValue = { newValue, prefs ->
-              prefs.exportedMapsDir = newValue
-            },
-            default = ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR,
+            preference = { it.exportedMapsDir },
+            label = { R.string.settings_storage_folders_exportedMaps }
         )
     )
 
@@ -134,12 +107,13 @@ object SettingsConstant {
 
     val experimentalPrefOptions = listOf(
         PrefEditItem(
-            labelResourceId = R.string.settings_experimental_updatesURL,
-            getValue = { it.updatesURL },
-            setValue = { newValue, prefs ->
-                prefs.updatesURL = newValue
-            },
-            default = ConfigKey.DEFAULT_UPDATES_URL
+            preference = { it.showMapNameFieldGuide }
+        ),
+        PrefEditItem(
+            preference = { it.showMediaViewGuide }
+        ),
+        PrefEditItem(
+            preference = { it.updatesURL }
         ),
         *folders.toTypedArray()
     )

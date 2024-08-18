@@ -48,7 +48,7 @@ fun LanguagePage(
     mainViewModel: MainViewModel = koinViewModel(),
     onNavigateBackRequest: () -> Unit
 ) {
-    val currentLanguage = mainViewModel.prefs.language
+    val currentLanguage = mainViewModel.prefs.language.value
     val availableDeviceLanguage = mainViewModel.deviceLanguage.getAvailableLanguage()
 
     @Composable
