@@ -2,6 +2,7 @@
     <string name="app_name">LAC Tool</string>
     <string name="action_back">Back</string>
     <string name="action_ok">Okay</string>
+    <string name="action_close">Close</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_dismiss">Dismiss</string>
     <string name="action_tapToDismiss">Tap to dismiss</string>
@@ -303,6 +304,10 @@
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>
     <string name="settings_experimental_updatesURL">Updates URL</string>
+    <string name="mediaView_guide">Help</string>
+    <string name="mediaView_guide_toggleOverlay">Tap to view the image fully, tap again to show the options</string>
+    <string name="mediaView_guide_toggleZoom">Rapidly tap twice to toggle zoom</string>
+    <string name="mediaView_guide_zoom">Pinch fingers to zoom-in and zoom-out, drag fingers to move</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>
     <string name="updates_error">Something went wrong while checking for updates</string>

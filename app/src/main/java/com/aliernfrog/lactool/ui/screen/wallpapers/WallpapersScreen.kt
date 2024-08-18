@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.Button
@@ -47,7 +47,6 @@ import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
-import com.aliernfrog.lactool.ui.sheet.WallpaperSheet
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
@@ -112,9 +111,7 @@ fun WallpapersScreen(
                         title = stringResource(R.string.wallpapers_list_active),
                         description = stringResource(R.string.wallpapers_list_clickToViewActions)
                     ) {
-                        scope.launch {
-                            wallpapersViewModel.showWallpaperSheet(it)
-                        }
+                        wallpapersViewModel.openWallpaperOptions(it)
                     }
                 }
             }
@@ -124,22 +121,11 @@ fun WallpapersScreen(
                     title = it.nameWithoutExtension,
                     description = stringResource(R.string.wallpapers_list_clickToViewActions)
                 ) {
-                    scope.launch {
-                        wallpapersViewModel.showWallpaperSheet(it)
-                    }
+                    wallpapersViewModel.openWallpaperOptions(it)
                 }
             }
         }
     }
-
-    WallpaperSheet(
-        wallpaper = wallpapersViewModel.wallpaperSheetWallpaper,
-        wallpapersPath = wallpapersViewModel.wallpapersDir,
-        state = wallpapersViewModel.wallpaperSheetState,
-        topToastState = wallpapersViewModel.topToastState,
-        onShareRequest = { scope.launch { wallpapersViewModel.shareImportedWallpaper(it, context) } },
-        onDeleteRequest = { scope.launch { wallpapersViewModel.deleteImportedWallpaper(it) } }
-    )
 }
 
 @Composable
@@ -214,7 +200,7 @@ private fun PickedWallpaper(
                 Button(
                     onClick = onImport
                 ) {
-                    ButtonIcon(rememberVectorPainter(Icons.Rounded.Download))
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Download))
                     Text(stringResource(R.string.wallpapers_chosen_import))
                 }
             }

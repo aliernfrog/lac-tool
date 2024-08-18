@@ -102,5 +102,6 @@ dependencies {
     implementation("dev.rikka.shizuku:provider:$shizukuVersion")
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.github.jeziellago:compose-markdown:0.5.2")
+    implementation("net.engawapg.lib:zoomable:1.6.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }
