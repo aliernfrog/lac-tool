@@ -42,6 +42,11 @@ class MapFile(
     private val fileName: String = file.name
 
     /**
+     * Name of the map thumbnail file. Does not check if it exists.
+     */
+    private val thumbnailFileName = "$name.jpg"
+
+    /**
      * Path of the map. Can be a [File] path or uri.
      */
     val path: String = file.path
@@ -66,7 +71,7 @@ class MapFile(
     /**
      * Thumbnail model of the map.
      */
-    val thumbnailModel: Any? = file.parentFile?.findFile("$name.jpg")?.painterModel
+    val thumbnailModel: Any? = file.parentFile?.findFile(thumbnailFileName)?.painterModel
 
     /**
      * Files related to the map (thumbnail file, data folder).
@@ -77,7 +82,7 @@ class MapFile(
             if (importedState != MapImportedState.IMPORTED) return files
             listOf(
                 name, // Folder containing inventory data etc.
-                "$name.jpg" // Thumbnail file
+                thumbnailFileName // Thumbnail file
             ).forEach { relatedFileName ->
                 file.parentFile?.findFile(relatedFileName)?.let {
                     if (it.exists()) files.add(it)
@@ -185,6 +190,24 @@ class MapFile(
         relatedFiles.plus(file).forEach {
             it.delete()
         }
+    }
+
+    /**
+     * Sets thumbnail file of the map to [file].
+     */
+    fun setThumbnailFile(
+        context: Context,
+        file: FileWrapper
+    ) {
+        val thumbnailFile = file.parentFile?.findFile(thumbnailFileName) ?: file.parentFile?.createFile(thumbnailFileName)
+        thumbnailFile!!.copyFrom(file, context)
+    }
+
+    /**
+     * Deletes thumbnail file of the map.
+     */
+    fun deleteThumbnailFile() {
+        file.parentFile?.findFile(thumbnailFileName)!!.delete()
     }
 
     /**

@@ -75,6 +75,10 @@
     <string name="maps_duplicate">Duplicate</string>
     <string name="maps_duplicated">Duplicated as {NAME}</string>
     <string name="maps_duplicating">Duplicating {NAME} as {NEW_NAME}..</string>
+    <string name="maps_thumbnail">Map thumbnail</string>
+    <string name="maps_thumbnail_pick">Pick a thumbnail</string>
+    <string name="maps_thumbnail_delete">Delete thumbnail</string>
+    <string name="maps_thumbnail_deleted">Deleted map thumbnail</string>
     <string name="maps_import">Import this map</string>
     <string name="maps_import_short">Import</string>
     <string name="maps_imported_single">Imported as {NAME}</string>

@@ -3,19 +3,30 @@ package com.aliernfrog.lactool.ui.viewmodel
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
+import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
@@ -24,12 +35,15 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -124,6 +138,52 @@ class MapsViewModel(
         mapsPendingDelete = null
         loadMaps(context)
         activeProgress = null
+    }
+
+    fun openMapThumbnailViewer(map: MapFile) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
+        mainViewModel.showMediaView(MediaViewData(
+            model = map.thumbnailModel,
+            title = map.name,
+            options = {
+                val context = LocalContext.current
+                val scope = rememberCoroutineScope()
+                val thumbnailPickerLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.PickVisualMedia()
+                ) { uri ->
+                    if (uri != null) scope.launch {
+                        map.runInIOThreadSafe {
+                            val cachedFile = UriUtil.cacheFile(uri, "maps", context)
+                            map.setThumbnailFile(context, FileWrapper(cachedFile!!))
+                        }
+                    }
+                }
+
+                ButtonRow(
+                    title = stringResource(R.string.maps_thumbnail_pick),
+                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate)
+                ) {
+                    thumbnailPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+                ButtonRow(
+                    title = stringResource(R.string.maps_thumbnail_delete),
+                    painter = rememberVectorPainter(Icons.Default.Delete),
+                    contentColor = MaterialTheme.colorScheme.error
+                ) {
+                    scope.launch {
+                        map.runInIOThreadSafe {
+                            map.deleteThumbnailFile()
+                            topToastState.showToast(
+                                text = R.string.maps_thumbnail_deleted,
+                                icon = Icons.Default.Delete
+                            )
+                        }
+                    }
+                }
+            }
+        ))
     }
 
     fun resolveMapNameInput(): String {
