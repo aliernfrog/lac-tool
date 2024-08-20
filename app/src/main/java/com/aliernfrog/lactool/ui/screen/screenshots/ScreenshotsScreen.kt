@@ -10,7 +10,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
@@ -23,9 +22,7 @@ import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.sheet.ScreenshotsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +32,6 @@ fun ScreenshotsScreen(
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         screenshotsViewModel.getScreenshotsFile(context)
         screenshotsViewModel.fetchScreenshots()
@@ -72,18 +68,9 @@ fun ScreenshotsScreen(
                     title = it.nameWithoutExtension,
                     showDetails = false
                 ) {
-                    scope.launch {
-                        screenshotsViewModel.showScreenshotSheet(it)
-                    }
+                    screenshotsViewModel.openScreenshotOptions(it)
                 }
             }
         }
     }
-
-    ScreenshotsSheet(
-        screenshot = screenshotsViewModel.screenshotSheetScreeenshot,
-        state = screenshotsViewModel.screenshotSheetState,
-        onShareRequest = { scope.launch { screenshotsViewModel.shareImportedScreenshot(it, context) } },
-        onDeleteRequest = { scope.launch { screenshotsViewModel.deleteImportedScreenshot(it) } }
-    )
 }

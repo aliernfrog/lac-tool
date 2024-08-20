@@ -189,7 +189,6 @@ class WallpapersViewModel(
                 ) {
                     clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)))
                     topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-                    mainViewModel.dismissMediaView()
                 }
                 ButtonRow(
                     title = stringResource(R.string.wallpapers_share),
