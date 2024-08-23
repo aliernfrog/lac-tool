@@ -42,6 +42,11 @@ class MapFile(
     private val fileName: String = file.name
 
     /**
+     * Name of the map thumbnail file. Does not check if it exists.
+     */
+    private val thumbnailFileName = "$name.jpg"
+
+    /**
      * Path of the map. Can be a [File] path or uri.
      */
     val path: String = file.path
@@ -66,7 +71,8 @@ class MapFile(
     /**
      * Thumbnail model of the map.
      */
-    val thumbnailModel: Any? = file.parentFile?.findFile("$name.jpg")?.painterModel
+    var thumbnailModel: Any? = getThumbnailFile()?.painterModel
+        private set
 
     /**
      * Files related to the map (thumbnail file, data folder).
@@ -77,7 +83,7 @@ class MapFile(
             if (importedState != MapImportedState.IMPORTED) return files
             listOf(
                 name, // Folder containing inventory data etc.
-                "$name.jpg" // Thumbnail file
+                thumbnailFileName // Thumbnail file
             ).forEach { relatedFileName ->
                 file.parentFile?.findFile(relatedFileName)?.let {
                     if (it.exists()) files.add(it)
@@ -185,6 +191,35 @@ class MapFile(
         relatedFiles.plus(file).forEach {
             it.delete()
         }
+    }
+
+    /**
+     * Returns thumbnail file of the map if exists, null otherwise.
+     */
+    fun getThumbnailFile(): FileWrapper? {
+        return file.parentFile?.findFile(thumbnailFileName)
+    }
+
+    /**
+     * Sets thumbnail file of the map to [file].
+     */
+    fun setThumbnailFile(
+        context: Context,
+        file: FileWrapper
+    ) {
+        val thumbnailFile = getThumbnailFile().let { found ->
+            if (found?.exists() == true) found else this.file.parentFile!!.createFile(thumbnailFileName)
+        }
+        thumbnailFile!!.copyFrom(file, context)
+        thumbnailModel = getThumbnailFile()?.painterModel
+    }
+
+    /**
+     * Deletes thumbnail file of the map.
+     */
+    fun deleteThumbnailFile() {
+        getThumbnailFile()!!.delete()
+        thumbnailModel = null
     }
 
     /**

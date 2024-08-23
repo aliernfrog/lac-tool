@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,8 +22,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
@@ -31,6 +35,7 @@ import com.aliernfrog.lactool.util.extension.clickableWithColor
 fun PickMapButton(
     chosenMap: MapFile?,
     showMapThumbnail: Boolean,
+    onClickThumbnailActions: () -> Unit,
     onClick: () -> Unit
 ) {
     Box(
@@ -76,6 +81,15 @@ fun PickMapButton(
                     .heightIn(56.dp)
                     .weight(1f)
             )
+            IconButton(
+                onClick = onClickThumbnailActions
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Image,
+                    contentDescription = stringResource(R.string.maps_thumbnail),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,

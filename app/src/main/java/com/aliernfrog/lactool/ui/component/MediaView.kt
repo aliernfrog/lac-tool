@@ -184,6 +184,7 @@ fun MediaView(
                     .fillMaxSize()
                     .zoomable(
                         zoomState = zoomState,
+                        zoomEnabled = data.zoomEnabled,
                         onTap = { _ ->
                             showOverlay = !showOverlay && overlayCanBeShown
                         }
