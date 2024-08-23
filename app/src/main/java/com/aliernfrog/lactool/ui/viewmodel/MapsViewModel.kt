@@ -145,13 +145,14 @@ class MapsViewModel(
 
     fun openMapThumbnailViewer(map: MapFile) {
         val mainViewModel = getKoinInstance<MainViewModel>()
+        val hasThumbnail = map.thumbnailModel != null
         mainViewModel.showMediaView(MediaViewData(
             model = map.thumbnailModel,
-            title = map.name,
+            title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
+            zoomEnabled = hasThumbnail,
             options = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
-                val hasThumbnail = map.thumbnailModel != null
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 val thumbnailPickerLauncher = rememberLauncherForActivityResult(
