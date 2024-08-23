@@ -159,6 +159,7 @@ class MapsViewModel(
                     contract = ActivityResultContracts.PickVisualMedia()
                 ) { uri ->
                     if (uri != null) scope.launch {
+                        activeProgress = Progress(context.getString(R.string.maps_thumbnail_setting))
                         map.runInIOThreadSafe {
                             val cachedFile = UriUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
@@ -169,6 +170,7 @@ class MapsViewModel(
                                 icon = Icons.Default.Check
                             )
                         }
+                        activeProgress = null
                     }
                 }
 
@@ -195,16 +197,18 @@ class MapsViewModel(
                     onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
                         scope.launch {
+                            activeProgress = Progress(context.getString(R.string.maps_thumbnail_deleting))
                             map.runInIOThreadSafe {
                                 map.deleteThumbnailFile()
                                 chooseMap(map)
-                                showDeleteDialog = false
                                 mainViewModel.dismissMediaView()
+                                showDeleteDialog = false
                                 topToastState.showToast(
                                     text = R.string.maps_thumbnail_deleted,
                                     icon = Icons.Default.Delete
                                 )
                             }
+                            activeProgress = null
                         }
                     }
                 )
