@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -37,6 +38,7 @@ import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -149,6 +151,9 @@ class MapsViewModel(
             options = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
+                val hasThumbnail = map.thumbnailModel != null
+                var showDeleteDialog by remember { mutableStateOf(false) }
+
                 val thumbnailPickerLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.PickVisualMedia()
                 ) { uri ->
@@ -172,21 +177,33 @@ class MapsViewModel(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 }
-                ButtonRow(
+
+                if (hasThumbnail) ButtonRow(
                     title = stringResource(R.string.maps_thumbnail_delete),
                     painter = rememberVectorPainter(Icons.Default.Delete),
                     contentColor = MaterialTheme.colorScheme.error
                 ) {
-                    scope.launch {
-                        map.runInIOThreadSafe {
-                            map.deleteThumbnailFile()
-                            topToastState.showToast(
-                                text = R.string.maps_thumbnail_deleted,
-                                icon = Icons.Default.Delete
-                            )
+                    showDeleteDialog = true
+                }
+
+                if (showDeleteDialog) DeleteConfirmationDialog(
+                    name = stringResource(R.string.maps_thumbnail_id)
+                        .replace("{MAP}", map.name),
+                    onDismissRequest = { showDeleteDialog = false },
+                    onConfirmDelete = {
+                        scope.launch {
+                            map.runInIOThreadSafe {
+                                map.deleteThumbnailFile()
+                                showDeleteDialog = false
+                                mainViewModel.dismissMediaView()
+                                topToastState.showToast(
+                                    text = R.string.maps_thumbnail_deleted,
+                                    icon = Icons.Default.Delete
+                                )
+                            }
                         }
                     }
-                }
+                )
             }
         ))
     }
