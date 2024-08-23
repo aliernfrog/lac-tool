@@ -178,7 +178,8 @@ class MapsViewModel(
 
                 ButtonRow(
                     title = stringResource(R.string.maps_thumbnail_set),
-                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate)
+                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate),
+                    description = if (hasThumbnail) stringResource(R.string.maps_thumbnail_set_overrides) else null
                 ) {
                     thumbnailPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

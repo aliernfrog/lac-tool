@@ -279,7 +279,6 @@
     <string name="settings_experimental">تنظیمات آزمایشی</string>
     <string name="settings_experimental_enabled">تنظیمات آزمایشی فعال شد!</string>
     <string name="settings_experimental_description">این تنظیمات برای استفاده معمولی در نظر گرفته نشده اند و ممکن است در صورت استفاده نادرست ابزار LAC را خراب کنند</string>
-    <string name="settings_experimental_updatesURL">به‌روزرسانی آدرس URL</string>
     <string name="updates_updateAvailable">به روز رسانی ابزار LAC در دسترس است</string>
     <string name="updates_noUpdates">به روز رسانی در دسترس نیست</string>
     <string name="updates_error">هنگام بررسی به‌روزرسانی، مشکلی پیش آمد</string>

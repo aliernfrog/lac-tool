@@ -299,7 +299,6 @@
     <string name="settings_experimental">Deneysel ayarlar</string>
     <string name="settings_experimental_enabled">Deneysel ayarlar açıldı!</string>
     <string name="settings_experimental_description">Normal kullanım için değildir, yanlış kullanıldığında uygulamayı bozabilir</string>
-    <string name="settings_experimental_updatesURL">Güncellemeler için URL</string>
     <string name="updates_updateAvailable">LAC Tool güncellemesi mevcut! Daha fazla detay için tıklayın</string>
     <string name="updates_noUpdates">Güncelleme yok</string>
     <string name="updates_error">Güncellemeleri denetlerken bir şeyler ters gitti</string>

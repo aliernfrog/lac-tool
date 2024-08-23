@@ -78,6 +78,7 @@
     <string name="maps_thumbnail">Map thumbnail</string>
     <string name="maps_thumbnail_noThumbnail">No thumbnail</string>
     <string name="maps_thumbnail_set">Pick a thumbnail</string>
+    <string name="maps_thumbnail_set_overrides">This will override existing thumbnail, make sure to back it up</string>
     <string name="maps_thumbnail_set_done">Set map thumbnail</string>
     <string name="maps_thumbnail_setting">Setting map thumbnail..</string>
     <string name="maps_thumbnail_share">Share thumbnail</string>
