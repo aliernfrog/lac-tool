@@ -207,9 +207,8 @@ class MapFile(
         context: Context,
         file: FileWrapper
     ) {
-        val parentFile = this.file.parentFile!!
-        val thumbnailFile = parentFile.findFile(thumbnailFileName).let { found ->
-            if (found?.exists() == true) found else parentFile.createFile(thumbnailFileName)
+        val thumbnailFile = getThumbnailFile().let { found ->
+            if (found?.exists() == true) found else this.file.parentFile!!.createFile(thumbnailFileName)
         }
         thumbnailFile!!.copyFrom(file, context)
         thumbnailModel = getThumbnailFile()?.painterModel
@@ -219,7 +218,7 @@ class MapFile(
      * Deletes thumbnail file of the map.
      */
     fun deleteThumbnailFile() {
-        file.parentFile?.findFile(thumbnailFileName)!!.delete()
+        getThumbnailFile()!!.delete()
         thumbnailModel = null
     }
 
