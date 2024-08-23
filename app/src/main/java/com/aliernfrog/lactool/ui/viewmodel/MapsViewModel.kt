@@ -161,6 +161,8 @@ class MapsViewModel(
                         map.runInIOThreadSafe {
                             val cachedFile = UriUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
+                            chooseMap(map)
+                            openMapThumbnailViewer(map)
                             topToastState.showToast(
                                 text = R.string.maps_thumbnail_set_done,
                                 icon = Icons.Default.Check
@@ -194,6 +196,7 @@ class MapsViewModel(
                         scope.launch {
                             map.runInIOThreadSafe {
                                 map.deleteThumbnailFile()
+                                chooseMap(map)
                                 showDeleteDialog = false
                                 mainViewModel.dismissMediaView()
                                 topToastState.showToast(

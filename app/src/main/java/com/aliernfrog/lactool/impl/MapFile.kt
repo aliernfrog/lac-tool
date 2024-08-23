@@ -71,7 +71,8 @@ class MapFile(
     /**
      * Thumbnail model of the map.
      */
-    val thumbnailModel: Any? = file.parentFile?.findFile(thumbnailFileName)?.painterModel
+    var thumbnailModel: Any? = getThumbnailFile()?.painterModel
+        private set
 
     /**
      * Files related to the map (thumbnail file, data folder).
@@ -193,6 +194,13 @@ class MapFile(
     }
 
     /**
+     * Returns thumbnail file of the map if exists, null otherwise.
+     */
+    private fun getThumbnailFile(): FileWrapper? {
+        return file.parentFile?.findFile(thumbnailFileName)
+    }
+
+    /**
      * Sets thumbnail file of the map to [file].
      */
     fun setThumbnailFile(
@@ -204,6 +212,7 @@ class MapFile(
             if (found?.exists() == true) found else parentFile.createFile(thumbnailFileName)
         }
         thumbnailFile!!.copyFrom(file, context)
+        thumbnailModel = getThumbnailFile()?.painterModel
     }
 
     /**
@@ -211,6 +220,7 @@ class MapFile(
      */
     fun deleteThumbnailFile() {
         file.parentFile?.findFile(thumbnailFileName)!!.delete()
+        thumbnailModel = null
     }
 
     /**
