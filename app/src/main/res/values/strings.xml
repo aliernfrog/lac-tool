@@ -80,9 +80,10 @@
     <string name="maps_thumbnail_set">Pick a thumbnail</string>
     <string name="maps_thumbnail_set_done">Set map thumbnail</string>
     <string name="maps_thumbnail_setting">Setting map thumbnail..</string>
+    <string name="maps_thumbnail_share">Share thumbnail</string>
     <string name="maps_thumbnail_delete">Delete thumbnail</string>
     <string name="maps_thumbnail_deleted">Deleted map thumbnail</string>
-    <string name="maps_thumbnail_deleting">Deleting map thumbnail</string>
+    <string name="maps_thumbnail_deleting">Deleting map thumbnail..</string>
     <string name="maps_thumbnail_id">thumbnail of {MAP}</string>
     <string name="maps_import">Import this map</string>
     <string name="maps_import_short">Import</string>
@@ -227,7 +228,7 @@
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
     <string name="wallpapers_share">Share wallpaper</string>
     <string name="wallpapers_delete">Delete wallpaper</string>
-    <string name="wallpapers_deleting">Deleting wallpaper</string>
+    <string name="wallpapers_deleting">Deleting wallpaper..</string>
     <string name="wallpapers_deleted">Deleted the wallpaper</string>
     <string name="screenshots">Screenshots</string>
     <string name="screenshots_permissions">LAC screenshots folder</string>
@@ -237,7 +238,7 @@
     <string name="screenshots_clickHint">Click screenshots to view more actions</string>
     <string name="screenshots_share">Share screnshot</string>
     <string name="screenshots_delete">Delete screenshot</string>
-    <string name="screenshots_deleting">Deleting screenshot</string>
+    <string name="screenshots_deleting">Deleting screenshot..</string>
     <string name="screenshots_deleted">Deleted the screenshot</string>
     <string name="settings">Settings</string>
     <string name="settings_updateNotification_updateAvailable">Update available: {VERSION}</string>

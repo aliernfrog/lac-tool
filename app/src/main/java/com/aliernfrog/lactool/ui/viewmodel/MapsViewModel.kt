@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +43,7 @@ import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -183,7 +185,22 @@ class MapsViewModel(
                     )
                 }
 
-                if (hasThumbnail) ButtonRow(
+                if (!hasThumbnail) return@MediaViewData
+
+                ButtonRow(
+                    title = stringResource(R.string.maps_thumbnail_share),
+                    painter = rememberVectorPainter(Icons.Default.Share)
+                ) {
+                    scope.launch {
+                        activeProgress = Progress(context.getString(R.string.info_sharing))
+                        map.runInIOThreadSafe {
+                            FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                        }
+                        activeProgress = null
+                    }
+                }
+
+                ButtonRow(
                     title = stringResource(R.string.maps_thumbnail_delete),
                     painter = rememberVectorPainter(Icons.Default.Delete),
                     contentColor = MaterialTheme.colorScheme.error
@@ -192,8 +209,7 @@ class MapsViewModel(
                 }
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
-                    name = stringResource(R.string.maps_thumbnail_id)
-                        .replace("{MAP}", map.name),
+                    name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),
                     onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
                         scope.launch {

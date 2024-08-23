@@ -196,7 +196,7 @@ class MapFile(
     /**
      * Returns thumbnail file of the map if exists, null otherwise.
      */
-    private fun getThumbnailFile(): FileWrapper? {
+    fun getThumbnailFile(): FileWrapper? {
         return file.parentFile?.findFile(thumbnailFileName)
     }
 
