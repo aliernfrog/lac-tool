@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -155,12 +156,16 @@ class MapsViewModel(
                         map.runInIOThreadSafe {
                             val cachedFile = UriUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
+                            topToastState.showToast(
+                                text = R.string.maps_thumbnail_set_done,
+                                icon = Icons.Default.Check
+                            )
                         }
                     }
                 }
 
                 ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_pick),
+                    title = stringResource(R.string.maps_thumbnail_set),
                     painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate)
                 ) {
                     thumbnailPickerLauncher.launch(
