@@ -29,6 +29,11 @@
 - Import LAC in game cellphone wallpapers without internet connection
 - LAC in game screenshot management
 
+## 🌍 Translations
+You can help translate LAC Tool in [Crowdin](https://crowdin.com/project/lac-tool).
+
+[![Crowdin](https://badges.crowdin.net/lac-tool/localized.svg)](https://crowdin.com/project/lac-tool)
+
 ## 🦝 Shizuku support
 [Shizuku](https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api) is an app which lets other apps elevate their permissions using wireless debugging or root access.
 
