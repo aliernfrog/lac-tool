@@ -199,8 +199,9 @@ class MapFile(
         context: Context,
         file: FileWrapper
     ) {
-        val thumbnailFile = file.parentFile?.findFile(thumbnailFileName).let { found -> 
-            if (found?.exists() == true) found else file.parentFile?.createFile(thumbnailFileName)
+        val parentFile = this.file.parentFile!!
+        val thumbnailFile = parentFile.findFile(thumbnailFileName).let { found ->
+            if (found?.exists() == true) found else parentFile.createFile(thumbnailFileName)
         }
         thumbnailFile!!.copyFrom(file, context)
     }
