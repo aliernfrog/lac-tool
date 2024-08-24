@@ -115,7 +115,7 @@ class ShizukuViewModel(
             Log.e(TAG, "updateStatus: ", e)
             ShizukuStatus.UNKNOWN
         }
-        if (status == ShizukuStatus.AVAILABLE) {
+        if (status == ShizukuStatus.AVAILABLE && !fileServiceRunning) {
             if (timeOutJob == null) timeOutJob = viewModelScope.launch {
                 delay(15000)
                 timedOut = true
