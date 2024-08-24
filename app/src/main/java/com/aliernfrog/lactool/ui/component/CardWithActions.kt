@@ -33,7 +33,7 @@ fun CardWithActions(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .width(IntrinsicSize.Max),
+                .width(IntrinsicSize.Min),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (title != null || painter != null) Row(
