@@ -2,10 +2,8 @@ package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -28,9 +26,7 @@ fun CardWithActions(
 ) {
     Card(
         shape = AppComponentShape,
-        modifier = modifier
-            .wrapContentWidth()
-            .width(IntrinsicSize.Min),
+        modifier = modifier.wrapContentWidth(),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
