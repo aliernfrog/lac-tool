@@ -19,6 +19,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.service.FileService
+import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Job
@@ -89,6 +90,17 @@ class ShizukuViewModel(
         Shizuku.addBinderReceivedListener(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
         Shizuku.addRequestPermissionResultListener(permissionResultListener)
+    }
+
+    fun launchManager(context: Context) {
+        try {
+            context.startActivity(
+                context.packageManager.getLaunchIntentForPackage(SHIZUKU_PACKAGE)
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "ShizukuViewModel/launchManager: failed to start activity ", e)
+            topToastState.showErrorToast()
+        }
     }
 
     fun checkAvailability(context: Context): ShizukuStatus {

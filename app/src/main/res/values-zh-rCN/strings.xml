@@ -44,7 +44,7 @@
     <string name="permissions_shizuku_install_install">安装</string>
     <string name="permissions_shizuku_notRunning">Shizuku 未运行</string>
     <string name="permissions_shizuku_notRunning_description">启动 Shizuku 服务以继续</string>
-    <string name="permissions_shizuku_notRunning_openShizuku">打开 Shizuku</string>
+    <string name="permissions_shizuku_openShizuku">打开 Shizuku</string>
     <string name="permissions_shizuku_permission">需要权限</string>
     <string name="permissions_shizuku_permission_description">LAC Tool 没有权限使用 Shizuku</string>
     <string name="permissions_shizuku_permission_grant">授予权限</string>

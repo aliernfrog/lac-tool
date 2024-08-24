@@ -44,7 +44,7 @@
     <string name="permissions_shizuku_install_install">نصب</string>
     <string name="permissions_shizuku_notRunning">شیزوکو در حال اجرا نیست</string>
     <string name="permissions_shizuku_notRunning_description">برای ادامه، سرویس Shizuku را شروع کنید</string>
-    <string name="permissions_shizuku_notRunning_openShizuku">بازکردن شیزکو</string>
+    <string name="permissions_shizuku_openShizuku">بازکردن شیزکو</string>
     <string name="permissions_shizuku_permission">مجوز لازم است</string>
     <string name="permissions_shizuku_permission_description">ابزار LAC مجوز استفاده از Shizuku را ندارد</string>
     <string name="permissions_shizuku_permission_grant">اجازه بدهید</string>

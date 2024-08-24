@@ -47,7 +47,7 @@
     <string name="permissions_shizuku_install_install">Yükle</string>
     <string name="permissions_shizuku_notRunning">Shizuku çalışmıyor</string>
     <string name="permissions_shizuku_notRunning_description">Devam etmek için Shizuku hizmetini başlatın</string>
-    <string name="permissions_shizuku_notRunning_openShizuku">Shizuku\'yu aç</string>
+    <string name="permissions_shizuku_openShizuku">Shizuku\'yu aç</string>
     <string name="permissions_shizuku_permission">İzin gerekli</string>
     <string name="permissions_shizuku_permission_description">LAC Tool\'un Shizuku kullanması için gerekli izinleri yok</string>
     <string name="permissions_shizuku_permission_grant">İzin ver</string>

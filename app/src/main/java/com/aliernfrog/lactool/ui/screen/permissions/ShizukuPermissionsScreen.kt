@@ -12,11 +12,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -65,21 +66,32 @@ fun ShizukuPermissionsScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp)
                 )
                 AnimatedVisibility(shizukuViewModel.timedOut) {
-                    Card(Modifier.padding(16.dp)) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(stringResource(R.string.info_shizuku_timedOut))
+                    CardWithActions(
+                        title = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp),
+                        buttons = {
+                            TextButton(
+                                onClick = {
+                                    shizukuViewModel.launchManager(context)
+                                }
+                            ) {
+                                ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                                Text(stringResource(R.string.permissions_shizuku_openShizuku))
+                            }
                             Button(
                                 onClick = {
                                     GeneralUtil.restartApp(context)
                                 },
                                 modifier = Modifier.padding(top = 8.dp)
                             ) {
-                                Text(stringResource(R.string.info_shizuku_timedOut_restart))
+                                ButtonIcon(rememberVectorPainter(Icons.Default.RestartAlt))
+                                Text(stringResource(R.string.permissions_shizuku_timedOut_restart))
                             }
                         }
+                    ) {
+                        Text(stringResource(R.string.permissions_shizuku_timedOut))
                     }
                 }
             } else ShizukuSetupGuide()
@@ -127,13 +139,11 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.WAITING_FOR_BINDER -> {
                 Button(
                     onClick = {
-                        context.packageManager.getLaunchIntentForPackage(ShizukuViewModel.SHIZUKU_PACKAGE)?.let {
-                            context.startActivity(it)
-                        }
+                        shizukuViewModel.launchManager(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                    Text(stringResource(R.string.permissions_shizuku_notRunning_openShizuku))
+                    Text(stringResource(R.string.permissions_shizuku_openShizuku))
                 }
             }
             ShizukuStatus.UNAUTHORIZED -> {
@@ -149,7 +159,7 @@ private fun ShizukuSetupGuide(
         CardWithActions(
             title = title?.let { stringResource(it) } ?: "",
             buttons = { button() },
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
             description?.let {
                 Text(
