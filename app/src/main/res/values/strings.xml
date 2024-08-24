@@ -18,7 +18,7 @@
     <string name="info_pleaseWait">Please wait..</string>
     <string name="info_sharing">Sharing..</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
-    <string name="info_shizuku_startingFileService">Starting file service..</string>
+    <string name="info_shizuku_waitingService">Waiting for Shizuku..</string>
     <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
     <string name="info_useUnrecommendedAnyway_description">Only do this if you are sure that your LAC data is stored in a different folder, or if you are experimenting</string>
     <string name="permissions_other">Other options</string>
@@ -44,14 +44,16 @@
     <string name="permissions_setupShizuku">Use Shizuku</string>
     <string name="permissions_setupShizuku_description">You need to use Shizuku to let LAC Tool access LAC folders.\nThis is because the Files app on your device does not allow apps to get access to files inside Android/data.\nYou can toggle Shizuku mode anytime from settings.</string>
     <string name="permissions_shizuku_introduction">Shizuku is an app which lets other apps use shell permissions by making use of wireless debugging.\nShizuku mode can be disabled from Settings > Storage > Storage access type</string>
+    <string name="permissions_shizuku_openShizuku">Open Shizuku</string>
     <string name="permissions_shizuku_install_title">Install Shizuku to get started</string>
     <string name="permissions_shizuku_install_install">Install</string>
     <string name="permissions_shizuku_notRunning">Shizuku is not running</string>
     <string name="permissions_shizuku_notRunning_description">Start Shizuku service to proceed</string>
-    <string name="permissions_shizuku_notRunning_openShizuku">Open Shizuku</string>
     <string name="permissions_shizuku_permission">Permission needed</string>
     <string name="permissions_shizuku_permission_description">LAC Tool does not have permissions to use Shizuku</string>
     <string name="permissions_shizuku_permission_grant">Grant permission</string>
+    <string name="permissions_shizuku_timedOut">Taking long? Try restarting LAC Tool</string>
+    <string name="permissions_shizuku_timedOut_restart">Restart</string>
     <string name="permissions_allFiles_title">Storage permissions</string>
     <string name="permissions_allFiles_description">Storage permissions are needed for LAC Tool to access LAC data</string>
     <string name="permissions_allFiles_grant">Grant permission</string>

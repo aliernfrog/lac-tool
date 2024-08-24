@@ -18,7 +18,6 @@
     <string name="info_pleaseWait">Lütfen bekleyin..</string>
     <string name="info_sharing">Paylaşılıyor..</string>
     <string name="info_deleteQuestion">{NAME}\'yi silmek istediğinizden emin misiniz?\nBu işlem geri alınamaz!</string>
-    <string name="info_shizuku_startingFileService">Dosya hizmeti başlatılıyor..</string>
     <string name="info_shizuku_disconnected">Shizuku bağlantısı kesildi</string>
     <string name="info_useUnrecommendedAnyway_description">Bunu sadece LAC\'ın verilerinizi başka bir klasörde sakladığından eminseniz veya deneme yapıyorsanız yapın</string>
     <string name="permissions_other">Diğer seçenekler</string>
@@ -48,7 +47,7 @@
     <string name="permissions_shizuku_install_install">Yükle</string>
     <string name="permissions_shizuku_notRunning">Shizuku çalışmıyor</string>
     <string name="permissions_shizuku_notRunning_description">Devam etmek için Shizuku hizmetini başlatın</string>
-    <string name="permissions_shizuku_notRunning_openShizuku">Shizuku\'yu aç</string>
+    <string name="permissions_shizuku_openShizuku">Shizuku\'yu aç</string>
     <string name="permissions_shizuku_permission">İzin gerekli</string>
     <string name="permissions_shizuku_permission_description">LAC Tool\'un Shizuku kullanması için gerekli izinleri yok</string>
     <string name="permissions_shizuku_permission_grant">İzin ver</string>

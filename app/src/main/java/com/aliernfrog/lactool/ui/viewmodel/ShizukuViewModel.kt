@@ -12,19 +12,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.IFileService
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.service.FileService
+import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 
 
 class ShizukuViewModel(
-    context: Context,
-    val topToastState: TopToastState
+    val prefs: PreferenceManager,
+    val topToastState: TopToastState,
+    context: Context
 ) : ViewModel() {
     companion object {
         const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
@@ -36,7 +43,9 @@ class ShizukuViewModel(
 
     var fileService: IFileService? = null
     var fileServiceRunning by mutableStateOf(false)
+    var timedOut by mutableStateOf(false)
 
+    private var timeOutJob: Job? = null
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
         checkAvailability(context)
     }
@@ -50,9 +59,14 @@ class ShizukuViewModel(
 
     private val userServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, binder: IBinder) {
-            Log.d(TAG, "user service connected")
+            val shizukuNeverLoad = prefs.shizukuNeverLoad.value
+            Log.d(TAG, "user service connected, shizukuNeverLoad ${shizukuNeverLoad}")
+            if (shizukuNeverLoad) return
             fileService = IFileService.Stub.asInterface(binder)
             fileServiceRunning = true
+            timeOutJob?.cancel()
+            timeOutJob = null
+            timedOut = false
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
@@ -78,6 +92,17 @@ class ShizukuViewModel(
         Shizuku.addRequestPermissionResultListener(permissionResultListener)
     }
 
+    fun launchManager(context: Context) {
+        try {
+            context.startActivity(
+                context.packageManager.getLaunchIntentForPackage(SHIZUKU_PACKAGE)
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "ShizukuViewModel/launchManager: failed to start activity ", e)
+            topToastState.showErrorToast()
+        }
+    }
+
     fun checkAvailability(context: Context): ShizukuStatus {
         status = try {
             if (!isInstalled(context)) ShizukuStatus.NOT_INSTALLED
@@ -90,7 +115,13 @@ class ShizukuViewModel(
             Log.e(TAG, "updateStatus: ", e)
             ShizukuStatus.UNKNOWN
         }
-        if (status == ShizukuStatus.AVAILABLE) Shizuku.bindUserService(userServiceArgs, userServiceConnection)
+        if (status == ShizukuStatus.AVAILABLE && !fileServiceRunning) {
+            if (timeOutJob == null) timeOutJob = viewModelScope.launch {
+                delay(15000)
+                timedOut = true
+            }
+            Shizuku.bindUserService(userServiceArgs, userServiceConnection)
+        }
         return status
     }
 

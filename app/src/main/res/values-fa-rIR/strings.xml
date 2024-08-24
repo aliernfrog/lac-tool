@@ -18,7 +18,6 @@
     <string name="info_pleaseWait">لطفا صبر کنید..</string>
     <string name="info_sharing">درحال ارسال..</string>
     <string name="info_deleteQuestion">آیا مطمئنید که می‌خواهید {NAME} را حذف کنید؟\nاین کار قابل واگرد نیست!</string>
-    <string name="info_shizuku_startingFileService">شروع سرویس فایل</string>
     <string name="info_shizuku_disconnected">از شیزوکو قطع شده است</string>
     <string name="info_useUnrecommendedAnyway_description">فقط در صورتی این کار را انجام دهید که مطمئن باشید داده های LAC شما در پوشه دیگری ذخیره شده است یا در حال آزمایش هستید</string>
     <string name="permissions_downgradeFilesApp">به روز رسانی برنامه فایل ها</string>
@@ -45,7 +44,7 @@
     <string name="permissions_shizuku_install_install">نصب</string>
     <string name="permissions_shizuku_notRunning">شیزوکو در حال اجرا نیست</string>
     <string name="permissions_shizuku_notRunning_description">برای ادامه، سرویس Shizuku را شروع کنید</string>
-    <string name="permissions_shizuku_notRunning_openShizuku">بازکردن شیزکو</string>
+    <string name="permissions_shizuku_openShizuku">بازکردن شیزکو</string>
     <string name="permissions_shizuku_permission">مجوز لازم است</string>
     <string name="permissions_shizuku_permission_description">ابزار LAC مجوز استفاده از Shizuku را ندارد</string>
     <string name="permissions_shizuku_permission_grant">اجازه بدهید</string>
