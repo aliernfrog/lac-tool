@@ -18,6 +18,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val showChosenMapThumbnail = booleanPreference("chosenMapThumbnail", true)
     val showMapThumbnailsInList = booleanPreference("showMapThumbnailsList", true)
     val language = stringPreference("appLanguage", "") // follow system if blank
+    val autoCheckUpdates = booleanPreference("autoUpdates", true)
 
     // Directory options
     val lacMapsDir = stringPreference("mapsDir", ConfigKey.RECOMMENDED_MAPS_DIR)
@@ -30,6 +31,6 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true)
     val showMediaViewGuide = booleanPreference("showMediaViewGuide", true)
-    val autoCheckUpdates = booleanPreference("autoUpdates", true)
+    val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false)
     val updatesURL = stringPreference("updatesUrl", ConfigKey.DEFAULT_UPDATES_URL)
 }

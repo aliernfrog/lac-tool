@@ -18,8 +18,10 @@
     <string name="info_pleaseWait">Please wait..</string>
     <string name="info_sharing">Sharing..</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
-    <string name="info_shizuku_startingFileService">Starting file service..</string>
+    <string name="info_shizuku_waitingService">Waiting for Shizuku..</string>
     <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
+    <string name="info_shizuku_timedOut">Taking long? Try restarting LAC Tool</string>
+    <string name="info_shizuku_timedOut_restart">Restart</string>
     <string name="info_useUnrecommendedAnyway_description">Only do this if you are sure that your LAC data is stored in a different folder, or if you are experimenting</string>
     <string name="permissions_other">Other options</string>
     <string name="permissions_downgradeFilesApp">Files app updates</string>

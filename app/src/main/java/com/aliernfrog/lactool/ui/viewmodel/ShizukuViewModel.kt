@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.IFileService
 import com.aliernfrog.lactool.R
@@ -19,6 +20,9 @@ import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.service.FileService
 import com.aliernfrog.toptoast.state.TopToastState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 
 
@@ -36,8 +40,11 @@ class ShizukuViewModel(
 
     var fileService: IFileService? = null
     var fileServiceRunning by mutableStateOf(false)
+    var timedOut by mutableStateOf(false)
 
+    private var timeOutJob: Job? = null
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
+        timeOutJob?.cancel()
         checkAvailability(context)
     }
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
@@ -81,7 +88,13 @@ class ShizukuViewModel(
     fun checkAvailability(context: Context): ShizukuStatus {
         status = try {
             if (!isInstalled(context)) ShizukuStatus.NOT_INSTALLED
-            else if (!Shizuku.pingBinder()) ShizukuStatus.WAITING_FOR_BINDER
+            else if (!Shizuku.pingBinder()) {
+                if (timeOutJob != null) timeOutJob = viewModelScope.launch {
+                    delay(15000)
+                    timedOut = true
+                }
+                ShizukuStatus.WAITING_FOR_BINDER
+            }
             else {
                 if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) ShizukuStatus.AVAILABLE
                 else ShizukuStatus.UNAUTHORIZED

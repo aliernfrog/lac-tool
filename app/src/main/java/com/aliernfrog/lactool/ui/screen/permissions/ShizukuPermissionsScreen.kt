@@ -1,9 +1,11 @@
 package com.aliernfrog.lactool.ui.screen.permissions
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
 import rikka.shizuku.Shizuku
 
@@ -57,9 +61,27 @@ fun ShizukuPermissionsScreen(
             if (isLoading) {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
                 Text(
-                    text = stringResource(R.string.info_shizuku_startingFileService),
+                    text = stringResource(R.string.info_shizuku_waitingService),
                     modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp)
                 )
+                AnimatedVisibility(shizukuViewModel.timedOut) {
+                    Card(Modifier.padding(16.dp)) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(stringResource(R.string.info_shizuku_timedOut))
+                            Button(
+                                onClick = {
+                                    GeneralUtil.restartApp(context)
+                                },
+                                modifier = Modifier.padding(top = 8.dp)
+                            ) {
+                                Text(stringResource(R.string.info_shizuku_timedOut_restart))
+                            }
+                        }
+                    }
+                }
             } else ShizukuSetupGuide()
         }
     }

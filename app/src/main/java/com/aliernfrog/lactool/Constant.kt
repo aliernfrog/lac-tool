@@ -113,6 +113,9 @@ object SettingsConstant {
             preference = { it.showMediaViewGuide }
         ),
         PrefEditItem(
+            preference = { it.shizukuNeverLoad }
+        ),
+        PrefEditItem(
             preference = { it.updatesURL }
         ),
         *folders.toTypedArray()

@@ -18,7 +18,6 @@
     <string name="info_pleaseWait">Lütfen bekleyin..</string>
     <string name="info_sharing">Paylaşılıyor..</string>
     <string name="info_deleteQuestion">{NAME}\'yi silmek istediğinizden emin misiniz?\nBu işlem geri alınamaz!</string>
-    <string name="info_shizuku_startingFileService">Dosya hizmeti başlatılıyor..</string>
     <string name="info_shizuku_disconnected">Shizuku bağlantısı kesildi</string>
     <string name="info_useUnrecommendedAnyway_description">Bunu sadece LAC\'ın verilerinizi başka bir klasörde sakladığından eminseniz veya deneme yapıyorsanız yapın</string>
     <string name="permissions_other">Diğer seçenekler</string>

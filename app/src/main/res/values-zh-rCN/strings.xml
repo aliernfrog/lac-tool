@@ -18,7 +18,6 @@
     <string name="info_pleaseWait">请稍候…</string>
     <string name="info_sharing">正在分享…</string>
     <string name="info_deleteQuestion">您确定要删除 {NAME} 吗？\n此操作无法撤消！</string>
-    <string name="info_shizuku_startingFileService">正在启动文件服务…</string>
     <string name="info_shizuku_disconnected">已与 Shizuku 断开连接</string>
     <string name="info_useUnrecommendedAnyway_description">只有当您确定您的 LAC 数据存储在其他文件夹中时，或者您正在进行实验时，才可以这样做</string>
     <string name="permissions_downgradeFilesApp">“文件”应用更新</string>
