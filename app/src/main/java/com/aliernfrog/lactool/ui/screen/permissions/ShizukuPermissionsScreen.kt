@@ -65,12 +65,14 @@ fun ShizukuPermissionsScreen(
                     text = stringResource(R.string.info_shizuku_waitingService),
                     modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp)
                 )
-                AnimatedVisibility(shizukuViewModel.timedOut) {
+                AnimatedVisibility(
+                    visible = shizukuViewModel.timedOut,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                ) {
                     CardWithActions(
                         title = null,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(16.dp),
                         buttons = {
                             TextButton(
                                 onClick = {
