@@ -19,6 +19,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.service.FileService
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -27,8 +28,9 @@ import rikka.shizuku.Shizuku
 
 
 class ShizukuViewModel(
-    context: Context,
-    val topToastState: TopToastState
+    val prefs: PreferenceManager,
+    val topToastState: TopToastState,
+    context: Context
 ) : ViewModel() {
     companion object {
         const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
@@ -44,7 +46,6 @@ class ShizukuViewModel(
 
     private var timeOutJob: Job? = null
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
-        timeOutJob?.cancel()
         checkAvailability(context)
     }
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
@@ -88,7 +89,7 @@ class ShizukuViewModel(
     fun checkAvailability(context: Context): ShizukuStatus {
         status = try {
             if (!isInstalled(context)) ShizukuStatus.NOT_INSTALLED
-            else if (!Shizuku.pingBinder()) {
+            else if (!Shizuku.pingBinder() || prefs.shizukuNeverLoad.value) {
                 if (timeOutJob != null) timeOutJob = viewModelScope.launch {
                     delay(15000)
                     timedOut = true
@@ -96,6 +97,8 @@ class ShizukuViewModel(
                 ShizukuStatus.WAITING_FOR_BINDER
             }
             else {
+                timeOutJob?.cancel()
+                timedOut = false
                 if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) ShizukuStatus.AVAILABLE
                 else ShizukuStatus.UNAUTHORIZED
             }

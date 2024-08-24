@@ -34,7 +34,7 @@ class PermissionsViewModel(
             StorageAccessType.SAF -> getMissingUriPermissions(
                 *permissionsData, context = context
             ).isEmpty()
-            StorageAccessType.SHIZUKU -> isShizukuFileServiceRunning && !prefs.shizukuNeverLoad.value
+            StorageAccessType.SHIZUKU -> isShizukuFileServiceRunning
             StorageAccessType.ALL_FILES -> {
                 val result = ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 result == PackageManager.PERMISSION_GRANTED
