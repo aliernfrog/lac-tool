@@ -58,8 +58,9 @@ class ShizukuViewModel(
 
     private val userServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, binder: IBinder) {
-            if (prefs.shizukuNeverLoad.value) return Log.d(TAG, "user service connected, but shizukuNeverLoad is true");
-            Log.d(TAG, "user service connected")
+            val shizukuNeverLoad = prefs.shizukuNeverLoad.value
+            Log.d(TAG, "user service connected, shizukuNeverLoad ${shizukuNeverLoad}")
+            if (shizukuNeverLoad) return
             fileService = IFileService.Stub.asInterface(binder)
             fileServiceRunning = true
             timeOutJob?.cancel()
