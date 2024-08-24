@@ -67,12 +67,13 @@ fun ShizukuPermissionsScreen(
                 )
                 AnimatedVisibility(
                     visible = shizukuViewModel.timedOut,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(16.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     CardWithActions(
                         title = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp),
                         buttons = {
                             TextButton(
                                 onClick = {
