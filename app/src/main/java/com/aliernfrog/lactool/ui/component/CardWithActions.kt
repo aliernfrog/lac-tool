@@ -28,12 +28,10 @@ fun CardWithActions(
 ) {
     Card(
         shape = AppComponentShape,
-        modifier = modifier,
+        modifier = modifier.width(IntrinsicSize.Max),
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .width(IntrinsicSize.Min),
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (title != null || painter != null) Row(
