@@ -58,9 +58,12 @@ class ShizukuViewModel(
 
     private val userServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, binder: IBinder) {
+            if (prefs.shizukuNeverLoad.value) return;
             Log.d(TAG, "user service connected")
             fileService = IFileService.Stub.asInterface(binder)
             fileServiceRunning = true
+            timeOutJob?.cancel()
+            timedOut = false
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
@@ -89,13 +92,7 @@ class ShizukuViewModel(
     fun checkAvailability(context: Context): ShizukuStatus {
         status = try {
             if (!isInstalled(context)) ShizukuStatus.NOT_INSTALLED
-            else if (!Shizuku.pingBinder() || prefs.shizukuNeverLoad.value) {
-                if (timeOutJob != null) timeOutJob = viewModelScope.launch {
-                    delay(15000)
-                    timedOut = true
-                }
-                ShizukuStatus.WAITING_FOR_BINDER
-            }
+            else if (!Shizuku.pingBinder()) ShizukuStatus.WAITING_FOR_BINDER
             else {
                 timeOutJob?.cancel()
                 timedOut = false
@@ -106,7 +103,13 @@ class ShizukuViewModel(
             Log.e(TAG, "updateStatus: ", e)
             ShizukuStatus.UNKNOWN
         }
-        if (status == ShizukuStatus.AVAILABLE) Shizuku.bindUserService(userServiceArgs, userServiceConnection)
+        if (status == ShizukuStatus.AVAILABLE) {
+            if (timeOutJob != null) timeOutJob = viewModelScope.launch {
+                delay(15000)
+                timedOut = true
+            }
+            Shizuku.bindUserService(userServiceArgs, userServiceConnection)
+        }
         return status
     }
 
