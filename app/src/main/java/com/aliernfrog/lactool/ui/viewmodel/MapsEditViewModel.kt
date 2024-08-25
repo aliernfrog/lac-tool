@@ -200,7 +200,7 @@ class MapsEditViewModel(
             zoomEnabled = !failed,
             errorContent = {
                 ErrorWithIcon(
-                    error = stringResource(R.string.mapsMaterials_material_failed),
+                    error = stringResource(R.string.mapsMaterials_failed),
                     painter = rememberVectorPainter(Icons.Rounded.Error),
                     contentColor = Color.Red
                 )
@@ -208,6 +208,7 @@ class MapsEditViewModel(
             options = {
                 val context = LocalContext.current
                 val clipboardManager = LocalClipboardManager.current
+                val unused = material.usedBy.isEmpty()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 ButtonRow(
@@ -219,10 +220,11 @@ class MapsEditViewModel(
                 }
                 ButtonRow(
                     title = stringResource(R.string.mapsMaterials_material_delete),
-                    description = stringResource(R.string.mapsMaterials_material_delete_description)
+                    description = if (unused) stringResource(R.string.mapsMaterials_unused)
+                    else stringResource(R.string.mapsMaterials_material_delete_description)
                         .replace("%n", material.usedBy.size.toString()),
                     painter = rememberVectorPainter(Icons.Rounded.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
+                    contentColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                 ) {
                     showDeleteDialog = true
                 }

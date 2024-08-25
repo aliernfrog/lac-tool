@@ -188,8 +188,8 @@
     <string name="mapsMaterials_unusedMaterials_description">%n materials are unused and can be removed</string>
     <string name="mapsMaterials_clickToViewMore">Click to view more</string>
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
-    <string name="mapsMaterials_failed">This material failed to load and might cause errors when loading the map in LAC, remove to avoid errors. Used by %n objects</string>
-    <string name="mapsMaterials_material_failed">This material failed to load and might cause errors when loading the map in LAC, remove to avoid errors</string>
+    <string name="mapsMaterials_unused">Unused, can safely be deleted</string>
+    <string name="mapsMaterials_failed">Failed to load, delete to avoid errors</string>
     <string name="mapsMaterials_material_copyUrl">Copy material URL</string>
     <string name="mapsMaterials_material_delete">Delete material</string>
     <string name="mapsMaterials_material_delete_description">Material will be removed from %n objects after deleted</string>
@@ -220,6 +220,7 @@
     <string name="wallpapers_alreadyExists">A wallpaper with this name already exists, choose another name</string>
     <string name="wallpapers_pickImage">Pick an image</string>
     <string name="wallpapers_noWallpapers">You do not have any wallpapers</string>
+    <string name="wallpapers_clickHint">Click images to view more actions</string>
     <string name="wallpapers_chosen">Chosen wallpaper</string>
     <string name="wallpapers_chosen_name">Wallpaper name</string>
     <string name="wallpapers_chosen_name_reset">Reset</string>
@@ -227,7 +228,6 @@
     <string name="wallpapers_chosen_importing">Importing wallpaper</string>
     <string name="wallpapers_chosen_imported">Imported the wallpaper</string>
     <string name="wallpapers_list_active">Current wallpaper</string>
-    <string name="wallpapers_list_clickToViewActions">Click to view full image and actions</string>
     <string name="wallpapers_copyImportUrl">Copy import URL</string>
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
     <string name="wallpapers_share">Share wallpaper</string>

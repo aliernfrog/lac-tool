@@ -173,8 +173,6 @@
     <string name="mapsMaterials_unusedMaterials_description">%n materyal kullanılmıyor ve kaldırılabilir</string>
     <string name="mapsMaterials_clickToViewMore">Daha fazlasını görmek için tıklayın</string>
     <string name="mapsMaterials_usedCount">%n obje tarafından kullanılıyor</string>
-    <string name="mapsMaterials_failed">Bu materyal yüklenmedi ve haritayı açarken hatalara sebep olabilir, bundan kaçınmak için kaldırın. %n obje tarafından kullanılıyor</string>
-    <string name="mapsMaterials_material_failed">Bu materyal yüklenmedi ve haritayı açarken hatalara sebep olabilir, bundan kaçınmak için kaldırın</string>
     <string name="mapsMaterials_material_copyUrl">Materyal URLsini kopyala</string>
     <string name="mapsMaterials_material_delete">Materyali sil</string>
     <string name="mapsMaterials_material_delete_description">Silindiğinde %n objeden kaldırılacak</string>
@@ -208,7 +206,6 @@
     <string name="wallpapers_chosen_import">İçe aktar</string>
     <string name="wallpapers_chosen_importing">Duvar kağıdı içe aktarılıyor</string>
     <string name="wallpapers_chosen_imported">Duvar kağıdı içe aktarıldı</string>
-    <string name="wallpapers_list_clickToViewActions">Tam resmi ve işlemleri görmek için tıklayın</string>
     <string name="wallpapers_copyImportUrl">İçe aktarma URL\'sini kopyala</string>
     <string name="wallpapers_copyImportUrlDescription">LAC içinden duvar kağıdı içe aktarmak için kullanılabilen bir URL</string>
     <string name="wallpapers_share">Duvar kağıdını paylaş</string>

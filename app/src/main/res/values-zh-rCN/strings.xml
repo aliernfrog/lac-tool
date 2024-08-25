@@ -115,8 +115,6 @@
     <string name="mapsMaterials_unusedMaterials_description">%n 个材料未使用，可以删除</string>
     <string name="mapsMaterials_clickToViewMore">点击查看更多</string>
     <string name="mapsMaterials_usedCount">由 %n 个对象使用</string>
-    <string name="mapsMaterials_failed">此材料加载失败，可能导致在 LAC 中加载地图时出错，请删除以避免出错。由 %n 个对象使用</string>
-    <string name="mapsMaterials_material_failed">此材料加载失败，可能导致在 LAC 中加载地图时出错，请删除以避免错误</string>
     <string name="mapsMaterials_material_copyUrl">复制材料 URL</string>
     <string name="mapsMaterials_material_delete">删除材料</string>
     <string name="mapsMaterials_material_delete_description">删除后，%n 个对象中的材料将被移除</string>
