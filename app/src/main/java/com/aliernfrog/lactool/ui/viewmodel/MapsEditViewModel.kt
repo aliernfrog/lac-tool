@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -200,7 +201,8 @@ class MapsEditViewModel(
             errorContent = {
                 ErrorWithIcon(
                     error = stringResource(R.string.mapsMaterials_material_failed),
-                    painter = rememberVectorPainter(Icons.Rounded.Error)
+                    painter = rememberVectorPainter(Icons.Rounded.Error),
+                    contentColor = Color.Red
                 )
             },
             options = {

@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.ZoomInMap
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,6 +50,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -81,7 +81,7 @@ fun MediaView(
     )
 
     var state by remember { mutableStateOf(
-        if (data.model != null) MediaViewState.LOADING else MediaViewState.NO_IMAGE
+        if (data.model != null) MediaViewState.SUCCESS else MediaViewState.NO_IMAGE
     ) }
     var showOverlay by remember { mutableStateOf(false) }
     var viewportHeight by remember { mutableStateOf(0.dp) }
@@ -170,7 +170,9 @@ fun MediaView(
                         data.title?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.titleLarge
+                                style = MaterialTheme.typography.titleLarge,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 2
                             )
                         }
                     }
@@ -227,28 +229,21 @@ fun MediaView(
                             contentColor = Color.White
                         )
                     }
-                    MediaViewState.LOADING,
-                    MediaViewState.SUCCESS -> {
-                        AsyncImage(
-                            model = data.model,
-                            onError = { state = MediaViewState.ERROR },
-                            onSuccess = { state = MediaViewState.SUCCESS },
-                            onLoading = { state = MediaViewState.LOADING },
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .zoomable(
-                                    zoomState = zoomState,
-                                    zoomEnabled = data.zoomEnabled,
-                                    onTap = { _ ->
-                                        showOverlay = !showOverlay && overlayCanBeShown
-                                    }
-                                )
-                        )
-                        if (it == MediaViewState.LOADING) CenteredBox {
-                            CircularProgressIndicator()
-                        }
-                    }
+                    MediaViewState.SUCCESS -> AsyncImage(
+                        model = data.model,
+                        onError = { state = MediaViewState.ERROR },
+                        onSuccess = { state = MediaViewState.SUCCESS },
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .zoomable(
+                                zoomState = zoomState,
+                                zoomEnabled = data.zoomEnabled,
+                                onTap = { _ ->
+                                    showOverlay = !showOverlay && overlayCanBeShown
+                                }
+                            )
+                    )
                 }
             }
         }
@@ -300,8 +295,7 @@ private fun GuideDialog(
 }
 
 private enum class MediaViewState {
-    LOADING,
+    SUCCESS,
     ERROR,
-    NO_IMAGE,
-    SUCCESS
+    NO_IMAGE
 }
