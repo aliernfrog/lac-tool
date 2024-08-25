@@ -12,7 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,7 @@ import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.SettingsButton
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -67,11 +70,14 @@ fun ScreenshotsScreen(
             items(screenshotsViewModel.screenshots) {
                 ImageButton(
                     model = it.painterModel,
-                    title = it.nameWithoutExtension,
-                    showDetails = false
-                ) {
-                    screenshotsViewModel.openScreenshotOptions(it)
-                }
+                    contentScale = ContentScale.FillWidth,
+                    onClick = {
+                        screenshotsViewModel.openScreenshotOptions(it)
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clip(AppComponentShape)
+                )
             }
         }
     }

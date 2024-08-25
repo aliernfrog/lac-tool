@@ -165,7 +165,6 @@
     <string name="mapsMaterials_unusedMaterials_description">%n ماده استفاده نشده است و قابل حذف است</string>
     <string name="mapsMaterials_clickToViewMore">برای مشاهده ادامه مطلب کلیک کنید</string>
     <string name="mapsMaterials_usedCount">مورد استفاده %n شی</string>
-    <string name="mapsMaterials_failed">این ماده بارگیری نشد و ممکن است هنگام بارگیری نقشه در LAC خطا ایجاد کند، برای جلوگیری از خطا حذف کنید. %n شیء استفاده می کند</string>
     <string name="mapsMaterials_material_failed">این ماده بارگیری نشد و ممکن است هنگام بارگیری نقشه در LAC باعث خطا شود، برای جلوگیری از خطا حذف کنید</string>
     <string name="mapsMaterials_material_copyUrl">کپی کردن URL متریال</string>
     <string name="mapsMaterials_material_delete">حذف متریال</string>
@@ -199,7 +198,6 @@
     <string name="wallpapers_chosen">والپیپر انتخاب شده</string>
     <string name="wallpapers_chosen_importing">واردات والپیپر</string>
     <string name="wallpapers_chosen_imported">والپیپر وارد شد</string>
-    <string name="wallpapers_list_clickToViewActions">برای مشاهده کامل تصویر و اقدامات کلیک کنید</string>
     <string name="wallpapers_copyImportUrl">URL واردات را کپی کنید</string>
     <string name="wallpapers_copyImportUrlDescription">URL که می تواند در LAC برای وارد کردن والپیپر استفاده شود</string>
     <string name="wallpapers_share">به اشتراک گذاری والپیپر</string>

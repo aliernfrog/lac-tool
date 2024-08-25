@@ -1,86 +1,123 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.clickableWithColor
 
 @Composable
 fun ImageButton(
     model: Any?,
-    title: String,
-    description: String? = null,
-    painter: Painter? = null,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Fit,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = contentColorFor(containerColor),
-    showDetails: Boolean = true,
-    onError: (AsyncImagePainter.State.Error) -> Unit = {},
-    onClick: () -> Unit
+    overlay: @Composable BoxScope.() -> Unit = {}
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clip(AppComponentShape)
+        modifier = modifier
             .background(containerColor)
-            .clickableWithColor(contentColor) { onClick() }
+            .clickableWithColor(
+                color = contentColor,
+                onClick = onClick
+            )
     ) {
         AsyncImage(
             model = model,
             contentDescription = null,
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop,
-            onError = onError
+            contentScale = contentScale,
+            modifier = Modifier.fillMaxWidth()
         )
-        if (showDetails) Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(containerColor.copy(alpha = 0.8f))
-                .padding(vertical = 16.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (painter != null) Icon(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier.padding(end = 4.dp).size(40.dp).padding(1.dp),
-                tint = contentColor
-            )
-            Column {
+        overlay()
+    }
+}
+
+@Composable
+fun ImageButtonOverlay(
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
+    contentColor: Color = contentColorFor(containerColor),
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier
+            .width(IntrinsicSize.Max)
+            .padding(8.dp)
+            .clip(AppComponentShape)
+            .background(containerColor.copy(alpha = 0.8f))
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            title?.let {
                 Text(
                     text = title,
-                    color = contentColor,
-                    fontWeight = FontWeight.Bold
-                )
-                if (description != null) Text(
-                    text = description,
-                    color = contentColor,
-                    fontSize = 14.sp,
-                    lineHeight = 18.sp,
-                    modifier = Modifier.alpha(0.6f)
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
+            content()
         }
+    }
+}
+
+@Composable
+fun ImageButtonInfo(
+    text: String,
+    modifier: Modifier = Modifier,
+    icon: Painter? = null
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        icon?.let {
+            val density = LocalDensity.current
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(
+                    with(density) {
+                        18.sp.toDp()
+                    }
+                )
+            )
+        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall
+        )
     }
 }

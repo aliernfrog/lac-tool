@@ -45,6 +45,7 @@ import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
@@ -60,6 +61,8 @@ fun WallpapersScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val hasAtLeastOneWallpaper = wallpapersViewModel.importedWallpapers.isNotEmpty()
+            || wallpapersViewModel.activeWallpaper != null
 
     LaunchedEffect(Unit) {
         wallpapersViewModel.getWallpapersFile(context)
@@ -78,6 +81,26 @@ fun WallpapersScreen(
         },
         topAppBarState = wallpapersViewModel.topAppBarState
     ) {
+        @Composable
+        fun WallpaperButton(wallpaper: FileWrapper) {
+            ImageButton(
+                model = wallpaper.painterModel,
+                contentScale = ContentScale.FillWidth,
+                onClick = {
+                    wallpapersViewModel.openWallpaperOptions(wallpaper)
+                },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clip(AppComponentShape)
+            ) {
+                ImageButtonOverlay(
+                    title = if (wallpaper == wallpapersViewModel.activeWallpaper) stringResource(R.string.wallpapers_list_active)
+                    else wallpaper.nameWithoutExtension,
+                    modifier = Modifier.align(Alignment.BottomStart)
+                ) {}
+            }
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = wallpapersViewModel.lazyListState
@@ -99,31 +122,26 @@ fun WallpapersScreen(
                         wallpapersViewModel.importPickedWallpaper(context)
                     }
                 }
+                FadeVisibility(hasAtLeastOneWallpaper) {
+                    Text(
+                        text = stringResource(R.string.wallpapers_clickHint),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    )
+                }
                 ErrorWithIcon(
                     error = stringResource(R.string.wallpapers_noWallpapers),
                     painter = rememberVectorPainter(Icons.Rounded.HideImage),
-                    visible = wallpapersViewModel.importedWallpapers.isEmpty()
-                            && wallpapersViewModel.activeWallpaper == null,
+                    visible = !hasAtLeastOneWallpaper,
                     modifier = Modifier.fillMaxWidth()
                 )
                 wallpapersViewModel.activeWallpaper?.let {
-                    ImageButton(
-                        model = it.painterModel,
-                        title = stringResource(R.string.wallpapers_list_active),
-                        description = stringResource(R.string.wallpapers_list_clickToViewActions)
-                    ) {
-                        wallpapersViewModel.openWallpaperOptions(it)
-                    }
+                    WallpaperButton(wallpaper = it)
                 }
             }
             items(wallpapersViewModel.importedWallpapers) {
-                ImageButton(
-                    model = it.painterModel,
-                    title = it.nameWithoutExtension,
-                    description = stringResource(R.string.wallpapers_list_clickToViewActions)
-                ) {
-                    wallpapersViewModel.openWallpaperOptions(it)
-                }
+                WallpaperButton(wallpaper = it)
             }
         }
     }
