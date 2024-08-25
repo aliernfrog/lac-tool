@@ -1,11 +1,17 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.TipsAndUpdates
@@ -18,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -32,6 +39,7 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
@@ -51,6 +59,11 @@ fun MapsMaterialsScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
+    LaunchedEffect(Unit) {
+        if (!mapsEditViewModel.materialsLoaded)
+            mapsEditViewModel.loadDownloadableMaterials(context)
+    }
+
     LaunchedEffect(mapsEditViewModel.mapEditor?.downloadableMaterials?.size) {
         // Back out if materials list is empty, which means there's nothing much to do in this screen
         if (mapsEditViewModel.mapEditor?.downloadableMaterials.isNullOrEmpty())
@@ -64,34 +77,44 @@ fun MapsMaterialsScreen(
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = onNavigateBackRequest
             )
-        },
-        topAppBarState = mapsEditViewModel.materialsTopAppBarState
+        }
     ) {
-        val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = mapsEditViewModel.materialsLazyListState
-        ) {
-            item {
-                Suggestions()
-            }
-            items(materials) {
-                val failed = mapsEditViewModel.failedMaterials.contains(it)
-                ImageButton(
-                    model = it.url,
-                    title = it.name,
-                    description = stringResource(if (failed) R.string.mapsMaterials_failed else R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
-                    painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
-                    containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
-                    onError = { _ ->
-                        scope.launch { mapsEditViewModel.onDownloadableMaterialError(it) }
-                    }
+        Crossfade(targetState = mapsEditViewModel.materialsLoaded) { loaded ->
+            if (!loaded) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .navigationBarsPadding(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                    VerticalProgressIndicator(
+                        progress = mapsEditViewModel.materialsLoadProgress
+                    )
                 }
-            }
-            item {
-                Spacer(Modifier.systemBarsPadding())
+            } else {
+                val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
+                LazyColumn(Modifier.fillMaxSize()) {
+                    item {
+                        Suggestions()
+                    }
+                    items(materials) {
+                        val failed = mapsEditViewModel.failedMaterials.contains(it)
+                        ImageButton(
+                            model = it.url,
+                            title = it.name,
+                            description = stringResource(if (failed) R.string.mapsMaterials_failed else R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
+                            painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
+                            containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
+                        ) {
+                            scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                        }
+                    }
+                    item {
+                        Spacer(Modifier.systemBarsPadding())
+                    }
+                }
             }
         }
     }

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,8 +29,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.ShizukuStatus
+import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
+import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
@@ -61,10 +62,9 @@ fun ShizukuPermissionsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             if (isLoading) {
-                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-                Text(
-                    text = stringResource(R.string.info_shizuku_waitingService),
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp)
+                VerticalProgressIndicator(
+                    progress = Progress(stringResource(R.string.info_shizuku_waitingService)),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 AnimatedVisibility(
                     visible = shizukuViewModel.timedOut,
