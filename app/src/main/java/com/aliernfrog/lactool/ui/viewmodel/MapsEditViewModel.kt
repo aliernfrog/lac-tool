@@ -82,7 +82,7 @@ class MapsEditViewModel(
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
 
-    val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
+    private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     val materialsLoaded: Boolean
         get() = materialsLoadProgress.float?.let { it >= 1f } ?: false
 
@@ -143,7 +143,6 @@ class MapsEditViewModel(
     }
 
     suspend fun loadDownloadableMaterials(context: Context) {
-        Log.d(TAG, "loadDownloadableMaterials called materialsLoaded: $materialsLoaded")
         if (materialsLoaded) return
         val materials = mapEditor?.downloadableMaterials ?: return
         val totalCount = materials.size
