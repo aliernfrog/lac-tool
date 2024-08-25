@@ -173,7 +173,6 @@
     <string name="mapsMaterials_unusedMaterials_description">%n materyal kullanılmıyor ve kaldırılabilir</string>
     <string name="mapsMaterials_clickToViewMore">Daha fazlasını görmek için tıklayın</string>
     <string name="mapsMaterials_usedCount">%n obje tarafından kullanılıyor</string>
-    <string name="mapsMaterials_material_failed">Bu materyal yüklenmedi ve haritayı açarken hatalara sebep olabilir, bundan kaçınmak için kaldırın</string>
     <string name="mapsMaterials_material_copyUrl">Materyal URLsini kopyala</string>
     <string name="mapsMaterials_material_delete">Materyali sil</string>
     <string name="mapsMaterials_material_delete_description">Silindiğinde %n objeden kaldırılacak</string>

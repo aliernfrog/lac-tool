@@ -165,7 +165,6 @@
     <string name="mapsMaterials_unusedMaterials_description">%n ماده استفاده نشده است و قابل حذف است</string>
     <string name="mapsMaterials_clickToViewMore">برای مشاهده ادامه مطلب کلیک کنید</string>
     <string name="mapsMaterials_usedCount">مورد استفاده %n شی</string>
-    <string name="mapsMaterials_material_failed">این ماده بارگیری نشد و ممکن است هنگام بارگیری نقشه در LAC باعث خطا شود، برای جلوگیری از خطا حذف کنید</string>
     <string name="mapsMaterials_material_copyUrl">کپی کردن URL متریال</string>
     <string name="mapsMaterials_material_delete">حذف متریال</string>
     <string name="mapsMaterials_material_delete_description">مواد پس از حذف از %n شی حذف خواهند شد</string>

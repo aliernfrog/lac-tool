@@ -89,11 +89,11 @@ class ScreenshotsViewModel(
         withContext(Dispatchers.IO) {
             screenshots = screenshotsFile.listFiles()
                 .filter { it.isFile && it.name.lowercase().endsWith(".jpg") }
-                .sortedBy { it.lastModified }
+                .sortedByDescending { it.lastModified }
         }
     }
 
-    private suspend fun deleteImportedScreenshot(screenshot: FileWrapper) {
+    private suspend fun deleteScreenshot(screenshot: FileWrapper) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.screenshots_deleting)
         )
@@ -105,7 +105,7 @@ class ScreenshotsViewModel(
         progressState.currentProgress = null
     }
 
-    private suspend fun shareImportedScreenshot(screenshot: FileWrapper, context: Context) {
+    private suspend fun shareScreenshot(screenshot: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.info_sharing)
         )
@@ -129,7 +129,7 @@ class ScreenshotsViewModel(
                     title = stringResource(R.string.screenshots_share),
                     painter = rememberVectorPainter(Icons.Rounded.IosShare)
                 ) {
-                    scope.launch { shareImportedScreenshot(screenshot, context) }
+                    scope.launch { shareScreenshot(screenshot, context) }
                 }
                 ButtonRow(
                     title = stringResource(R.string.screenshots_delete),
@@ -144,7 +144,7 @@ class ScreenshotsViewModel(
                     onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
                         showDeleteDialog = false
-                        scope.launch { deleteImportedScreenshot(screenshot) }
+                        scope.launch { deleteScreenshot(screenshot) }
                         mainViewModel.dismissMediaView()
                     }
                 )

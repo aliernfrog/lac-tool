@@ -190,7 +190,6 @@
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
     <string name="mapsMaterials_unused">Unused, can safely be deleted</string>
     <string name="mapsMaterials_failed">Failed to load, delete to avoid errors</string>
-    <string name="mapsMaterials_material_failed">This material failed to load and might cause errors when loading the map in LAC, remove to avoid errors</string>
     <string name="mapsMaterials_material_copyUrl">Copy material URL</string>
     <string name="mapsMaterials_material_delete">Delete material</string>
     <string name="mapsMaterials_material_delete_description">Material will be removed from %n objects after deleted</string>
