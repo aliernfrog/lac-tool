@@ -82,6 +82,7 @@ class MapsEditViewModel(
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
 
+    val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     val materialsLoaded: Boolean
         get() = materialsLoadProgress.float?.let { it >= 1f } ?: false
 
@@ -92,8 +93,11 @@ class MapsEditViewModel(
             val inputStream = mapFile?.inputStream(context)
             val content = inputStream?.bufferedReader()?.readText() ?: return@withContext inputStream?.close()
             mapEditor = LACMapEditor(content)
+            val materialsCount = (mapEditor?.downloadableMaterials?.size ?: 0).toLong()
             materialsLoadProgress = Progress(
-                description = "",
+                description = materialsProgressText
+                    .replace("{DONE}", "0")
+                    .replace("{TOTAL}", materialsCount.toString()),
                 totalProgress = (mapEditor?.downloadableMaterials?.size ?: 0).toLong(),
                 passedProgress = 0
             )
@@ -142,6 +146,7 @@ class MapsEditViewModel(
         Log.d(TAG, "loadDownloadableMaterials called materialsLoaded: $materialsLoaded")
         if (materialsLoaded) return
         val materials = mapEditor?.downloadableMaterials ?: return
+        val totalCount = materials.size
         var passedCount = 0
         materials.forEach { material ->
             val request = ImageRequest.Builder(context)
@@ -155,8 +160,10 @@ class MapsEditViewModel(
             context.imageLoader.execute(request)
             passedCount++
             materialsLoadProgress = Progress(
-                description = "",
-                totalProgress = materials.size.toLong(),
+                description = materialsProgressText
+                    .replace("{DONE}", passedCount.toString())
+                    .replace("{TOTAL}", totalCount.toString()),
+                totalProgress = totalCount.toLong(),
                 passedProgress = passedCount.toLong()
             )
         }

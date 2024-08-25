@@ -1,12 +1,17 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.TipsAndUpdates
@@ -19,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -75,16 +81,19 @@ fun MapsMaterialsScreen(
     ) {
         Crossfade(targetState = mapsEditViewModel.materialsLoaded) { loaded ->
             if (!loaded) {
-                VerticalProgressIndicator(
-                    progress = mapsEditViewModel.materialsLoadProgress.let {
-                        it.copy(
-                            description = stringResource(R.string.mapsMaterials_loading)
-                                .replace("{DONE}", it.passedProgress.toString())
-                                .replace("{TOTAL}", it.totalProgress.toString())
-                        )
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .navigationBarsPadding(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    VerticalProgressIndicator(
+                        progress = mapsEditViewModel.materialsLoadProgress,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             } else {
                 val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
                 LazyColumn(Modifier.fillMaxSize()) {
