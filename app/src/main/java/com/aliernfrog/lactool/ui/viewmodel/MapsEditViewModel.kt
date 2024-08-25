@@ -7,11 +7,14 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
@@ -19,7 +22,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -31,10 +41,15 @@ import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
+import com.aliernfrog.lactool.data.MediaViewData
+import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -59,11 +74,9 @@ class MapsEditViewModel(
     val rolesLazyListState = LazyListState()
 
     val addRoleSheetState = SheetState(skipPartiallyExpanded = true, Density(context))
-    val materialSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
     var pendingRoleDelete by mutableStateOf<String?>(null)
-    var pendingMaterialDelete by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var saveWarningShown by mutableStateOf(false)
 
     private var mapFile: FileWrapper? = null
@@ -79,8 +92,6 @@ class MapsEditViewModel(
         passedProgress = 0
     ))
         private set
-    var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
-    var materialSheetMaterialFailed by mutableStateOf(false)
 
     private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     val materialsLoaded: Boolean
@@ -168,7 +179,7 @@ class MapsEditViewModel(
         }
     }
 
-    fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
+    private fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
         failedMaterials.remove(material)
         updateMapEditorState()
@@ -180,12 +191,54 @@ class MapsEditViewModel(
         )
     }
 
-    suspend fun showMaterialSheet(material: LACMapDownloadableMaterial) {
-        if (materialSheetChosenMaterial != material) {
-            materialSheetMaterialFailed = false
-            materialSheetChosenMaterial = material
-        }
-        materialSheetState.show()
+    fun openDownloadableMaterialOptions(material: LACMapDownloadableMaterial) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
+        val failed = failedMaterials.contains(material)
+        mainViewModel.showMediaView(MediaViewData(
+            model = material.url,
+            title = material.name,
+            zoomEnabled = !failed,
+            errorContent = {
+                ErrorWithIcon(
+                    error = stringResource(R.string.mapsMaterials_material_failed),
+                    painter = rememberVectorPainter(Icons.Rounded.Error),
+                    contentColor = Color.Red
+                )
+            },
+            options = {
+                val context = LocalContext.current
+                val clipboardManager = LocalClipboardManager.current
+                var showDeleteDialog by remember { mutableStateOf(false) }
+
+                ButtonRow(
+                    title = stringResource(R.string.mapsMaterials_material_copyUrl),
+                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
+                ) {
+                    clipboardManager.setText(AnnotatedString(material.url))
+                    topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                }
+                ButtonRow(
+                    title = stringResource(R.string.mapsMaterials_material_delete),
+                    description = stringResource(R.string.mapsMaterials_material_delete_description)
+                        .replace("%n", material.usedBy.size.toString()),
+                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                    contentColor = MaterialTheme.colorScheme.error
+                ) {
+                    showDeleteDialog = true
+                }
+
+                if (showDeleteDialog) {
+                    DeleteConfirmationDialog(
+                        name = material.name,
+                        onDismissRequest = { showDeleteDialog = false }
+                    ) {
+                        deleteDownloadableMaterial(material, context)
+                        showDeleteDialog = false
+                        mainViewModel.dismissMediaView()
+                    }
+                }
+            }
+        ))
     }
 
     fun replaceOldObjects(context: Context) {

@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.screen.screenshots
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -56,7 +57,8 @@ fun ScreenshotsScreen(
                 ErrorWithIcon(
                     error = stringResource(R.string.screenshots_noScreenshots),
                     painter = rememberVectorPainter(Icons.Rounded.NoPhotography),
-                    visible = screenshotsViewModel.screenshots.isEmpty()
+                    visible = screenshotsViewModel.screenshots.isEmpty(),
+                    modifier = Modifier.fillMaxWidth()
                 )
                 FadeVisibility(screenshotsViewModel.screenshots.isNotEmpty()) {
                     Text(stringResource(R.string.screenshots_clickHint), Modifier.padding(8.dp))
