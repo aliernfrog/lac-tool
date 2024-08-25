@@ -90,8 +90,7 @@ fun MapsMaterialsScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     VerticalProgressIndicator(
-                        progress = mapsEditViewModel.materialsLoadProgress,
-                        modifier = Modifier.fillMaxSize()
+                        progress = mapsEditViewModel.materialsLoadProgress
                     )
                 }
             } else {
