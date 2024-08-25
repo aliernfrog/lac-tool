@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,7 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.ImageButton
+import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
@@ -51,6 +53,11 @@ fun MapsMaterialsScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
+    LaunchedEffect(Unit) {
+        if (!mapsEditViewModel.materialsLoaded)
+            mapsEditViewModel.loadDownloadableMaterials(context)
+    }
+
     LaunchedEffect(mapsEditViewModel.mapEditor?.downloadableMaterials?.size) {
         // Back out if materials list is empty, which means there's nothing much to do in this screen
         if (mapsEditViewModel.mapEditor?.downloadableMaterials.isNullOrEmpty())
@@ -64,34 +71,42 @@ fun MapsMaterialsScreen(
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = onNavigateBackRequest
             )
-        },
-        topAppBarState = mapsEditViewModel.materialsTopAppBarState
+        }
     ) {
-        val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = mapsEditViewModel.materialsLazyListState
-        ) {
-            item {
-                Suggestions()
-            }
-            items(materials) {
-                val failed = mapsEditViewModel.failedMaterials.contains(it)
-                ImageButton(
-                    model = it.url,
-                    title = it.name,
-                    description = stringResource(if (failed) R.string.mapsMaterials_failed else R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
-                    painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
-                    containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
-                    onError = { _ ->
-                        scope.launch { mapsEditViewModel.onDownloadableMaterialError(it) }
+        Crossfade(targetState = mapsEditViewModel.materialsLoaded) { loaded ->
+            if (!loaded) {
+                VerticalProgressIndicator(
+                    progress = mapsEditViewModel.materialsLoadProgress.let {
+                        it.copy(
+                            description = stringResource(R.string.mapsMaterials_loading)
+                                .replace("{DONE}", it.passedProgress.toString())
+                                .replace("{TOTAL}", it.totalProgress.toString())
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
+                LazyColumn(Modifier.fillMaxSize()) {
+                    item {
+                        Suggestions()
                     }
-                ) {
-                    scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                    items(materials) {
+                        val failed = mapsEditViewModel.failedMaterials.contains(it)
+                        ImageButton(
+                            model = it.url,
+                            title = it.name,
+                            description = stringResource(if (failed) R.string.mapsMaterials_failed else R.string.mapsMaterials_usedCount).replace("%n", it.usedBy.size.toString()),
+                            painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
+                            containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
+                        ) {
+                            scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                        }
+                    }
+                    item {
+                        Spacer(Modifier.systemBarsPadding())
+                    }
                 }
-            }
-            item {
-                Spacer(Modifier.systemBarsPadding())
             }
         }
     }

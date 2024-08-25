@@ -23,6 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapType
@@ -55,8 +57,6 @@ class MapsEditViewModel(
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
-    val materialsTopAppBarState = TopAppBarState(0F, 0F, 0F)
-    val materialsLazyListState = LazyListState()
 
     val addRoleSheetState = SheetState(skipPartiallyExpanded = true, Density(context))
     val materialSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
@@ -72,8 +72,18 @@ class MapsEditViewModel(
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
     var rolesExpandedRoleIndex by mutableIntStateOf(-1)
     var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
+        private set
+    var materialsLoadProgress by mutableStateOf(Progress(
+        description = "",
+        totalProgress = 0,
+        passedProgress = 0
+    ))
+        private set
     var materialSheetChosenMaterial by mutableStateOf<LACMapDownloadableMaterial?>(null)
     var materialSheetMaterialFailed by mutableStateOf(false)
+
+    val materialsLoaded: Boolean
+        get() = materialsLoadProgress.float?.let { it >= 1f } ?: false
 
     @SuppressLint("Recycle")
     suspend fun openMap(map: MapFile, context: Context) {
@@ -82,6 +92,11 @@ class MapsEditViewModel(
             val inputStream = mapFile?.inputStream(context)
             val content = inputStream?.bufferedReader()?.readText() ?: return@withContext inputStream?.close()
             mapEditor = LACMapEditor(content)
+            materialsLoadProgress = Progress(
+                description = "",
+                totalProgress = (mapEditor?.downloadableMaterials?.size ?: 0).toLong(),
+                passedProgress = 0
+            )
             inputStream.close()
         }
         navController.navigate(Destination.MAPS_EDIT.route)
@@ -123,6 +138,30 @@ class MapsEditViewModel(
         }
     }
 
+    suspend fun loadDownloadableMaterials(context: Context) {
+        Log.d(TAG, "loadDownloadableMaterials called materialsLoaded: $materialsLoaded")
+        if (materialsLoaded) return
+        val materials = mapEditor?.downloadableMaterials ?: return
+        var passedCount = 0
+        materials.forEach { material ->
+            val request = ImageRequest.Builder(context)
+                .data(material.url)
+                .listener(
+                    onError = { _, _ ->
+                        failedMaterials.add(material)
+                    }
+                )
+                .build()
+            context.imageLoader.execute(request)
+            passedCount++
+            materialsLoadProgress = Progress(
+                description = "",
+                totalProgress = materials.size.toLong(),
+                passedProgress = passedCount.toLong()
+            )
+        }
+    }
+
     fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
         failedMaterials.remove(material)
@@ -133,13 +172,6 @@ class MapsEditViewModel(
                 .replace("{REPLACEDCOUNT}", removedObjects.toString()),
             icon = Icons.Rounded.Delete
         )
-    }
-
-    suspend fun onDownloadableMaterialError(material: LACMapDownloadableMaterial) {
-        if (!failedMaterials.contains(material)) {
-            failedMaterials.add(material)
-            materialsLazyListState.animateScrollToItem(0)
-        }
     }
 
     suspend fun showMaterialSheet(material: LACMapDownloadableMaterial) {
