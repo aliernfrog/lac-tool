@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,11 +42,8 @@ import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
-import com.aliernfrog.lactool.ui.sheet.DownloadableMaterialSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +53,6 @@ fun MapsMaterialsScreen(
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (!mapsEditViewModel.materialsLoaded)
@@ -108,7 +103,7 @@ fun MapsMaterialsScreen(
                             painter = if (failed) rememberVectorPainter(Icons.Rounded.Report) else null,
                             containerColor = if (failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant
                         ) {
-                            scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                            mapsEditViewModel.openDownloadableMaterialOptions(it)
                         }
                     }
                     item {
@@ -119,41 +114,13 @@ fun MapsMaterialsScreen(
         }
     }
 
-    mapsEditViewModel.pendingMaterialDelete?.let {
-        DeleteConfirmationDialog(
-            name = it.name,
-            onDismissRequest = { mapsEditViewModel.pendingMaterialDelete = null }
-        ) {
-            mapsEditViewModel.deleteDownloadableMaterial(it, context)
-            mapsEditViewModel.pendingMaterialDelete = null
-            scope.launch {
-                mapsEditViewModel.materialSheetState.hide()
-                mapsEditViewModel.materialSheetChosenMaterial = null
-            }
-        }
-    }
-
     MaterialsNoConnectionDialog()
-
-    DownloadableMaterialSheet(
-        material = mapsEditViewModel.materialSheetChosenMaterial,
-        failed = mapsEditViewModel.materialSheetMaterialFailed,
-        state = mapsEditViewModel.materialSheetState,
-        topToastState = mapsEditViewModel.topToastState,
-        onDeleteRequest = {
-            mapsEditViewModel.pendingMaterialDelete = it
-        },
-        onError = {
-            mapsEditViewModel.materialSheetMaterialFailed = true
-        }
-    )
 }
 
 @Composable
 private fun Suggestions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
-    val scope = rememberCoroutineScope()
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
     val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibilityColumn(hasSuggestions) {
@@ -164,7 +131,7 @@ private fun Suggestions(
             accentColor = MaterialTheme.colorScheme.error,
             materials = mapsEditViewModel.failedMaterials,
             onMaterialClick = {
-                scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                mapsEditViewModel.openDownloadableMaterialOptions(it)
             }
         )
         Suggestion(
@@ -174,7 +141,7 @@ private fun Suggestions(
             accentColor = MaterialTheme.colorScheme.secondary,
             materials = unusedMaterials,
             onMaterialClick = {
-                scope.launch { mapsEditViewModel.showMaterialSheet(it) }
+                mapsEditViewModel.openDownloadableMaterialOptions(it)
             }
         )
         DividerRow(Modifier.padding(8.dp))

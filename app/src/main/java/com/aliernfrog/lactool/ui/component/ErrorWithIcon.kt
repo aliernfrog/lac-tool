@@ -2,7 +2,6 @@ package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -27,7 +26,7 @@ fun ErrorWithIcon(
 ) {
     FadeVisibility(visible) {
         Column(
-            modifier = modifier.fillMaxWidth().padding(8.dp).alpha(0.7f),
+            modifier = modifier.padding(8.dp).alpha(0.7f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

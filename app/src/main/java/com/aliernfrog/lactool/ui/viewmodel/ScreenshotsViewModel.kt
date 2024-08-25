@@ -123,7 +123,7 @@ class ScreenshotsViewModel(
             options = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
-                var deleteConfirmationShown by remember { mutableStateOf(false) }
+                var showDeleteDialog by remember { mutableStateOf(false) }
 
                 ButtonRow(
                     title = stringResource(R.string.screenshots_share),
@@ -136,14 +136,14 @@ class ScreenshotsViewModel(
                     painter = rememberVectorPainter(Icons.Rounded.Delete),
                     contentColor = MaterialTheme.colorScheme.error
                 ) {
-                    deleteConfirmationShown = true
+                    showDeleteDialog = true
                 }
 
-                if (deleteConfirmationShown) DeleteConfirmationDialog(
+                if (showDeleteDialog) DeleteConfirmationDialog(
                     name = screenshot.name,
-                    onDismissRequest = { deleteConfirmationShown = false },
+                    onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
-                        deleteConfirmationShown = false
+                        showDeleteDialog = false
                         scope.launch { deleteImportedScreenshot(screenshot) }
                         mainViewModel.dismissMediaView()
                     }

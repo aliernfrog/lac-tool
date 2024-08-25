@@ -180,7 +180,7 @@ class WallpapersViewModel(
                 val context = LocalContext.current
                 val clipboardManager = LocalClipboardManager.current
                 val scope = rememberCoroutineScope()
-                var deleteConfirmationShown by remember { mutableStateOf(false) }
+                var showDeleteDialog by remember { mutableStateOf(false) }
 
                 ButtonRow(
                     title = stringResource(R.string.wallpapers_copyImportUrl),
@@ -201,14 +201,14 @@ class WallpapersViewModel(
                     painter = rememberVectorPainter(Icons.Rounded.Delete),
                     contentColor = MaterialTheme.colorScheme.error
                 ) {
-                    deleteConfirmationShown = true
+                    showDeleteDialog = true
                 }
 
-                if (deleteConfirmationShown) DeleteConfirmationDialog(
+                if (showDeleteDialog) DeleteConfirmationDialog(
                     name = wallpaper.name,
-                    onDismissRequest = { deleteConfirmationShown = false },
+                    onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
-                        deleteConfirmationShown = false
+                        showDeleteDialog = false
                         scope.launch { deleteImportedWallpaper(wallpaper) }
                         mainViewModel.dismissMediaView()
                     }

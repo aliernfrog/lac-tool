@@ -253,7 +253,8 @@ fun MapsListScreen(
                             if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
                             else mapsListViewModel.chosenSegment.noMapsTextId
                         ),
-                        painter = rememberVectorPainter(Icons.Rounded.LocationOff)
+                        painter = rememberVectorPainter(Icons.Rounded.LocationOff),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 } else Text(
                     text = stringResource(R.string.mapsList_count)

@@ -1,10 +1,12 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,8 +23,10 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Pinch
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.ZoomInMap
+import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -75,6 +80,9 @@ fun MediaView(
         skipHiddenState = false
     )
 
+    var state by remember { mutableStateOf(
+        if (data.model != null) MediaViewState.LOADING else MediaViewState.NO_IMAGE
+    ) }
     var showOverlay by remember { mutableStateOf(false) }
     var viewportHeight by remember { mutableStateOf(0.dp) }
     var optionsHeight by remember { mutableStateOf(viewportHeight/3) }
@@ -177,18 +185,10 @@ fun MediaView(
                     }
                 }
             }
-            AsyncImage(
-                model = data.model,
-                contentDescription = null,
+            Crossfade(
+                targetState = state,
                 modifier = Modifier
                     .fillMaxSize()
-                    .zoomable(
-                        zoomState = zoomState,
-                        zoomEnabled = data.zoomEnabled,
-                        onTap = { _ ->
-                            showOverlay = !showOverlay && overlayCanBeShown
-                        }
-                    )
                     .offset { IntOffset(x = 0, y = animatedOffsetY.roundToPx()) }
                     .pointerInput(Unit) {
                         if (!isZoomedIn) detectVerticalDragGestures(
@@ -203,7 +203,54 @@ fun MediaView(
                             }
                         )
                     }
-            )
+            ) {
+                @Composable
+                fun CenteredBox(
+                    modifier: Modifier = Modifier,
+                    content: @Composable BoxScope.() -> Unit
+                ) {
+                    Box(
+                        modifier = modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                        content = content
+                    )
+                }
+
+                when (it) {
+                    MediaViewState.ERROR -> CenteredBox {
+                        data.errorContent()
+                    }
+                    MediaViewState.NO_IMAGE -> CenteredBox {
+                        ErrorWithIcon(
+                            error = "",
+                            painter = rememberVectorPainter(Icons.Rounded.HideImage),
+                            contentColor = Color.White
+                        )
+                    }
+                    MediaViewState.LOADING,
+                    MediaViewState.SUCCESS -> {
+                        AsyncImage(
+                            model = data.model,
+                            onError = { state = MediaViewState.ERROR },
+                            onSuccess = { state = MediaViewState.SUCCESS },
+                            onLoading = { state = MediaViewState.LOADING },
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .zoomable(
+                                    zoomState = zoomState,
+                                    zoomEnabled = data.zoomEnabled,
+                                    onTap = { _ ->
+                                        showOverlay = !showOverlay && overlayCanBeShown
+                                    }
+                                )
+                        )
+                        if (it == MediaViewState.LOADING) CenteredBox {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -250,4 +297,11 @@ private fun GuideDialog(
             }
         }
     )
+}
+
+private enum class MediaViewState {
+    LOADING,
+    ERROR,
+    NO_IMAGE,
+    SUCCESS
 }
