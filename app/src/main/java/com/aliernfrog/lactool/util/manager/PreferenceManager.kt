@@ -2,6 +2,8 @@ package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
 import com.aliernfrog.lactool.ConfigKey
+import com.aliernfrog.lactool.enum.ListSorting
+import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
@@ -27,10 +29,17 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val exportedMapsDir = stringPreference("mapsExportDir", ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR)
     val storageAccessType = intPreference("storageAccessType", StorageAccessType.SAF.ordinal)
 
-    // Experimental (developer) options
-    val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
+    // Wallpapers list
+    val wallpapersListSorting = intPreference("wallpapersListSorting", ListSorting.DATE.ordinal)
+    val wallpapersListSortingReversed = booleanPreference("wallpapersListSortingReversed", false)
+    val wallpapersListStyle = intPreference("wallpapersListStyle", ListStyle.GRID.ordinal)
+
+    // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true)
     val showMediaViewGuide = booleanPreference("showMediaViewGuide", true)
+
+    // Experimental (developer) options
+    val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false)
     val updatesURL = stringPreference("updatesUrl", ConfigKey.DEFAULT_UPDATES_URL)
 }

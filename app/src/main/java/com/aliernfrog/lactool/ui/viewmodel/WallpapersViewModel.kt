@@ -2,7 +2,6 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
@@ -28,6 +27,7 @@ import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
+import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
@@ -57,7 +57,6 @@ class WallpapersViewModel(
     private val contextUtils: ContextUtils
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
-    val lazyListState = LazyListState()
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
     private val wallpapersDir : String get() = prefs.lacWallpapersDir.value
@@ -65,12 +64,21 @@ class WallpapersViewModel(
 
     private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
-    var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
+    private var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
     var wallpaperNameInputRaw by mutableStateOf("")
     private val wallpaperNameInput: String
         get() = wallpaperNameInputRaw.ifEmpty { pickedWallpaper?.nameWithoutExtension ?: "" }
+
+    val wallpapersToShow: List<FileWrapper>
+        get() {
+            val sorting = ListSorting.entries[prefs.wallpapersListSorting.value]
+            val reversed = prefs.wallpapersListSortingReversed.value
+            return importedWallpapers.sortedWith(sorting.comparator).let {
+                if (reversed) it.reversed() else it
+            }
+        }
 
     suspend fun setPickedWallpaper(uri: Uri, context: Context) {
         withContext(Dispatchers.IO) {

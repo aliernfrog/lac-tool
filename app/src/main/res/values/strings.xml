@@ -60,6 +60,15 @@
     <string name="permissions_allFiles_denied">Permission was denied</string>
     <string name="permissions_allFiles_saf">Access specific directories</string>
     <string name="permissions_allFiles_saf_description">Lets LAC Tool only access the directories it needs, this may be complicated to setup</string>
+    <string name="list_options">List options</string>
+    <string name="list_sorting">Sort</string>
+    <string name="list_sorting_name">By name</string>
+    <string name="list_sorting_date">By date</string>
+    <string name="list_sorting_size">By size</string>
+    <string name="list_sorting_reversed">Reversed</string>
+    <string name="list_style">Style</string>
+    <string name="list_style_list">List</string>
+    <string name="list_style_grid">Grid</string>
     <string name="maps">Maps</string>
     <string name="maps_permissions">LAC maps folder</string>
     <string name="maps_permissions_description">You need to choose the folder where your LAC maps are stored</string>
@@ -122,11 +131,6 @@
     <string name="mapsList_search">Search maps..</string>
     <string name="mapsList_search_clear">Clear search</string>
     <string name="mapsList_count">{COUNT} maps</string>
-    <string name="mapsList_sorting">Sort</string>
-    <string name="mapsList_sorting_name">By name</string>
-    <string name="mapsList_sorting_date">By date</string>
-    <string name="mapsList_sorting_size">By size</string>
-    <string name="mapsList_sorting_reverse">Reversed</string>
     <string name="mapsList_storage">Storage</string>
     <string name="mapsList_imported">Your maps</string>
     <string name="mapsList_exported">Exported maps</string>

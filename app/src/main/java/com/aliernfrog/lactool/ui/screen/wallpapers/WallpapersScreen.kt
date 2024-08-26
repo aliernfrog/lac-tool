@@ -4,15 +4,22 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.rounded.HideImage
@@ -26,7 +33,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
@@ -44,8 +56,10 @@ import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
+import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
@@ -60,9 +74,7 @@ fun WallpapersScreen(
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val hasAtLeastOneWallpaper = wallpapersViewModel.importedWallpapers.isNotEmpty()
-            || wallpapersViewModel.activeWallpaper != null
+    val listStyle = ListStyle.entries[wallpapersViewModel.prefs.wallpapersListStyle.value]
 
     LaunchedEffect(Unit) {
         wallpapersViewModel.getWallpapersFile(context)
@@ -82,18 +94,23 @@ fun WallpapersScreen(
         topAppBarState = wallpapersViewModel.topAppBarState
     ) {
         @Composable
-        fun WallpaperButton(wallpaper: FileWrapper) {
+        fun WallpaperButton(
+            wallpaper: FileWrapper,
+            modifier: Modifier = Modifier,
+            contentScale: ContentScale = ContentScale.FillWidth,
+            showOverlay: Boolean = true
+        ) {
             ImageButton(
                 model = wallpaper.painterModel,
-                contentScale = ContentScale.FillWidth,
+                contentScale = contentScale,
                 onClick = {
                     wallpapersViewModel.openWallpaperOptions(wallpaper)
                 },
-                modifier = Modifier
+                modifier = modifier
                     .padding(8.dp)
                     .clip(AppComponentShape)
             ) {
-                ImageButtonOverlay(
+                if (showOverlay) ImageButtonOverlay(
                     title = if (wallpaper == wallpapersViewModel.activeWallpaper) stringResource(R.string.wallpapers_list_active)
                     else wallpaper.nameWithoutExtension,
                     modifier = Modifier.align(Alignment.BottomStart)
@@ -101,49 +118,119 @@ fun WallpapersScreen(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = wallpapersViewModel.lazyListState
-        ) {
-            item {
-                PickImageButton {
-                    scope.launch {
-                        wallpapersViewModel.setPickedWallpaper(it, context)
+        @Composable
+        fun ListHeader() {
+            Column {
+                Header(
+                    wallpaperButton = {
+                        WallpaperButton(it)
                     }
-                }
-                PickedWallpaper(
-                    pickedWallpaper = wallpapersViewModel.pickedWallpaper,
-                    wallpaperName = wallpapersViewModel.wallpaperNameInputRaw,
-                    onWallpaperNameChange = {
-                        wallpapersViewModel.wallpaperNameInputRaw = it
-                    }
-                ) {
-                    scope.launch {
-                        wallpapersViewModel.importPickedWallpaper(context)
-                    }
-                }
-                FadeVisibility(hasAtLeastOneWallpaper) {
-                    Text(
-                        text = stringResource(R.string.wallpapers_clickHint),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    )
-                }
-                ErrorWithIcon(
-                    error = stringResource(R.string.wallpapers_noWallpapers),
-                    painter = rememberVectorPainter(Icons.Rounded.HideImage),
-                    visible = !hasAtLeastOneWallpaper,
-                    modifier = Modifier.fillMaxWidth()
                 )
-                wallpapersViewModel.activeWallpaper?.let {
-                    WallpaperButton(wallpaper = it)
-                }
-            }
-            items(wallpapersViewModel.importedWallpapers) {
-                WallpaperButton(wallpaper = it)
             }
         }
+
+        AnimatedContent(targetState = listStyle) { style ->
+            when (style) {
+                ListStyle.LIST -> LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    item {
+                        ListHeader()
+                    }
+                    items(wallpapersViewModel.wallpapersToShow) {
+                        WallpaperButton(
+                            wallpaper = it,
+                            modifier = Modifier.animateItem()
+                        )
+                    }
+                }
+                ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                    modifier = Modifier.fillMaxSize()
+                ) { maxLineSpan ->
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        ListHeader()
+                    }
+                    items(wallpapersViewModel.wallpapersToShow) {
+                        WallpaperButton(
+                            wallpaper = it,
+                            contentScale = ContentScale.Crop,
+                            showOverlay = false,
+                            modifier = Modifier
+                                .animateItem()
+                                .aspectRatio(1f)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Header(
+    wallpapersViewModel: WallpapersViewModel = koinViewModel(),
+    wallpaperButton: @Composable (wallpaper: FileWrapper) -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val hasAtLeastOneWallpaper = wallpapersViewModel.wallpapersToShow.isNotEmpty()
+            || wallpapersViewModel.activeWallpaper != null
+    var listOptionsExpanded by remember { mutableStateOf(false) }
+
+    PickImageButton {
+        scope.launch {
+            wallpapersViewModel.setPickedWallpaper(it, context)
+        }
+    }
+    PickedWallpaper(
+        pickedWallpaper = wallpapersViewModel.pickedWallpaper,
+        wallpaperName = wallpapersViewModel.wallpaperNameInputRaw,
+        onWallpaperNameChange = {
+            wallpapersViewModel.wallpaperNameInputRaw = it
+        }
+    ) {
+        scope.launch {
+            wallpapersViewModel.importPickedWallpaper(context)
+        }
+    }
+    FadeVisibility(hasAtLeastOneWallpaper) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.wallpapers_clickHint),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+            Box {
+                IconButton(
+                    onClick = { listOptionsExpanded = true }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Sort,
+                        contentDescription = stringResource(R.string.list_options)
+                    )
+                }
+                ListViewOptionsDropdown(
+                    expanded = listOptionsExpanded,
+                    onDismissRequest = { listOptionsExpanded = false },
+                    sortingPref = wallpapersViewModel.prefs.wallpapersListSorting,
+                    sortingReversedPref = wallpapersViewModel.prefs.wallpapersListSortingReversed,
+                    stylePref = wallpapersViewModel.prefs.wallpapersListStyle
+                )
+            }
+        }
+    }
+    ErrorWithIcon(
+        error = stringResource(R.string.wallpapers_noWallpapers),
+        painter = rememberVectorPainter(Icons.Rounded.HideImage),
+        visible = !hasAtLeastOneWallpaper,
+        modifier = Modifier.fillMaxWidth()
+    )
+    wallpapersViewModel.activeWallpaper?.let {
+        wallpaperButton(it)
     }
 }
 

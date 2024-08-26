@@ -108,11 +108,11 @@
     <string name="mapsList_search">Haritaları arayın..</string>
     <string name="mapsList_search_clear">Aramayı temizle</string>
     <string name="mapsList_count">{COUNT} harita</string>
-    <string name="mapsList_sorting">Sıralama</string>
-    <string name="mapsList_sorting_name">İsme göre</string>
-    <string name="mapsList_sorting_date">Tarihe göre</string>
-    <string name="mapsList_sorting_size">Boyuta göre</string>
-    <string name="mapsList_sorting_reverse">Ters</string>
+    <string name="list_sorting">Sıralama</string>
+    <string name="list_sorting_name">İsme göre</string>
+    <string name="list_sorting_date">Tarihe göre</string>
+    <string name="list_sorting_size">Boyuta göre</string>
+    <string name="list_sorting_reversed">Ters</string>
     <string name="mapsList_storage">Depolama</string>
     <string name="mapsList_imported">Haritalarınız</string>
     <string name="mapsList_exported">Dışa aktarılanlar</string>

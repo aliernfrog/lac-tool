@@ -100,11 +100,11 @@
     <string name="mapsList_search">جستجوی مپ</string>
     <string name="mapsList_search_clear">پاک کردن جستجو</string>
     <string name="mapsList_count">{COUNT} نقشه ها</string>
-    <string name="mapsList_sorting">مرتب‌سازی</string>
-    <string name="mapsList_sorting_name">براساس اسم</string>
-    <string name="mapsList_sorting_date">براساس تاریخ</string>
-    <string name="mapsList_sorting_size">براساس اندازه</string>
-    <string name="mapsList_sorting_reverse">معکوس</string>
+    <string name="list_sorting">مرتب‌سازی</string>
+    <string name="list_sorting_name">براساس اسم</string>
+    <string name="list_sorting_date">براساس تاریخ</string>
+    <string name="list_sorting_size">براساس اندازه</string>
+    <string name="list_sorting_reversed">معکوس</string>
     <string name="mapsList_storage">حافظه</string>
     <string name="mapsList_imported">مپ های شما</string>
     <string name="mapsList_exported">مپ صادر شد</string>

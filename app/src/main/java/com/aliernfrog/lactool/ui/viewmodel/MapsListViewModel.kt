@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
-import com.aliernfrog.lactool.enum.MapsListSortingType
+import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
@@ -17,10 +17,9 @@ class MapsListViewModel(
     val prefs: PreferenceManager,
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
-
     var searchQuery by mutableStateOf("")
     var chosenSegment by mutableStateOf(MapsListSegment.IMPORTED)
-    var sorting by mutableStateOf(MapsListSortingType.ALPHABETICAL)
+    var sorting by mutableStateOf(ListSorting.ALPHABETICAL)
     var reverseList by mutableStateOf(false)
     var selectedMaps = mutableStateListOf<MapFile>()
 
@@ -45,7 +44,9 @@ class MapsListViewModel(
                 .filter {
                     it.name.contains(searchQuery, ignoreCase = true)
                 }
-                .sortedWith(sorting.comparator)
+                .sortedWith { m1, m2 ->
+                    sorting.comparator.compare(m1.file, m2.file)
+                }
             return if (reverseList) list.reversed() else list
         }
 

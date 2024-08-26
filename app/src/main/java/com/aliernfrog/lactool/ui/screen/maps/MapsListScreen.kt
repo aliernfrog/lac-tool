@@ -61,7 +61,7 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
-import com.aliernfrog.lactool.enum.MapsListSortingType
+import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
@@ -305,8 +305,8 @@ fun MapsListScreen(
 private fun Search(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
-    sorting: MapsListSortingType,
-    onSortingChange: (MapsListSortingType) -> Unit,
+    sorting: ListSorting,
+    onSortingChange: (ListSorting) -> Unit,
     reversed: Boolean,
     onReversedChange: (Boolean) -> Unit
 ) {
@@ -338,7 +338,7 @@ private fun Search(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.mapsList_sorting)
+                            contentDescription = stringResource(R.string.list_sorting)
                         )
                     }
                     DropdownMenu(
@@ -346,14 +346,14 @@ private fun Search(
                         onDismissRequest = { sortingOptionsShown = false }
                     ) {
                         Text(
-                            text = stringResource(R.string.mapsList_sorting),
+                            text = stringResource(R.string.list_sorting),
                             style = MaterialTheme.typography.titleSmall,
                             modifier = Modifier.padding(horizontal = 10.dp)
                         )
                         DividerRow(Modifier.padding(vertical = 4.dp))
-                        MapsListSortingType.entries.forEach { option ->
+                        ListSorting.entries.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(stringResource(option.labelId)) },
+                                text = { Text(stringResource(option.label)) },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = option.iconVector,
@@ -371,7 +371,7 @@ private fun Search(
                         }
                         DividerRow(Modifier.padding(vertical = 4.dp))
                         DropdownMenuItem(
-                            text = { Text(stringResource(R.string.mapsList_sorting_reverse)) },
+                            text = { Text(stringResource(R.string.list_sorting_reversed)) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.SwapVert,
