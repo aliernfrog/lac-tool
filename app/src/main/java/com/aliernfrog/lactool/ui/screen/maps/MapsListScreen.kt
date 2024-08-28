@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -35,7 +34,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -67,6 +65,7 @@ import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.form.DividerRow
@@ -198,20 +197,14 @@ fun MapsListScreen(
                     // padding so that FAB shadow doesnt get cropped
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    if (showStorage) ExtendedFloatingActionButton(
-                        shape = RoundedCornerShape(16.dp),
+                    if (showStorage) FloatingActionButton(
+                        icon = Icons.Outlined.SdCard,
+                        text = stringResource(R.string.mapsList_storage),
                         onClick = {
                             val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
                             launcher.launch(intent)
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.SdCard,
-                            contentDescription = null,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Text(stringResource(R.string.mapsList_storage))
-                    } else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
+                    ) else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
                         mapsListViewModel.selectedMaps.clear()
                     }
                 }

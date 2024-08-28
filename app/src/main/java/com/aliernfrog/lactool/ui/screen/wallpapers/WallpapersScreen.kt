@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.screen.wallpapers
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,9 +9,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -20,15 +21,14 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.rounded.HideImage
-import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,12 +56,12 @@ import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.ColumnRounded
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
@@ -74,7 +74,16 @@ fun WallpapersScreen(
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val listStyle = ListStyle.entries[wallpapersViewModel.prefs.wallpapersListStyle.value]
+    val mediaPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) scope.launch {
+                wallpapersViewModel.setPickedWallpaper(uri, context)
+            }
+        }
+    )
 
     LaunchedEffect(Unit) {
         wallpapersViewModel.getWallpapersFile(context)
@@ -91,7 +100,18 @@ fun WallpapersScreen(
                 }
             )
         },
-        topAppBarState = wallpapersViewModel.topAppBarState
+        topAppBarState = wallpapersViewModel.topAppBarState,
+        floatingActionButton = {
+            FloatingActionButton(
+                icon = Icons.Default.Add,
+                text = stringResource(R.string.wallpapers_add),
+                onClick = {
+                    mediaPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
+        }
     ) {
         @Composable
         fun WallpaperButton(
@@ -141,6 +161,9 @@ fun WallpapersScreen(
                             modifier = Modifier.animateItem()
                         )
                     }
+                    item {
+                        Footer()
+                    }
                 }
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
                     modifier = Modifier.fillMaxSize()
@@ -157,6 +180,9 @@ fun WallpapersScreen(
                                 .animateItem()
                                 .aspectRatio(1f)
                         )
+                    }
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Footer()
                     }
                 }
             }
@@ -176,11 +202,6 @@ private fun Header(
     var listOptionsExpanded by remember { mutableStateOf(false) }
 
     Column {
-        PickImageButton {
-            scope.launch {
-                wallpapersViewModel.setPickedWallpaper(it, context)
-            }
-        }
         PickedWallpaper(
             pickedWallpaper = wallpapersViewModel.pickedWallpaper,
             wallpaperName = wallpapersViewModel.wallpaperNameInputRaw,
@@ -236,24 +257,8 @@ private fun Header(
 }
 
 @Composable
-private fun PickImageButton(
-    onPickUri: (uri: Uri) -> Unit
-) {
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) onPickUri(uri)
-        }
-    )
-    RoundedButtonRow(
-        title = stringResource(R.string.wallpapers_pickImage),
-        painter = rememberVectorPainter(Icons.Rounded.Image),
-        containerColor = MaterialTheme.colorScheme.primary
-    ) {
-        launcher.launch(
-            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-        )
-    }
+private fun Footer() {
+    Spacer(Modifier.height(70.dp))
 }
 
 @Composable

@@ -192,7 +192,6 @@
     <string name="wallpapers_permissions">پوشه‌ی والپیپرهای LAC</string>
     <string name="wallpapers_permissions_description">باید پوشه ای را انتخاب کنید که والپیپرهای LAC شما در آن ذخیره می شوند</string>
     <string name="wallpapers_permissions_recommendedPath_description">والپیپرهای LAC در این پوشه ذخیره می شوند</string>
-    <string name="wallpapers_pickImage">یک عکس را انتخاب کنید</string>
     <string name="wallpapers_noWallpapers">شما هیچ والپیپری ندارید</string>
     <string name="wallpapers_chosen">والپیپر انتخاب شده</string>
     <string name="wallpapers_chosen_importing">واردات والپیپر</string>

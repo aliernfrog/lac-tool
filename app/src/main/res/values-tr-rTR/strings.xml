@@ -200,7 +200,6 @@
     <string name="wallpapers_permissions">LAC duvar kağıtları klasörü</string>
     <string name="wallpapers_permissions_description">LAC duvar kağıtlarının saklandığı klasörü seçmeniz gerekiyor</string>
     <string name="wallpapers_permissions_recommendedPath_description">LAC duvar kağıtları bu klasörde saklanır</string>
-    <string name="wallpapers_pickImage">Resim seç</string>
     <string name="wallpapers_noWallpapers">Duvar kağıdınız yok</string>
     <string name="wallpapers_chosen">Seçilen duvar kağıdı</string>
     <string name="wallpapers_chosen_import">İçe aktar</string>
