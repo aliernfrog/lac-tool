@@ -24,59 +24,66 @@ import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
 fun ListViewOptionsDropdown(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    sorting: ListSorting,
-    onSortingChange: (ListSorting) -> Unit,
-    sortingReversed: Boolean,
-    onSortingReversedChange: (Boolean) -> Unit,
+    sorting: ListSorting?,
+    onSortingChange: ((ListSorting) -> Unit)?,
+    sortingReversed: Boolean?,
+    onSortingReversedChange: ((Boolean) -> Unit)?,
     style: ListStyle,
     onStyleChange: (ListStyle) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isAnySortingOptionAvailable = onSortingChange != null || onSortingReversedChange != null
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
         modifier = modifier
     ) {
-        Text(
-            text = stringResource(R.string.list_sorting),
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(horizontal = 10.dp)
-        )
-        ListSorting.entries.forEach { option ->
-            DropdownMenuItem(
-                text = { Text(stringResource(option.label)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = option.iconVector,
-                        contentDescription = null
-                    )
-                },
-                trailingIcon = {
-                    RadioButton(
-                        selected = option == sorting,
+        if (isAnySortingOptionAvailable) {
+            Text(
+                text = stringResource(R.string.list_sorting),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+            onSortingChange?.let {
+                ListSorting.entries.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(option.label)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = option.iconVector,
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = {
+                            RadioButton(
+                                selected = option == sorting,
+                                onClick = { onSortingChange(option) }
+                            )
+                        },
                         onClick = { onSortingChange(option) }
                     )
-                },
-                onClick = { onSortingChange(option) }
-            )
+                }
+            }
+            onSortingReversedChange?.let {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.list_sorting_reversed)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.SwapVert,
+                            contentDescription = null
+                        )
+                    },
+                    trailingIcon = {
+                        Checkbox(
+                            checked = sortingReversed == true,
+                            onCheckedChange = { onSortingReversedChange(it) }
+                        )
+                    },
+                    onClick = { onSortingReversedChange(sortingReversed != true) }
+                )
+            }
+            DividerRow(Modifier.padding(vertical = 4.dp))
         }
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.list_sorting_reversed)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.SwapVert,
-                    contentDescription = null
-                )
-            },
-            trailingIcon = {
-                Checkbox(
-                    checked = sortingReversed,
-                    onCheckedChange = { onSortingReversedChange(it) }
-                )
-            },
-            onClick = { onSortingReversedChange(!sortingReversed) }
-        )
-        DividerRow(Modifier.padding(vertical = 4.dp))
         Text(
             text = stringResource(R.string.list_style),
             style = MaterialTheme.typography.titleSmall,
@@ -107,18 +114,24 @@ fun ListViewOptionsDropdown(
 fun ListViewOptionsDropdown(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    sortingPref: BasePreferenceManager.Preference<Int>,
-    sortingReversedPref: BasePreferenceManager.Preference<Boolean>,
+    sortingPref: BasePreferenceManager.Preference<Int>?,
+    sortingReversedPref: BasePreferenceManager.Preference<Boolean>?,
     stylePref: BasePreferenceManager.Preference<Int>,
     modifier: Modifier = Modifier
 ) {
     ListViewOptionsDropdown(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
-        sorting = ListSorting.entries[sortingPref.value],
-        onSortingChange = { sortingPref.value = it.ordinal },
-        sortingReversed = sortingReversedPref.value,
-        onSortingReversedChange = { sortingReversedPref.value = it },
+        sorting = sortingPref?.let {
+            ListSorting.entries[it.value]
+        },
+        onSortingChange = sortingPref?.let { pref -> {
+            pref.value = it.ordinal
+        } },
+        sortingReversed = sortingReversedPref?.value,
+        onSortingReversedChange = sortingReversedPref?.let { pref ->{
+            pref.value = it
+        } },
         style = ListStyle.entries[stylePref.value],
         onStyleChange = { stylePref.value = it.ordinal },
         modifier = modifier

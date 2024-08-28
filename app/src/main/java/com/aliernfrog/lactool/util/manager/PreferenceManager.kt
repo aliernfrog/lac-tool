@@ -29,6 +29,9 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val exportedMapsDir = stringPreference("mapsExportDir", ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR)
     val storageAccessType = intPreference("storageAccessType", StorageAccessType.SAF.ordinal)
 
+    // Maps materials list
+    val mapsMaterialsListStyle = intPreference("mapsMaterialsListStyle", ListStyle.GRID.ordinal)
+
     // Wallpapers list
     val wallpapersListSorting = intPreference("wallpapersListSorting", ListSorting.DATE.ordinal)
     val wallpapersListSortingReversed = booleanPreference("wallpapersListSortingReversed", false)

@@ -53,6 +53,7 @@ import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +61,7 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
+    val prefs: PreferenceManager,
     val topToastState: TopToastState,
     private val progressState: ProgressState,
     private val mainViewModel: MainViewModel,
