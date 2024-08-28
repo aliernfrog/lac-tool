@@ -61,8 +61,8 @@ class ScreenshotsViewModel(
 
     val screenshotsToShow: List<FileWrapper>
         get() {
-            val sorting = ListSorting.entries[prefs.wallpapersListSorting.value]
-            val reversed = prefs.wallpapersListSortingReversed.value
+            val sorting = ListSorting.entries[prefs.screenshotsListSorting.value]
+            val reversed = prefs.screenshotsListSortingReversed.value
             return screenshots.sortedWith(sorting.comparator).let {
                 if (reversed) it.reversed() else it
             }
