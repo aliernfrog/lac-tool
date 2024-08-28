@@ -34,6 +34,11 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val wallpapersListSortingReversed = booleanPreference("wallpapersListSortingReversed", false)
     val wallpapersListStyle = intPreference("wallpapersListStyle", ListStyle.GRID.ordinal)
 
+    // Screenshots list
+    val screenshotsListSorting = intPreference("screenshotsListSorting", ListSorting.DATE.ordinal)
+    val screenshotsListSortingReversed = booleanPreference("screenshotsListSortingReversed", false)
+    val screenshotsListStyle = intPreference("screenshotsListStyle", ListStyle.GRID.ordinal)
+
     // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true)
     val showMediaViewGuide = booleanPreference("showMediaViewGuide", true)

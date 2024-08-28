@@ -120,13 +120,11 @@ fun WallpapersScreen(
 
         @Composable
         fun ListHeader() {
-            Column {
-                Header(
-                    wallpaperButton = {
-                        WallpaperButton(it)
-                    }
-                )
-            }
+            Header(
+                wallpaperButton = {
+                    WallpaperButton(it)
+                }
+            )
         }
 
         AnimatedContent(targetState = listStyle) { style ->
@@ -146,7 +144,7 @@ fun WallpapersScreen(
                 }
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
                     modifier = Modifier.fillMaxSize()
-                ) { maxLineSpan ->
+                ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ListHeader()
                     }
@@ -177,60 +175,63 @@ private fun Header(
             || wallpapersViewModel.activeWallpaper != null
     var listOptionsExpanded by remember { mutableStateOf(false) }
 
-    PickImageButton {
-        scope.launch {
-            wallpapersViewModel.setPickedWallpaper(it, context)
-        }
-    }
-    PickedWallpaper(
-        pickedWallpaper = wallpapersViewModel.pickedWallpaper,
-        wallpaperName = wallpapersViewModel.wallpaperNameInputRaw,
-        onWallpaperNameChange = {
-            wallpapersViewModel.wallpaperNameInputRaw = it
-        }
-    ) {
-        scope.launch {
-            wallpapersViewModel.importPickedWallpaper(context)
-        }
-    }
-    FadeVisibility(hasAtLeastOneWallpaper) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.wallpapers_clickHint),
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-            Box {
-                IconButton(
-                    onClick = { listOptionsExpanded = true }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Sort,
-                        contentDescription = stringResource(R.string.list_options)
-                    )
-                }
-                ListViewOptionsDropdown(
-                    expanded = listOptionsExpanded,
-                    onDismissRequest = { listOptionsExpanded = false },
-                    sortingPref = wallpapersViewModel.prefs.wallpapersListSorting,
-                    sortingReversedPref = wallpapersViewModel.prefs.wallpapersListSortingReversed,
-                    stylePref = wallpapersViewModel.prefs.wallpapersListStyle
-                )
+    Column {
+        PickImageButton {
+            scope.launch {
+                wallpapersViewModel.setPickedWallpaper(it, context)
             }
         }
-    }
-    ErrorWithIcon(
-        error = stringResource(R.string.wallpapers_noWallpapers),
-        painter = rememberVectorPainter(Icons.Rounded.HideImage),
-        visible = !hasAtLeastOneWallpaper,
-        modifier = Modifier.fillMaxWidth()
-    )
-    wallpapersViewModel.activeWallpaper?.let {
-        wallpaperButton(it)
+        PickedWallpaper(
+            pickedWallpaper = wallpapersViewModel.pickedWallpaper,
+            wallpaperName = wallpapersViewModel.wallpaperNameInputRaw,
+            onWallpaperNameChange = {
+                wallpapersViewModel.wallpaperNameInputRaw = it
+            }
+        ) {
+            scope.launch {
+                wallpapersViewModel.importPickedWallpaper(context)
+            }
+        }
+        FadeVisibility(hasAtLeastOneWallpaper) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.wallpapers_clickHint),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                )
+                Box {
+                    IconButton(
+                        onClick = { listOptionsExpanded = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Sort,
+                            contentDescription = stringResource(R.string.list_options)
+                        )
+                    }
+                    ListViewOptionsDropdown(
+                        expanded = listOptionsExpanded,
+                        onDismissRequest = { listOptionsExpanded = false },
+                        sortingPref = wallpapersViewModel.prefs.wallpapersListSorting,
+                        sortingReversedPref = wallpapersViewModel.prefs.wallpapersListSortingReversed,
+                        stylePref = wallpapersViewModel.prefs.wallpapersListStyle
+                    )
+                }
+            }
+        }
+        ErrorWithIcon(
+            error = stringResource(R.string.wallpapers_noWallpapers),
+            painter = rememberVectorPainter(Icons.Rounded.HideImage),
+            visible = !hasAtLeastOneWallpaper,
+            modifier = Modifier.fillMaxWidth()
+        )
+        wallpapersViewModel.activeWallpaper?.let {
+            wallpaperButton(it)
+        }
     }
 }
 
