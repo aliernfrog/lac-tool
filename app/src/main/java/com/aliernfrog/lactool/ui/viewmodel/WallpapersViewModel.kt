@@ -2,36 +2,52 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material.icons.rounded.PriorityHigh
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
+import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -57,7 +73,6 @@ class WallpapersViewModel(
     private val contextUtils: ContextUtils
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
-    val lazyListState = LazyListState()
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
     private val wallpapersDir : String get() = prefs.lacWallpapersDir.value
@@ -65,32 +80,95 @@ class WallpapersViewModel(
 
     private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
-    var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
-    var pickedWallpaper by mutableStateOf<FileWrapper?>(null)
+    private var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
-    var wallpaperNameInputRaw by mutableStateOf("")
-    private val wallpaperNameInput: String
-        get() = wallpaperNameInputRaw.ifEmpty { pickedWallpaper?.nameWithoutExtension ?: "" }
 
-    suspend fun setPickedWallpaper(uri: Uri, context: Context) {
+    val wallpapersToShow: List<FileWrapper>
+        get() {
+            val sorting = ListSorting.entries[prefs.wallpapersListSorting.value]
+            val reversed = prefs.wallpapersListSortingReversed.value
+            return importedWallpapers.sortedWith(sorting.comparator).let {
+                if (reversed) it.reversed() else it
+            }
+        }
+
+    suspend fun onWallpaperPick(uri: Uri, context: Context) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
         withContext(Dispatchers.IO) {
             val file = UriUtil.cacheFile(
                 uri = uri,
                 parentName = "wallpapers",
                 context = context
-            )
+            )?.let { FileWrapper(it) }
             if (file == null) {
                 topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
             }
-            pickedWallpaper = FileWrapper(file)
-            wallpaperNameInputRaw = file.nameWithoutExtension
+            mainViewModel.showMediaView(MediaViewData(
+                model = file.painterModel,
+                title = context.getString(R.string.wallpapers_chosen),
+                options = {
+                    val scope = rememberCoroutineScope()
+                    val originalName = remember { file.nameWithoutExtension }
+                    var importName by remember { mutableStateOf(originalName) }
+
+                    OutlinedTextField(
+                        value = importName,
+                        onValueChange = { importName = it },
+                        label = {
+                            Text(stringResource(R.string.wallpapers_chosen_name))
+                        },
+                        placeholder = {
+                            Text(originalName)
+                        },
+                        trailingIcon = {
+                            Crossfade(importName != originalName) { enabled ->
+                                IconButton(
+                                    onClick = { importName = originalName },
+                                    enabled = enabled
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Restore,
+                                        contentDescription = stringResource(R.string.wallpapers_chosen_name_reset)
+                                    )
+                                }
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        Button(
+                            onClick = { scope.launch {
+                                importWallpaper(
+                                    file = file,
+                                    withName = importName.ifEmpty { originalName },
+                                    context = context
+                                )
+                                mainViewModel.dismissMediaView()
+                            } }
+                        ) {
+                            ButtonIcon(rememberVectorPainter(Icons.Default.Download))
+                            Text(stringResource(R.string.wallpapers_chosen_import))
+                        }
+                    }
+                }
+            ))
         }
     }
 
-    suspend fun importPickedWallpaper(context: Context) {
-        val wallpaper = pickedWallpaper ?: return
-        val outputName = "$wallpaperNameInput.jpg"
+    private suspend fun importWallpaper(
+        file: FileWrapper,
+        withName: String,
+        context: Context
+    ) {
+        val outputName = "$withName.jpg"
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_chosen_importing)
         )
@@ -100,9 +178,7 @@ class WallpapersViewModel(
                 text = R.string.wallpapers_alreadyExists
             )
             outputFile = wallpapersFile.createFile(outputName) ?: return@withContext
-            outputFile.copyFrom(wallpaper, context)
-            pickedWallpaper = null
-            wallpaperNameInputRaw = ""
+            outputFile.copyFrom(file, context)
             fetchImportedWallpapers()
             topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
         }

@@ -23,6 +23,7 @@ import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
+import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
@@ -56,7 +57,16 @@ class ScreenshotsViewModel(
 
     private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
-    var screenshots by mutableStateOf(emptyList<FileWrapper>())
+    private var screenshots by mutableStateOf(emptyList<FileWrapper>())
+
+    val screenshotsToShow: List<FileWrapper>
+        get() {
+            val sorting = ListSorting.entries[prefs.screenshotsListSorting.value]
+            val reversed = prefs.screenshotsListSortingReversed.value
+            return screenshots.sortedWith(sorting.comparator).let {
+                if (reversed) it.reversed() else it
+            }
+        }
 
     fun getScreenshotsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::screenshotsFile.isInitialized) false

@@ -1,34 +1,34 @@
 package com.aliernfrog.lactool.enum
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Note
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.impl.FileWrapper
 
-@Suppress("unused")
-enum class MapsListSortingType(
-    val labelId: Int,
+enum class ListSorting(
+    @StringRes val label: Int,
     val iconVector: ImageVector,
-    val comparator: Comparator<MapFile>
+    val comparator: Comparator<FileWrapper>
 ) {
     ALPHABETICAL(
-        labelId = R.string.mapsList_sorting_name,
+        label = R.string.list_sorting_name,
         iconVector = Icons.Default.SortByAlpha,
-        comparator = compareBy(MapFile::name)
+        comparator = compareBy(FileWrapper::name)
     ),
 
     DATE(
-        labelId = R.string.mapsList_sorting_date,
+        label = R.string.list_sorting_date,
         iconVector = Icons.Default.CalendarMonth,
-        comparator = compareByDescending(MapFile::lastModified)
+        comparator = compareByDescending(FileWrapper::lastModified)
     ),
 
     SIZE(
-        labelId = R.string.mapsList_sorting_size,
+        label = R.string.list_sorting_size,
         iconVector = Icons.AutoMirrored.Filled.Note,
-        comparator = compareByDescending(MapFile::size)
+        comparator = compareByDescending(FileWrapper::size)
     )
 }

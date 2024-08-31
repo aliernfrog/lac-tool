@@ -100,11 +100,11 @@
     <string name="mapsList_search">جستجوی مپ</string>
     <string name="mapsList_search_clear">پاک کردن جستجو</string>
     <string name="mapsList_count">{COUNT} نقشه ها</string>
-    <string name="mapsList_sorting">مرتب‌سازی</string>
-    <string name="mapsList_sorting_name">براساس اسم</string>
-    <string name="mapsList_sorting_date">براساس تاریخ</string>
-    <string name="mapsList_sorting_size">براساس اندازه</string>
-    <string name="mapsList_sorting_reverse">معکوس</string>
+    <string name="list_sorting">مرتب‌سازی</string>
+    <string name="list_sorting_name">براساس اسم</string>
+    <string name="list_sorting_date">براساس تاریخ</string>
+    <string name="list_sorting_size">براساس اندازه</string>
+    <string name="list_sorting_reversed">معکوس</string>
     <string name="mapsList_storage">حافظه</string>
     <string name="mapsList_imported">مپ های شما</string>
     <string name="mapsList_exported">مپ صادر شد</string>
@@ -192,7 +192,6 @@
     <string name="wallpapers_permissions">پوشه‌ی والپیپرهای LAC</string>
     <string name="wallpapers_permissions_description">باید پوشه ای را انتخاب کنید که والپیپرهای LAC شما در آن ذخیره می شوند</string>
     <string name="wallpapers_permissions_recommendedPath_description">والپیپرهای LAC در این پوشه ذخیره می شوند</string>
-    <string name="wallpapers_pickImage">یک عکس را انتخاب کنید</string>
     <string name="wallpapers_noWallpapers">شما هیچ والپیپری ندارید</string>
     <string name="wallpapers_chosen">والپیپر انتخاب شده</string>
     <string name="wallpapers_chosen_importing">واردات والپیپر</string>

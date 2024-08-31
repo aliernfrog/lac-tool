@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -58,6 +59,7 @@ import coil.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.ui.component.form.DividerRow
+import com.aliernfrog.lactool.ui.viewmodel.InsetsViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
@@ -72,10 +74,13 @@ fun MediaView(
     onDismissRequest: () -> Unit
 ) {
     val mainViewModel = koinViewModel<MainViewModel>()
+    val insetsViewModel = koinViewModel<InsetsViewModel>()
+
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
     val zoomState = rememberZoomState()
     val isZoomedIn = zoomState.scale > 1f
+    val isIMEShown = insetsViewModel.imePadding > 0.dp
     val bottomSheetState = rememberStandardBottomSheetState(
         skipHiddenState = false
     )
@@ -110,6 +115,11 @@ fun MediaView(
         else if (!showOverlay && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
     }
 
+    // Expand sheet to add IME padding, if IME is shown
+    LaunchedEffect(isIMEShown) {
+        if (isIMEShown) bottomSheetState.expand()
+    }
+
     BottomSheetScaffold(
         sheetContent = {
             data.options?.let {
@@ -121,6 +131,7 @@ fun MediaView(
                             }
                         }
                         .navigationBarsPadding()
+                        .imePadding()
                         .verticalScroll(rememberScrollState())
                 ) {
                     it.invoke()
