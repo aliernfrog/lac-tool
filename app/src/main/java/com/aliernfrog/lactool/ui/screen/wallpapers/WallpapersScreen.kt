@@ -148,10 +148,7 @@ fun WallpapersScreen(
                         ListHeader()
                     }
                     items(wallpapersViewModel.wallpapersToShow) {
-                        WallpaperButton(
-                            wallpaper = it,
-                            modifier = Modifier.animateItem()
-                        )
+                        WallpaperButton(it)
                     }
                     item {
                         Footer()
@@ -168,9 +165,7 @@ fun WallpapersScreen(
                             wallpaper = it,
                             contentScale = ContentScale.Crop,
                             showOverlay = false,
-                            modifier = Modifier
-                                .animateItem()
-                                .aspectRatio(1f)
+                            modifier = Modifier.aspectRatio(1f)
                         )
                     }
                     item(span = { GridItemSpan(maxLineSpan) }) {

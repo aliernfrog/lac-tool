@@ -122,10 +122,7 @@ fun ScreenshotsScreen(
                         Header()
                     }
                     items(screenshotsViewModel.screenshotsToShow) {
-                        ScreenshotButton(
-                            screenshot = it,
-                            modifier = Modifier.animateItem()
-                        )
+                        ScreenshotButton(it)
                     }
                 }
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
@@ -139,9 +136,7 @@ fun ScreenshotsScreen(
                             screenshot = it,
                             contentScale = ContentScale.Crop,
                             showOverlay = false,
-                            modifier = Modifier
-                                .animateItem()
-                                .aspectRatio(1f)
+                            modifier = Modifier.aspectRatio(1f)
                         )
                     }
                 }

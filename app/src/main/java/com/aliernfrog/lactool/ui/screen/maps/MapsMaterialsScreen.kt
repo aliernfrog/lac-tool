@@ -192,7 +192,7 @@ fun MapsMaterialsScreen(
                                 Suggestions()
                             }
                             items(materials) {
-                                MaterialButton(it, modifier = Modifier.animateItem())
+                                MaterialButton(it)
                             }
                             item {
                                 Spacer(Modifier.systemBarsPadding())
@@ -209,9 +209,7 @@ fun MapsMaterialsScreen(
                                     material = it,
                                     contentScale = ContentScale.Crop,
                                     minified = true,
-                                    modifier = Modifier
-                                        .animateItem()
-                                        .aspectRatio(1f)
+                                    modifier = Modifier.aspectRatio(1f)
                                 )
                             }
                             item(span = { GridItemSpan(maxLineSpan) }) {
