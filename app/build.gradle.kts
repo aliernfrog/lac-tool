@@ -104,4 +104,7 @@ dependencies {
     implementation("com.github.jeziellago:compose-markdown:0.5.2")
     implementation("net.engawapg.lib:zoomable:1.6.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeMaterialVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling-preview:$composeMaterialVersion")
 }

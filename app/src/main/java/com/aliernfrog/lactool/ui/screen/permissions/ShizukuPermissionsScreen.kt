@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
+import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -63,7 +65,7 @@ fun ShizukuPermissionsScreen(
         ) {
             if (isLoading) {
                 VerticalProgressIndicator(
-                    progress = Progress(stringResource(R.string.info_shizuku_waitingService)),
+                    progress = Progress(stringResource(R.string.permissions_shizuku_waitingService)),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 AnimatedVisibility(
@@ -77,7 +79,7 @@ fun ShizukuPermissionsScreen(
                             .align(Alignment.CenterHorizontally)
                             .padding(16.dp),
                         buttons = {
-                            TextButton(
+                            if (shizukuViewModel.managerInstalled) TextButton(
                                 onClick = {
                                     shizukuViewModel.launchManager(context)
                                 }
@@ -92,11 +94,11 @@ fun ShizukuPermissionsScreen(
                                 modifier = Modifier.padding(top = 8.dp)
                             ) {
                                 ButtonIcon(rememberVectorPainter(Icons.Default.RestartAlt))
-                                Text(stringResource(R.string.permissions_shizuku_timedOut_restart))
+                                Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut_restart))
                             }
                         }
                     ) {
-                        Text(stringResource(R.string.permissions_shizuku_timedOut))
+                        Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut))
                     }
                 }
             } else ShizukuSetupGuide()
@@ -111,7 +113,7 @@ private fun ShizukuSetupGuide(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    if (shizukuViewModel.installed) Text(
+    if (shizukuViewModel.managerInstalled) Text(
         text = stringResource(R.string.permissions_shizuku_introduction),
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(8.dp)
@@ -172,6 +174,34 @@ private fun ShizukuSetupGuide(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+        }
+    }
+
+    FadeVisibility(
+        shizukuViewModel.deviceRooted && shizukuViewModel.status != ShizukuStatus.UNAUTHORIZED
+    ) {
+        CardWithActions(
+            title = stringResource(R.string.permissions_shizuku_rooted),
+            buttons = {
+                OutlinedButton(
+                    onClick = {
+                        uriHandler.openUri(ShizukuViewModel.SUI_GITHUB)
+                    }
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                    Text(stringResource(R.string.permissions_shizuku_sui))
+                }
+                Button(
+                    onClick = {
+                        shizukuViewModel.launchManager(context)
+                    }
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                    Text(stringResource(R.string.permissions_shizuku_openShizuku))
+                }
+            }
+        ) {
+            Text(stringResource(R.string.permissions_shizuku_rooted_description))
         }
     }
 

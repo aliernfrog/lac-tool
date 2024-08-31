@@ -26,6 +26,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
+import java.io.File
 
 
 class ShizukuViewModel(
@@ -35,11 +36,15 @@ class ShizukuViewModel(
 ) : ViewModel() {
     companion object {
         const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
+        const val SUI_GITHUB = "https://github.com/RikkaApps/Sui"
     }
 
     var status by mutableStateOf(ShizukuStatus.UNKNOWN)
-    val installed: Boolean
+    val managerInstalled: Boolean
         get() = status != ShizukuStatus.NOT_INSTALLED && status != ShizukuStatus.UNKNOWN
+    val deviceRooted = System.getenv("PATH")?.split(":")?.any { path ->
+        File(path, "su").canExecute()
+    } ?: false
 
     var fileService: IFileService? = null
     var fileServiceRunning by mutableStateOf(false)
@@ -60,7 +65,7 @@ class ShizukuViewModel(
     private val userServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, binder: IBinder) {
             val shizukuNeverLoad = prefs.shizukuNeverLoad.value
-            Log.d(TAG, "user service connected, shizukuNeverLoad ${shizukuNeverLoad}")
+            Log.d(TAG, "user service connected, shizukuNeverLoad: $shizukuNeverLoad")
             if (shizukuNeverLoad) return
             fileService = IFileService.Stub.asInterface(binder)
             fileServiceRunning = true
@@ -90,6 +95,28 @@ class ShizukuViewModel(
         Shizuku.addBinderReceivedListener(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
         Shizuku.addRequestPermissionResultListener(permissionResultListener)
+        checkAvailability(context)
+    }
+
+    fun checkAvailability(context: Context): ShizukuStatus {
+        status = try {
+            if (Shizuku.pingBinder()) {
+                if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) ShizukuStatus.AVAILABLE
+                else ShizukuStatus.UNAUTHORIZED
+            } else if (!isManagerInstalled(context)) ShizukuStatus.NOT_INSTALLED
+            else ShizukuStatus.WAITING_FOR_BINDER
+        } catch (e: Exception) {
+            Log.e(TAG, "ShizukuViewModel/checkAvailability: failed to determine status", e)
+            ShizukuStatus.UNKNOWN
+        }
+        if (status == ShizukuStatus.AVAILABLE && !fileServiceRunning) {
+            if (timeOutJob == null) timeOutJob = viewModelScope.launch {
+                delay(15000)
+                timedOut = true
+            }
+            Shizuku.bindUserService(userServiceArgs, userServiceConnection)
+        }
+        return status
     }
 
     fun launchManager(context: Context) {
@@ -103,35 +130,11 @@ class ShizukuViewModel(
         }
     }
 
-    fun checkAvailability(context: Context): ShizukuStatus {
-        status = try {
-            if (!isInstalled(context)) ShizukuStatus.NOT_INSTALLED
-            else if (!Shizuku.pingBinder()) ShizukuStatus.WAITING_FOR_BINDER
-            else {
-                if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) ShizukuStatus.AVAILABLE
-                else ShizukuStatus.UNAUTHORIZED
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "updateStatus: ", e)
-            ShizukuStatus.UNKNOWN
-        }
-        if (status == ShizukuStatus.AVAILABLE && !fileServiceRunning) {
-            if (timeOutJob == null) timeOutJob = viewModelScope.launch {
-                delay(15000)
-                timedOut = true
-            }
-            Shizuku.bindUserService(userServiceArgs, userServiceConnection)
-        }
-        return status
-    }
-
-    private fun isInstalled(context: Context): Boolean {
-        return try {
-            context.packageManager.getPackageInfo(SHIZUKU_PACKAGE, 0) != null
-        } catch (e: Exception) {
-            Log.e(TAG, "isInstalled: ", e)
-            false
-        }
+    private fun isManagerInstalled(context: Context) = try {
+        context.packageManager.getPackageInfo(SHIZUKU_PACKAGE, 0) != null
+    } catch (e: Exception) {
+        Log.e(TAG, "isInstalled: ", e)
+        false
     }
 
     override fun onCleared() {
