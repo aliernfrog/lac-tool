@@ -93,10 +93,22 @@ class MapFile(
         }
 
     /**
+     * Readable size of the map in KB.
+     */
+    val readableSize: String = "${size / 1024} KB"
+
+    /**
+     * Readable last modified information of the map.
+     */
+    val readableLastModified = contextUtils.stringFunction { context ->
+        FileUtil.lastModifiedFromLong(this.lastModified, context)
+    }
+
+    /**
      * Details of the map. Includes size (KB) and modified time.
      */
     val details: String = contextUtils.stringFunction { context ->
-        "${size / 1024} KB | ${FileUtil.lastModifiedFromLong(this.lastModified, context)}"
+        "$readableSize | $readableLastModified"
     }
 
     /**

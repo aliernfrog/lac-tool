@@ -19,8 +19,6 @@ class MapsListViewModel(
 ) : ViewModel() {
     var searchQuery by mutableStateOf("")
     var chosenSegment by mutableStateOf(MapsListSegment.IMPORTED)
-    var sorting by mutableStateOf(ListSorting.ALPHABETICAL)
-    var reverseList by mutableStateOf(false)
     var selectedMaps = mutableStateListOf<MapFile>()
 
     val availableSegments: List<MapsListSegment>
@@ -40,14 +38,17 @@ class MapsListViewModel(
      */
     val mapsToShow: List<MapFile>
         get() {
-            val list = chosenSegment.getMaps(mapsViewModel)
+            val sorting = ListSorting.entries[prefs.mapsListSorting.value]
+            return chosenSegment.getMaps(mapsViewModel)
                 .filter {
                     it.name.contains(searchQuery, ignoreCase = true)
                 }
                 .sortedWith { m1, m2 ->
                     sorting.comparator.compare(m1.file, m2.file)
                 }
-            return if (reverseList) list.reversed() else list
+                .let {
+                    if (prefs.mapsListSortingReversed.value) it.reversed() else it
+                }
         }
 
     fun isMapSelected(map: MapFile): Boolean {
