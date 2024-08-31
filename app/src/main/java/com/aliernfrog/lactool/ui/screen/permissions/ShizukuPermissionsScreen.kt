@@ -199,9 +199,13 @@ private fun ShizukuSetupGuide(
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
                     Text(stringResource(R.string.permissions_shizuku_openShizuku))
                 }
-            }
+            },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
-            Text(stringResource(R.string.permissions_shizuku_rooted_description))
+            Text(
+                text = stringResource(R.string.permissions_shizuku_rooted_description),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 
