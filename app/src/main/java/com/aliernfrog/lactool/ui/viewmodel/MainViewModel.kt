@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.data.MediaViewData
@@ -101,10 +100,8 @@ class MainViewModel(
         get() = arrayOf(
             "LAC Tool $applicationVersionName ($applicationVersionCode)",
             "Android API ${Build.VERSION.SDK_INT}",
-            "Storage access type ${prefs.storageAccessType.value}",
-            SettingsConstant.experimentalPrefOptions.joinToString("\n") {
-                val pref = it.preference(prefs)
-                "${pref.key}: ${pref.value}"
+            prefs.debugInfoPrefs.joinToString("\n") {
+                "${it.key}: ${it.value}"
             }
         ).joinToString("\n")
 

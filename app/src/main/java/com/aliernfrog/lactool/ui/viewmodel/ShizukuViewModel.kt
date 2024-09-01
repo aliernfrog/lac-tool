@@ -95,7 +95,6 @@ class ShizukuViewModel(
         Shizuku.addBinderReceivedListener(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
         Shizuku.addRequestPermissionResultListener(permissionResultListener)
-        checkAvailability(context)
     }
 
     fun checkAvailability(context: Context): ShizukuStatus {

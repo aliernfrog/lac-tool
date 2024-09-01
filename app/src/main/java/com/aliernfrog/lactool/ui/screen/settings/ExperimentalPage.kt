@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
@@ -81,8 +80,7 @@ fun ExperimentalPage(
         }
 
         FormSection(title = "Prefs", bottomDivider = false) {
-            SettingsConstant.experimentalPrefOptions.forEach { prefEditItem ->
-                val pref = prefEditItem.preference(mainViewModel.prefs)
+            mainViewModel.prefs.experimentalPrefs.forEach { pref ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -126,8 +124,8 @@ fun ExperimentalPage(
                 contentColor = MaterialTheme.colorScheme.error
             ) {
                 scope.launch {
-                    SettingsConstant.experimentalPrefOptions.forEach {
-                        it.preference(mainViewModel.prefs).resetValue()
+                    mainViewModel.prefs.experimentalPrefs.forEach {
+                        it.resetValue()
                     }
                     mainViewModel.topToastState.showAndroidToast(
                         text = "Restored default values for experimental prefs",

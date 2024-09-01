@@ -21,15 +21,6 @@ val supportsPerAppLanguagePreferences = Build.VERSION.SDK_INT >= Build.VERSION_C
 val folderPickerSupportsInitialUri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 val hasAndroidDataRestrictions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
-object ConfigKey {
-    const val PREF_NAME = "APP_CONFIG"
-    const val DEFAULT_UPDATES_URL = "https://aliernfrog.github.io/lactool/latest.json"
-    val RECOMMENDED_MAPS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/editor"
-    val RECOMMENDED_WALLPAPERS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/wallpaper"
-    val RECOMMENDED_SCREENSHOTS_DIR = "${externalStorageRoot}Android/data/com.MA.LAC/files/screenshots"
-    val RECOMMENDED_EXPORTED_MAPS_DIR = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/LACTool/exported"
-}
-
 object SettingsConstant {
     val socials = listOf(
         Social(
@@ -103,22 +94,6 @@ object SettingsConstant {
             description = R.string.settings_about_credits_inspiration,
             link = "https://github.com/ReVanced/revanced-manager"
         )
-    )
-
-    val experimentalPrefOptions = listOf(
-        PrefEditItem(
-            preference = { it.showMapNameFieldGuide }
-        ),
-        PrefEditItem(
-            preference = { it.showMediaViewGuide }
-        ),
-        PrefEditItem(
-            preference = { it.shizukuNeverLoad }
-        ),
-        PrefEditItem(
-            preference = { it.updatesURL }
-        ),
-        *folders.toTypedArray()
     )
 }
 

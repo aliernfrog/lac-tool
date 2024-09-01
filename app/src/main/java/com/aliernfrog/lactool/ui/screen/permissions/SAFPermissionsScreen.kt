@@ -119,7 +119,7 @@ private fun SAFPermissionsList(
 
     fun takePersistableUriPermissions(uri: Uri) {
         uri.takePersistablePermissions(context)
-        activePermissionData?.onUriUpdate?.invoke(uri)
+        activePermissionData?.pref?.value = uri.toString()
         onUpdateState()
     }
 

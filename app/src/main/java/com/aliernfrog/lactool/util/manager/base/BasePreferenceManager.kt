@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import kotlin.reflect.KProperty
 
-@Suppress("SameParameterValue")
 abstract class BasePreferenceManager(
     private val prefs: SharedPreferences
 ) {
@@ -19,6 +18,8 @@ abstract class BasePreferenceManager(
     private fun putBoolean(key: String, value: Boolean) = prefs.edit { putBoolean(key, value) }
     private fun putInt(key: String, value: Int) = prefs.edit { putInt(key, value) }
 
+    val experimentalPrefs = mutableListOf<Preference<*>>()
+    val debugInfoPrefs = mutableListOf<Preference<*>>()
 
     class Preference<T>(
         val key: String,
@@ -43,34 +44,54 @@ abstract class BasePreferenceManager(
         }
     }
 
-
     protected fun stringPreference(
         key: String,
-        defaultValue: String = ""
-    ) = Preference(
-        key = key,
-        defaultValue = defaultValue,
-        getter = ::getString,
-        setter = ::putString
-    )
+        defaultValue: String = "",
+        experimental: Boolean = false,
+        includeInDebugInfo: Boolean = experimental
+    ): Preference<String> {
+        val pref = Preference(
+            key = key,
+            defaultValue = defaultValue,
+            getter = ::getString,
+            setter = ::putString
+        )
+        if (experimental) experimentalPrefs.add(pref)
+        if (includeInDebugInfo) debugInfoPrefs.add(pref)
+        return pref
+    }
 
     protected fun booleanPreference(
         key: String,
-        defaultValue: Boolean
-    ) = Preference(
-        key = key,
-        defaultValue = defaultValue,
-        getter = ::getBoolean,
-        setter = ::putBoolean
-    )
+        defaultValue: Boolean,
+        experimental: Boolean = false,
+        includeInDebugInfo: Boolean = experimental
+    ): Preference<Boolean> {
+        val pref = Preference(
+            key = key,
+            defaultValue = defaultValue,
+            getter = ::getBoolean,
+            setter = ::putBoolean
+        )
+        if (experimental) experimentalPrefs.add(pref)
+        if (includeInDebugInfo) debugInfoPrefs.add(pref)
+        return pref
+    }
 
     protected fun intPreference(
         key: String,
-        defaultValue: Int
-    ) = Preference(
-        key = key,
-        defaultValue = defaultValue,
-        getter = ::getInt,
-        setter = ::putInt
-    )
+        defaultValue: Int,
+        experimental: Boolean = false,
+        includeInDebugInfo: Boolean = experimental
+    ): Preference<Int> {
+        val pref = Preference(
+            key = key,
+            defaultValue = defaultValue,
+            getter = ::getInt,
+            setter = ::putInt
+        )
+        if (experimental) experimentalPrefs.add(pref)
+        if (includeInDebugInfo) debugInfoPrefs.add(pref)
+        return pref
+    }
 }
