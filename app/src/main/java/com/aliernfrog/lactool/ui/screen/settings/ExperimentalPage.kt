@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +41,17 @@ fun ExperimentalPage(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    val sortedExperimentalOptions = remember {
+        mainViewModel.prefs.experimentalPrefs.sortedBy {
+            when (it.defaultValue) {
+                is Boolean -> 0
+                is String -> 1
+                is Int -> 2
+                else -> 3
+            }
+        }
+    }
 
     SettingsPageContainer(
         title = stringResource(R.string.settings_experimental),
@@ -80,7 +92,7 @@ fun ExperimentalPage(
         }
 
         FormSection(title = "Prefs", bottomDivider = false) {
-            mainViewModel.prefs.experimentalPrefs.forEach { pref ->
+            sortedExperimentalOptions.forEach { pref ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -124,7 +136,7 @@ fun ExperimentalPage(
                 contentColor = MaterialTheme.colorScheme.error
             ) {
                 scope.launch {
-                    mainViewModel.prefs.experimentalPrefs.forEach {
+                    sortedExperimentalOptions.forEach {
                         it.resetValue()
                     }
                     mainViewModel.topToastState.showAndroidToast(
