@@ -103,16 +103,15 @@ fun LibsPage(
 
     AppModalBottomSheet(sheetState = librarySheetState) {
         selectedLibrary?.let { lib ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
+            Column(Modifier.fillMaxWidth()) {
                 Text(
                     text = lib.name,
                     style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = 16.dp)
                 )
                 lib.description?.let {
                     Text(
@@ -121,7 +120,7 @@ fun LibsPage(
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(horizontal = 8.dp)
+                            .padding(horizontal = 16.dp)
                     )
                 }
 
@@ -136,7 +135,7 @@ fun LibsPage(
                             isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
                         )
                         .horizontalScroll(buttonsScrollState)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
                     lib.website?.let {
                         if (it.contains("://")) Button(
