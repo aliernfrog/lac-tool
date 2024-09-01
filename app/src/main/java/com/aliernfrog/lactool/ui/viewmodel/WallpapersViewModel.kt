@@ -134,6 +134,7 @@ class WallpapersViewModel(
                                 }
                             }
                         },
+                        singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp)
