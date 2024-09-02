@@ -13,10 +13,12 @@ abstract class BasePreferenceManager(
     private fun getString(key: String, defaultValue: String?) = prefs.getString(key, defaultValue)!!
     private fun getBoolean(key: String, defaultValue: Boolean) = prefs.getBoolean(key, defaultValue)
     private fun getInt(key: String, defaultValue: Int) = prefs.getInt(key, defaultValue)
+    private fun getLong(key: String, defaultValue: Long) = prefs.getLong(key, defaultValue)
 
     private fun putString(key: String, value: String?) = prefs.edit { putString(key, value) }
     private fun putBoolean(key: String, value: Boolean) = prefs.edit { putBoolean(key, value) }
     private fun putInt(key: String, value: Int) = prefs.edit { putInt(key, value) }
+    private fun putLong(key: String, value: Long) = prefs.edit { putLong(key, value) }
 
     val experimentalPrefs = mutableListOf<Preference<*>>()
     val debugInfoPrefs = mutableListOf<Preference<*>>()
@@ -89,6 +91,23 @@ abstract class BasePreferenceManager(
             defaultValue = defaultValue,
             getter = ::getInt,
             setter = ::putInt
+        )
+        if (experimental) experimentalPrefs.add(pref)
+        if (includeInDebugInfo) debugInfoPrefs.add(pref)
+        return pref
+    }
+
+    protected fun longPreference(
+        key: String,
+        defaultValue: Long,
+        experimental: Boolean = false,
+        includeInDebugInfo: Boolean = experimental
+    ): Preference<Long> {
+        val pref = Preference(
+            key = key,
+            defaultValue = defaultValue,
+            getter = ::getLong,
+            setter = ::putLong
         )
         if (experimental) experimentalPrefs.add(pref)
         if (includeInDebugInfo) debugInfoPrefs.add(pref)

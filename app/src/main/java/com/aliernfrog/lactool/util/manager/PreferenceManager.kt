@@ -8,6 +8,7 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 class PreferenceManager(context: Context) : BasePreferenceManager(
     prefs = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE)
@@ -55,5 +56,6 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // Experimental (developer) options
     val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
+    val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", GeneralUtil.getAppVersionCode(context), experimental = true, includeInDebugInfo = false)
     val updatesURL = stringPreference("updatesUrl", "https://aliernfrog.github.io/lactool/latest.json", experimental = true, includeInDebugInfo = false)
 }

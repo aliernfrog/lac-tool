@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.rounded.Done
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
@@ -48,7 +50,8 @@ fun ExperimentalPage(
                 is Boolean -> 0
                 is String -> 1
                 is Int -> 2
-                else -> 3
+                is Long -> 3
+                else -> 99
             }
         }
     }
@@ -93,6 +96,24 @@ fun ExperimentalPage(
 
         FormSection(title = "Prefs", bottomDivider = false) {
             sortedExperimentalOptions.forEach { pref ->
+                @Composable
+                fun TextField(
+                    onValueChange: (String) -> Unit,
+                    isNumberOnly: Boolean = false
+                ) {
+                    OutlinedTextField(
+                        value = pref.value.toString(),
+                        onValueChange = onValueChange,
+                        label = { Text(pref.key) },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = if (isNumberOnly) KeyboardType.Number else KeyboardType.Unspecified
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -118,13 +139,22 @@ fun ExperimentalPage(
                         }
                         is String -> {
                             pref as BasePreferenceManager.Preference<String>
-                            OutlinedTextField(
-                                value = pref.value,
+                            TextField(
                                 onValueChange = { pref.value = it },
-                                label = { Text(pref.key) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
+                        is Int -> {
+                            pref as BasePreferenceManager.Preference<Int>
+                            TextField(
+                                onValueChange = { pref.value = it.toIntOrNull() ?: pref.defaultValue },
+                                isNumberOnly = true
+                            )
+                        }
+                        is Long -> {
+                            pref as BasePreferenceManager.Preference<Long>
+                            TextField(
+                                onValueChange = { pref.value = it.toLongOrNull() ?: pref.defaultValue },
+                                isNumberOnly = true
                             )
                         }
                     }

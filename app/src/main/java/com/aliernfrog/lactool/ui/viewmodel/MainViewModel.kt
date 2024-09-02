@@ -112,6 +112,7 @@ class MainViewModel(
         if (!supportsPerAppLanguagePreferences && prefs.language.value.isNotBlank()) runBlocking {
             appLanguage = GeneralUtil.getLanguageFromCode(prefs.language.value)?.getAvailableLanguage()
         }
+        prefs.lastKnownInstalledVersion.value = applicationVersionCode
     }
 
     suspend fun checkUpdates(
