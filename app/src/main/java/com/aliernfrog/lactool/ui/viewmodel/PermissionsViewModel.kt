@@ -47,7 +47,7 @@ class PermissionsViewModel(
         context: Context
     ): List<PermissionData> {
         return permissionsData.filter {
-            !Uri.parse(it.getUri()).appHasPermissions(context)
+            !Uri.parse(it.pref.value).appHasPermissions(context)
         }
     }
 }

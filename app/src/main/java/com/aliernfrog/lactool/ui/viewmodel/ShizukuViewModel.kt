@@ -2,8 +2,10 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.IBinder
 import android.util.Log
 import androidx.compose.material.icons.Icons
@@ -36,6 +38,7 @@ class ShizukuViewModel(
 ) : ViewModel() {
     companion object {
         const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
+        const val SHIZUKU_PLAY_STORE = "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"
         const val SUI_GITHUB = "https://github.com/RikkaApps/Sui"
     }
 
@@ -95,7 +98,6 @@ class ShizukuViewModel(
         Shizuku.addBinderReceivedListener(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
         Shizuku.addRequestPermissionResultListener(permissionResultListener)
-        checkAvailability(context)
     }
 
     fun checkAvailability(context: Context): ShizukuStatus {
@@ -121,9 +123,12 @@ class ShizukuViewModel(
 
     fun launchManager(context: Context) {
         try {
-            context.startActivity(
+            if (managerInstalled) context.startActivity(
                 context.packageManager.getLaunchIntentForPackage(SHIZUKU_PACKAGE)
-            )
+            ) else {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(SHIZUKU_PLAY_STORE))
+                context.startActivity(intent)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "ShizukuViewModel/launchManager: failed to start activity ", e)
             topToastState.showErrorToast()

@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
 @Composable
 fun MergeMapDialog(
@@ -94,7 +93,6 @@ fun MergeMapDialog(
             OutlinedTextField(
                 value = mapName,
                 onValueChange = { mapName = it },
-                shape = AppComponentShape,
                 singleLine = true,
                 enabled = canDismiss,
                 modifier = Modifier.focusRequester(focusRequester)
@@ -105,6 +103,7 @@ fun MergeMapDialog(
             dismissOnClickOutside = canDismiss
         )
     )
+
     LaunchedEffect(Unit) {
         try {
             focusRequester.requestFocus()

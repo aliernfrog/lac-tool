@@ -3,12 +3,12 @@ package com.aliernfrog.lactool.util
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.PinDrop
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,7 +30,7 @@ enum class Destination(
     MAPS(
         route = "maps",
         labelId = R.string.maps,
-        vectorFilled = Icons.Default.PinDrop,
+        vectorFilled = Icons.Rounded.PinDrop,
         vectorOutlined = Icons.Outlined.PinDrop
     ),
 
