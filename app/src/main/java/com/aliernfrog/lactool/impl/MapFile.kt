@@ -107,9 +107,7 @@ class MapFile(
     /**
      * Details of the map. Includes size (KB) and modified time.
      */
-    val details: String = contextUtils.stringFunction { context ->
-        "$readableSize | $readableLastModified"
-    }
+    val details: String = "$readableSize | $readableLastModified"
 
     /**
      * Renames the map.

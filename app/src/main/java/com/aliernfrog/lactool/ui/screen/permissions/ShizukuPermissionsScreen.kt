@@ -85,10 +85,7 @@ fun ShizukuPermissionsScreen(
                                 }
                             ) {
                                 ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                                Text(stringResource(
-                                    if (shizukuViewModel.managerInstalled) R.string.permissions_shizuku_openShizuku
-                                    else R.string.permissions_shizuku_installShizuku
-                                ))
+                                Text(stringResource(R.string.permissions_shizuku_openShizuku))
                             }
                             Button(
                                 onClick = {
@@ -201,7 +198,10 @@ private fun ShizukuSetupGuide(
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                    Text(stringResource(R.string.permissions_shizuku_openShizuku))
+                    Text(stringResource(
+                        if (shizukuViewModel.managerInstalled) R.string.permissions_shizuku_openShizuku
+                        else R.string.permissions_shizuku_installShizuku
+                    ))
                 }
             },
             modifier = Modifier.fillMaxWidth().padding(8.dp)
