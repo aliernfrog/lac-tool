@@ -44,8 +44,8 @@
     <string name="permissions_setupShizuku_description">You need to use Shizuku to let LAC Tool access LAC folders.\nThis is because the Files app on your device does not allow apps to get access to files inside Android/data.\nYou can toggle Shizuku mode anytime from settings.</string>
     <string name="permissions_shizuku_introduction">Shizuku is an app which lets other apps use shell permissions by making use of wireless debugging.\nShizuku mode can be disabled from Settings > Storage > Storage access type</string>
     <string name="permissions_shizuku_openShizuku">Open Shizuku</string>
+    <string name="permissions_shizuku_installShizuku">Install Shizuku</string>
     <string name="permissions_shizuku_install_title">Install Shizuku to get started</string>
-    <string name="permissions_shizuku_install_install">Install</string>
     <string name="permissions_shizuku_notRunning">Shizuku is not running</string>
     <string name="permissions_shizuku_notRunning_description">Start Shizuku service to proceed</string>
     <string name="permissions_shizuku_permission">Permission needed</string>

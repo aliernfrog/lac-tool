@@ -85,7 +85,10 @@ fun ShizukuPermissionsScreen(
                                 }
                             ) {
                                 ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                                Text(stringResource(R.string.permissions_shizuku_openShizuku))
+                                Text(stringResource(
+                                    if (shizukuViewModel.managerInstalled) R.string.permissions_shizuku_openShizuku
+                                    else R.string.permissions_shizuku_install_install
+                                ))
                             }
                             Button(
                                 onClick = {
@@ -137,11 +140,11 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> {
                 Button(
                     onClick = {
-                        uriHandler.openUri("https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api")
+                        shizukuViewModel.launchManager(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                    Text(stringResource(R.string.permissions_shizuku_install_install))
+                    Text(stringResource(R.string.permissions_shizuku_installShizuku))
                 }
             }
             ShizukuStatus.WAITING_FOR_BINDER -> {
