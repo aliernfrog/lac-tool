@@ -1,3 +1,5 @@
+import org.apache.commons.io.output.ByteArrayOutputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -80,6 +82,40 @@ fileTree("src/main/res").visit {
 android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
     languages.joinToString(",") { "\"$it\"" }
 }}")
+
+// Utilities to get git environment information
+// Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
+fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
+fun getLatestCommit() = exec("git", "rev-parse", "--short", "HEAD")
+fun hasLocalChanges(): Boolean {
+    val branch = getCurrentBranch()
+    val uncommittedChanges = exec("git", "status", "-s")?.isNotEmpty() ?: false
+    val unpushedChanges = exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
+    return uncommittedChanges || unpushedChanges
+}
+
+android.defaultConfig.run {
+    buildConfigField("String", "GIT_BRANCH", "\"${getCurrentBranch()}\"")
+    buildConfigField("String", "GIT_COMMIT", "\"${getLatestCommit()}\"")
+    buildConfigField("boolean", "GIT_LOCAL_CHANGES", "${hasLocalChanges()}")
+}
+
+fun exec(vararg command: String) = try {
+    val stdout = ByteArrayOutputStream()
+    val errout = ByteArrayOutputStream()
+    exec {
+        commandLine = command.toList()
+        standardOutput = stdout
+        errorOutput = errout
+        isIgnoreExitValue = true
+    }
+
+    if (errout.size() > 0) throw Error(errout.toString(Charsets.UTF_8))
+    stdout.toString(Charsets.UTF_8).trim()
+} catch (e: Throwable) {
+    e.printStackTrace()
+    null
+}
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
