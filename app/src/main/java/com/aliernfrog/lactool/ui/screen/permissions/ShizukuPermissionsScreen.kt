@@ -87,7 +87,7 @@ fun ShizukuPermissionsScreen(
                                 ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
                                 Text(stringResource(
                                     if (shizukuViewModel.managerInstalled) R.string.permissions_shizuku_openShizuku
-                                    else R.string.permissions_shizuku_install_install
+                                    else R.string.permissions_shizuku_installShizuku
                                 ))
                             }
                             Button(
