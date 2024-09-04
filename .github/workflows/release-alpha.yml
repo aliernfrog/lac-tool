@@ -53,3 +53,23 @@ jobs:
         with:
           name: lactool
           path: lactool.apk
+      
+      - name: Check if workflow supplied
+        id: check-workflow
+        run: |
+          if [ "$SECRET" == "" ]; then
+            echo "present=NO" >> $GITHUB_OUTPUT
+          else
+            echo "present=YES" >> $GITHUB_OUTPUT
+          fi
+        env:
+          SECRET: ${{ secrets.VERSION_DATA_WORKFLOW }}
+
+      - name: Trigger workflow
+        if: steps.check-workflow.outputs.present == 'YES'
+        uses: fjogeleit/http-request-action@v1.15.2
+        with:
+          url: ${{ secrets.VERSION_DATA_WORKFLOW }}
+          method: "POST"
+          customHeaders: '{ "Accept":"application/vnd.github+json", "Authorization":"Bearer ${{ secrets.VERSION_DATA_TOKEN }}" }'
+          data: '{ "ref":"main" }'
