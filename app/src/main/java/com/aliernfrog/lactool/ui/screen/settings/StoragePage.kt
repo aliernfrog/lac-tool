@@ -132,7 +132,7 @@ private fun FolderConfiguration(
     val openFolderLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree(), onResult = {
         if (it == null) return@rememberLauncherForActivityResult
         val pref = activePref ?: return@rememberLauncherForActivityResult
-        it.takePersistablePermissions(context)
+        if (!useRawPathInputs) it.takePersistablePermissions(context)
         pref.preference(prefs).value = it.toString()
     })
 
@@ -145,6 +145,7 @@ private fun FolderConfiguration(
                     label = label,
                     pref = pref,
                     onPickFolderRequest = {
+                        activePref = prefEditItem
                         openFolderLauncher.launch(null)
                     }
                 )
