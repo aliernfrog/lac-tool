@@ -86,6 +86,7 @@ android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
 // Utilities to get git environment information
 // Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
 fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
+    ?: exec("git", "describe", "--tags", "--exact-match")
 fun getLatestCommit() = exec("git", "rev-parse", "--short", "HEAD")
 fun hasLocalChanges(): Boolean {
     val branch = getCurrentBranch()
@@ -112,8 +113,7 @@ fun exec(vararg command: String) = try {
 
     if (errout.size() > 0) throw Error(errout.toString(Charsets.UTF_8))
     stdout.toString(Charsets.UTF_8).trim()
-} catch (e: Throwable) {
-    e.printStackTrace()
+} catch (_: Throwable) {
     null
 }
 
@@ -139,7 +139,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.github.jeziellago:compose-markdown:0.5.4")
     implementation("net.engawapg.lib:zoomable:1.6.2")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
 
     debugImplementation("androidx.compose.ui:ui-tooling:$composeMaterialVersion")
     debugImplementation("androidx.compose.ui:ui-tooling-preview:$composeMaterialVersion")
