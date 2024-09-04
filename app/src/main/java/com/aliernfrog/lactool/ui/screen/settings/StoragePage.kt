@@ -129,11 +129,13 @@ private fun FolderConfiguration(
 ) {
     val context = LocalContext.current
     var activePref: PrefEditItem<String>? = remember { null }
-    val openFolderLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree(), onResult = {
-        if (it == null) return@rememberLauncherForActivityResult
+    val openFolderLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree(), onResult = { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
         val pref = activePref ?: return@rememberLauncherForActivityResult
-        if (!useRawPathInputs) it.takePersistablePermissions(context)
-        pref.preference(prefs).value = it.toString()
+        if (!useRawPathInputs) uri.takePersistablePermissions(context)
+        pref.preference(prefs).value = uri.toString().let { 
+            if (useRawPathInputs) FileUtil.getFilePath(it) else it
+        }
     })
 
     AnimatedContent(useRawPathInputs) { rawPathInput ->
