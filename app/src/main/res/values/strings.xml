@@ -247,7 +247,7 @@
     <string name="screenshots_permissions_recommendedPath_description">LAC screenshots are stored in this folder</string>
     <string name="screenshots_noScreenshots">You have not taken any screenshots from the in-game cellphone</string>
     <string name="screenshots_clickHint">Click screenshots to view more actions</string>
-    <string name="screenshots_share">Share screnshot</string>
+    <string name="screenshots_share">Share screenshot</string>
     <string name="screenshots_delete">Delete screenshot</string>
     <string name="screenshots_deleting">Deleting screenshot..</string>
     <string name="screenshots_deleted">Deleted the screenshot</string>
