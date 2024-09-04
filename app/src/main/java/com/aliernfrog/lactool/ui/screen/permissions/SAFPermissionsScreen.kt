@@ -75,7 +75,7 @@ private fun DowngradeFiles(
             .verticalScroll(rememberScrollState())
     ) {
         CardWithActions(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             title = stringResource(R.string.permissions_downgradeFilesApp),
             buttons = {
                 TextButton(
@@ -119,7 +119,7 @@ private fun SAFPermissionsList(
 
     fun takePersistableUriPermissions(uri: Uri) {
         uri.takePersistablePermissions(context)
-        activePermissionData?.onUriUpdate?.invoke(uri)
+        activePermissionData?.pref?.value = uri.toString()
         onUpdateState()
     }
 

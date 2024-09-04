@@ -2,9 +2,11 @@ package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +20,7 @@ import com.aliernfrog.lactool.ui.theme.AppComponentShape
 
 @Composable
 fun CardWithActions(
-    title: String,
+    title: String?,
     modifier: Modifier = Modifier,
     painter: Painter? = null,
     buttons: @Composable () -> Unit,
@@ -26,13 +28,15 @@ fun CardWithActions(
 ) {
     Card(
         shape = AppComponentShape,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.width(IntrinsicSize.Max)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
+            if (title != null || painter != null) Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 painter?.let {
@@ -42,14 +46,16 @@ fun CardWithActions(
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge
-                )
+                title?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
             content()
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.align(Alignment.End),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
             ) {

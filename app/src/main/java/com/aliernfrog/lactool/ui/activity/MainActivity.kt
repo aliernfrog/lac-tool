@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.aliernfrog.lactool.ui.component.InsetsObserver
+import com.aliernfrog.lactool.ui.component.MediaView
 import com.aliernfrog.lactool.ui.screen.MainScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.theme.Theme
@@ -45,14 +47,14 @@ class MainActivity : AppCompatActivity() {
         val context = LocalContext.current
         val view = LocalView.current
         val scope = rememberCoroutineScope()
-        val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme)
+        val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme.value)
 
         @Composable
         fun AppTheme(content: @Composable () -> Unit) {
             LACToolTheme(
                 darkTheme = darkTheme,
-                dynamicColors = mainViewModel.prefs.materialYou,
-                pitchBlack = mainViewModel.prefs.pitchBlack,
+                dynamicColors = mainViewModel.prefs.materialYou.value,
+                pitchBlack = mainViewModel.prefs.pitchBlack.value,
                 content = content
             )
         }
@@ -61,6 +63,12 @@ class MainActivity : AppCompatActivity() {
             InsetsObserver()
             AppContainer {
                 MainScreen()
+                Crossfade(mainViewModel.mediaViewData) { data ->
+                    if (data != null) MediaView(
+                        data = data,
+                        onDismissRequest = { mainViewModel.dismissMediaView() }
+                    )
+                }
                 TopToastHost(mainViewModel.topToastState)
             }
         }
@@ -69,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.topToastState.setComposeView(view)
             mainViewModel.topToastState.setAppTheme { AppTheme(it) }
 
-            if (mainViewModel.prefs.autoCheckUpdates) mainViewModel.checkUpdates()
+            if (mainViewModel.prefs.autoCheckUpdates.value) mainViewModel.checkUpdates()
 
             this@MainActivity.intent?.let {
                 mainViewModel.handleIntent(it, context = context)

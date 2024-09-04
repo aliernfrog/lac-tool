@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.material3.ripple
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -17,8 +16,8 @@ import androidx.compose.ui.unit.dp
 fun Modifier.clickableWithColor(
     color: Color,
     onClick: () -> Unit
-): Modifier = composed {
-    this.clickable(
+): Modifier {
+    return this.clickable(
         interactionSource = null,
         indication = ripple(color = color),
         onClick = onClick
@@ -30,8 +29,8 @@ fun Modifier.combinedClickableWithColor(
     color: Color,
     onLongClick: () -> Unit,
     onClick: () -> Unit
-): Modifier = composed {
-    this.combinedClickable(
+): Modifier {
+    return this.combinedClickable(
         interactionSource = null,
         indication = ripple(color = color),
         onLongClick = onLongClick,

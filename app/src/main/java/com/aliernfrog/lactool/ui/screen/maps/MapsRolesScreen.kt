@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -78,7 +79,8 @@ fun MapsRolesScreen(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) else ErrorWithIcon(
                         error = stringResource(R.string.mapsRoles_noRoles),
-                        painter = rememberVectorPainter(Icons.Rounded.Style)
+                        painter = rememberVectorPainter(Icons.Rounded.Style),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }

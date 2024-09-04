@@ -78,9 +78,6 @@ fun AboutPage(
     val appIcon = remember {
         context.packageManager.getApplicationIcon(context.packageName).toBitmap().asImageBitmap()
     }
-    val appVersion = remember {
-        "${mainViewModel.applicationVersionName} (${mainViewModel.applicationVersionCode})"
-    }
 
     SettingsPageContainer(
         title = stringResource(R.string.settings_about),
@@ -111,7 +108,7 @@ fun AboutPage(
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
-                            text = appVersion,
+                            text = mainViewModel.applicationVersionLabel,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.clickable {
                                 settingsViewModel.onAboutClick()
@@ -159,10 +156,10 @@ fun AboutPage(
         SwitchRow(
             title = stringResource(R.string.settings_about_autoCheckUpdates),
             description = stringResource(R.string.settings_about_autoCheckUpdates_description),
-            checked = settingsViewModel.prefs.autoCheckUpdates,
+            checked = settingsViewModel.prefs.autoCheckUpdates.value,
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            settingsViewModel.prefs.autoCheckUpdates = it
+            settingsViewModel.prefs.autoCheckUpdates.value = it
         }
 
         FormSection(

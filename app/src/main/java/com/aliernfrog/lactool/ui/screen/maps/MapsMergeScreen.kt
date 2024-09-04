@@ -10,18 +10,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddLocationAlt
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.rounded.AddLocationAlt
-import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -34,6 +30,7 @@ import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
+import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
@@ -54,21 +51,15 @@ fun MapsMergeScreen(
             title = stringResource(R.string.mapsMerge_addMap),
             showMultiSelectionOptions = false,
             multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
-                ExtendedFloatingActionButton(
-                    shape = RoundedCornerShape(16.dp),
+                FloatingActionButton(
+                    icon = Icons.Default.AddLocationAlt,
+                    text = stringResource(R.string.maps_merge_short),
                     onClick = { scope.launch {
                         mapsMergeViewModel.addMaps(context, *selectedMaps.toTypedArray())
                         mapsMergeViewModel.mapListShown = false
                         clearSelection()
                     } }
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.AddLocationAlt,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(stringResource(R.string.maps_merge_short))
-                }
+                )
             },
             onBackClick = { mapsMergeViewModel.mapListShown = false },
             onMapPick = { scope.launch {
@@ -109,19 +100,11 @@ private fun MergeScreen(
                 enter = scaleIn() + fadeIn(),
                 exit = scaleOut() + fadeOut()
             ) {
-                ExtendedFloatingActionButton(
-                    onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
-                    shape = RoundedCornerShape(16.dp),
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Build,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(stringResource(R.string.mapsMerge_merge))
-                }
+                FloatingActionButton(
+                    icon = Icons.Default.Build,
+                    text = stringResource(R.string.mapsMerge_merge),
+                    onClick = { mapsMergeViewModel.mergeMapDialogShown = true }
+                )
             }
         }
     ) {

@@ -17,11 +17,11 @@ enum class StorageAccessType(
         label = R.string.settings_storage_storageAccessType_saf,
         description = R.string.settings_storage_storageAccessType_saf_description,
         enable = {
-            it.storageAccessType = SAF.ordinal
-            it.lacMapsDir = FileUtil.getTreeUriForPath(it.lacMapsDir).toString()
-            it.lacWallpapersDir = FileUtil.getTreeUriForPath(it.lacWallpapersDir).toString()
-            it.lacScreenshotsDir = FileUtil.getTreeUriForPath(it.lacScreenshotsDir).toString()
-            it.exportedMapsDir = FileUtil.getTreeUriForPath(it.exportedMapsDir).toString()
+            it.storageAccessType.value = SAF.ordinal
+            it.lacMapsDir.value = FileUtil.getTreeUriForPath(it.lacMapsDir.value).toString()
+            it.lacWallpapersDir.value = FileUtil.getTreeUriForPath(it.lacWallpapersDir.value).toString()
+            it.lacScreenshotsDir.value = FileUtil.getTreeUriForPath(it.lacScreenshotsDir.value).toString()
+            it.exportedMapsDir.value = FileUtil.getTreeUriForPath(it.exportedMapsDir.value).toString()
         }
     ),
 
@@ -30,11 +30,11 @@ enum class StorageAccessType(
         description = R.string.settings_storage_storageAccessType_shizuku_description,
         minSDK = Build.VERSION_CODES.M,
         enable = {
-            it.storageAccessType = SHIZUKU.ordinal
-            it.lacMapsDir = FileUtil.getFilePath(it.lacMapsDir)
-            it.lacWallpapersDir = FileUtil.getFilePath(it.lacWallpapersDir)
-            it.lacScreenshotsDir = FileUtil.getFilePath(it.lacScreenshotsDir)
-            it.exportedMapsDir = FileUtil.getFilePath(it.exportedMapsDir)
+            it.storageAccessType.value = SHIZUKU.ordinal
+            it.lacMapsDir.value = FileUtil.getFilePath(it.lacMapsDir.value)
+            it.lacWallpapersDir.value = FileUtil.getFilePath(it.lacWallpapersDir.value)
+            it.lacScreenshotsDir.value = FileUtil.getFilePath(it.lacScreenshotsDir.value)
+            it.exportedMapsDir.value = FileUtil.getFilePath(it.exportedMapsDir.value)
         }
     ),
 
@@ -43,11 +43,11 @@ enum class StorageAccessType(
         description = R.string.settings_storage_storageAccessType_allFiles_description,
         maxSDK = Build.VERSION_CODES.N_MR1,
         enable = {
-            it.storageAccessType = ALL_FILES.ordinal
-            it.lacMapsDir = FileUtil.getFilePath(it.lacMapsDir)
-            it.lacWallpapersDir = FileUtil.getFilePath(it.lacWallpapersDir)
-            it.lacScreenshotsDir = FileUtil.getFilePath(it.lacScreenshotsDir)
-            it.exportedMapsDir = FileUtil.getFilePath(it.exportedMapsDir)
+            it.storageAccessType.value = ALL_FILES.ordinal
+            it.lacMapsDir.value = FileUtil.getFilePath(it.lacMapsDir.value)
+            it.lacWallpapersDir.value = FileUtil.getFilePath(it.lacWallpapersDir.value)
+            it.lacScreenshotsDir.value = FileUtil.getFilePath(it.lacScreenshotsDir.value)
+            it.exportedMapsDir.value = FileUtil.getFilePath(it.exportedMapsDir.value)
         }
     )
 }

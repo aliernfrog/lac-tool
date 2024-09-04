@@ -5,22 +5,31 @@ import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Density
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
+import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -28,6 +37,7 @@ import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -37,28 +47,33 @@ class ScreenshotsViewModel(
     val prefs: PreferenceManager,
     private val topToastState: TopToastState,
     private val progressState: ProgressState,
-    private val contextUtils: ContextUtils,
-    context: Context
+    private val contextUtils: ContextUtils
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
     
-    private val screenshotsDir : String get() = prefs.lacScreenshotsDir
+    private val screenshotsDir : String get() = prefs.lacScreenshotsDir.value
     private lateinit var screenshotsFile: FileWrapper
 
-    val screenshotSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
+    private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
-    private var lastKnownStorageAccessType = prefs.storageAccessType
+    private var screenshots by mutableStateOf(emptyList<FileWrapper>())
 
-    var screenshots by mutableStateOf(emptyList<FileWrapper>())
-    var screenshotSheetScreeenshot by mutableStateOf<FileWrapper?>(null)
+    val screenshotsToShow: List<FileWrapper>
+        get() {
+            val sorting = ListSorting.entries[prefs.screenshotsListSorting.value]
+            val reversed = prefs.screenshotsListSortingReversed.value
+            return screenshots.sortedWith(sorting.comparator).let {
+                if (reversed) it.reversed() else it
+            }
+        }
 
     fun getScreenshotsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::screenshotsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType) false
+        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
         else screenshotsDir == screenshotsFile.path
         if (isUpToDate) return screenshotsFile
-        val storageAccessType = prefs.storageAccessType
+        val storageAccessType = prefs.storageAccessType.value
         lastKnownStorageAccessType = storageAccessType
         screenshotsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
@@ -84,11 +99,11 @@ class ScreenshotsViewModel(
         withContext(Dispatchers.IO) {
             screenshots = screenshotsFile.listFiles()
                 .filter { it.isFile && it.name.lowercase().endsWith(".jpg") }
-                .sortedBy { it.lastModified }
+                .sortedByDescending { it.lastModified }
         }
     }
 
-    suspend fun deleteImportedScreenshot(screenshot: FileWrapper) {
+    private suspend fun deleteScreenshot(screenshot: FileWrapper) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.screenshots_deleting)
         )
@@ -100,7 +115,7 @@ class ScreenshotsViewModel(
         progressState.currentProgress = null
     }
 
-    suspend fun shareImportedScreenshot(screenshot: FileWrapper, context: Context) {
+    private suspend fun shareScreenshot(screenshot: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.info_sharing)
         )
@@ -110,8 +125,40 @@ class ScreenshotsViewModel(
         progressState.currentProgress = null
     }
 
-    suspend fun showScreenshotSheet(screenshot: FileWrapper) {
-        screenshotSheetScreeenshot = screenshot
-        screenshotSheetState.show()
+    fun openScreenshotOptions(screenshot: FileWrapper) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
+        mainViewModel.showMediaView(MediaViewData(
+            model = screenshot.painterModel,
+            title = screenshot.name,
+            options = {
+                val context = LocalContext.current
+                val scope = rememberCoroutineScope()
+                var showDeleteDialog by remember { mutableStateOf(false) }
+
+                ButtonRow(
+                    title = stringResource(R.string.screenshots_share),
+                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
+                ) {
+                    scope.launch { shareScreenshot(screenshot, context) }
+                }
+                ButtonRow(
+                    title = stringResource(R.string.screenshots_delete),
+                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                    contentColor = MaterialTheme.colorScheme.error
+                ) {
+                    showDeleteDialog = true
+                }
+
+                if (showDeleteDialog) DeleteConfirmationDialog(
+                    name = screenshot.name,
+                    onDismissRequest = { showDeleteDialog = false },
+                    onConfirmDelete = {
+                        showDeleteDialog = false
+                        scope.launch { deleteScreenshot(screenshot) }
+                        mainViewModel.dismissMediaView()
+                    }
+                )
+            }
+        ))
     }
 }

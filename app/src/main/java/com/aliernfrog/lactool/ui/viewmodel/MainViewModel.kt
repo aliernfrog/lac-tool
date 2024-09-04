@@ -22,10 +22,11 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.Language
+import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.MapsListSegment
@@ -40,7 +41,6 @@ import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.extension.toLanguage
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -60,7 +60,6 @@ class MainViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     val progressState: ProgressState,
-    private val contextUtils: ContextUtils,
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
@@ -68,9 +67,19 @@ class MainViewModel(
     lateinit var navController: NavController
     val updateSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
 
-    val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
-    val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
+    private val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
+    private val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
+    val applicationVersionLabel = "$applicationVersionName (${
+        BuildConfig.GIT_COMMIT.ifBlank { applicationVersionCode.toString() }
+    }${
+        if (BuildConfig.GIT_LOCAL_CHANGES) "*" else ""
+    }${
+        BuildConfig.GIT_BRANCH.let {
+            if (it == applicationVersionName) ""
+            else " - ${it.ifBlank { "local" }}"
+        }
+    })"
 
     private val defaultLanguage = GeneralUtil.getLanguageFromCode("en-US")!!
     val deviceLanguage = LocaleManagerCompat.getSystemLocales(context)[0]?.toLanguage() ?: defaultLanguage
@@ -79,7 +88,7 @@ class MainViewModel(
     var appLanguage: Language?
         get() = _appLanguage ?: deviceLanguage.getAvailableLanguage() ?: defaultLanguage
         set(language) {
-            prefs.language = language?.fullCode ?: ""
+            prefs.language.value = language?.fullCode ?: ""
             val localeListCompat = if (language == null) LocaleListCompat.getEmptyLocaleList()
             else LocaleListCompat.forLanguageTags(language.languageCode)
             AppCompatDelegate.setApplicationLocales(localeListCompat)
@@ -100,18 +109,21 @@ class MainViewModel(
 
     val debugInfo: String
         get() = arrayOf(
-            "LAC Tool $applicationVersionName ($applicationVersionCode)",
+            "LAC Tool $applicationVersionLabel",
             "Android API ${Build.VERSION.SDK_INT}",
-            "Storage access type ${prefs.storageAccessType}",
-            SettingsConstant.experimentalPrefOptions.joinToString("\n") {
-                "${contextUtils.getString(it.labelResourceId)}: ${it.getValue(prefs)}"
+            prefs.debugInfoPrefs.joinToString("\n") {
+                "${it.key}: ${it.value}"
             }
         ).joinToString("\n")
 
+    var mediaViewData by mutableStateOf<MediaViewData?>(null)
+        private set
+
     init {
-        if (!supportsPerAppLanguagePreferences && prefs.language.isNotBlank()) runBlocking {
-            appLanguage = GeneralUtil.getLanguageFromCode(prefs.language)?.getAvailableLanguage()
+        if (!supportsPerAppLanguagePreferences && prefs.language.value.isNotBlank()) runBlocking {
+            appLanguage = GeneralUtil.getLanguageFromCode(prefs.language.value)?.getAvailableLanguage()
         }
+        prefs.lastKnownInstalledVersion.value = applicationVersionCode
     }
 
     suspend fun checkUpdates(
@@ -120,7 +132,7 @@ class MainViewModel(
     ) {
         withContext(Dispatchers.IO) {
             try {
-                val updatesURL = prefs.updatesURL
+                val updatesURL = prefs.updatesURL.value
                 val responseJson = JSONObject(URL(updatesURL).readText())
                 val json = responseJson.getJSONObject(
                     if (applicationIsPreRelease && responseJson.has("preRelease")) "preRelease" else "stable"
@@ -176,6 +188,14 @@ class MainViewModel(
                 scope.launch { updateSheetState.show() }
             }
         )
+    }
+
+    fun showMediaView(data: MediaViewData) {
+        mediaViewData = data
+    }
+
+    fun dismissMediaView() {
+        mediaViewData = null
     }
 
     fun handleIntent(intent: Intent, context: Context) {

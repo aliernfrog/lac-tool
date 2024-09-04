@@ -10,9 +10,9 @@ class ProgressState {
 
 class Progress(
     val description: String,
-    totalProgress: Long,
-    passedProgress: Long = 0,
-    steps: List<Progress> = emptyList()
+    val totalProgress: Long,
+    val passedProgress: Long = 0,
+    private val steps: List<Progress> = emptyList()
 ) {
     constructor(
         description: String,
@@ -40,5 +40,21 @@ class Progress(
             total += ((percentagePerStep*(it.percentage ?: 0))/100)
         }
         total
+    }
+
+    val float: Float? = if (percentage == null) null else percentage.toFloat()/100
+
+    fun copy(
+        description: String = this.description,
+        totalProgress: Long = this.totalProgress,
+        passedProgress: Long = this.passedProgress,
+        steps: List<Progress> = this.steps
+    ): Progress {
+        return Progress(
+            description = description,
+            totalProgress = totalProgress,
+            passedProgress = passedProgress,
+            steps = steps
+        )
     }
 }

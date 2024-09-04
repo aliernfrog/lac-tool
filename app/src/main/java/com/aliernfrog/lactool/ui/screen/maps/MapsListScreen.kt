@@ -16,8 +16,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -25,22 +26,18 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.outlined.SdCard
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -59,18 +56,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
-import com.aliernfrog.lactool.enum.MapsListSortingType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.FloatingActionButton
+import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
+import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.form.DividerRow
-import com.aliernfrog.lactool.ui.component.maps.MapButton
+import com.aliernfrog.lactool.ui.component.maps.GridMapItem
+import com.aliernfrog.lactool.ui.component.maps.ListMapItem
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.staticutil.UriUtil
@@ -96,6 +96,8 @@ fun MapsListScreen(
     val scope = rememberCoroutineScope()
     val mapsToShow = mapsListViewModel.mapsToShow
     val isMultiSelecting = mapsListViewModel.selectedMaps.isNotEmpty()
+    val listStyle = ListStyle.entries[mapsListViewModel.prefs.mapsListStyle.value]
+    val showMapThumbnails = mapsListViewModel.prefs.showMapThumbnailsInList.value
     var multiSelectionDropdownShown by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -198,117 +200,139 @@ fun MapsListScreen(
                     // padding so that FAB shadow doesnt get cropped
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    if (showStorage) ExtendedFloatingActionButton(
-                        shape = RoundedCornerShape(16.dp),
+                    if (showStorage) FloatingActionButton(
+                        icon = Icons.Outlined.SdCard,
+                        text = stringResource(R.string.mapsList_storage),
                         onClick = {
                             val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
                             launcher.launch(intent)
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.SdCard,
-                            contentDescription = null,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Text(stringResource(R.string.mapsList_storage))
-                    } else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
+                    ) else multiSelectFloatingActionButton(mapsListViewModel.selectedMaps) {
                         mapsListViewModel.selectedMaps.clear()
                     }
                 }
             }
         }
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            item {
-                Search(
-                    searchQuery = mapsListViewModel.searchQuery,
-                    onSearchQueryChange = { mapsListViewModel.searchQuery = it },
-                    sorting = mapsListViewModel.sorting,
-                    onSortingChange = { mapsListViewModel.sorting = it },
-                    reversed = mapsListViewModel.reverseList,
-                    onReversedChange = { mapsListViewModel.reverseList = it }
-                )
-                Filter(
-                    segments = mapsListViewModel.availableSegments,
-                    selectedSegment = mapsListViewModel.chosenSegment,
-                    onSelectedSegmentChange = {
-                        mapsListViewModel.chosenSegment = it
-                    }
-                )
-            }
-
-            item {
-                if (mapsToShow.isEmpty()) {
-                    if (mapsViewModel.isLoadingMaps) Column(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CircularProgressIndicator(strokeWidth = 3.dp)
-                    }
-
-                    else ErrorWithIcon(
-                        error = stringResource(
-                            if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
-                            else mapsListViewModel.chosenSegment.noMapsTextId
-                        ),
-                        painter = rememberVectorPainter(Icons.Rounded.LocationOff)
-                    )
-                } else Text(
-                    text = stringResource(R.string.mapsList_count)
-                        .replace("{COUNT}", mapsToShow.size.toString()),
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                )
-            }
-
-            items(mapsToShow) { map ->
-                val selected = mapsListViewModel.isMapSelected(map)
-                fun toggleSelection() {
-                    mapsListViewModel.selectedMaps.run {
-                        if (selected) remove(map) else add(map)
-                    }
+        @Composable
+        fun MapItem(map: MapFile, isGrid: Boolean) {
+            val selected = if (isMultiSelecting) mapsListViewModel.isMapSelected(map) else null
+            fun toggleSelection() {
+                mapsListViewModel.selectedMaps.run {
+                    if (selected == true) remove(map) else add(map)
                 }
+            }
 
-                MapButton(
-                    map = map,
-                    showMapThumbnail = mapsListViewModel.prefs.showMapThumbnailsInList,
-                    modifier = Modifier.animateItem(),
-                    trailingComponent = {
-                        if (isMultiSelecting) Checkbox(
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            checked = selected,
-                            onCheckedChange = {
-                                toggleSelection()
-                            }
-                        )
-                    },
-                    onLongClick = {
-                        toggleSelection()
-                    }
+            if (isGrid) GridMapItem(
+                map = map,
+                selected = selected,
+                showMapThumbnail = showMapThumbnails,
+                onSelectedChange = { toggleSelection() },
+                onLongClick = { toggleSelection() }
+            ) {
+                if (isMultiSelecting) toggleSelection()
+                else onMapPick(map)
+            }
+            else ListMapItem(
+                map = map,
+                selected = selected,
+                showMapThumbnail = showMapThumbnails,
+                onSelectedChange = { toggleSelection() },
+                onLongClick = { toggleSelection() }
+            ) {
+                if (isMultiSelecting) toggleSelection()
+                else onMapPick(map)
+            }
+        }
+
+        AnimatedContent(targetState = listStyle) { style ->
+            when (style) {
+                ListStyle.LIST -> LazyColumn(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    if (isMultiSelecting) toggleSelection()
-                    else onMapPick(map)
-                }
-            }
+                    item {
+                        Header(mapsToShow)
+                    }
 
-            item {
-                Spacer(Modifier.navigationBarsPadding().padding(bottom = 80.dp))
+                    items(mapsToShow) {
+                        MapItem(it, isGrid = false)
+                    }
+
+                    item {
+                        Footer()
+                    }
+                }
+                ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                    modifier = Modifier.fillMaxSize()
+                ) { maxLineSpan: Int ->
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Header(mapsToShow)
+                    }
+
+                    items(mapsToShow) {
+                        MapItem(it, isGrid = true)
+                    }
+
+                    item { Footer() }
+                }
             }
         }
     }
+}
+
+@Composable
+private fun Header(
+    mapsToShow: List<MapFile>,
+    mapsViewModel: MapsViewModel = koinViewModel(),
+    mapsListViewModel: MapsListViewModel = koinViewModel()
+) {
+    Column {
+        Search(
+            searchQuery = mapsListViewModel.searchQuery,
+            onSearchQueryChange = { mapsListViewModel.searchQuery = it }
+        )
+        Filter(
+            segments = mapsListViewModel.availableSegments,
+            selectedSegment = mapsListViewModel.chosenSegment,
+            onSelectedSegmentChange = {
+                mapsListViewModel.chosenSegment = it
+            }
+        )
+        if (mapsToShow.isEmpty()) {
+            if (mapsViewModel.isLoadingMaps) Column(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(strokeWidth = 3.dp)
+            }
+            else ErrorWithIcon(
+                error = stringResource(
+                    if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
+                    else mapsListViewModel.chosenSegment.noMapsTextId
+                ),
+                painter = rememberVectorPainter(Icons.Rounded.LocationOff),
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else Text(
+            text = stringResource(R.string.mapsList_count)
+                .replace("{COUNT}", mapsToShow.size.toString()),
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+    }
+}
+
+@Composable
+private fun Footer() {
+    Spacer(Modifier.navigationBarsPadding().padding(bottom = 70.dp))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Search(
     searchQuery: String,
-    onSearchQueryChange: (String) -> Unit,
-    sorting: MapsListSortingType,
-    onSortingChange: (MapsListSortingType) -> Unit,
-    reversed: Boolean,
-    onReversedChange: (Boolean) -> Unit
+    onSearchQueryChange: (String) -> Unit
 ) {
+    val mapsListViewModel = koinViewModel<MapsListViewModel>()
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
@@ -337,55 +361,16 @@ private fun Search(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.mapsList_sorting)
+                            contentDescription = stringResource(R.string.list_sorting)
                         )
                     }
-                    DropdownMenu(
+                    ListViewOptionsDropdown(
                         expanded = sortingOptionsShown,
-                        onDismissRequest = { sortingOptionsShown = false }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.mapsList_sorting),
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        )
-                        DividerRow(Modifier.padding(vertical = 4.dp))
-                        MapsListSortingType.entries.forEach { option ->
-                            DropdownMenuItem(
-                                text = { Text(stringResource(option.labelId)) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = option.iconVector,
-                                        contentDescription = null
-                                    )
-                                },
-                                trailingIcon = {
-                                    RadioButton(
-                                        selected = option == sorting,
-                                        onClick = { onSortingChange(option) }
-                                    )
-                                },
-                                onClick = { onSortingChange(option) }
-                            )
-                        }
-                        DividerRow(Modifier.padding(vertical = 4.dp))
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.mapsList_sorting_reverse)) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.SwapVert,
-                                    contentDescription = null
-                                )
-                            },
-                            trailingIcon = {
-                                Checkbox(
-                                    checked = reversed,
-                                    onCheckedChange = { onReversedChange(it) }
-                                )
-                            },
-                            onClick = { onReversedChange(!reversed) }
-                        )
-                    }
+                        onDismissRequest = { sortingOptionsShown = false },
+                        sortingPref = mapsListViewModel.prefs.mapsListSorting,
+                        sortingReversedPref = mapsListViewModel.prefs.mapsListSortingReversed,
+                        stylePref = mapsListViewModel.prefs.mapsListStyle
+                    )
                 },
                 placeholder = {
                     Text(stringResource(R.string.mapsList_search))

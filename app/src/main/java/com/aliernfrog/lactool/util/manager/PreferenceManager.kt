@@ -1,34 +1,61 @@
 package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
-import com.aliernfrog.lactool.ConfigKey
+import android.os.Environment
+import com.aliernfrog.lactool.enum.ListSorting
+import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.enum.StorageAccessType
+import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 
 class PreferenceManager(context: Context) : BasePreferenceManager(
-    prefs = context.getSharedPreferences(ConfigKey.PREF_NAME, Context.MODE_PRIVATE)
+    prefs = context.getSharedPreferences("APP_CONFIG", Context.MODE_PRIVATE)
 ) {
     // Appearance options
-    var theme by intPreference(ConfigKey.KEY_APP_THEME, Theme.SYSTEM.ordinal)
-    var materialYou by booleanPreference(ConfigKey.KEY_APP_MATERIAL_YOU, true)
-    var pitchBlack by booleanPreference("pitchBlack", false)
+    val theme = intPreference("appTheme", Theme.SYSTEM.ordinal)
+    val materialYou = booleanPreference("materialYou", true)
+    val pitchBlack = booleanPreference("pitchBlack", false)
 
     // General options
-    var showChosenMapThumbnail by booleanPreference(ConfigKey.KEY_SHOW_CHOSEN_MAP_THUMBNAIL, true)
-    var showMapThumbnailsInList by booleanPreference(ConfigKey.KEY_SHOW_MAP_THUMBNAILS_LIST, true)
-    var language by stringPreference(ConfigKey.KEY_APP_LANGUAGE, "") // follow system if blank
+    val showChosenMapThumbnail = booleanPreference("chosenMapThumbnail", true)
+    val showMapThumbnailsInList = booleanPreference("showMapThumbnailsList", true)
+    val language = stringPreference("appLanguage", "") // follow system if blank
+    val autoCheckUpdates = booleanPreference("autoUpdates", true)
 
     // Directory options
-    var lacMapsDir by stringPreference(ConfigKey.KEY_MAPS_DIR, ConfigKey.RECOMMENDED_MAPS_DIR)
-    var lacWallpapersDir by stringPreference(ConfigKey.KEY_WALLPAPERS_DIR, ConfigKey.RECOMMENDED_WALLPAPERS_DIR)
-    var lacScreenshotsDir by stringPreference(ConfigKey.KEY_SCREENSHOTS_DIR, ConfigKey.RECOMMENDED_SCREENSHOTS_DIR)
-    var exportedMapsDir by stringPreference(ConfigKey.KEY_EXPORTED_MAPS_DIR, ConfigKey.RECOMMENDED_EXPORTED_MAPS_DIR)
-    var storageAccessType by intPreference("storageAccessType", StorageAccessType.SAF.ordinal)
+    val lacMapsDir = stringPreference("mapsDir", "${externalStorageRoot}Android/data/com.MA.LAC/files/editor", experimental = true)
+    val lacWallpapersDir = stringPreference("wallpapersDir", "${externalStorageRoot}Android/data/com.MA.LAC/files/wallpaper", experimental = true)
+    val lacScreenshotsDir = stringPreference("screenshotsDir", "${externalStorageRoot}Android/data/com.MA.LAC/files/screenshots", experimental = true)
+    val exportedMapsDir = stringPreference("mapsExportDir", "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/LACTool/exported", experimental = true)
+    val storageAccessType = intPreference("storageAccessType", StorageAccessType.SAF.ordinal, includeInDebugInfo = true)
+
+    // Maps list
+    val mapsListSorting = intPreference("mapsListSorting", ListSorting.ALPHABETICAL.ordinal)
+    val mapsListSortingReversed = booleanPreference("mapsListSortingReversed", false)
+    val mapsListStyle = intPreference("mapsListStyle", ListStyle.LIST.ordinal)
+
+    // Maps materials list
+    val mapsMaterialsListStyle = intPreference("mapsMaterialsListStyle", ListStyle.GRID.ordinal)
+
+    // Wallpapers list
+    val wallpapersListSorting = intPreference("wallpapersListSorting", ListSorting.DATE.ordinal)
+    val wallpapersListSortingReversed = booleanPreference("wallpapersListSortingReversed", false)
+    val wallpapersListStyle = intPreference("wallpapersListStyle", ListStyle.GRID.ordinal)
+
+    // Screenshots list
+    val screenshotsListSorting = intPreference("screenshotsListSorting", ListSorting.DATE.ordinal)
+    val screenshotsListSortingReversed = booleanPreference("screenshotsListSortingReversed", false)
+    val screenshotsListStyle = intPreference("screenshotsListStyle", ListStyle.GRID.ordinal)
+
+    // Other options
+    val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true, experimental = true, includeInDebugInfo = false)
+    val showMediaViewGuide = booleanPreference("showMediaViewGuide", true, experimental = true, includeInDebugInfo = false)
 
     // Experimental (developer) options
-    var experimentalOptionsEnabled by booleanPreference("experimentalOptionsEnabled", false)
-    var showMapNameFieldGuide by booleanPreference("showMapNameFieldGuide", true)
-    var autoCheckUpdates by booleanPreference(ConfigKey.KEY_APP_AUTO_UPDATES, true)
-    var updatesURL by stringPreference(ConfigKey.KEY_APP_UPDATES_URL, ConfigKey.DEFAULT_UPDATES_URL)
+    val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
+    val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
+    val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", GeneralUtil.getAppVersionCode(context), experimental = true, includeInDebugInfo = false)
+    val updatesURL = stringPreference("updatesUrl", "https://aliernfrog.github.io/lactool/latest.json", experimental = true, includeInDebugInfo = false)
 }

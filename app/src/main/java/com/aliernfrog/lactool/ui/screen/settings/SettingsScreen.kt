@@ -29,7 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -92,9 +91,6 @@ private fun SettingsRootPage(
     onNavigateRequest: (SettingsPage) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val appVersion = remember {
-        "${mainViewModel.applicationVersionName} (${mainViewModel.applicationVersionCode})"
-    }
 
     AppScaffold(
         topBar = { scrollBehavior ->
@@ -121,12 +117,13 @@ private fun SettingsRootPage(
 
             SettingsPage.entries
                 .filter {
-                    it.showInSettingsHome && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled)
+                    it.showInSettingsHome && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled.value)
                 }
                 .forEach { page ->
                     ButtonRow(
                         title = stringResource(page.title),
-                        description = if (page == SettingsPage.ABOUT) appVersion else stringResource(page.description),
+                        description = if (page == SettingsPage.ABOUT) mainViewModel.applicationVersionLabel
+                        else stringResource(page.description),
                         painter = rememberVectorPainter(page.icon)
                     ) {
                         onNavigateRequest(page)

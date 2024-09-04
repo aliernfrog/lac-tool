@@ -1,3 +1,5 @@
+import org.apache.commons.io.output.ByteArrayOutputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,9 +7,9 @@ plugins {
     id("com.mikepenz.aboutlibraries.plugin")
 }
 
-val composeMaterialVersion = "1.7.0-beta06"
-val composeMaterial3Version = "1.3.0-beta05"
-val composeCompilerVersion = "1.5.14"
+val composeMaterialVersion = "1.7.0-rc01"
+val composeMaterial3Version = "1.3.0-rc01"
+val composeCompilerVersion = "1.5.15"
 val lifecycleVersion = "2.8.4"
 val shizukuVersion = "13.1.5"
 
@@ -19,8 +21,8 @@ android {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 21
         targetSdk = 34
-        versionCode = 33000
-        versionName = "3.3.0"
+        versionCode = 34000
+        versionName = "3.4.0"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -81,6 +83,40 @@ android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
     languages.joinToString(",") { "\"$it\"" }
 }}")
 
+// Utilities to get git environment information
+// Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
+fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
+fun getLatestCommit() = exec("git", "rev-parse", "--short", "HEAD")
+fun hasLocalChanges(): Boolean {
+    val branch = getCurrentBranch()
+    val uncommittedChanges = exec("git", "status", "-s")?.isNotEmpty() ?: false
+    val unpushedChanges = exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
+    return uncommittedChanges || unpushedChanges
+}
+
+android.defaultConfig.run {
+    buildConfigField("String", "GIT_BRANCH", "\"${getCurrentBranch()}\"")
+    buildConfigField("String", "GIT_COMMIT", "\"${getLatestCommit()}\"")
+    buildConfigField("boolean", "GIT_LOCAL_CHANGES", "${hasLocalChanges()}")
+}
+
+fun exec(vararg command: String) = try {
+    val stdout = ByteArrayOutputStream()
+    val errout = ByteArrayOutputStream()
+    exec {
+        commandLine = command.toList()
+        standardOutput = stdout
+        errorOutput = errout
+        isIgnoreExitValue = true
+    }
+
+    if (errout.size() > 0) throw Error(errout.toString(Charsets.UTF_8))
+    stdout.toString(Charsets.UTF_8).trim()
+} catch (e: Throwable) {
+    e.printStackTrace()
+    null
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
@@ -92,8 +128,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.activity:activity-compose:1.9.1")
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta06")
-    implementation("com.mikepenz:aboutlibraries-core:11.2.2")
+    implementation("androidx.navigation:navigation-compose:2.8.0-rc01")
+    implementation("com.mikepenz:aboutlibraries-core:11.2.3")
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
     implementation("com.github.aliernfrog:top-toast-compose:2.1.0-alpha01")
     implementation("com.github.aliernfrog:laclib:1.1.0")
@@ -101,6 +137,10 @@ dependencies {
     implementation("dev.rikka.shizuku:api:$shizukuVersion")
     implementation("dev.rikka.shizuku:provider:$shizukuVersion")
     implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.github.jeziellago:compose-markdown:0.5.2")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    implementation("com.github.jeziellago:compose-markdown:0.5.4")
+    implementation("net.engawapg.lib:zoomable:1.6.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.1")
+
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeMaterialVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling-preview:$composeMaterialVersion")
 }

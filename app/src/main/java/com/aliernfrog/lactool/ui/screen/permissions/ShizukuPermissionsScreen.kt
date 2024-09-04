@@ -1,19 +1,24 @@
 package com.aliernfrog.lactool.ui.screen.permissions
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -25,9 +30,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.ShizukuStatus
+import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
+import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
 import rikka.shizuku.Shizuku
 
@@ -55,11 +64,44 @@ fun ShizukuPermissionsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             if (isLoading) {
-                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-                Text(
-                    text = stringResource(R.string.info_shizuku_startingFileService),
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp)
+                VerticalProgressIndicator(
+                    progress = Progress(stringResource(R.string.permissions_shizuku_waitingService)),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+                AnimatedVisibility(
+                    visible = shizukuViewModel.timedOut,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    CardWithActions(
+                        title = null,
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp),
+                        buttons = {
+                            if (shizukuViewModel.managerInstalled) TextButton(
+                                onClick = {
+                                    shizukuViewModel.launchManager(context)
+                                }
+                            ) {
+                                ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                                Text(stringResource(R.string.permissions_shizuku_openShizuku))
+                            }
+                            Button(
+                                onClick = {
+                                    shizukuViewModel.prefs.shizukuNeverLoad.value = false
+                                    GeneralUtil.restartApp(context)
+                                },
+                                modifier = Modifier.padding(top = 8.dp)
+                            ) {
+                                ButtonIcon(rememberVectorPainter(Icons.Default.RestartAlt))
+                                Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut_restart))
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut))
+                    }
+                }
             } else ShizukuSetupGuide()
         }
     }
@@ -72,7 +114,7 @@ private fun ShizukuSetupGuide(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    if (shizukuViewModel.installed) Text(
+    if (shizukuViewModel.managerInstalled) Text(
         text = stringResource(R.string.permissions_shizuku_introduction),
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(8.dp)
@@ -95,23 +137,21 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> {
                 Button(
                     onClick = {
-                        uriHandler.openUri("https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api")
+                        shizukuViewModel.launchManager(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                    Text(stringResource(R.string.permissions_shizuku_install_install))
+                    Text(stringResource(R.string.permissions_shizuku_installShizuku))
                 }
             }
             ShizukuStatus.WAITING_FOR_BINDER -> {
                 Button(
                     onClick = {
-                        context.packageManager.getLaunchIntentForPackage(ShizukuViewModel.SHIZUKU_PACKAGE)?.let {
-                            context.startActivity(it)
-                        }
+                        shizukuViewModel.launchManager(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                    Text(stringResource(R.string.permissions_shizuku_notRunning_openShizuku))
+                    Text(stringResource(R.string.permissions_shizuku_openShizuku))
                 }
             }
             ShizukuStatus.UNAUTHORIZED -> {
@@ -127,7 +167,7 @@ private fun ShizukuSetupGuide(
         CardWithActions(
             title = title?.let { stringResource(it) } ?: "",
             buttons = { button() },
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
             description?.let {
                 Text(
@@ -135,6 +175,41 @@ private fun ShizukuSetupGuide(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+        }
+    }
+
+    FadeVisibility(
+        shizukuViewModel.deviceRooted && shizukuViewModel.status != ShizukuStatus.UNAUTHORIZED
+    ) {
+        CardWithActions(
+            title = stringResource(R.string.permissions_shizuku_rooted),
+            buttons = {
+                OutlinedButton(
+                    onClick = {
+                        uriHandler.openUri(ShizukuViewModel.SUI_GITHUB)
+                    }
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                    Text(stringResource(R.string.permissions_shizuku_sui))
+                }
+                Button(
+                    onClick = {
+                        shizukuViewModel.launchManager(context)
+                    }
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                    Text(stringResource(
+                        if (shizukuViewModel.managerInstalled) R.string.permissions_shizuku_openShizuku
+                        else R.string.permissions_shizuku_installShizuku
+                    ))
+                }
+            },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.permissions_shizuku_rooted_description),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 

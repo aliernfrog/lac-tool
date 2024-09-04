@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.MapAction
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ButtonIcon
@@ -74,32 +75,37 @@ fun MapsScreen(
         ) },
         topAppBarState = mapsViewModel.topAppBarState
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsViewModel.scrollState)) {
-            PickMapButton(
-                chosenMap = mapsViewModel.chosenMap,
-                showMapThumbnail = mapsViewModel.prefs.showChosenMapThumbnail
-            ) {
-                mapsViewModel.mapListShown = true
+        Crossfade(targetState = mapsViewModel.chosenMap) { chosenMap ->
+            if (chosenMap == null) return@Crossfade
+            Column(Modifier.fillMaxSize().verticalScroll(mapsViewModel.scrollState)) {
+                PickMapButton(
+                    chosenMap = chosenMap,
+                    showMapThumbnail = mapsViewModel.prefs.showChosenMapThumbnail.value,
+                    onClickThumbnailActions = {
+                        mapsViewModel.openMapThumbnailViewer(chosenMap)
+                    }
+                ) {
+                    mapsViewModel.mapListShown = true
+                }
+                Actions(chosenMap = chosenMap)
             }
-            Actions()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Actions(
-    mapsViewModel: MapsViewModel = koinViewModel()
+    mapsViewModel: MapsViewModel = koinViewModel(),
+    chosenMap: MapFile
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val chosenMap = mapsViewModel.chosenMap ?: return
 
     TextField(
         value = mapsViewModel.mapNameEdit,
         onValueChange = { mapsViewModel.mapNameEdit = it },
         label = { Text(stringResource(R.string.maps_mapName)) },
-        placeholder = { Text(mapsViewModel.chosenMap?.name ?: "") },
+        placeholder = { Text(chosenMap.name) },
         singleLine = true,
         leadingIcon = {
             Icon(
@@ -113,9 +119,9 @@ private fun Actions(
             .clip(AppComponentShape)
     )
 
-    FadeVisibility(visible = mapsViewModel.prefs.showMapNameFieldGuide) {
+    FadeVisibility(visible = mapsViewModel.prefs.showMapNameFieldGuide.value) {
         OutlinedCard(
-            onClick = { mapsViewModel.prefs.showMapNameFieldGuide = false },
+            onClick = { mapsViewModel.prefs.showMapNameFieldGuide.value = false },
             shape = AppComponentShape,
             modifier = Modifier.padding(
                 horizontal = 8.dp,

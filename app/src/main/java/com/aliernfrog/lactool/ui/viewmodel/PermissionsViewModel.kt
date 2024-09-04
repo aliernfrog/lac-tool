@@ -19,7 +19,7 @@ class PermissionsViewModel(
     val topToastState: TopToastState
 ) : ViewModel() {
     private var storageAccessType: StorageAccessType
-        get() = StorageAccessType.entries[prefs.storageAccessType]
+        get() = StorageAccessType.entries[prefs.storageAccessType.value]
         set(value) { value.enable(prefs) }
 
     var showShizukuIntroDialog by mutableStateOf(false)
@@ -47,7 +47,7 @@ class PermissionsViewModel(
         context: Context
     ): List<PermissionData> {
         return permissionsData.filter {
-            !Uri.parse(it.getUri()).appHasPermissions(context)
+            !Uri.parse(it.pref.value).appHasPermissions(context)
         }
     }
 }

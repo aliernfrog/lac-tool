@@ -1,10 +1,9 @@
 package com.aliernfrog.lactool.data
 
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
 
-data class PrefEditItem(
-    val labelResourceId: Int,
-    val getValue: (prefs: PreferenceManager) -> String,
-    val setValue: (newValue: String, prefs: PreferenceManager) -> Unit,
-    val default: String = ""
+data class PrefEditItem<T>(
+    val preference: (PreferenceManager) -> BasePreferenceManager.Preference<T>,
+    val label: (PreferenceManager) -> Any = { preference(it).key }
 )
