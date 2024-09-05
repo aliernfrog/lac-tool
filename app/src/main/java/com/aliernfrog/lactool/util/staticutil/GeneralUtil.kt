@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.di.appModules
-import com.aliernfrog.lactool.documentsUIPackageName
 import com.aliernfrog.lactool.hasAndroidDataRestrictions
 import com.aliernfrog.lactool.ui.activity.MainActivity
 import com.aliernfrog.lactool.util.extension.toPath
@@ -18,10 +17,22 @@ import java.util.Locale
 
 class GeneralUtil {
     companion object {
-        fun filesAppRestrictsAndroidData(context: Context): Boolean {
+        fun documentsUIRestrictsAndroidData(context: Context): Boolean {
             if (!hasAndroidDataRestrictions) return false
-            val packageInfo = context.packageManager.getPackageInfo(documentsUIPackageName, 0)
-            return packageInfo.longVersionCode >= 340916000
+            val documentsUIPackage = getDocumentsUIPackage(context)
+            return documentsUIPackage?.longVersionCode?.let {
+                it >= 340916000
+            } ?: false
+        }
+
+        fun getDocumentsUIPackage(context: Context) = try {
+            context.packageManager.getPackageInfo("com.google.android.documentsui", 0)
+        } catch (_: Exception) {
+            try {
+                context.packageManager.getPackageInfo("com.android.documentsui", 0)
+            } catch (_: Exception) {
+                null
+            }
         }
 
         fun getAppVersionName(context: Context): String {
