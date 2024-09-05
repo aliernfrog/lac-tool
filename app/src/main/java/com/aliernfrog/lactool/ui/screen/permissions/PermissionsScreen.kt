@@ -19,7 +19,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
-import com.aliernfrog.lactool.documentsUIPackageName
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
@@ -27,6 +26,7 @@ import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,10 +105,11 @@ fun PermissionsScreen(
         confirmButton = {
             Button(
                 onClick = {
+                    val documentsUIPackage = GeneralUtil.getDocumentsUIPackage(context) ?: return@Button
                     permissionsViewModel.showFilesDowngradeDialog = false
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        data = Uri.parse("package:$documentsUIPackageName")
+                        data = Uri.parse("package:${documentsUIPackage.packageName}")
                         context.startActivity(this)
                     }
                 }

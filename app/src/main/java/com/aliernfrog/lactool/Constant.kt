@@ -14,7 +14,6 @@ const val TAG = "LACToolLogs"
 const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 const val crowdinURL = "https://crowdin.com/project/lac-tool"
-const val documentsUIPackageName = "com.google.android.documentsui"
 
 val externalStorageRoot = Environment.getExternalStorageDirectory().toString()+"/"
 val supportsPerAppLanguagePreferences = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU

@@ -55,7 +55,7 @@ fun SAFPermissionsScreen(
 ) {
     val context = LocalContext.current
     val requiresAndroidData = permissionsData.any { it.requiresAndroidData }
-    val needsToDowngradeFiles = requiresAndroidData && GeneralUtil.filesAppRestrictsAndroidData(context)
+    val needsToDowngradeFiles = requiresAndroidData && GeneralUtil.documentsUIRestrictsAndroidData(context)
 
     AnimatedContent(needsToDowngradeFiles) {
         if (it) DowngradeFiles()
