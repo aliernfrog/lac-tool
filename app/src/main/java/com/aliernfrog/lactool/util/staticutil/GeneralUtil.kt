@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.util.staticutil
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -20,8 +21,18 @@ class GeneralUtil {
     companion object {
         fun filesAppRestrictsAndroidData(context: Context): Boolean {
             if (!hasAndroidDataRestrictions) return false
-            val packageInfo = context.packageManager.getPackageInfo(documentsUIPackageName, 0)
-            return packageInfo.longVersionCode >= 340916000
+            val packageInfo: PackageInfo? = try {
+              context.packageManager.getPackageInfo(documentsUIPackageName, 0)
+            } catch (_: Exception) {
+              try {
+                context.packageManager.getPackageInfo("com.android.documentsui", 0)
+              } catch (_: Exception) {
+                null
+              }
+            }
+            return packageInfo?.let {
+                it.longVersionCode >= 340916000
+            } ?: false
         }
 
         fun getAppVersionName(context: Context): String {
