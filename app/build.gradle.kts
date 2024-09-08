@@ -7,10 +7,10 @@ plugins {
     id("com.mikepenz.aboutlibraries.plugin")
 }
 
-val composeMaterialVersion = "1.7.0-rc01"
-val composeMaterial3Version = "1.3.0-rc01"
+val composeMaterialVersion = "1.7.0"
+val composeMaterial3Version = "1.3.0"
 val composeCompilerVersion = "1.5.15"
-val lifecycleVersion = "2.8.4"
+val lifecycleVersion = "2.8.5"
 val shizukuVersion = "13.1.5"
 
 android {
@@ -127,11 +127,11 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.9.1")
-    implementation("androidx.navigation:navigation-compose:2.8.0-rc01")
+    implementation("androidx.activity:activity-compose:1.9.2")
+    implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("com.mikepenz:aboutlibraries-core:11.2.3")
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
-    implementation("com.github.aliernfrog:top-toast-compose:2.1.0-alpha01")
+    implementation("com.github.aliernfrog:top-toast-compose:2.1.0")
     implementation("com.github.aliernfrog:laclib:1.1.0")
     implementation("com.lazygeniouz:dfc:1.0.8")
     implementation("dev.rikka.shizuku:api:$shizukuVersion")
