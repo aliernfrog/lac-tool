@@ -97,6 +97,7 @@ class MainViewModel(
 
     var latestVersionInfo by mutableStateOf(ReleaseInfo(
         versionName = applicationVersionName,
+        versionCode = applicationVersionCode,
         preRelease = applicationIsPreRelease,
         body = context.getString(R.string.updates_noChangelog),
         htmlUrl = githubRepoURL,
@@ -106,6 +107,9 @@ class MainViewModel(
 
     var updateAvailable by mutableStateOf(false)
         private set
+
+    val showUpdateNotifications: Boolean
+        get() = updateAvailable && prefs.ignoredUpdateVersionCode.value != latestVersionInfo.versionCode
 
     val debugInfo: String
         get() = arrayOf(
@@ -137,9 +141,10 @@ class MainViewModel(
                 val json = responseJson.getJSONObject(
                     if (applicationIsPreRelease && responseJson.has("preRelease")) "preRelease" else "stable"
                 )
-                val latestVersionCode = json.getInt("versionCode")
+                val latestVersionCode = json.getLong("versionCode")
                 latestVersionInfo = ReleaseInfo(
                     versionName = json.getString("versionName"),
+                    versionCode = latestVersionCode,
                     preRelease = json.getBoolean("preRelease"),
                     body = json.getString("body"),
                     htmlUrl = json.getString("htmlUrl"),
@@ -149,7 +154,7 @@ class MainViewModel(
                 if (updateAvailable) {
                     if (manuallyTriggered) coroutineScope {
                         updateSheetState.show()
-                    } else {
+                    } else if (showUpdateNotifications) {
                         showUpdateToast()
                         Destination.SETTINGS.hasNotification.value = true
                     }

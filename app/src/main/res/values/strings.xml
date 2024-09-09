@@ -335,6 +335,9 @@
     <string name="updates_preRelease">Pre-release</string>
     <string name="updates_openInGithub">View in GitHub</string>
     <string name="updates_update">Update</string>
+    <string name="updates_ignore">Ignore</string>
+    <string name="updates_ignore_question">Are you sure you want to ignore this update?\nYou can manually update later in Settings > About</string>
+    <string name="updates_ignore_ignore">Ignore update</string>
     <string name="updates_checkUpdates">Check updates</string>
     <string name="updates_noChangelog">Check updates to view changelog</string>
 </resources>

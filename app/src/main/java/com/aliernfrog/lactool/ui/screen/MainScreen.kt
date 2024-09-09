@@ -128,7 +128,10 @@ fun MainScreen(
         updateAvailable = mainViewModel.updateAvailable,
         onCheckUpdatesRequest = { scope.launch {
             mainViewModel.checkUpdates(manuallyTriggered = true)
-        } }
+        } },
+        onIgnoreRequest = {
+            mainViewModel.prefs.ignoredUpdateVersionCode.value = mainViewModel.latestVersionInfo.versionCode
+        }
     )
 
     LaunchedEffect(navController) {

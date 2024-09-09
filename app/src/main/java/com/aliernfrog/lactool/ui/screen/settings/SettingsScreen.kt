@@ -108,7 +108,7 @@ private fun SettingsRootPage(
                 .navigationBarsPadding()
         ) {
             UpdateNotification(
-                isShown = mainViewModel.updateAvailable,
+                isShown = mainViewModel.showUpdateNotifications,
                 versionInfo = mainViewModel.latestVersionInfo,
                 onClick = { scope.launch {
                     mainViewModel.updateSheetState.show()
