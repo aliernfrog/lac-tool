@@ -10,6 +10,7 @@
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="action_more">More</string>
+    <string name="action_openInBrowser">Open in browser</string>
     <string name="intent_openMap">Open map</string>
     <string name="intent_downloadMap">Download map</string>
     <string name="warning_error">Something went wrong</string>
@@ -331,9 +332,6 @@
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_noUpdates">No updates available</string>
     <string name="updates_error">Something went wrong while checking for updates</string>
-    <string name="updates_stable">Stable</string>
-    <string name="updates_preRelease">Pre-release</string>
-    <string name="updates_openInGithub">View in GitHub</string>
     <string name="updates_update">Update</string>
     <string name="updates_ignore">Ignore</string>
     <string name="updates_ignore_question">Are you sure you want to ignore this update?\nYou can manually update later in Settings > About</string>
