@@ -128,17 +128,23 @@ private fun Actions(
         Spacer(
             modifier = Modifier.weight(1f).fillMaxWidth()
         )
-        AnimatedContent(updateAvailable) { showUpdate ->
+        AnimatedContent(
+            targetState = updateAvailable,
+            modifier = Modifier.padding(start = 16.dp)
+        ) { showUpdate ->
             if (showUpdate) Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedButton(
-                    onClick = { ignoreDialogShown = true }
+                    onClick = { ignoreDialogShown = true },
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.updates_ignore))
                 }
                 Button(
-                    onClick = onUpdateClick
+                    onClick = onUpdateClick,
+                    modifier = Modifier.weight(1f)
                 ) {
                     ButtonIcon(
                         painter = rememberVectorPainter(Icons.Default.Update)

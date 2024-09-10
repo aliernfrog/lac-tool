@@ -14,7 +14,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         val view = LocalView.current
         val scope = rememberCoroutineScope()
         val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme.value)
+        var isAppInitialized by rememberSaveable { mutableStateOf(false) }
 
         @Composable
         fun AppTheme(content: @Composable () -> Unit) {
@@ -73,6 +78,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         LaunchedEffect(Unit) {
+            if (isAppInitialized) return@LaunchedEffect
             mainViewModel.scope = scope
             mainViewModel.topToastState.setComposeView(view)
             mainViewModel.topToastState.setAppTheme { AppTheme(it) }
@@ -82,6 +88,8 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity.intent?.let {
                 mainViewModel.handleIntent(it, context = context)
             }
+
+            isAppInitialized = true
         }
     }
 
