@@ -79,16 +79,14 @@ class MainActivity : AppCompatActivity() {
         }
         LaunchedEffect(Unit) {
             mainViewModel.scope = scope
-            if (isAppInitialized) return@LaunchedEffect
             mainViewModel.topToastState.setComposeView(view)
+            if (isAppInitialized) return@LaunchedEffect
+            
             mainViewModel.topToastState.setAppTheme { AppTheme(it) }
-
             if (mainViewModel.prefs.autoCheckUpdates.value) mainViewModel.checkUpdates()
-
             this@MainActivity.intent?.let {
                 mainViewModel.handleIntent(it, context = context)
             }
-
             isAppInitialized = true
         }
     }
