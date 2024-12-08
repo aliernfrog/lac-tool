@@ -89,7 +89,7 @@ fun MapRoleRow(
                 modifier = Modifier
                     .heightIn(56.dp)
                     .background(headerColor)
-                    .clickableWithColor(headerContentColor, onClick),
+                    .clickableWithColor(headerContentColor, onClick = onClick),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(

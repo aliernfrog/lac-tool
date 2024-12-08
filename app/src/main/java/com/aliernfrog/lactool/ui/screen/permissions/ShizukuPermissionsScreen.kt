@@ -91,8 +91,7 @@ fun ShizukuPermissionsScreen(
                                 onClick = {
                                     shizukuViewModel.prefs.shizukuNeverLoad.value = false
                                     GeneralUtil.restartApp(context)
-                                },
-                                modifier = Modifier.padding(top = 8.dp)
+                                }
                             ) {
                                 ButtonIcon(rememberVectorPainter(Icons.Default.RestartAlt))
                                 Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut_restart))

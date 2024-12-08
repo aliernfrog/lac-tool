@@ -1,9 +1,11 @@
 package com.aliernfrog.lactool.ui.component.form
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -24,6 +26,7 @@ fun SwitchRow(
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     FormRow(
         title = title,
         modifier = modifier,
@@ -34,6 +37,7 @@ fun SwitchRow(
         contentColor = contentColor.let {
             if (enabled) it else it.copy(alpha = 0.7f)
         },
+        interactionSource = interactionSource,
         onClick = {
             if (enabled) onCheckedChange(!checked)
         }
@@ -42,6 +46,7 @@ fun SwitchRow(
             checked = checked,
             onCheckedChange = onCheckedChange,
             enabled = enabled,
+            interactionSource = interactionSource,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
     }

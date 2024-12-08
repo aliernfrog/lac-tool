@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.component.form
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -28,6 +29,7 @@ fun FormRow(
     containerColor: Color = Color.Transparent,
     contentColor: Color = if (containerColor == Color.Transparent)
         MaterialTheme.colorScheme.onSurface else contentColorFor(containerColor),
+    interactionSource: MutableInteractionSource? = null,
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -39,6 +41,7 @@ fun FormRow(
             .background(containerColor)
             .clickableWithColor(
                 color = contentColor,
+                interactionSource = interactionSource,
                 onClick = onClick
             )
             .padding(end = 9.dp),
