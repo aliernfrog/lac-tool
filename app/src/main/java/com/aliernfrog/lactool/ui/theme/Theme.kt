@@ -50,7 +50,10 @@ fun LACToolTheme(
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
 
         if (Build.VERSION.SDK_INT >= 23) Color.Transparent.toArgb().let {
+            // No idea why they deprecated those, they are not transparent by default on <A15
+            @Suppress("DEPRECATION")
             activity.window.statusBarColor = it
+            @Suppress("DEPRECATION")
             if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = it
         }
 
