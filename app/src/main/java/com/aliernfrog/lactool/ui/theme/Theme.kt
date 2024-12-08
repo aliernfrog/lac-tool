@@ -13,7 +13,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -47,12 +46,7 @@ fun LACToolTheme(
         val activity = view.context as Activity
         val insetsController = WindowCompat.getInsetsController(activity.window, view)
 
-        WindowCompat.setDecorFitsSystemWindows(activity.window, false)
-
-        if (Build.VERSION.SDK_INT >= 23) Color.Transparent.toArgb().let {
-            activity.window.statusBarColor = it
-            if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = it
-        }
+        //WindowCompat.setDecorFitsSystemWindows(activity.window, false)
 
         if (Build.VERSION.SDK_INT >= 29) {
             activity.window.isNavigationBarContrastEnforced = false
