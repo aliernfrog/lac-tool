@@ -46,7 +46,7 @@ fun LACToolTheme(
         val activity = view.context as Activity
         val insetsController = WindowCompat.getInsetsController(activity.window, view)
 
-        //WindowCompat.setDecorFitsSystemWindows(activity.window, false)
+        WindowCompat.setDecorFitsSystemWindows(activity.window, false)
 
         if (Build.VERSION.SDK_INT >= 29) {
             activity.window.isNavigationBarContrastEnforced = false
