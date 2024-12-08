@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ripple
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -15,10 +16,11 @@ import androidx.compose.ui.unit.dp
 
 fun Modifier.clickableWithColor(
     color: Color,
+    interactionSource: MutableInteractionSource? = null,
     onClick: () -> Unit
 ): Modifier {
     return this.clickable(
-        interactionSource = null,
+        interactionSource = interactionSource,
         indication = ripple(color = color),
         onClick = onClick
     )
