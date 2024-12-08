@@ -13,6 +13,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -47,6 +48,14 @@ fun LACToolTheme(
         val insetsController = WindowCompat.getInsetsController(activity.window, view)
 
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
+
+        if (Build.VERSION.SDK_INT >= 23) Color.Transparent.toArgb().let {
+            // No idea why they deprecated those, they are not transparent by default on <A15
+            @Suppress("DEPRECATION")
+            activity.window.statusBarColor = it
+            @Suppress("DEPRECATION")
+            if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = it
+        }
 
         if (Build.VERSION.SDK_INT >= 29) {
             activity.window.isNavigationBarContrastEnforced = false
