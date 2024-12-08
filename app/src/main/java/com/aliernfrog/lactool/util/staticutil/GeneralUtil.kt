@@ -44,7 +44,7 @@ class GeneralUtil {
 
         fun getAppVersionName(context: Context): String {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            return packageInfo.versionName.toString()
+            return packageInfo.versionName
         }
 
         fun getAppVersionCode(context: Context): Long {
