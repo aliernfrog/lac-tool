@@ -3,32 +3,41 @@ package com.aliernfrog.lactool.ui.sheet
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,28 +65,42 @@ fun UpdateSheet(
             versionName = latestVersionInfo.versionName,
             preRelease = latestVersionInfo.preRelease,
             updateAvailable = updateAvailable,
-            onGithubClick = { uriHandler.openUri(latestVersionInfo.htmlUrl) },
             onUpdateClick = { uriHandler.openUri(latestVersionInfo.downloadLink) },
             onCheckUpdatesRequest = onCheckUpdatesRequest
         )
         DividerRow(
             alpha = 0.3f
         )
-        MarkdownText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = bottomPadding)
-                .padding(16.dp),
-            markdown = latestVersionInfo.body,
-            linkColor = MaterialTheme.colorScheme.primary,
-            style = LocalTextStyle.current.copy(
-                color = LocalContentColor.current
-            ),
-            onLinkClicked = {
-                uriHandler.openUri(it)
+        Column(Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = bottomPadding)
+        ) {
+            MarkdownText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 16.dp),
+                markdown = latestVersionInfo.body,
+                linkColor = MaterialTheme.colorScheme.primary,
+                style = LocalTextStyle.current.copy(
+                    color = LocalContentColor.current
+                ),
+                onLinkClicked = {
+                    uriHandler.openUri(it)
+                }
+            )
+            TextButton(
+                onClick = { uriHandler.openUri(latestVersionInfo.htmlUrl) },
+                modifier = Modifier.padding(horizontal = 16.dp).align(Alignment.End)
+            ) {
+                ButtonIcon(
+                    painter = painterResource(R.drawable.github)
+                )
+                Text(
+                    text = stringResource(R.string.updates_openInGithub)
+                )
             }
-        )
+        }
     }
 }
 
@@ -86,15 +109,21 @@ private fun Actions(
     versionName: String,
     preRelease: Boolean,
     updateAvailable: Boolean,
-    onGithubClick: () -> Unit,
     onUpdateClick: () -> Unit,
     onCheckUpdatesRequest: () -> Unit
 ) {
+    val density = LocalDensity.current
     val versionNameScrollState = rememberScrollState()
+    var actionsWidth by remember { mutableStateOf(Dp.Infinity) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+            .onSizeChanged {
+                with(density) {
+                    actionsWidth = it.width.toDp()
+                }
+            },
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -126,14 +155,10 @@ private fun Actions(
                 modifier = Modifier.padding(horizontal = 6.dp)
             )
         }
-        IconButton(onClick = onGithubClick) {
-            Icon(
-                painter = painterResource(R.drawable.github),
-                contentDescription = stringResource(R.string.updates_openInGithub),
-                modifier = Modifier.padding(6.dp)
-            )
-        }
-        AnimatedContent(updateAvailable) { showUpdate ->
+        AnimatedContent(
+            targetState = updateAvailable,
+            modifier = Modifier.widthIn(max = actionsWidth/2)
+        ) { showUpdate ->
             if (showUpdate) Button(
                 onClick = onUpdateClick
             ) {
@@ -146,7 +171,7 @@ private fun Actions(
                 onClick = onCheckUpdatesRequest
             ) {
                 ButtonIcon(
-                    painter = rememberVectorPainter(Icons.Default.Update)
+                    painter = rememberVectorPainter(Icons.Default.Refresh)
                 )
                 Text(stringResource(R.string.updates_checkUpdates))
             }
