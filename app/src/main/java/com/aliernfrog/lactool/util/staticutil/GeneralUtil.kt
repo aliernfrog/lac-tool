@@ -17,19 +17,26 @@ import java.util.Locale
 
 class GeneralUtil {
     companion object {
+        private const val DOCUMENTS_UI_PACKAGE = "com.android.documentsui"
+        private const val GOOGLE_DOCUMENTS_UI_PACKAGE = "com.google.android.documentsui"
+
         fun documentsUIRestrictsAndroidData(context: Context): Boolean {
             if (!hasAndroidDataRestrictions) return false
             val documentsUIPackage = getDocumentsUIPackage(context)
-            return documentsUIPackage?.longVersionCode?.let {
-                it >= 340916000
+            return documentsUIPackage?.let {
+                it.longVersionCode >= when (it.packageName) {
+                    DOCUMENTS_UI_PACKAGE -> 14
+                    GOOGLE_DOCUMENTS_UI_PACKAGE -> 340916000
+                    else -> Long.MAX_VALUE
+                }
             } ?: false
         }
 
         fun getDocumentsUIPackage(context: Context) = try {
-            context.packageManager.getPackageInfo("com.google.android.documentsui", 0)
+            context.packageManager.getPackageInfo(GOOGLE_DOCUMENTS_UI_PACKAGE, 0)
         } catch (_: Exception) {
             try {
-                context.packageManager.getPackageInfo("com.android.documentsui", 0)
+                context.packageManager.getPackageInfo(DOCUMENTS_UI_PACKAGE, 0)
             } catch (_: Exception) {
                 null
             }
