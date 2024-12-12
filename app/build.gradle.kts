@@ -1,5 +1,3 @@
-import org.apache.commons.io.output.ByteArrayOutputStream
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -93,17 +91,14 @@ android.defaultConfig.run {
 }
 
 fun exec(vararg command: String) = try {
-    val stdout = ByteArrayOutputStream()
-    val errout = ByteArrayOutputStream()
-    exec {
-        commandLine = command.toList()
-        standardOutput = stdout
-        errorOutput = errout
-        isIgnoreExitValue = true
-    }
-
-    if (errout.size() > 0) throw Error(errout.toString(Charsets.UTF_8))
-    stdout.toString(Charsets.UTF_8).trim()
+    val process = ProcessBuilder(command.toList())
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+    val stdout = process.inputStream.bufferedReader().readText()
+    val stderr = process.errorStream.bufferedReader().readText()
+    if (stderr.isNotEmpty()) throw Error(stderr)
+    stdout.trim()
 } catch (_: Throwable) {
     null
 }
