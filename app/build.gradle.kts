@@ -122,12 +122,15 @@ dependencies {
     implementation(libs.coil.okhttp)
     implementation(libs.dfc)
     implementation(libs.koin)
-    implementation(libs.laclib)
     implementation(libs.markdown)
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
     implementation(libs.toptoast)
     implementation(libs.zoomable)
+
+    implementation(project.properties["laclibPath"]?.toString().let {
+        if (it.isNullOrEmpty()) libs.laclib else files(it)
+    })
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.tooling.preview)
