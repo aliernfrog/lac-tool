@@ -1,3 +1,13 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+val localProperties = Properties()
+try {
+    localProperties.load(FileInputStream(rootProject.file("local.properties")))
+} catch (t: Throwable) {
+    logger.warn("Failed to load local.properties: ", t)
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -72,6 +82,9 @@ android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
     languages.joinToString(",") { "\"$it\"" }
 }}")
 
+val laclibPath: String? = localProperties.getProperty("laclibPath")
+val useLocalLaclib = !laclibPath.isNullOrEmpty()
+
 // Utilities to get git environment information
 // Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
 fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
@@ -81,7 +94,7 @@ fun hasLocalChanges(): Boolean {
     val branch = getCurrentBranch()
     val uncommittedChanges = exec("git", "status", "-s")?.isNotEmpty() ?: false
     val unpushedChanges = exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
-    return uncommittedChanges || unpushedChanges
+    return uncommittedChanges || unpushedChanges || useLocalLaclib
 }
 
 android.defaultConfig.run {
@@ -128,9 +141,12 @@ dependencies {
     implementation(libs.toptoast)
     implementation(libs.zoomable)
 
-    implementation(project.properties["laclibPath"]?.toString().let {
-        if (it.isNullOrEmpty()) libs.laclib else files(it)
-    })
+    implementation(
+        if (!useLocalLaclib) libs.laclib else {
+            println("Using local LACLib")
+            files(laclibPath)
+        }
+    )
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.tooling.preview)
