@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -217,6 +218,15 @@ private fun MiscActions(
             Column(Modifier.padding(vertical = 8.dp)) {
                 FilterObjects()
             }
+        }
+        if (mapsEditViewModel.prefs.mapEditRawView.value) ButtonRow(
+            title = "[DEBUG] Share current content",
+            description = "without .applyChanges()"
+        ) {
+            val intent = Intent(Intent.ACTION_SEND)
+                .setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, mapsEditViewModel.mapEditor?.editor?.getCurrentContent())
+            context.startActivity(Intent.createChooser(intent, "Current content [no .applyChanges()]"))
         }
     }
 }
