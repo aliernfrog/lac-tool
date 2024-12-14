@@ -163,7 +163,7 @@ private fun OptionsActions(
                         value = option.value,
                         onValueChange = {
                             option.value = it 
-                            mapsEditViewModel.updateMapEditorState()
+                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
                         },
                         placeholder = option.value,
                         numberOnly = true
@@ -173,7 +173,7 @@ private fun OptionsActions(
                         checked = option.value == "true",
                         onCheckedChange = {
                             option.value = it.toString()
-                            mapsEditViewModel.updateMapEditorState()
+                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
                         }
                     )
                     LACMapOptionType.SWITCH -> SwitchRow(
@@ -181,7 +181,7 @@ private fun OptionsActions(
                         checked = option.value == "enabled",
                         onCheckedChange = {
                             option.value = if (it) "enabled" else "disabled"
-                            mapsEditViewModel.updateMapEditorState()
+                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
                         }
                     )
                 }
@@ -196,7 +196,7 @@ private fun MiscActions(
 ) {
     val context = LocalContext.current
     FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
             ButtonRow(
                 title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                 description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
