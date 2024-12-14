@@ -25,16 +25,16 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 
 @Composable
 fun MapToMerge(
-    mapToMerge: LACMapToMerge,
+    mapToMerge: MutableMapToMerge,
     isBaseMap: Boolean = false,
     expanded: Boolean = false,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
