@@ -212,15 +212,20 @@ class FileWrapper(
     }
 
     fun writeFile(content: String, context: Context) {
-        when (file) {
-            is File -> file.outputStream().use {
+        var target = file
+        if (exists()) {
+            delete()
+            target = parentFile?.createFile(name)?.file ?: return
+        }
+        when (target) {
+            is File -> target.outputStream().use {
                 FileUtil.writeFile(it, content)
             }
-            is DocumentFileCompat -> context.contentResolver.openOutputStream(file.uri)?.use {
+            is DocumentFileCompat -> context.contentResolver.openOutputStream(target.uri)?.use {
                 FileUtil.writeFile(it, content)
             }
             is ServiceFile -> {
-                val fd = shizukuViewModel.fileService!!.getFd(path)
+                val fd = shizukuViewModel.fileService!!.getFd(target.path)
                 ParcelFileDescriptor.AutoCloseOutputStream(fd).use {
                     FileUtil.writeFile(it, content)
                 }

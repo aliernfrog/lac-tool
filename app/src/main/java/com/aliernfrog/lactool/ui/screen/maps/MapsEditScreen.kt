@@ -34,6 +34,8 @@ import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
+import com.aliernfrog.lactool.util.staticutil.FileUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,13 +73,19 @@ fun MapsEditScreen(
             }
         }
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(mapsEditViewModel.scrollState)) {
             GeneralActions(
                 onNavigateRequest = onNavigateRequest
             )
             OptionsActions()
             MiscActions()
-            Spacer(Modifier.systemBarsPadding().height(70.dp))
+            Spacer(
+                Modifier
+                    .systemBarsPadding()
+                    .height(70.dp))
         }
     }
     if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
@@ -195,6 +203,7 @@ private fun MiscActions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
             ButtonRow(
@@ -216,6 +225,31 @@ private fun MiscActions(
         ) {
             Column(Modifier.padding(vertical = 8.dp)) {
                 FilterObjects()
+            }
+        }
+        if (mapsEditViewModel.prefs.debug.value) {
+            ButtonRow(
+                title = "[DEBUG] View getCurrentContent()",
+                description = "without applyChanges()"
+            ) {
+                scope.launch(Dispatchers.IO) {
+                    FileUtil.openTextAsFile(
+                        text = mapsEditViewModel.mapEditor?.editor?.getCurrentContent()
+                            ?: "content was null",
+                        context = context
+                    )
+                }
+            }
+            ButtonRow(
+                title = "[DEBUG] applyChanges() and view result"
+            ) {
+                scope.launch(Dispatchers.IO) {
+                    FileUtil.openTextAsFile(
+                        text = mapsEditViewModel.mapEditor?.editor?.applyChanges()
+                            ?: "content was null",
+                        context = context
+                    )
+                }
             }
         }
     }

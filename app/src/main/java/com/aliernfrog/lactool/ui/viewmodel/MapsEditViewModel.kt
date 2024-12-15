@@ -106,7 +106,12 @@ class MapsEditViewModel(
         withContext(Dispatchers.IO) {
             val inputStream = mapFile?.inputStream(context)
             val content = inputStream?.bufferedReader()?.readText() ?: return@withContext inputStream?.close()
-            mapEditor = MapEditorState(LACMapEditor(content))
+            mapEditor = MapEditorState(LACMapEditor(
+                content = content,
+                onDebugLog = {
+                    if (prefs.debug.value) Log.d(TAG, "[laclib] $it")
+                }
+            ))
             val materialsCount = (mapEditor?.downloadableMaterials?.size ?: 0).toLong()
             materialsLoadProgress = Progress(
                 description = materialsProgressText
