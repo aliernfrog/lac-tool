@@ -47,12 +47,12 @@ class MapEditorState(
         editor.mapOptions = mapOptions.map { it.toImmutable() }.toMutableList()
     }
 
-    private var _replaceableObjects by mutableStateOf(editor.replacableObjects.toList())
+    private var _replaceableObjects by mutableStateOf(editor.replaceableObjects.toList())
     var replaceableObjects: List<LACMapObject>
         get() = _replaceableObjects
         set(value) {
             _replaceableObjects = value
-            editor.replacableObjects = value.toMutableList()
+            editor.replaceableObjects = value.toMutableList()
         }
 
     private var _downloadableMaterials by mutableStateOf(editor.downloadableMaterials.toList())
@@ -65,7 +65,7 @@ class MapEditorState(
 
     fun replaceOldObjects(): Int {
         val replaced = editor.replaceOldObjects()
-        _replaceableObjects = editor.replacableObjects.toList()
+        _replaceableObjects = editor.replaceableObjects.toList()
         return replaced
     }
 
