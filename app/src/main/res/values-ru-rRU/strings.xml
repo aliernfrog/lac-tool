@@ -269,10 +269,10 @@
     <string name="settings_appearance_pitchBlack_description">Полностью чёрный фон при включенном тёмном режиме</string>
     <string name="settings_maps">Миниатюра карты</string>
     <string name="settings_maps_description">Настройте, когда будут отображаться миниатюры карт</string>
-    <string name="settings_maps_showChosenMapThumbnail">Показывать миниатюру выбранной карты</string>
-    <string name="settings_maps_showChosenMapThumbnail_description">Знайте, на какой карте вы находитесь</string>
-    <string name="settings_maps_showMapThumbnailsInList">Показывать миниатюры карт в списке карт</string>
-    <string name="settings_maps_showMapThumbnailsInList_description">Легко узнавайте какие карты у вас есть</string>
+    <string name="settings_maps_thumbnails_chosen">Показывать миниатюру выбранной карты</string>
+    <string name="settings_maps_thumbnails_chosen_description">Знайте, на какой карте вы находитесь</string>
+    <string name="settings_maps_thumbnails_list">Показывать миниатюры карт в списке карт</string>
+    <string name="settings_maps_thumbnails_list_description">Легко узнавайте какие карты у вас есть</string>
     <string name="settings_storage">Хранилище</string>
     <string name="settings_storage_description">Настройте взаимодействие LAC Tool с хранилищем</string>
     <string name="settings_storage_storageAccessType">Доступ к хранилищу</string>
