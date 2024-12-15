@@ -10,6 +10,7 @@ import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.util.extension.toPath
+import java.io.BufferedWriter
 import java.io.File
 import java.io.OutputStream
 
@@ -65,7 +66,7 @@ class FileUtil {
         }
 
         fun writeFile(outputStream: OutputStream, content: String) {
-            val writer = outputStream.writer(Charsets.UTF_8)
+            val writer = BufferedWriter(outputStream.writer(Charsets.UTF_8))
             writer.write(content)
             writer.flush()
             writer.close()
@@ -75,8 +76,7 @@ class FileUtil {
             val targetFile = File("${context.externalCacheDir}/shared/temptext.txt")
             targetFile.parentFile?.mkdirs()
             if (targetFile.isFile) targetFile.delete()
-            val output = targetFile.outputStream()
-            writeFile(output, text)
+            targetFile.outputStream().use { writeFile(it, text) }
             val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", targetFile)
             val intent = Intent(Intent.ACTION_VIEW)
                 .setDataAndType(uri, "text/plain")
