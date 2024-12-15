@@ -212,9 +212,12 @@ class FileWrapper(
     }
 
     fun writeFile(content: String, context: Context) {
-        delete()
-        val newFile = parentFile?.createFile(name)
-        when (val target = newFile?.file) {
+        var target = file
+        if (exists()) {
+            delete()
+            target = parentFile?.createFile(name)?.file ?: return
+        }
+        when (target) {
             is File -> target.outputStream().use {
                 FileUtil.writeFile(it, content)
             }
