@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
-import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -35,6 +34,8 @@ import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
+import com.aliernfrog.lactool.util.staticutil.FileUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -196,6 +197,7 @@ private fun MiscActions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
         FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
             ButtonRow(
@@ -219,14 +221,16 @@ private fun MiscActions(
                 FilterObjects()
             }
         }
-        if (mapsEditViewModel.prefs.mapEditRawView.value) ButtonRow(
-            title = "[DEBUG] Share current content",
+        if (mapsEditViewModel.prefs.debug.value) ButtonRow(
+            title = "[DEBUG] View .getCurrentContent()",
             description = "without .applyChanges()"
         ) {
-            val intent = Intent(Intent.ACTION_SEND)
-                .setType("text/plain")
-                .putExtra(Intent.EXTRA_TEXT, mapsEditViewModel.mapEditor?.editor?.getCurrentContent())
-            context.startActivity(Intent.createChooser(intent, "Current content [no .applyChanges()]"))
+            scope.launch(Dispatchers.IO) {
+                FileUtil.openTextAsFile(
+                    text = mapsEditViewModel.mapEditor?.editor?.getCurrentContent() ?: "content was null",
+                    context = context
+                )
+            }
         }
     }
 }

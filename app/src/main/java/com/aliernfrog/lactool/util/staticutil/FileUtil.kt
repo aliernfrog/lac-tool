@@ -71,6 +71,19 @@ class FileUtil {
             writer.close()
         }
 
+        fun openTextAsFile(text: String, context: Context) {
+            val targetFile = File("${context.externalCacheDir}/shared/temptext.txt")
+            targetFile.parentFile?.mkdirs()
+            if (targetFile.isFile) targetFile.delete()
+            val output = targetFile.outputStream()
+            writeFile(output, text)
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", targetFile)
+            val intent = Intent(Intent.ACTION_VIEW)
+                .setDataAndType(uri, "text/plain")
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            context.startActivity(intent)
+        }
+
         fun shareFiles(vararg files: FileWrapper, context: Context, title: String = context.getString(R.string.action_share)) {
             val isSingle = files.size <= 1
             val sharedFileUris = files.map {
