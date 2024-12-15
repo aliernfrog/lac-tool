@@ -47,7 +47,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.ui.component.ButtonIcon
