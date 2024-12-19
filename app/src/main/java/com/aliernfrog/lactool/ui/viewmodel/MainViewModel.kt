@@ -226,7 +226,9 @@ class MainViewModel(
                     mapsListViewModel.availableSegments.indexOfFirst {
                         it == MapsListSegment.SHARED
                     }.let {
-                        if (it > 0) mapsListViewModel.pagerState.requestScrollToPage(it)
+                        withContext(Dispatchers.Main) {
+                            if (it > 0) mapsListViewModel.pagerState.scrollToPage(it)
+                        }
                     }
                 }
                 progressState.currentProgress = null
