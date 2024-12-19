@@ -117,8 +117,8 @@
     <string name="maps_share_short">Paylaş</string>
     <string name="maps_edit">Bu haritayı düzenle</string>
     <string name="maps_edit_description">Haritanın ayarlarını ve rollerini düzenleyin</string>
-    <string name="maps_edit_opening">{NAME} açılıyor</string>
-    <string name="maps_edit_saving">{NAME} kaydediliyor</string>
+    <string name="maps_edit_opening">{NAME} açılıyor..</string>
+    <string name="maps_edit_saving">{NAME} kaydediliyor..</string>
     <string name="maps_edit_saved">{NAME} kaydedildi</string>
     <string name="maps_merge">Bu haritayı birleştir</string>
     <string name="maps_merge_short">Birleştir</string>
@@ -267,8 +267,9 @@
     <string name="settings_appearance_materialYou_unavailable">Sadece Android 12 ve üzerinde kullanılabilir</string>
     <string name="settings_appearance_pitchBlack">Zifiri karanlık</string>
     <string name="settings_appearance_pitchBlack_description">Karanlık mod etkinken zifiri karanlık arka plan</string>
-    <string name="settings_maps">Harita resimleri</string>
-    <string name="settings_maps_description">Harita resimlerinin ne zaman gösterileceğini ayarlayın</string>
+    <string name="settings_maps">Haritalar</string>
+    <string name="settings_maps_description">Haritalarla ilgili çeşitli yapılandırmalar</string>
+    <string name="settings_maps_thumbnails">Küçük resimler</string>
     <string name="settings_maps_thumbnails_chosen">Seçilen haritanın resmini göster</string>
     <string name="settings_maps_thumbnails_chosen_description">Hangi haritada olduğunuzu bilin</string>
     <string name="settings_maps_thumbnails_list">Harita listesinde resimleri göster</string>
