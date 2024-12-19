@@ -1,26 +1,29 @@
-import org.apache.commons.io.output.ByteArrayOutputStream
+import java.io.FileInputStream
+import java.util.Properties
 
-plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.parcelize")
-    id("com.mikepenz.aboutlibraries.plugin")
+val localProperties = Properties()
+try {
+    localProperties.load(FileInputStream(rootProject.file("local.properties")))
+} catch (t: Throwable) {
+    logger.warn("Failed to load local.properties: ", t)
 }
 
-val composeMaterialVersion = "1.7.0"
-val composeMaterial3Version = "1.3.0"
-val composeCompilerVersion = "1.5.15"
-val lifecycleVersion = "2.8.5"
-val shizukuVersion = "13.1.5"
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.aboutlibraries)
+}
 
 android {
     namespace = "com.aliernfrog.lactool"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 34300
         versionName = "3.4.3"
         vectorDrawables { useSupportLibrary = true }
@@ -39,13 +42,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
     }
 
@@ -53,10 +56,6 @@ android {
         aidl = true
         buildConfig = true
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
     packaging {
@@ -83,6 +82,9 @@ android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
     languages.joinToString(",") { "\"$it\"" }
 }}")
 
+val laclibPath: String? = localProperties.getProperty("laclibPath")
+val useLocalLaclib = !laclibPath.isNullOrEmpty()
+
 // Utilities to get git environment information
 // Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
 fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
@@ -92,7 +94,7 @@ fun hasLocalChanges(): Boolean {
     val branch = getCurrentBranch()
     val uncommittedChanges = exec("git", "status", "-s")?.isNotEmpty() ?: false
     val unpushedChanges = exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
-    return uncommittedChanges || unpushedChanges
+    return uncommittedChanges || unpushedChanges || useLocalLaclib
 }
 
 android.defaultConfig.run {
@@ -102,45 +104,52 @@ android.defaultConfig.run {
 }
 
 fun exec(vararg command: String) = try {
-    val stdout = ByteArrayOutputStream()
-    val errout = ByteArrayOutputStream()
-    exec {
-        commandLine = command.toList()
-        standardOutput = stdout
-        errorOutput = errout
-        isIgnoreExitValue = true
-    }
-
-    if (errout.size() > 0) throw Error(errout.toString(Charsets.UTF_8))
-    stdout.toString(Charsets.UTF_8).trim()
+    val process = ProcessBuilder(command.toList())
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+    val stdout = process.inputStream.bufferedReader().readText()
+    val stderr = process.errorStream.bufferedReader().readText()
+    if (stderr.isNotEmpty()) throw Error(stderr)
+    stdout.trim()
 } catch (_: Throwable) {
     null
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.compose.ui:ui:$composeMaterialVersion")
-    implementation("androidx.compose.material:material:$composeMaterialVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeMaterialVersion")
-    implementation("androidx.compose.material3:material3:$composeMaterial3Version")
-    implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.9.2")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
-    implementation("com.mikepenz:aboutlibraries-core:11.2.3")
-    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
-    implementation("com.github.aliernfrog:top-toast-compose:2.1.0")
-    implementation("com.github.aliernfrog:laclib:1.1.0")
-    implementation("com.lazygeniouz:dfc:1.0.8")
-    implementation("dev.rikka.shizuku:api:$shizukuVersion")
-    implementation("dev.rikka.shizuku:provider:$shizukuVersion")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.github.jeziellago:compose-markdown:0.5.4")
-    implementation("net.engawapg.lib:zoomable:1.6.2")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ktx)
+    implementation(libs.androidx.lifecycle.compose)
+    implementation(libs.androidx.lifecycle.ktx)
+    implementation(libs.androidx.navigation)
+    implementation(libs.androidx.splashscreen)
 
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeMaterialVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling-preview:$composeMaterialVersion")
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.material.icons)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.window)
+
+    implementation(libs.aboutlibraries)
+    implementation(libs.coil)
+    implementation(libs.coil.okhttp)
+    implementation(libs.dfc)
+    implementation(libs.koin)
+    implementation(libs.markdown)
+    implementation(libs.shizuku.api)
+    implementation(libs.shizuku.provider)
+    implementation(libs.toptoast)
+    implementation(libs.zoomable)
+
+    implementation(
+        if (!useLocalLaclib) libs.laclib else {
+            println("Using local LACLib")
+            files(laclibPath)
+        }
+    )
+
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.tooling.preview)
+
+    coreLibraryDesugaring(libs.android.desugar)
 }

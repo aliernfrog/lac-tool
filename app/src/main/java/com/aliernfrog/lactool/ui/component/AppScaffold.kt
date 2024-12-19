@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.component
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -17,10 +18,15 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
 
@@ -28,8 +34,8 @@ import com.aliernfrog.lactool.R
 @Composable
 fun AppScaffold(
     topBar: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
-    topAppBarState: TopAppBarState = TopAppBarState(0F,0F,0F),
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState),
+    topAppBarState: TopAppBarState = rememberTopAppBarState(),
+    scrollBehavior: TopAppBarScrollBehavior = adaptiveExitUntilCollapsedScrollBehavior(topAppBarState),
     floatingActionButton: @Composable () -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -56,7 +62,14 @@ fun AppTopBar(
     navigationIcon: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack,
     onNavigationClick: (() -> Unit)? = null
 ) {
-    LargeTopAppBar(
+    if (shouldDisableLargeTopAppBar()) AppSmallTopBar(
+        title = title,
+        scrollBehavior = scrollBehavior,
+        actions = actions,
+        colors = colors,
+        navigationIcon = navigationIcon,
+        onNavigationClick = onNavigationClick
+    ) else LargeTopAppBar(
         title = { Text(title) },
         scrollBehavior = scrollBehavior,
         colors = colors,
@@ -80,7 +93,7 @@ fun AppSmallTopBar(
     title: String,
     scrollBehavior: TopAppBarScrollBehavior,
     actions: @Composable RowScope.() -> Unit = {},
-    colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     navigationIcon: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack,
     onNavigationClick: (() -> Unit)? = null
 ) {
@@ -100,4 +113,21 @@ fun AppSmallTopBar(
         },
         actions = actions
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun adaptiveExitUntilCollapsedScrollBehavior(
+    topAppBarState: TopAppBarState = rememberTopAppBarState()
+): TopAppBarScrollBehavior {
+    return if (shouldDisableLargeTopAppBar()) TopAppBarDefaults.pinnedScrollBehavior(topAppBarState)
+    else TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+}
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Composable
+private fun shouldDisableLargeTopAppBar(): Boolean {
+    val context = LocalContext.current
+    val heightSizeClass = calculateWindowSizeClass(context as Activity)
+    return heightSizeClass.heightSizeClass == WindowHeightSizeClass.Compact
 }

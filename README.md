@@ -64,3 +64,8 @@ Shizuku method will automatically be enabled if there is no other way for the ap
     - Release variant: `./gradlew assembleRelease`
     - Debug variant: `./gradlew assembleDebug`
 </details>
+<details>
+  <summary>Properties</summary>
+  Following can be set in `local.properties`:
+  - `laclibPath` -> Path to a local [LACLib](https://github.com/aliernfrog/laclib) jar (defaults to the one from JitPack)
+</details>
