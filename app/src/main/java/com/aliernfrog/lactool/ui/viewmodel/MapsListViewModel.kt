@@ -19,7 +19,6 @@ class MapsListViewModel(
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
     var searchQuery by mutableStateOf("")
-    var chosenSegment by mutableStateOf(MapsListSegment.IMPORTED)
     var selectedMaps = mutableStateListOf<MapFile>()
 
     val availableSegments: List<MapsListSegment>

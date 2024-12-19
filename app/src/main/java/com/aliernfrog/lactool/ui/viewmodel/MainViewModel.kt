@@ -223,8 +223,11 @@ class MainViewModel(
                     mapsViewModel.mapListShown = false
                 } else {
                     mapsViewModel.sharedMaps = cached.toMutableStateList()
-                    // TODO handle this
-                    mapsListViewModel.chosenSegment = MapsListSegment.SHARED
+                    mapsListViewModel.availableSegments.indexOfFirst {
+                        it == MapsListSegment.SHARED
+                    }.let {
+                        if (it > 0) mapsListViewModel.pagerState.scrollToPage(it)
+                    }
                 }
                 progressState.currentProgress = null
             }

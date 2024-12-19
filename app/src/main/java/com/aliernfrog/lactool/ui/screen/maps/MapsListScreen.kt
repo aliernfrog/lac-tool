@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -246,8 +247,7 @@ fun MapsListScreen(
         }
 
         HorizontalPager(
-            state = mapsListViewModel.pagerState,
-            beyondViewportPageCount = 0
+            state = mapsListViewModel.pagerState
         ) { page ->
             val segment = mapsListViewModel.availableSegments[page]
             val mapsToShow = mapsListViewModel.getFilteredMaps(segment)
@@ -258,7 +258,7 @@ fun MapsListScreen(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         item {
-                            Header(segment, mapsToShow)
+                            Header(segment, page, mapsToShow)
                         }
 
                         items(mapsToShow) {
@@ -273,7 +273,7 @@ fun MapsListScreen(
                         modifier = Modifier.fillMaxSize()
                     ) { maxLineSpan: Int ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
-                            Header(segment, mapsToShow)
+                            Header(segment, page, mapsToShow)
                         }
 
                         items(mapsToShow) {
@@ -291,6 +291,7 @@ fun MapsListScreen(
 @Composable
 private fun Header(
     segment: MapsListSegment,
+    segmentIndex: Int,
     mapsToShow: List<MapFile>,
     mapsViewModel: MapsViewModel = koinViewModel(),
     mapsListViewModel: MapsListViewModel = koinViewModel()
@@ -305,12 +306,12 @@ private fun Header(
             options = mapsListViewModel.availableSegments.map {
                 stringResource(it.labelId)
             },
-            selectedIndex = mapsListViewModel.pagerState.currentPage,
+            selectedIndex = segmentIndex,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) { scope.launch {
-            mapsListViewModel.pagerState.animateScrollToPage(it)
+            mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(durationMillis = 1000))
         } }
         if (mapsToShow.isEmpty()) {
             if (mapsViewModel.isLoadingMaps) Column(
