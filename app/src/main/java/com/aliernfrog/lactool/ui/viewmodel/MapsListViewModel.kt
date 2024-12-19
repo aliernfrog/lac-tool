@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,8 @@ class MapsListViewModel(
             !(mapsViewModel.sharedMaps.isEmpty() && it == MapsListSegment.SHARED)
         }
 
+    val pagerState = PagerState { availableSegments.size }
+
     val selectedMapsActions: List<MapAction>
         get() = MapAction.entries.filter { action ->
             action.availableForMultiSelection && !selectedMaps.any { map ->
@@ -33,22 +36,15 @@ class MapsListViewModel(
             }
         }
 
-    /**
-     * Map list with filters and sorting options applied.
-     */
-    val mapsToShow: List<MapFile>
-        get() {
-            val sorting = ListSorting.entries[prefs.mapsListSorting.value]
-            return chosenSegment.getMaps(mapsViewModel)
-                .filter {
-                    it.name.contains(searchQuery, ignoreCase = true)
-                }
-                .sortedWith { m1, m2 ->
-                    sorting.comparator.compare(m1.file, m2.file)
-                }
-                .let {
-                    if (prefs.mapsListSortingReversed.value) it.reversed() else it
-                }
+    fun getFilteredMaps(segment: MapsListSegment) = segment.getMaps(mapsViewModel)
+        .filter {
+            it.name.contains(searchQuery, ignoreCase = true)
+        }
+        .sortedWith { m1, m2 ->
+            ListSorting.entries[prefs.mapsListSorting.value].comparator.compare(m1.file, m2.file)
+        }
+        .let {
+            if (prefs.mapsListSortingReversed.value) it.reversed() else it
         }
 
     fun isMapSelected(map: MapFile): Boolean {

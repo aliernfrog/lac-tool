@@ -223,6 +223,7 @@ class MainViewModel(
                     mapsViewModel.mapListShown = false
                 } else {
                     mapsViewModel.sharedMaps = cached.toMutableStateList()
+                    // TODO handle this
                     mapsListViewModel.chosenSegment = MapsListSegment.SHARED
                 }
                 progressState.currentProgress = null
