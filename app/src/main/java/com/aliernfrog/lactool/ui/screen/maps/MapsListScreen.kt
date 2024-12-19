@@ -311,7 +311,7 @@ private fun Header(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) { scope.launch {
-            mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(durationMillis = 1000))
+            mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(durationMillis = 150))
         } }
         if (mapsToShow.isEmpty()) {
             if (mapsViewModel.isLoadingMaps) Column(
