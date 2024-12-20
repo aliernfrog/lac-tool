@@ -247,7 +247,8 @@ fun MapsListScreen(
         }
 
         HorizontalPager(
-            state = mapsListViewModel.pagerState
+            state = mapsListViewModel.pagerState,
+            beyondViewportPageCount = 1
         ) { page ->
             val segment = mapsListViewModel.availableSegments[page]
             val mapsToShow = mapsListViewModel.getFilteredMaps(segment)
@@ -311,7 +312,7 @@ private fun Header(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) { scope.launch {
-            mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(durationMillis = 150))
+            mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(300))
         } }
         if (mapsToShow.isEmpty()) {
             if (mapsViewModel.isLoadingMaps) Column(
