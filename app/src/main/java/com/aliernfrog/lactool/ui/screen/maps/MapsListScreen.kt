@@ -8,10 +8,12 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -21,6 +23,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -53,7 +57,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -166,7 +174,9 @@ fun MapsListScreen(
                         } else {
                             Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
                                 if (showLoading) CircularProgressIndicator(
-                                    modifier = Modifier.size(48.dp).padding(8.dp)
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .padding(8.dp)
                                 )
                                 else IconButton(
                                     onClick = {
@@ -246,42 +256,69 @@ fun MapsListScreen(
             }
         }
 
-        HorizontalPager(
-            state = mapsListViewModel.pagerState,
-            beyondViewportPageCount = 1
-        ) { page ->
-            val segment = mapsListViewModel.availableSegments[page]
-            val mapsToShow = mapsListViewModel.getFilteredMaps(segment)
+        BoxWithConstraints {
+            val viewportHeight = maxHeight
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+            ) {
+                Header()
 
-            AnimatedContent(targetState = listStyle) { style ->
-                when (style) {
-                    ListStyle.LIST -> LazyColumn(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        item {
-                            Header(segment, page, mapsToShow)
-                        }
+                HorizontalPager(
+                    state = mapsListViewModel.pagerState,
+                    beyondViewportPageCount = 1,
+                    modifier = Modifier
+                        .height(viewportHeight)
+                        .nestedScroll(remember {
+                            object : NestedScrollConnection {
+                                override fun onPreScroll(
+                                    available: Offset,
+                                    source: NestedScrollSource
+                                ): Offset {
+                                    return if (available.y > 0) Offset.Zero else Offset(
+                                        x = 0f,
+                                        y = -scrollState.dispatchRawDelta(-available.y)
+                                    )
+                                }
+                            }
+                        })
+                ) { page ->
+                    val segment = mapsListViewModel.availableSegments[page]
+                    val mapsToShow = mapsListViewModel.getFilteredMaps(segment)
 
-                        items(mapsToShow) {
-                            MapItem(it, isGrid = false)
-                        }
+                    AnimatedContent(targetState = listStyle) { style ->
+                        when (style) {
+                            ListStyle.LIST -> LazyColumn(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                item {
+                                    SegmentSummary(segment, mapsToShow)
+                                }
 
-                        item {
-                            Footer()
-                        }
-                    }
-                    ListStyle.GRID -> LazyAdaptiveVerticalGrid(
-                        modifier = Modifier.fillMaxSize()
-                    ) { maxLineSpan: Int ->
-                        item(span = { GridItemSpan(maxLineSpan) }) {
-                            Header(segment, page, mapsToShow)
-                        }
+                                items(mapsToShow) {
+                                    MapItem(it, isGrid = false)
+                                }
 
-                        items(mapsToShow) {
-                            MapItem(it, isGrid = true)
-                        }
+                                item {
+                                    Footer()
+                                }
+                            }
+                            ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    SegmentSummary(segment, mapsToShow)
+                                }
 
-                        item { Footer() }
+                                items(mapsToShow) {
+                                    MapItem(it, isGrid = true)
+                                }
+
+                                item { Footer() }
+                            }
+                        }
                     }
                 }
             }
@@ -291,10 +328,6 @@ fun MapsListScreen(
 
 @Composable
 private fun Header(
-    segment: MapsListSegment,
-    segmentIndex: Int,
-    mapsToShow: List<MapFile>,
-    mapsViewModel: MapsViewModel = koinViewModel(),
     mapsListViewModel: MapsListViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -307,34 +340,43 @@ private fun Header(
             options = mapsListViewModel.availableSegments.map {
                 stringResource(it.labelId)
             },
-            selectedIndex = segmentIndex,
+            selectedIndex = mapsListViewModel.pagerState.currentPage,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) { scope.launch {
             mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(300))
         } }
-        if (mapsToShow.isEmpty()) {
-            if (mapsViewModel.isLoadingMaps) Column(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator(strokeWidth = 3.dp)
-            }
-            else ErrorWithIcon(
-                error = stringResource(
-                    if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
-                    else segment.noMapsTextId
-                ),
-                painter = rememberVectorPainter(Icons.Rounded.LocationOff),
-                modifier = Modifier.fillMaxWidth()
-            )
-        } else Text(
-            text = stringResource(R.string.mapsList_count)
-                .replace("{COUNT}", mapsToShow.size.toString()),
-            modifier = Modifier.padding(horizontal = 20.dp)
-        )
     }
+}
+
+@Composable
+private fun SegmentSummary(
+    segment: MapsListSegment,
+    mapsToShow: List<MapFile>,
+    mapsListViewModel: MapsListViewModel = koinViewModel(),
+    mapsViewModel: MapsViewModel = koinViewModel()
+) {
+    if (mapsToShow.isEmpty()) {
+        if (mapsViewModel.isLoadingMaps) Column(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(strokeWidth = 3.dp)
+        }
+        else ErrorWithIcon(
+            error = stringResource(
+                if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
+                else segment.noMapsTextId
+            ),
+            painter = rememberVectorPainter(Icons.Rounded.LocationOff),
+            modifier = Modifier.fillMaxWidth()
+        )
+    } else Text(
+        text = stringResource(R.string.mapsList_count)
+            .replace("{COUNT}", mapsToShow.size.toString()),
+        modifier = Modifier.padding(horizontal = 20.dp)
+    )
 }
 
 @Composable
