@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
@@ -36,6 +36,7 @@ import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
+import com.aliernfrog.lactool.ui.theme.AppFABHeight
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -116,7 +117,7 @@ private fun MergeScreen(
             MapsList(
                 maps = mapsMergeViewModel.mapMerger.mapsToMerge
             )
-            Spacer(Modifier.systemBarsPadding().height(70.dp))
+            Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
         }
     }
 

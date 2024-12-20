@@ -3,7 +3,6 @@ package com.aliernfrog.lactool.ui.screen.permissions
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -42,7 +41,10 @@ fun AllFilesPermissionsScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
     ) {
         CardWithActions(
             title = stringResource(R.string.permissions_allFiles_title),
@@ -72,7 +74,5 @@ fun AllFilesPermissionsScreen(
                 StorageAccessType.SAF.enable(permissionsViewModel.prefs)
             }
         }
-
-        Spacer(Modifier.navigationBarsPadding())
     }
 }

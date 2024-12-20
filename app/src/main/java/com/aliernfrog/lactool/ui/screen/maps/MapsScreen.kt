@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -77,7 +78,12 @@ fun MapsScreen(
     ) {
         Crossfade(targetState = mapsViewModel.chosenMap) { chosenMap ->
             if (chosenMap == null) return@Crossfade
-            Column(Modifier.fillMaxSize().verticalScroll(mapsViewModel.scrollState)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(mapsViewModel.scrollState)
+                    .navigationBarsPadding()
+            ) {
                 PickMapButton(
                     chosenMap = chosenMap,
                     showMapThumbnail = mapsViewModel.prefs.showChosenMapThumbnail.value,

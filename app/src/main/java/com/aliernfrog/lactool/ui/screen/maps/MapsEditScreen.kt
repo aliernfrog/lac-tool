@@ -31,6 +31,7 @@ import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
+import com.aliernfrog.lactool.ui.theme.AppFABHeight
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
@@ -74,18 +75,14 @@ fun MapsEditScreen(
         }
     ) {
         Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(mapsEditViewModel.scrollState)) {
+            Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)
+        ) {
             GeneralActions(
                 onNavigateRequest = onNavigateRequest
             )
             OptionsActions()
             MiscActions()
-            Spacer(
-                Modifier
-                    .systemBarsPadding()
-                    .height(70.dp))
+            Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
         }
     }
     if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
