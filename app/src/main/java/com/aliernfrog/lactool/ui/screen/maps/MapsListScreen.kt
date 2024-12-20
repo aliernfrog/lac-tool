@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -94,7 +96,6 @@ fun MapsListScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val mapsToShow = mapsListViewModel.mapsToShow
     val isMultiSelecting = mapsListViewModel.selectedMaps.isNotEmpty()
     val listStyle = ListStyle.entries[mapsListViewModel.prefs.mapsListStyle.value]
     val showMapThumbnails = mapsListViewModel.prefs.showMapThumbnailsInList.value
@@ -245,35 +246,43 @@ fun MapsListScreen(
             }
         }
 
-        AnimatedContent(targetState = listStyle) { style ->
-            when (style) {
-                ListStyle.LIST -> LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    item {
-                        Header(mapsToShow)
-                    }
+        HorizontalPager(
+            state = mapsListViewModel.pagerState,
+            beyondViewportPageCount = 1
+        ) { page ->
+            val segment = mapsListViewModel.availableSegments[page]
+            val mapsToShow = mapsListViewModel.getFilteredMaps(segment)
 
-                    items(mapsToShow) {
-                        MapItem(it, isGrid = false)
-                    }
+            AnimatedContent(targetState = listStyle) { style ->
+                when (style) {
+                    ListStyle.LIST -> LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        item {
+                            Header(segment, page, mapsToShow)
+                        }
 
-                    item {
-                        Footer()
-                    }
-                }
-                ListStyle.GRID -> LazyAdaptiveVerticalGrid(
-                    modifier = Modifier.fillMaxSize()
-                ) { maxLineSpan: Int ->
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Header(mapsToShow)
-                    }
+                        items(mapsToShow) {
+                            MapItem(it, isGrid = false)
+                        }
 
-                    items(mapsToShow) {
-                        MapItem(it, isGrid = true)
+                        item {
+                            Footer()
+                        }
                     }
+                    ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                        modifier = Modifier.fillMaxSize()
+                    ) { maxLineSpan: Int ->
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Header(segment, page, mapsToShow)
+                        }
 
-                    item { Footer() }
+                        items(mapsToShow) {
+                            MapItem(it, isGrid = true)
+                        }
+
+                        item { Footer() }
+                    }
                 }
             }
         }
@@ -282,22 +291,29 @@ fun MapsListScreen(
 
 @Composable
 private fun Header(
+    segment: MapsListSegment,
+    segmentIndex: Int,
     mapsToShow: List<MapFile>,
     mapsViewModel: MapsViewModel = koinViewModel(),
     mapsListViewModel: MapsListViewModel = koinViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     Column {
         Search(
             searchQuery = mapsListViewModel.searchQuery,
             onSearchQueryChange = { mapsListViewModel.searchQuery = it }
         )
-        Filter(
-            segments = mapsListViewModel.availableSegments,
-            selectedSegment = mapsListViewModel.chosenSegment,
-            onSelectedSegmentChange = {
-                mapsListViewModel.chosenSegment = it
-            }
-        )
+        SegmentedButtons(
+            options = mapsListViewModel.availableSegments.map {
+                stringResource(it.labelId)
+            },
+            selectedIndex = segmentIndex,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) { scope.launch {
+            mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(300))
+        } }
         if (mapsToShow.isEmpty()) {
             if (mapsViewModel.isLoadingMaps) Column(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
@@ -308,7 +324,7 @@ private fun Header(
             else ErrorWithIcon(
                 error = stringResource(
                     if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
-                    else mapsListViewModel.chosenSegment.noMapsTextId
+                    else segment.noMapsTextId
                 ),
                 painter = rememberVectorPainter(Icons.Rounded.LocationOff),
                 modifier = Modifier.fillMaxWidth()
@@ -388,25 +404,6 @@ private fun Search(
                 end = 8.dp
             )
     )
-}
-
-@Composable
-private fun Filter(
-    segments: List<MapsListSegment>,
-    selectedSegment: MapsListSegment,
-    onSelectedSegmentChange: (MapsListSegment) -> Unit
-) {
-    SegmentedButtons(
-        options = segments.map {
-            stringResource(it.labelId)
-        },
-        selectedIndex = selectedSegment.ordinal,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        onSelectedSegmentChange(segments[it])
-    }
 }
 
 @Composable
