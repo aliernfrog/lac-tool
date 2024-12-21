@@ -74,7 +74,7 @@ import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.maps.GridMapItem
 import com.aliernfrog.lactool.ui.component.maps.ListMapItem
-import com.aliernfrog.lactool.ui.theme.AppFABHeight
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.staticutil.UriUtil
@@ -343,7 +343,7 @@ private fun Header(
 
 @Composable
 private fun Footer() {
-    Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
+    Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

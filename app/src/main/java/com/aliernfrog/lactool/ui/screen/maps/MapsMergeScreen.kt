@@ -36,7 +36,7 @@ import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
-import com.aliernfrog.lactool.ui.theme.AppFABHeight
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -117,7 +117,7 @@ private fun MergeScreen(
             MapsList(
                 maps = mapsMergeViewModel.mapMerger.mapsToMerge
             )
-            Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
+            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
         }
     }
 

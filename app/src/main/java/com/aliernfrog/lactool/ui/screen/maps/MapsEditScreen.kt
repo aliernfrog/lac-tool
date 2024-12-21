@@ -31,7 +31,7 @@ import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
-import com.aliernfrog.lactool.ui.theme.AppFABHeight
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
@@ -82,7 +82,7 @@ fun MapsEditScreen(
             )
             OptionsActions()
             MiscActions()
-            Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
+            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
         }
     }
     if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(

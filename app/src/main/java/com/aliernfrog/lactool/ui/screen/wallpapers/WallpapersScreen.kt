@@ -56,7 +56,7 @@ import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
-import com.aliernfrog.lactool.ui.theme.AppFABHeight
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -238,5 +238,5 @@ private fun Header(
 
 @Composable
 private fun Footer() {
-    Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
+    Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
 }

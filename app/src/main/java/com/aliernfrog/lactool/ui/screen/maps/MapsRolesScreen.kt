@@ -31,7 +31,7 @@ import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
-import com.aliernfrog.lactool.ui.theme.AppFABHeight
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.extension.removeHtml
 import kotlinx.coroutines.launch
@@ -101,7 +101,7 @@ fun MapsRolesScreen(
                 )
             }
             item {
-                Spacer(Modifier.navigationBarsPadding().height(AppFABHeight))
+                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
             }
         }
     }
