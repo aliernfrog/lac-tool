@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
@@ -195,7 +194,7 @@ fun MapsMaterialsScreen(
                                 MaterialButton(it)
                             }
                             item {
-                                Spacer(Modifier.systemBarsPadding())
+                                Spacer(Modifier.navigationBarsPadding())
                             }
                         }
                         ListStyle.GRID -> LazyAdaptiveVerticalGrid(
@@ -213,7 +212,7 @@ fun MapsMaterialsScreen(
                                 )
                             }
                             item(span = { GridItemSpan(maxLineSpan) }) {
-                                Spacer(Modifier.systemBarsPadding())
+                                Spacer(Modifier.navigationBarsPadding())
                             }
                         }
                     }

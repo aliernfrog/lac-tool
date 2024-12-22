@@ -23,6 +23,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -62,7 +63,13 @@ fun AppTopBar(
     navigationIcon: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack,
     onNavigationClick: (() -> Unit)? = null
 ) {
-    if (shouldDisableLargeTopAppBar()) AppSmallTopBar(
+    val disableLargeTopAppBar = shouldDisableLargeTopAppBar()
+
+    LaunchedEffect(disableLargeTopAppBar) {
+        if (disableLargeTopAppBar) scrollBehavior.state.heightOffset = 0f
+    }
+
+    if (disableLargeTopAppBar && scrollBehavior.state.heightOffset == 0f) AppSmallTopBar(
         title = title,
         scrollBehavior = scrollBehavior,
         actions = actions,

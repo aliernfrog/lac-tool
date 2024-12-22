@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -55,6 +56,7 @@ import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -147,9 +149,11 @@ fun WallpapersScreen(
                     item {
                         ListHeader()
                     }
+
                     items(wallpapersViewModel.wallpapersToShow) {
                         WallpaperButton(it)
                     }
+
                     item {
                         Footer()
                     }
@@ -160,6 +164,7 @@ fun WallpapersScreen(
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ListHeader()
                     }
+
                     items(wallpapersViewModel.wallpapersToShow) {
                         WallpaperButton(
                             wallpaper = it,
@@ -168,6 +173,7 @@ fun WallpapersScreen(
                             modifier = Modifier.aspectRatio(1f)
                         )
                     }
+
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Footer()
                     }
@@ -232,5 +238,5 @@ private fun Header(
 
 @Composable
 private fun Footer() {
-    Spacer(Modifier.height(70.dp))
+    Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
 }

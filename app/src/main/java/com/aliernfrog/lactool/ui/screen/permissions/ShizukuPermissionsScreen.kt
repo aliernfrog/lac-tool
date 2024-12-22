@@ -3,7 +3,6 @@ package com.aliernfrog.lactool.ui.screen.permissions
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -62,6 +61,7 @@ fun ShizukuPermissionsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
         ) {
             if (isLoading) {
                 VerticalProgressIndicator(
@@ -211,6 +211,4 @@ private fun ShizukuSetupGuide(
             )
         }
     }
-
-    Spacer(Modifier.navigationBarsPadding())
 }
