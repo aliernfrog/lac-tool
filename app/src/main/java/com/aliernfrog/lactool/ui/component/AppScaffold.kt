@@ -66,7 +66,7 @@ fun AppTopBar(
     val disableLargeTopAppBar = shouldDisableLargeTopAppBar()
 
     LaunchedEffect(disableLargeTopAppBar) {
-        scrollBehavior.state.heightOffset = 0f
+        if (disableLargeTopAppBar) scrollBehavior.state.heightOffset = 0f
     }
 
     if (disableLargeTopAppBar && scrollBehavior.state.heightOffset == 0f) AppSmallTopBar(
