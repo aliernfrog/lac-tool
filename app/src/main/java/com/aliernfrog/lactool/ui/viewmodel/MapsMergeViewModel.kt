@@ -10,7 +10,6 @@ import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -18,6 +17,7 @@ import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.impl.laclib.MapMergerState
 import com.aliernfrog.lactool.util.extension.popBackStackSafe
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
@@ -36,8 +36,8 @@ class MapsMergeViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
+    val mapMerger = MapMergerState(LACMapMerger())
     var isMerging by mutableStateOf(false)
-    var mapMerger by mutableStateOf(LACMapMerger(), neverEqualPolicy())
     var optionsExpandedFor by mutableIntStateOf(0)
     var mergeMapDialogShown by mutableStateOf(false)
     var mapListShown by mutableStateOf(false)
@@ -62,7 +62,7 @@ class MapsMergeViewModel(
             mapsFile.createFile(newFileName)!!.writeFile(newMapContent, context)
             mergeMapDialogShown = false
             isMerging = false
-            mapMerger.mapsToMerge.clear()
+            mapMerger.clearMaps()
             // No need to update merger state here because it navigates back after finishing
             mapsViewModel.chooseMap(mapsFile.findFile(newFileName))
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
@@ -81,18 +81,16 @@ class MapsMergeViewModel(
                 inputStream.close()
                 mapMerger.addMap(map.name, content)
             }
-            updateMergerState()
         }
     }
 
     fun removeMap(index: Int, mapName: String, context: Context) {
-        mapMerger.mapsToMerge.removeAt(index)
+        mapMerger.removeMap(index)
         optionsExpandedFor = 0
         topToastState.showToast(
             text = context.getString(R.string.mapsMerge_map_removed).replace("{MAP}", mapName),
             icon = Icons.Rounded.Done
         )
-        updateMergerState()
     }
 
 
@@ -103,7 +101,6 @@ class MapsMergeViewModel(
             text = context.getString(R.string.mapsMerge_map_madeBase).replace("{MAP}", mapName),
             icon = Icons.Rounded.Done
         )
-        updateMergerState()
     }
 
 
@@ -115,9 +112,5 @@ class MapsMergeViewModel(
         topToastState.showToast(reason, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
         mergeMapDialogShown = false
         isMerging = false
-    }
-
-    fun updateMergerState() {
-        mapMerger = mapMerger
     }
 }

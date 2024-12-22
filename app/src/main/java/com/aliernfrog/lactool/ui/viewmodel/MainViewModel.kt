@@ -15,7 +15,6 @@ import androidx.compose.material3.SheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.unit.Density
 import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
@@ -222,8 +221,14 @@ class MainViewModel(
                     mapsViewModel.chooseMap(cached.first())
                     mapsViewModel.mapListShown = false
                 } else {
-                    mapsViewModel.sharedMaps = cached.toMutableStateList()
-                    mapsListViewModel.chosenSegment = MapsListSegment.SHARED
+                    mapsViewModel.sharedMaps = cached
+                    withContext(Dispatchers.Main) {
+                        mapsListViewModel.availableSegments.indexOfFirst {
+                            it == MapsListSegment.SHARED
+                        }.let {
+                            if (it > 0) mapsListViewModel.pagerState.scrollToPage(it)
+                        }
+                    }
                 }
                 progressState.currentProgress = null
             }

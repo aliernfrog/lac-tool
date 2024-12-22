@@ -239,10 +239,10 @@
     <string name="settings_appearance_pitchBlack_description">启用深色模式时背景为纯黑色</string>
     <string name="settings_maps">地图缩略图</string>
     <string name="settings_maps_description">配置何时显示地图缩略图</string>
-    <string name="settings_maps_showChosenMapThumbnail">显示所选地图的缩略图</string>
-    <string name="settings_maps_showChosenMapThumbnail_description">知晓你在哪张地图</string>
-    <string name="settings_maps_showMapThumbnailsInList">在地图列表中显示地图缩略图</string>
-    <string name="settings_maps_showMapThumbnailsInList_description">轻松识别您拥有的地图</string>
+    <string name="settings_maps_thumbnails_chosen">显示所选地图的缩略图</string>
+    <string name="settings_maps_thumbnails_chosen_description">知晓你在哪张地图</string>
+    <string name="settings_maps_thumbnails_list">在地图列表中显示地图缩略图</string>
+    <string name="settings_maps_thumbnails_list_description">轻松识别您拥有的地图</string>
     <string name="settings_storage">存储</string>
     <string name="settings_storage_description">配置 LAC Tool 的存储读写方式</string>
     <string name="settings_storage_storageAccessType">存储访问类型</string>

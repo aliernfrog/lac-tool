@@ -73,6 +73,7 @@ private fun DowngradeFiles(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
     ) {
         CardWithActions(
             modifier = Modifier.fillMaxWidth().padding(8.dp),

@@ -19,10 +19,12 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val pitchBlack = booleanPreference("pitchBlack", false)
 
     // General options
-    val showChosenMapThumbnail = booleanPreference("chosenMapThumbnail", true)
-    val showMapThumbnailsInList = booleanPreference("showMapThumbnailsList", true)
     val language = stringPreference("appLanguage", "") // follow system if blank
     val autoCheckUpdates = booleanPreference("autoUpdates", true)
+
+    // Maps options
+    val showChosenMapThumbnail = booleanPreference("chosenMapThumbnail", true)
+    val showMapThumbnailsInList = booleanPreference("showMapThumbnailsList", true)
 
     // Directory options
     val lacMapsDir = stringPreference("mapsDir", "${externalStorageRoot}Android/data/com.MA.LAC/files/editor", experimental = true)
@@ -55,6 +57,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
 
     // Experimental (developer) options
     val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
+    val debug = booleanPreference("debug", false, experimental = true, includeInDebugInfo = false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
     val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", GeneralUtil.getAppVersionCode(context), experimental = true, includeInDebugInfo = false)
     val updatesURL = stringPreference("updatesUrl", "https://aliernfrog.github.io/lactool/latest.json", experimental = true, includeInDebugInfo = false)

@@ -47,6 +47,7 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
@@ -83,7 +84,7 @@ class MapsEditViewModel(
 
     private var mapFile: FileWrapper? = null
 
-    var mapEditor by mutableStateOf<LACMapEditor?>(null, neverEqualPolicy())
+    var mapEditor by mutableStateOf<MapEditorState?>(null)
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
     var rolesExpandedRoleIndex by mutableIntStateOf(-1)
     var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
@@ -105,7 +106,12 @@ class MapsEditViewModel(
         withContext(Dispatchers.IO) {
             val inputStream = mapFile?.inputStream(context)
             val content = inputStream?.bufferedReader()?.readText() ?: return@withContext inputStream?.close()
-            mapEditor = LACMapEditor(content)
+            mapEditor = MapEditorState(LACMapEditor(
+                content = content,
+                onDebugLog = {
+                    if (prefs.debug.value) Log.d(TAG, "[laclib] $it")
+                }
+            ))
             val materialsCount = (mapEditor?.downloadableMaterials?.size ?: 0).toLong()
             materialsLoadProgress = Progress(
                 description = materialsProgressText
@@ -119,23 +125,16 @@ class MapsEditViewModel(
         navController.navigate(Destination.MAPS_EDIT.route)
     }
 
-    fun updateMapEditorState() {
-        mapEditor = mapEditor
-    }
-
     fun setServerName(serverName: String) {
         mapEditor?.serverName = serverName
-        updateMapEditorState()
     }
 
     fun setMapType(mapType: LACMapType) {
         mapEditor?.mapType = mapType
-        updateMapEditorState()
     }
 
     fun deleteRole(role: String, context: Context) {
         mapEditor?.deleteRole(role)
-        updateMapEditorState()
         topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("{ROLE}", role.removeHtml()), Icons.Rounded.Delete)
     }
 
@@ -150,7 +149,6 @@ class MapsEditViewModel(
                 )
             }
         ) {
-            updateMapEditorState()
             topToastState.showToast(context.getString(R.string.mapsRoles_addedRole).replace("{ROLE}", role.removeHtml()), Icons.Rounded.Check)
         }
     }
@@ -184,7 +182,6 @@ class MapsEditViewModel(
     private fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
         failedMaterials.remove(material)
-        updateMapEditorState()
         topToastState.showToast(
             text = context.getString(R.string.mapsMaterials_deleted)
                 .replace("{MATERIAL}", material.name)
@@ -247,7 +244,6 @@ class MapsEditViewModel(
 
     fun replaceOldObjects(context: Context) {
         val replacedObjects = mapEditor?.replaceOldObjects() ?: 0
-        updateMapEditorState()
         topToastState.showToast(
             text = context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replacedObjects.toString()),
             icon = Icons.Rounded.Done
@@ -255,11 +251,11 @@ class MapsEditViewModel(
     }
 
     fun getObjectFilterMatches(): List<String> {
-        return mapEditor?.getObjectsMatchingFilter(objectFilter) ?: listOf()
+        return mapEditor?.editor?.getObjectsMatchingFilter(objectFilter) ?: listOf()
     }
 
     fun removeObjectFilterMatches(context: Context) {
-        val removedObjects = mapEditor?.removeObjectsMatchingFilter(objectFilter)
+        val removedObjects = mapEditor?.editor?.removeObjectsMatchingFilter(objectFilter)
         objectFilter = LACMapObjectFilter()
         topToastState.showToast(
             text = context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", removedObjects.toString()),
@@ -274,7 +270,7 @@ class MapsEditViewModel(
             context.getString(R.string.maps_edit_saving).replace("{NAME}", mapName.toString())
         )
         try { withContext(Dispatchers.IO) {
-            val newContent = mapEditor?.applyChanges() ?: return@withContext
+            val newContent = mapEditor?.editor?.applyChanges() ?: return@withContext
             mapFile!!.writeFile(newContent, context)
             topToastState.showToast(
                 text = context.getString(R.string.maps_edit_saved).replace("{NAME}", mapName.toString()),

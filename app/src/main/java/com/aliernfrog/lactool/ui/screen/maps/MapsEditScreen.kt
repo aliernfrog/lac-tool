@@ -31,9 +31,12 @@ import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
+import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.getName
+import com.aliernfrog.lactool.util.staticutil.FileUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,13 +74,15 @@ fun MapsEditScreen(
             }
         }
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
+        Column(
+            Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)
+        ) {
             GeneralActions(
                 onNavigateRequest = onNavigateRequest
             )
             OptionsActions()
             MiscActions()
-            Spacer(Modifier.systemBarsPadding().height(70.dp))
+            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
         }
     }
     if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
@@ -163,7 +168,7 @@ private fun OptionsActions(
                         value = option.value,
                         onValueChange = {
                             option.value = it 
-                            mapsEditViewModel.updateMapEditorState()
+                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
                         },
                         placeholder = option.value,
                         numberOnly = true
@@ -173,7 +178,7 @@ private fun OptionsActions(
                         checked = option.value == "true",
                         onCheckedChange = {
                             option.value = it.toString()
-                            mapsEditViewModel.updateMapEditorState()
+                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
                         }
                     )
                     LACMapOptionType.SWITCH -> SwitchRow(
@@ -181,7 +186,7 @@ private fun OptionsActions(
                         checked = option.value == "enabled",
                         onCheckedChange = {
                             option.value = if (it) "enabled" else "disabled"
-                            mapsEditViewModel.updateMapEditorState()
+                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
                         }
                     )
                 }
@@ -195,8 +200,9 @@ private fun MiscActions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replacableObjects?.isEmpty() != true) {
+        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
             ButtonRow(
                 title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                 description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
@@ -216,6 +222,31 @@ private fun MiscActions(
         ) {
             Column(Modifier.padding(vertical = 8.dp)) {
                 FilterObjects()
+            }
+        }
+        if (mapsEditViewModel.prefs.debug.value) {
+            ButtonRow(
+                title = "[DEBUG] View getCurrentContent()",
+                description = "without applyChanges()"
+            ) {
+                scope.launch(Dispatchers.IO) {
+                    FileUtil.openTextAsFile(
+                        text = mapsEditViewModel.mapEditor?.editor?.getCurrentContent()
+                            ?: "content was null",
+                        context = context
+                    )
+                }
+            }
+            ButtonRow(
+                title = "[DEBUG] applyChanges() and view result"
+            ) {
+                scope.launch(Dispatchers.IO) {
+                    FileUtil.openTextAsFile(
+                        text = mapsEditViewModel.mapEditor?.editor?.applyChanges()
+                            ?: "content was null",
+                        context = context
+                    )
+                }
             }
         }
     }

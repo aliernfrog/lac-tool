@@ -269,10 +269,10 @@
     <string name="settings_appearance_pitchBlack_description">Karanlık mod etkinken zifiri karanlık arka plan</string>
     <string name="settings_maps">Harita resimleri</string>
     <string name="settings_maps_description">Harita resimlerinin ne zaman gösterileceğini ayarlayın</string>
-    <string name="settings_maps_showChosenMapThumbnail">Seçilen haritanın resmini göster</string>
-    <string name="settings_maps_showChosenMapThumbnail_description">Hangi haritada olduğunuzu bilin</string>
-    <string name="settings_maps_showMapThumbnailsInList">Harita listesinde resimleri göster</string>
-    <string name="settings_maps_showMapThumbnailsInList_description">Haritalarınızı kolayca ayırt edin</string>
+    <string name="settings_maps_thumbnails_chosen">Seçilen haritanın resmini göster</string>
+    <string name="settings_maps_thumbnails_chosen_description">Hangi haritada olduğunuzu bilin</string>
+    <string name="settings_maps_thumbnails_list">Harita listesinde resimleri göster</string>
+    <string name="settings_maps_thumbnails_list_description">Haritalarınızı kolayca ayırt edin</string>
     <string name="settings_storage">Depolama</string>
     <string name="settings_storage_description">LAC Tool\'un depolamayla nasıl etkileşime gireceğini ayarlayın</string>
     <string name="settings_storage_storageAccessType">Depolama erişimi tipi</string>
