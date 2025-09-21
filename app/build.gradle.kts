@@ -39,6 +39,12 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+
+        debug {
+            applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "LAC Tool Debug")
+            versionNameSuffix = "-debug"
+        }
     }
 
     compileOptions {
