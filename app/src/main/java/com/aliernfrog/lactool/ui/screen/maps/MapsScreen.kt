@@ -109,7 +109,9 @@ private fun Actions(
 
     TextField(
         value = mapsViewModel.mapNameEdit,
-        onValueChange = { mapsViewModel.mapNameEdit = it },
+        onValueChange = {
+            mapsViewModel.mapNameEdit = it.replace("\n", "")
+        },
         label = { Text(stringResource(R.string.maps_mapName)) },
         placeholder = { Text(chosenMap.name) },
         singleLine = true,
