@@ -94,7 +94,7 @@ class MapsViewModel(
                 is FileWrapper -> MapFile(map)
                 else -> if (map == null) null else MapFile(FileWrapper(map))
             }
-            if (mapToChoose != null) mapNameEdit = mapToChoose.name
+            if (mapToChoose != null) mapNameEdit = mapToChoose.name.replace("\n", "")
             chosenMap = mapToChoose
         } catch (e: Exception) {
             topToastState.showErrorToast()
@@ -233,7 +233,7 @@ class MapsViewModel(
     }
 
     fun resolveMapNameInput(): String {
-        return mapNameEdit.ifBlank { chosenMap?.name ?: "" }
+        return mapNameEdit.ifBlank { chosenMap?.name ?: "" }.replace("\n", "")
     }
 
     fun showActionFailedDialog(successes: List<Pair<String, MapActionResult>>, fails: List<Pair<String, MapActionResult>>) {

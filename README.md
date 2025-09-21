@@ -42,6 +42,10 @@ Shizuku method in LAC Tool can be enabled or disabled anytime from settings.
 
 Shizuku method will automatically be enabled if there is no other way for the app to access LAC data. The app will guide you to setup Shizuku if this mode is enabled.
 
+## ⚖️ License
+Since commit [`0cd1915`](https://github.com/aliernfrog/lac-tool/commit/0cd1915cf1830292ffef0e0617a068455e208c78), LAC Tool is licensed under the GPLv3 license.<br />
+You must keep the source code public if you are distributing your own version of LAC Tool. See [LICENSE.md](LICENSE.md) file for more details.
+
 ## 🔧 Building
 <details>
   <summary>Using GitHub Actions</summary>

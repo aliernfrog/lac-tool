@@ -4,8 +4,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.compose.material.icons.Icons
@@ -29,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 import java.io.File
+import androidx.core.net.toUri
 
 
 class ShizukuViewModel(
@@ -38,12 +40,16 @@ class ShizukuViewModel(
 ) : ViewModel() {
     companion object {
         const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
-        const val SHIZUKU_PLAY_STORE = "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"
+        const val SHIZUKU_PROBLEMATIC_VERSION_CODE = 1086.toLong()
+        const val SHIZUKU_RECOMMENDED_VERSION_NAME = "v13.5.4"
+        const val SHIZUKU_RECOMMENDED_VERSION_DOWNLOAD_URL = "https://github.com/RikkaApps/Shizuku/releases/download/v13.5.4/shizuku-v13.5.4.r1049.0e53409-release.apk"
+        const val SHIZUKU_PLAYSTORE_URL = /*"https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"*/ SHIZUKU_RECOMMENDED_VERSION_DOWNLOAD_URL
+        const val SHIZUKU_RELEASES_URL = "https://github.com/RikkaApps/Shizuku/releases"
         const val SUI_GITHUB = "https://github.com/RikkaApps/Sui"
     }
 
     var status by mutableStateOf(ShizukuStatus.UNKNOWN)
-    val managerInstalled: Boolean
+    val shizukuInstalled: Boolean
         get() = status != ShizukuStatus.NOT_INSTALLED && status != ShizukuStatus.UNKNOWN
     val deviceRooted = System.getenv("PATH")?.split(":")?.any { path ->
         File(path, "su").canExecute()
@@ -51,6 +57,7 @@ class ShizukuViewModel(
 
     var fileService: IFileService? = null
     var fileServiceRunning by mutableStateOf(false)
+    var shizukuVersionProblematic by mutableStateOf(false)
     var timedOut by mutableStateOf(false)
 
     private var timeOutJob: Job? = null
@@ -100,12 +107,27 @@ class ShizukuViewModel(
         Shizuku.addRequestPermissionResultListener(permissionResultListener)
     }
 
+    fun launchShizuku(context: Context) {
+        try {
+            if (shizukuInstalled) context.startActivity(
+                context.packageManager.getLaunchIntentForPackage(SHIZUKU_PACKAGE)
+            ) else {
+                val intent = Intent(Intent.ACTION_VIEW, SHIZUKU_PLAYSTORE_URL.toUri())
+                context.startActivity(intent)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "ShizukuViewModel/launchShizuku: failed to start activity ", e)
+            topToastState.showErrorToast()
+        }
+    }
+
     fun checkAvailability(context: Context): ShizukuStatus {
+        shizukuVersionProblematic = isShizukuVersionProblematic(context)
         status = try {
             if (Shizuku.pingBinder()) {
                 if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) ShizukuStatus.AVAILABLE
                 else ShizukuStatus.UNAUTHORIZED
-            } else if (!isManagerInstalled(context)) ShizukuStatus.NOT_INSTALLED
+            } else if (!isShizukuInstalled(context)) ShizukuStatus.NOT_INSTALLED
             else ShizukuStatus.WAITING_FOR_BINDER
         } catch (e: Exception) {
             Log.e(TAG, "ShizukuViewModel/checkAvailability: failed to determine status", e)
@@ -113,7 +135,7 @@ class ShizukuViewModel(
         }
         if (status == ShizukuStatus.AVAILABLE && !fileServiceRunning) {
             if (timeOutJob == null) timeOutJob = viewModelScope.launch {
-                delay(15000)
+                delay(8000)
                 timedOut = true
             }
             Shizuku.bindUserService(userServiceArgs, userServiceConnection)
@@ -121,25 +143,25 @@ class ShizukuViewModel(
         return status
     }
 
-    fun launchManager(context: Context) {
-        try {
-            if (managerInstalled) context.startActivity(
-                context.packageManager.getLaunchIntentForPackage(SHIZUKU_PACKAGE)
-            ) else {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(SHIZUKU_PLAY_STORE))
-                context.startActivity(intent)
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "ShizukuViewModel/launchManager: failed to start activity ", e)
-            topToastState.showErrorToast()
-        }
-    }
+    fun getCurrentShizukuVersionNameSimplified(context: Context): String? = getShizukuPackageInfo(context)?.versionName?.split(".")?.let {
+        if (it.size > 3) it.take(3)
+        else it
+    }?.joinToString(".")
 
-    private fun isManagerInstalled(context: Context) = try {
-        context.packageManager.getPackageInfo(SHIZUKU_PACKAGE, 0) != null
-    } catch (e: Exception) {
-        Log.e(TAG, "isInstalled: ", e)
-        false
+    private fun isShizukuInstalled(context: Context) = getShizukuPackageInfo(context) != null
+
+    private fun isShizukuVersionProblematic(context: Context) = getShizukuPackageInfo(context)?.let { packageInfo ->
+        @Suppress("DEPRECATION")
+        val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.longVersionCode
+        } else packageInfo.versionCode.toLong()
+        versionCode == SHIZUKU_PROBLEMATIC_VERSION_CODE
+    } ?: false
+
+    private fun getShizukuPackageInfo(context: Context): PackageInfo? = try {
+        context.packageManager.getPackageInfo(SHIZUKU_PACKAGE, 0)
+    } catch (_: Exception) {
+        null
     }
 
     override fun onCleared() {
