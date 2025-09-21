@@ -53,11 +53,15 @@
     <string name="permissions_shizuku_permission_description">LAC Tool\'un Shizuku kullanması için gerekli izinleri yok</string>
     <string name="permissions_shizuku_permission_grant">İzin ver</string>
     <string name="permissions_shizuku_rooted">Shizuku\'yu otomatik olarak başlat</string>
-    <string name="permissions_shizuku_rooted_description">Rootlu cihazlarda, Shizuku\'yu cihazınız açıldığında otomatik olarak başlayacak şekilde ayarlayabilirsiniz; bu ayarı Shizuku\'da bulabilirsiniz\nAlternatif olarak, benzer şekilde çalışan Shizuku\'nun \"Sui\" Magisk modülünü kullanabilirsiniz</string>
+    <string name="permissions_shizuku_rooted_description">Rootlu cihazlarda, Shizuku\'yu cihazınız açıldığında otomatik olarak başlayacak şekilde ayarlayabilirsiniz; bu ayarı Shizuku\'da bulabilirsiniz\nAlternatif olarak, benzer şekilde çalışan Shizuku\'nun \"Sui\" Zygisk modülünü kullanabilirsiniz</string>
     <string name="permissions_shizuku_sui">Sui</string>
     <string name="permissions_shizuku_waitingService">Dosya hizmeti bekleniyor..</string>
     <string name="permissions_shizuku_waitingService_timedOut">Uzun mu sürüyor? LAC Tool\'u yeniden başlatmayı deneyin</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Yeniden başlat</string>
+    <string name="permissions_shizuku_problematicVersion">Shizuku\'nun mevcut sürümü ({CURRENT_VERSION}), bu ekranda sonsuz beklemenize sebep olabilir. Bu sorundan etkileniyorsanız lütfen {RECOMMENDED_VERSION} sürümüne düşürün</string>
+    <string name="permissions_shizuku_problematicVersion_note">Sürüm düşürmeden önce mevcut Shizuku\'yu kaldırmayı unutmayın. Ayrıca, mevcutsa {CURRENT_VERSION} sürümünden daha yeni bir sürüme de yükseltebilirsiniz</string>
+    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Önerilen sürümü indir</string>
+    <string name="permissions_shizuku_problematicVersion_allVersions">Bütün sürümler</string>
     <string name="permissions_allFiles_title">Depolama izinleri</string>
     <string name="permissions_allFiles_description">LAC Tool\'un LAC verilerine erişmesi için depolama izinleri gereklidir</string>
     <string name="permissions_allFiles_grant">İzin ver</string>
