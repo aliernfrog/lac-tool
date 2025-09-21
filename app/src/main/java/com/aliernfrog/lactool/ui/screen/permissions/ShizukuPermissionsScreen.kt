@@ -12,6 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -72,37 +75,93 @@ fun ShizukuPermissionsScreen(
                     visible = shizukuViewModel.timedOut,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    CardWithActions(
-                        title = null,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .align(Alignment.CenterHorizontally)
-                            .padding(16.dp),
-                        buttons = {
-                            if (shizukuViewModel.managerInstalled) TextButton(
-                                onClick = {
-                                    shizukuViewModel.launchManager(context)
-                                }
-                            ) {
-                                ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
-                                Text(stringResource(R.string.permissions_shizuku_openShizuku))
-                            }
-                            Button(
-                                onClick = {
-                                    shizukuViewModel.prefs.shizukuNeverLoad.value = false
-                                    GeneralUtil.restartApp(context)
-                                }
-                            ) {
-                                ButtonIcon(rememberVectorPainter(Icons.Default.RestartAlt))
-                                Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut_restart))
-                            }
-                        }
+                    Column(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut))
+                        if (shizukuViewModel.shizukuVersionProblematic) ProblematicManagerCard(
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(16.dp)
+                        )
+
+                        CardWithActions(
+                            title = null,
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(16.dp),
+                            buttons = {
+                                if (shizukuViewModel.shizukuInstalled) TextButton(
+                                    onClick = {
+                                        shizukuViewModel.launchShizuku(context)
+                                    }
+                                ) {
+                                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
+                                    Text(stringResource(R.string.permissions_shizuku_openShizuku))
+                                }
+                                Button(
+                                    onClick = {
+                                        shizukuViewModel.prefs.shizukuNeverLoad.value = false
+                                        GeneralUtil.restartApp(context)
+                                    }
+                                ) {
+                                    ButtonIcon(rememberVectorPainter(Icons.Default.RestartAlt))
+                                    Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut_restart))
+                                }
+                            }
+                        ) {
+                            Text(stringResource(R.string.permissions_shizuku_waitingService_timedOut))
+                        }
                     }
                 }
             } else ShizukuSetupGuide()
         }
+    }
+}
+
+@Composable
+private fun ProblematicManagerCard(
+    modifier: Modifier = Modifier,
+    shizukuViewModel: ShizukuViewModel = koinViewModel()
+) {
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+    val currentManagerVersion = remember {
+        "v" + shizukuViewModel.getCurrentShizukuVersionNameSimplified(context)
+    }
+    CardWithActions(
+        title = null,
+        modifier = modifier,
+        buttons = {
+            TextButton(
+                onClick = {
+                    uriHandler.openUri(ShizukuViewModel.SHIZUKU_RELEASES_URL)
+                }
+            ) {
+                ButtonIcon(rememberVectorPainter(Icons.Default.OpenInBrowser))
+                Text(stringResource(R.string.permissions_shizuku_problematicVersion_allVersions))
+            }
+
+            Button(
+                onClick = {
+                    uriHandler.openUri(ShizukuViewModel.SHIZUKU_RECOMMENDED_VERSION_DOWNLOAD_URL)
+                }
+            ) {
+                ButtonIcon(rememberVectorPainter(Icons.Default.Download))
+                Text(stringResource(R.string.permissions_shizuku_problematicVersion_downloadRecommended))
+            }
+        }
+    ) {
+        Text(
+            text = stringResource(R.string.permissions_shizuku_problematicVersion)
+                .replace("{CURRENT_VERSION}", currentManagerVersion)
+                .replace("{RECOMMENDED_VERSION}", ShizukuViewModel.SHIZUKU_RECOMMENDED_VERSION_NAME)
+        )
+        Text(
+            text = stringResource(R.string.permissions_shizuku_problematicVersion_note)
+                .replace("{CURRENT_VERSION}", currentManagerVersion),
+            style = MaterialTheme.typography.bodySmall
+        )
     }
 }
 
@@ -113,7 +172,7 @@ private fun ShizukuSetupGuide(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    if (shizukuViewModel.managerInstalled) Text(
+    if (shizukuViewModel.shizukuInstalled) Text(
         text = stringResource(R.string.permissions_shizuku_introduction),
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(8.dp)
@@ -136,7 +195,7 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> {
                 Button(
                     onClick = {
-                        shizukuViewModel.launchManager(context)
+                        shizukuViewModel.launchShizuku(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
@@ -146,7 +205,7 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.WAITING_FOR_BINDER -> {
                 Button(
                     onClick = {
-                        shizukuViewModel.launchManager(context)
+                        shizukuViewModel.launchShizuku(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
@@ -193,12 +252,12 @@ private fun ShizukuSetupGuide(
                 }
                 Button(
                     onClick = {
-                        shizukuViewModel.launchManager(context)
+                        shizukuViewModel.launchShizuku(context)
                     }
                 ) {
                     ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
                     Text(stringResource(
-                        if (shizukuViewModel.managerInstalled) R.string.permissions_shizuku_openShizuku
+                        if (shizukuViewModel.shizukuInstalled) R.string.permissions_shizuku_openShizuku
                         else R.string.permissions_shizuku_installShizuku
                     ))
                 }
