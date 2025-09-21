@@ -52,7 +52,7 @@
     <string name="permissions_shizuku_permission_description">LAC Tool does not have permissions to use Shizuku</string>
     <string name="permissions_shizuku_permission_grant">Grant permission</string>
     <string name="permissions_shizuku_rooted">Start Shizuku automatically</string>
-    <string name="permissions_shizuku_rooted_description">On rooted devices, you can set Shizuku to start automatically when your device boots up, you can find this option in Shizuku\nAlternatively, you can use Shizuku\'s Magisk module \"Sui\" which works similarly</string>
+    <string name="permissions_shizuku_rooted_description">On rooted devices, you can set Shizuku to start automatically when your device boots up, you can find this option in Shizuku\nAlternatively, you can use Shizuku\'s Zygisk module \"Sui\" which works similarly</string>
     <string name="permissions_shizuku_sui">Sui</string>
     <string name="permissions_shizuku_waitingService">Waiting for file service..</string>
     <string name="permissions_shizuku_waitingService_timedOut">Taking long? Try restarting LAC Tool</string>
