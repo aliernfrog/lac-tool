@@ -251,7 +251,6 @@
     <string name="settings_storage_storageAccessType_allFiles">所有文件访问（旧版）</string>
     <string name="settings_storage_storageAccessType_allFiles_description">访问所有文件，这可能更容易设置</string>
     <string name="settings_storage_folders">文件夹</string>
-    <string name="settings_storage_folders_default">默认：%s</string>
     <string name="settings_storage_folders_notSet">未配置</string>
     <string name="settings_storage_folders_recommendedFolder">推荐文件夹</string>
     <string name="settings_storage_folders_choose">选择文件夹</string>
@@ -273,8 +272,6 @@
     <string name="settings_about">关于</string>
     <string name="settings_about_changelog">更新日志</string>
     <string name="settings_about_update">更新</string>
-    <string name="settings_about_autoCheckUpdates">自动检查更新</string>
-    <string name="settings_about_autoCheckUpdates_description">启动时自动检查 LAC Tool 更新</string>
     <string name="settings_about_credits">鸣谢</string>
     <string name="settings_about_libs">库</string>
     <string name="settings_about_libs_description">用于制作 LAC Tool 的库</string>

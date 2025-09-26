@@ -241,7 +241,6 @@
     <string name="settings_storage_storageAccessType_shizuku">شیزکو</string>
     <string name="settings_storage_storageAccessType_shizuku_description">از Shizuku برای دسترسی به فضای ذخیره سازی استفاده کنید</string>
     <string name="settings_storage_folders">پوشه ها</string>
-    <string name="settings_storage_folders_default">پیش‌فرض : %s</string>
     <string name="settings_storage_folders_notSet">پیکربندی نشده است</string>
     <string name="settings_storage_folders_recommendedFolder">پوشه پیشنهادی</string>
     <string name="settings_storage_folders_choose">انتخاب پوشه</string>
@@ -263,8 +262,6 @@
     <string name="settings_about">درباره</string>
     <string name="settings_about_changelog">تغییرات</string>
     <string name="settings_about_update">به‌روزرسانی</string>
-    <string name="settings_about_autoCheckUpdates">بررسی خودکار به‌روزرسانی‌ها</string>
-    <string name="settings_about_autoCheckUpdates_description">به‌روزرسانی‌های ابزار LAC را به‌طور خودکار هنگام راه‌اندازی بررسی کنید</string>
     <string name="settings_about_credits_gameDev">توسعه دهنده‌ی LAC</string>
     <string name="settings_about_credits_appDev">توسعه‌دهنده‌ی ابزار LAC</string>
     <string name="settings_about_credits_ui">UI</string>
