@@ -288,7 +288,6 @@
     <string name="settings_storage_storageAccessType_allFiles">Bütün dosyalara erişim (eski)</string>
     <string name="settings_storage_storageAccessType_allFiles_description">Bütün dosyalara eriş, bunun kurulumu daha kolay olabilir</string>
     <string name="settings_storage_folders">Klasörler</string>
-    <string name="settings_storage_folders_default">Varsayılan: %s</string>
     <string name="settings_storage_folders_notSet">Ayarlanmadı</string>
     <string name="settings_storage_folders_recommendedFolder">Önerilen klasör</string>
     <string name="settings_storage_folders_choose">Klasör seç</string>
@@ -310,8 +309,6 @@
     <string name="settings_about">Hakkında</string>
     <string name="settings_about_changelog">Değişiklik günlüğü</string>
     <string name="settings_about_update">Güncelle</string>
-    <string name="settings_about_autoCheckUpdates">Güncellemeleri otomatik olarak denetle</string>
-    <string name="settings_about_autoCheckUpdates_description">LAC Tool başlatıldığında güncellemeleri kontrol et</string>
     <string name="settings_about_credits">Emeği geçenler</string>
     <string name="settings_about_libs">Kütüphaneler</string>
     <string name="settings_about_libs_description">LAC Tool\'u yapmak için kullanılan kütüphaneler</string>

@@ -283,7 +283,6 @@
     <string name="settings_storage_storageAccessType_allFiles">Полный доступ к файлам (устаревший)</string>
     <string name="settings_storage_storageAccessType_allFiles_description">Доступ ко всем файлам, это может быть проще настроить</string>
     <string name="settings_storage_folders">Папки</string>
-    <string name="settings_storage_folders_default">По умолчанию: %s</string>
     <string name="settings_storage_folders_notSet">Не настроено</string>
     <string name="settings_storage_folders_recommendedFolder">Рекомендуемая папка</string>
     <string name="settings_storage_folders_choose">Выбрать папку</string>
@@ -305,8 +304,6 @@
     <string name="settings_about">О программе</string>
     <string name="settings_about_changelog">Список изменений</string>
     <string name="settings_about_update">Обновления</string>
-    <string name="settings_about_autoCheckUpdates">Проверять обновления автоматически</string>
-    <string name="settings_about_autoCheckUpdates_description">Проверять наличие обновлений LAC Tool автоматически при запуске</string>
     <string name="settings_about_credits">Авторы</string>
     <string name="settings_about_libs">Библиотеки</string>
     <string name="settings_about_libs_description">Библиотеки, использованные при создании LAC Tool</string>

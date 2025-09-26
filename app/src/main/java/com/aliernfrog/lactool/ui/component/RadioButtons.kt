@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -30,6 +31,7 @@ fun RadioButtons(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(0.dp)
                 .clickable { onSelected() }
                 .padding(horizontal = 2.dp)
         ) {

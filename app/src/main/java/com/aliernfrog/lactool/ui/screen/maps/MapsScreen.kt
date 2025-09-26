@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -16,7 +17,9 @@ import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,10 +46,11 @@ import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.maps.PickMapButton
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
-import com.aliernfrog.lactool.ui.component.maps.PickMapButton
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import kotlinx.coroutines.launch
@@ -99,19 +103,18 @@ fun MapsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Actions(
-    mapsViewModel: MapsViewModel = koinViewModel(),
-    chosenMap: MapFile
+    chosenMap: MapFile,
+    mapsViewModel: MapsViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     TextField(
         value = mapsViewModel.mapNameEdit,
-        onValueChange = {
-            mapsViewModel.mapNameEdit = it.replace("\n", "")
-        },
+        onValueChange = { mapsViewModel.mapNameEdit = it },
         label = { Text(stringResource(R.string.maps_mapName)) },
         placeholder = { Text(chosenMap.name) },
         singleLine = true,
@@ -123,7 +126,7 @@ private fun Actions(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(vertical = 8.dp, horizontal = 12.dp)
             .clip(AppComponentShape)
     )
 
@@ -132,7 +135,7 @@ private fun Actions(
             onClick = { mapsViewModel.prefs.showMapNameFieldGuide.value = false },
             shape = AppComponentShape,
             modifier = Modifier.padding(
-                horizontal = 8.dp,
+                horizontal = 12.dp,
                 vertical = 4.dp
             )
         ) {
@@ -167,7 +170,7 @@ private fun Actions(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = 8.dp,
+                    horizontal = 12.dp,
                     vertical = 4.dp
                 ),
             verticalAlignment = Alignment.CenterVertically,
@@ -177,6 +180,7 @@ private fun Actions(
                 onClick = { scope.launch {
                     MapAction.DUPLICATE.execute(context, chosenMap)
                 } },
+                shapes = ButtonDefaults.shapes(),
                 enabled = buttonsEnabled
             ) {
                 ButtonIcon(rememberVectorPainter(Icons.Default.FileCopy))
@@ -186,6 +190,7 @@ private fun Actions(
                 onClick = { scope.launch {
                     MapAction.RENAME.execute(context, chosenMap)
                 } },
+                shapes = ButtonDefaults.shapes(),
                 enabled = buttonsEnabled
             ) {
                 ButtonIcon(rememberVectorPainter(Icons.Default.Edit))
@@ -204,10 +209,16 @@ private fun Actions(
         action != MapAction.RENAME && action != MapAction.DUPLICATE
     }.map { action -> {
         FadeVisibility(visible = action.availableFor(chosenMap)) {
-            ButtonRow(
+            ExpressiveButtonRow(
                 title = stringResource(action.longLabel),
                 description = action.description?.let { stringResource(it) },
-                painter = rememberVectorPainter(action.icon),
+                icon = {
+                    ExpressiveRowIcon(
+                        painter = rememberVectorPainter(action.icon),
+                        containerColor = if (action.destructive) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.primaryContainer
+                    )
+                },
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = if (action.destructive) MaterialTheme.colorScheme.error
                 else contentColorFor(MaterialTheme.colorScheme.surfaceContainerHigh)
@@ -219,6 +230,12 @@ private fun Actions(
 
     VerticalSegmentor(
         *actions.toTypedArray(),
-        modifier = Modifier.padding(8.dp)
+        dynamic = true,
+        modifier = Modifier.padding(
+            vertical = 8.dp,
+            horizontal = 12.dp
+        )
     )
+
+    Spacer(Modifier.navigationBarsPadding())
 }

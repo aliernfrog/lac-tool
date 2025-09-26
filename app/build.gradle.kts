@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -19,6 +20,7 @@ plugins {
 android {
     namespace = "com.aliernfrog.lactool"
     compileSdk = 35
+    buildToolsVersion = "35.0.1"
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
@@ -53,9 +55,12 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+            optIn.add("kotlin.RequiresOptIn")
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        }
     }
 
     buildFeatures {

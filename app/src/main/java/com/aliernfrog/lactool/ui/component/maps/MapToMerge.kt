@@ -29,6 +29,7 @@ import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.SwitchRow
 
@@ -49,9 +50,13 @@ fun MapToMerge(
         expanded = expanded,
         title = mapToMerge.mapName,
         description = if (!isBaseMap) null else stringResource(R.string.mapsMerge_base_description),
-        painter = rememberVectorPainter(
-            if (isBaseMap) Icons.Rounded.Home else Icons.Rounded.PinDrop
-        ),
+        icon = {
+            ExpressiveRowIcon(
+                painter = rememberVectorPainter(
+                    if (isBaseMap) Icons.Rounded.Home else Icons.Rounded.PinDrop
+                )
+            )
+        },
         onClickHeader = onClickHeader
     ) {
         if (!isBaseMap) OutlinedTextField(

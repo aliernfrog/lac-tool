@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
@@ -61,7 +60,6 @@ fun AddRoleSheet(
                 alwaysShowRaw = roleHtml.isNotBlank(),
                 showTopDivider = false,
                 expanded = null,
-                minimizedHeaderColor = MaterialTheme.colorScheme.surfaceVariant,
                 onRoleDelete = {},
                 onClick = {},
                 modifier = Modifier

@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Environment
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Translate
+import androidx.compose.ui.graphics.Color
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.data.Social
 import com.aliernfrog.lactool.impl.CreditData
@@ -25,16 +26,19 @@ object SettingsConstant {
         Social(
             label = "LAC",
             icon = R.drawable.discord,
+            iconContainerColor = Color(0xFF5865F2),
             url = "https://discord.gg/aQhGqHSc3W"
         ),
         Social(
             label = "LAC Tool",
             icon = R.drawable.github,
+            iconContainerColor = Color(0xFF104C35),
             url = githubRepoURL
         ),
         Social(
             label = "Crowdin",
             icon = Icons.Default.Translate,
+            iconContainerColor = Color(0xFF263238),
             url = crowdinURL
         )
     )
