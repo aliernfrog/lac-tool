@@ -14,9 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun LazyAdaptiveVerticalGrid(
     modifier: Modifier = Modifier,
+    maxLineSpan: Int = getMaxLineSpan(),
     content: LazyGridScope.(maxLineSpan: Int) -> Unit
 ) {
-    val maxLineSpan = getMaxLineSpan()
     LazyVerticalGrid(
         columns = GridCells.Fixed(maxLineSpan),
         modifier = modifier
@@ -27,12 +27,13 @@ fun LazyAdaptiveVerticalGrid(
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-private fun getMaxLineSpan(): Int {
+fun getMaxLineSpan(min: Int = Int.MAX_VALUE): Int {
     val context = LocalContext.current
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
-    return when (windowSizeClass.widthSizeClass) {
+    val max = when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Medium -> 4
         WindowWidthSizeClass.Expanded -> 5
         else -> 3
     }
+    return min.coerceAtMost(max)
 }

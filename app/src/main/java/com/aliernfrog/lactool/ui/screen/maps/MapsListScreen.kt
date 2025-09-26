@@ -1,11 +1,14 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
+import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +23,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -33,17 +37,23 @@ import androidx.compose.material.icons.outlined.SdCard
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,6 +64,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -70,10 +83,14 @@ import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
+import com.aliernfrog.lactool.ui.component.SEGMENTOR_DEFAULT_ROUNDNESS
+import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SegmentedButtons
 import com.aliernfrog.lactool.ui.component.SettingsButton
+import com.aliernfrog.lactool.ui.component.getMaxLineSpan
 import com.aliernfrog.lactool.ui.component.maps.GridMapItem
 import com.aliernfrog.lactool.ui.component.maps.ListMapItem
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
@@ -84,7 +101,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MapsListScreen(
     title: String = stringResource(R.string.mapsList_pickMap),
@@ -102,6 +120,9 @@ fun MapsListScreen(
     val listStyle = ListStyle.entries[mapsListViewModel.prefs.mapsListStyle.value]
     val showMapThumbnails = mapsListViewModel.prefs.showMapThumbnailsInList.value
     var multiSelectionDropdownShown by remember { mutableStateOf(false) }
+
+    val windowSizeClass = calculateWindowSizeClass(context as Activity)
+    val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.data?.data != null) scope.launch {
@@ -147,6 +168,7 @@ fun MapsListScreen(
                     actions = {
                         if (multiSelecting && showMultiSelectionOptions) Box {
                             IconButton(
+                                shapes = IconButtonDefaults.shapes(),
                                 onClick = {
                                     multiSelectionDropdownShown = true
                                 }
@@ -167,10 +189,11 @@ fun MapsListScreen(
                             )
                         } else {
                             Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
-                                if (showLoading) CircularProgressIndicator(
+                                if (showLoading) LoadingIndicator(
                                     modifier = Modifier.size(48.dp).padding(8.dp)
                                 )
                                 else IconButton(
+                                    shapes = IconButtonDefaults.shapes(),
                                     onClick = {
                                         scope.launch {
                                             mapsViewModel.loadMaps(context)
@@ -218,7 +241,7 @@ fun MapsListScreen(
         }
     ) {
         @Composable
-        fun MapItem(map: MapFile, isGrid: Boolean) {
+        fun MapItem(map: MapFile, isGrid: Boolean, modifier: Modifier = Modifier) {
             val selected = if (isMultiSelecting) mapsListViewModel.isMapSelected(map) else null
             fun toggleSelection() {
                 mapsListViewModel.selectedMaps.run {
@@ -226,12 +249,20 @@ fun MapsListScreen(
                 }
             }
 
+            val scale by animateFloatAsState(
+                if (selected == true) 0.95f else 1f
+            )
+            val roundness by animateDpAsState(
+                if (selected == true) SEGMENTOR_DEFAULT_ROUNDNESS else SEGMENTOR_SMALL_ROUNDNESS
+            )
+
             if (isGrid) GridMapItem(
                 map = map,
                 selected = selected,
                 showMapThumbnail = showMapThumbnails,
                 onSelectedChange = { toggleSelection() },
-                onLongClick = { toggleSelection() }
+                onLongClick = { toggleSelection() },
+                modifier = modifier.scale(scale).clip(RoundedCornerShape(roundness))
             ) {
                 if (isMultiSelecting) toggleSelection()
                 else onMapPick(map)
@@ -241,7 +272,8 @@ fun MapsListScreen(
                 selected = selected,
                 showMapThumbnail = showMapThumbnails,
                 onSelectedChange = { toggleSelection() },
-                onLongClick = { toggleSelection() }
+                onLongClick = { toggleSelection() },
+                modifier = modifier.scale(scale).clip(RoundedCornerShape(roundness))
             ) {
                 if (isMultiSelecting) toggleSelection()
                 else onMapPick(map)
@@ -261,11 +293,21 @@ fun MapsListScreen(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         item {
-                            Header(segment, page, mapsToShow)
+                            Header(segment, page, mapsToShow, Modifier.padding(horizontal = 12.dp))
                         }
 
-                        items(mapsToShow) {
-                            MapItem(it, isGrid = false)
+                        itemsIndexed(mapsToShow) { index, map ->
+                            MapItem(
+                                map, isGrid = false,
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .verticalSegmentedShape(
+                                        index = index,
+                                        totalSize = mapsToShow.size,
+                                        spacing = 4.dp,
+                                        containerColor = Color.Transparent
+                                    )
+                            )
                         }
 
                         item {
@@ -273,14 +315,23 @@ fun MapsListScreen(
                         }
                     }
                     ListStyle.GRID -> LazyAdaptiveVerticalGrid(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 10.dp),
+                        maxLineSpan = getMaxLineSpan(
+                            if (isCompact) 2 else Int.MAX_VALUE
+                        )
                     ) { maxLineSpan: Int ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
-                            Header(segment, page, mapsToShow)
+                            Header(segment, page, mapsToShow, Modifier.padding(horizontal = 2.dp))
                         }
 
-                        items(mapsToShow) {
-                            MapItem(it, isGrid = true)
+                        items(mapsToShow) { map ->
+                            MapItem(
+                                map = map,
+                                isGrid = true,
+                                modifier = Modifier.padding(2.dp)
+                            )
                         }
 
                         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -293,16 +344,18 @@ fun MapsListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Header(
     segment: MapsListSegment,
     segmentIndex: Int,
     mapsToShow: List<MapFile>,
+    modifier: Modifier = Modifier,
     mapsViewModel: MapsViewModel = koinViewModel(),
     mapsListViewModel: MapsListViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
-    Column {
+    Column(modifier) {
         Search(
             searchQuery = mapsListViewModel.searchQuery,
             onSearchQueryChange = { mapsListViewModel.searchQuery = it }
@@ -312,9 +365,7 @@ private fun Header(
                 stringResource(it.labelId)
             },
             selectedIndex = segmentIndex,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
+            modifier = Modifier.fillMaxWidth()
         ) { scope.launch {
             mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(300))
         } }
@@ -323,20 +374,26 @@ private fun Header(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CircularProgressIndicator(strokeWidth = 3.dp)
+                LoadingIndicator()
             }
-            else ErrorWithIcon(
-                error = stringResource(
-                    if (mapsListViewModel.searchQuery.isNotEmpty()) R.string.mapsList_searchNoMatches
-                    else segment.noMapsTextId
-                ),
-                painter = rememberVectorPainter(Icons.Rounded.LocationOff),
-                modifier = Modifier.fillMaxWidth()
-            )
+            else AnimatedContent(mapsListViewModel.searchQuery.isNotEmpty()) { searching ->
+                ErrorWithIcon(
+                    error = stringResource(
+                        if (searching) R.string.mapsList_searchNoMatches else segment.noMapsTextId
+                    ),
+                    painter = rememberVectorPainter(
+                        if (searching) Icons.Rounded.SearchOff else Icons.Rounded.LocationOff
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         } else Text(
             text = stringResource(R.string.mapsList_count)
                 .replace("{COUNT}", mapsToShow.size.toString()),
-            modifier = Modifier.padding(horizontal = 20.dp)
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier
+                .padding(horizontal = 6.dp)
+                .padding(bottom = 4.dp)
         )
     }
 }
@@ -346,7 +403,7 @@ private fun Footer() {
     Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Search(
     searchQuery: String,
@@ -363,7 +420,8 @@ private fun Search(
                 onExpandedChange = {},
                 leadingIcon = {
                     if (searchQuery.isNotEmpty()) IconButton(
-                        onClick = { onSearchQueryChange("") }
+                        onClick = { onSearchQueryChange("") },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
@@ -377,7 +435,8 @@ private fun Search(
                 trailingIcon = {
                     var sortingOptionsShown by rememberSaveable { mutableStateOf(false) }
                     IconButton(
-                        onClick = { sortingOptionsShown = true }
+                        onClick = { sortingOptionsShown = true },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,
@@ -403,10 +462,6 @@ private fun Search(
         modifier = Modifier
             .fillMaxWidth()
             .offset(y = (-12).dp)
-            .padding(
-                start = 8.dp,
-                end = 8.dp
-            )
     )
 }
 

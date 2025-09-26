@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.ui.screen.permissions
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -12,6 +13,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,12 +23,14 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.component.CardWithActions
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
-import com.aliernfrog.lactool.ui.component.form.FormSection
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
 import com.aliernfrog.toptoast.enum.TopToastColor
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AllFilesPermissionsScreen(
     permissionsViewModel: PermissionsViewModel = koinViewModel(),
@@ -50,6 +55,7 @@ fun AllFilesPermissionsScreen(
             title = stringResource(R.string.permissions_allFiles_title),
             buttons = {
                 Button(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                     }
@@ -57,22 +63,28 @@ fun AllFilesPermissionsScreen(
                     Text(stringResource(R.string.permissions_allFiles_grant))
                 }
             },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(
+                vertical = 8.dp,
+                horizontal = 12.dp
+            )
         ) {
             Text(stringResource(R.string.permissions_allFiles_description))
         }
 
-        FormSection(
-            title = stringResource(R.string.permissions_other),
-            topDivider = true,
-            bottomDivider = false
+        ExpressiveSection(
+            title = stringResource(R.string.permissions_other)
         ) {
-            ButtonRow(
+            ExpressiveButtonRow(
                 title = stringResource(R.string.permissions_allFiles_saf),
-                description = stringResource(R.string.permissions_allFiles_saf_description)
+                description = stringResource(R.string.permissions_allFiles_saf_description),
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .verticalSegmentedShape()
             ) {
                 StorageAccessType.SAF.enable(permissionsViewModel.prefs)
             }
         }
+
+        Spacer(Modifier.navigationBarsPadding())
     }
 }

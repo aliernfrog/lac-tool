@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Done
@@ -16,20 +17,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.*
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
-import com.aliernfrog.lactool.ui.component.form.FormSection
-import com.aliernfrog.lactool.ui.component.form.SwitchRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
@@ -80,7 +80,9 @@ fun MapsEditScreen(
             GeneralActions(
                 onNavigateRequest = onNavigateRequest
             )
-            OptionsActions()
+            FadeVisibility(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
+                OptionsActions()
+            }
             MiscActions()
             Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
         }
@@ -100,58 +102,93 @@ fun MapsEditScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GeneralActions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel(),
     onNavigateRequest: (Destination) -> Unit
 ) {
-    FormSection(title = stringResource(R.string.mapsEdit_general), bottomDivider = false) {
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.serverName != null) {
-            TextField(
-                label = stringResource(R.string.mapsEdit_serverName),
-                value = mapsEditViewModel.mapEditor?.serverName ?: "",
-                onValueChange = { mapsEditViewModel.setServerName(it) }
-            )
-        }
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapType != null) {
-            ExpandableRow(
-                expanded = mapsEditViewModel.mapTypesExpanded,
-                title = stringResource(R.string.mapsEdit_mapType),
-                trailingButtonText = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
-                onClickHeader = {
-                    mapsEditViewModel.mapTypesExpanded = !mapsEditViewModel.mapTypesExpanded
+    ExpressiveSection(title = stringResource(R.string.mapsEdit_general)) {
+        VerticalSegmentor(
+            {
+                FadeVisibility(visible = mapsEditViewModel.mapEditor?.serverName != null) {
+                    TextField(
+                        label = stringResource(R.string.mapsEdit_serverName),
+                        value = mapsEditViewModel.mapEditor?.serverName ?: "",
+                        onValueChange = { mapsEditViewModel.setServerName(it) }
+                    )
                 }
-            ) {
-                RadioButtons(
-                    options = LACMapType.entries.map { it.getName() },
-                    selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    onSelect = { mapsEditViewModel.setMapType(LACMapType.entries[it]) }
-                )
-            }
-        }
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
-            ButtonRow(
-                title = stringResource(R.string.mapsRoles),
-                description = stringResource(R.string.mapsRoles_description)
-                    .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
-                expanded = false,
-                arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
-            ) {
-                onNavigateRequest(Destination.MAPS_ROLES)
-            }
-        }
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
-            ButtonRow(
-                title = stringResource(R.string.mapsMaterials),
-                description = stringResource(R.string.mapsMaterials_description)
-                    .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
-                expanded = false,
-                arrowRotation = if (LocalLayoutDirection.current == LayoutDirection.Rtl) 270f else 90f
-            ) {
-                onNavigateRequest(Destination.MAPS_MATERIALS)
-            }
-        }
+            },
+            {
+                FadeVisibility(visible = mapsEditViewModel.mapEditor?.mapType != null) {
+                    ExpandableRow(
+                        expanded = mapsEditViewModel.mapTypesExpanded,
+                        title = stringResource(R.string.mapsEdit_mapType),
+                        minimizedHeaderTrailingButtonText = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
+                        onClickHeader = {
+                            mapsEditViewModel.mapTypesExpanded = !mapsEditViewModel.mapTypesExpanded
+                        }
+                    ) {
+                        RadioButtons(
+                            options = LACMapType.entries.map { it.getName() },
+                            selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            onSelect = { mapsEditViewModel.setMapType(LACMapType.entries[it]) }
+                        )
+                    }
+                }
+            },
+            {
+                FadeVisibility(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
+                    val onClick = {
+                        onNavigateRequest(Destination.MAPS_ROLES)
+                    }
+                    ExpressiveButtonRow(
+                        title = stringResource(R.string.mapsRoles),
+                        description = stringResource(R.string.mapsRoles_description)
+                            .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
+                        trailingComponent = {
+                            FilledTonalIconButton(
+                                shapes = IconButtonDefaults.shapes(),
+                                onClick = onClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        onClick = onClick
+                    )
+                }
+            },
+            {
+                FadeVisibility(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
+                    val onClick = {
+                        onNavigateRequest(Destination.MAPS_MATERIALS)
+                    }
+                    ExpressiveButtonRow(
+                        title = stringResource(R.string.mapsMaterials),
+                        description = stringResource(R.string.mapsMaterials_description)
+                            .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
+                        trailingComponent = {
+                            FilledTonalIconButton(
+                                shapes = IconButtonDefaults.shapes(),
+                                onClick = onClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        onClick = onClick
+                    )
+                }
+            },
+            dynamic = true,
+            modifier = Modifier.padding(horizontal = 12.dp)
+        )
     }
 }
 
@@ -159,39 +196,43 @@ private fun GeneralActions(
 private fun OptionsActions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
-    FadeVisibilityColumn(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
-        FormSection(title = stringResource(R.string.mapsEdit_options), topDivider = true, bottomDivider = false) {
-            mapsEditViewModel.mapEditor?.mapOptions?.forEach { option ->
-                when (option.type) {
-                    LACMapOptionType.NUMBER -> TextField(
-                        label = option.label,
-                        value = option.value,
-                        onValueChange = {
-                            option.value = it 
-                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
-                        },
-                        placeholder = option.value,
-                        numberOnly = true
-                    )
-                    LACMapOptionType.BOOLEAN -> SwitchRow(
-                        title = option.label,
-                        checked = option.value == "true",
-                        onCheckedChange = {
-                            option.value = it.toString()
-                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
-                        }
-                    )
-                    LACMapOptionType.SWITCH -> SwitchRow(
-                        title = option.label,
-                        checked = option.value == "enabled",
-                        onCheckedChange = {
-                            option.value = if (it) "enabled" else "disabled"
-                            mapsEditViewModel.mapEditor?.pushMapOptionsState()
-                        }
-                    )
+    val optionsComponents: List<@Composable () -> Unit> = mapsEditViewModel.mapEditor?.mapOptions.orEmpty().map { option -> {
+        when (option.type) {
+            LACMapOptionType.NUMBER -> TextField(
+                label = option.label,
+                value = option.value,
+                onValueChange = {
+                    option.value = it
+                    mapsEditViewModel.mapEditor?.pushMapOptionsState()
+                },
+                placeholder = option.value,
+                numberOnly = true
+            )
+            LACMapOptionType.BOOLEAN -> ExpressiveSwitchRow(
+                title = option.label,
+                checked = option.value == "true",
+                onCheckedChange = {
+                    option.value = it.toString()
+                    mapsEditViewModel.mapEditor?.pushMapOptionsState()
                 }
-            }
+            )
+            LACMapOptionType.SWITCH -> ExpressiveSwitchRow(
+                title = option.label,
+                checked = option.value == "enabled",
+                onCheckedChange = {
+                    option.value = if (it) "enabled" else "disabled"
+                    mapsEditViewModel.mapEditor?.pushMapOptionsState()
+                }
+            )
         }
+    } }
+
+    ExpressiveSection(title = stringResource(R.string.mapsEdit_options)) {
+        VerticalSegmentor(
+            *optionsComponents.toTypedArray(),
+            dynamic = true,
+            modifier = Modifier.padding(horizontal = 12.dp)
+        )
     }
 }
 
@@ -201,33 +242,16 @@ private fun MiscActions(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    FormSection(title = stringResource(R.string.mapsEdit_misc), topDivider = true, bottomDivider = false) {
-        FadeVisibilityColumn(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
-            ButtonRow(
-                title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
-                description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
-                painter = rememberVectorPainter(Icons.Rounded.FindReplace)
-            ) {
-                mapsEditViewModel.replaceOldObjects(context)
-            }
-        }
-        ExpandableRow(
-            expanded = mapsEditViewModel.objectFilterExpanded,
-            title = stringResource(R.string.mapsEdit_filterObjects),
-            description = stringResource(R.string.mapsEdit_filterObjects_description),
-            painter = rememberVectorPainter(Icons.Rounded.FilterAlt),
-            onClickHeader = {
-                mapsEditViewModel.objectFilterExpanded = !mapsEditViewModel.objectFilterExpanded
-            }
-        ) {
-            Column(Modifier.padding(vertical = 8.dp)) {
-                FilterObjects()
-            }
-        }
-        if (mapsEditViewModel.prefs.debug.value) {
-            ButtonRow(
-                title = "[DEBUG] View getCurrentContent()",
-                description = "without applyChanges()"
+
+    val debugBadge: @Composable () -> Unit = {
+        Text("DEBUG")
+    }
+    val debugButtons: List<@Composable () -> Unit> = if (mapsEditViewModel.prefs.debug.value) listOf(
+        {
+            ExpressiveButtonRow(
+                title = "View getCurrentContent()",
+                description = "without applyChanges()",
+                trailingComponent = debugBadge
             ) {
                 scope.launch(Dispatchers.IO) {
                     FileUtil.openTextAsFile(
@@ -237,8 +261,11 @@ private fun MiscActions(
                     )
                 }
             }
-            ButtonRow(
-                title = "[DEBUG] applyChanges() and view result"
+        },
+        {
+            ExpressiveButtonRow(
+                title = "applyChanges() and view result",
+                trailingComponent = debugBadge
             ) {
                 scope.launch(Dispatchers.IO) {
                     FileUtil.openTextAsFile(
@@ -249,9 +276,52 @@ private fun MiscActions(
                 }
             }
         }
+    ) else listOf()
+
+    ExpressiveSection(stringResource(R.string.mapsEdit_misc)) {
+        VerticalSegmentor(
+            {
+                FadeVisibility(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
+                    ExpressiveButtonRow(
+                        title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
+                        description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
+                        icon = {
+                            ExpressiveRowIcon(
+                                painter = rememberVectorPainter(Icons.Rounded.FindReplace)
+                            )
+                        }
+                    ) {
+                        mapsEditViewModel.replaceOldObjects(context)
+                    }
+                }
+            },
+            {
+                ExpandableRow(
+                    expanded = mapsEditViewModel.objectFilterExpanded,
+                    title = stringResource(R.string.mapsEdit_filterObjects),
+                    description = stringResource(R.string.mapsEdit_filterObjects_description),
+                    icon = {
+                        ExpressiveRowIcon(
+                            painter = rememberVectorPainter(Icons.Rounded.FilterAlt)
+                        )
+                    },
+                    onClickHeader = {
+                        mapsEditViewModel.objectFilterExpanded = !mapsEditViewModel.objectFilterExpanded
+                    }
+                ) {
+                    Column(Modifier.padding(vertical = 8.dp)) {
+                        FilterObjects()
+                    }
+                }
+            },
+            *debugButtons.toTypedArray(),
+            dynamic = true,
+            modifier = Modifier.padding(horizontal = 12.dp)
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FilterObjects(
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
@@ -287,13 +357,13 @@ private fun FilterObjects(
             )
         }
     }
-    SwitchRow(
+    ExpressiveSwitchRow(
         title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
         checked = mapsEditViewModel.objectFilter.caseSensitive
     ) {
         mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(caseSensitive = it)
     }
-    SwitchRow(
+    ExpressiveSwitchRow(
         title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
         description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
         checked = mapsEditViewModel.objectFilter.exactMatch
@@ -307,6 +377,7 @@ private fun FilterObjects(
     Crossfade(targetState = matches > 0) {
         Button(
             onClick = { mapsEditViewModel.removeObjectFilterMatches(context) },
+            shapes = ButtonDefaults.shapes(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error
             ),

@@ -11,7 +11,6 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,6 +34,7 @@ import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.supportsPerAppLanguagePreferences
+import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
 import com.aliernfrog.lactool.util.Destination
 import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
@@ -64,7 +64,7 @@ class MainViewModel(
     lateinit var scope: CoroutineScope
 
     lateinit var navController: NavController
-    val updateSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
+    val updateSheetState = createSheetStateWithDensity(skipPartiallyExpanded = false, Density(context))
 
     private val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
     private val applicationVersionCode = GeneralUtil.getAppVersionCode(context)

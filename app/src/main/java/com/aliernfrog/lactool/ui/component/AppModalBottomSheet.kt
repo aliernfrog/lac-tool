@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,4 +78,21 @@ fun BaseModalBottomSheet(
     ) {
         content(insetsViewModel.bottomPadding)
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun createSheetStateWithDensity(
+    skipPartiallyExpanded: Boolean,
+    density: Density
+): SheetState {
+    /**
+     * ref: [BottomSheetDefaults.PositionalThreshold]
+     */
+    val positionalThresholdPx = { with(density) { 56.dp.toPx() } }
+    val velocityThresholdPx = { with(density) { 125.dp.toPx() } }
+    return SheetState(
+        skipPartiallyExpanded = skipPartiallyExpanded,
+        positionalThreshold = positionalThresholdPx,
+        velocityThreshold = velocityThresholdPx
+    )
 }

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -49,6 +48,7 @@ import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
 import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.Destination
@@ -76,7 +76,7 @@ class MapsEditViewModel(
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
 
-    val addRoleSheetState = SheetState(skipPartiallyExpanded = true, Density(context))
+    val addRoleSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
     var pendingRoleDelete by mutableStateOf<String?>(null)

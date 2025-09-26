@@ -9,8 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -19,14 +21,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
-import com.aliernfrog.lactool.ui.component.form.FormSection
-import com.aliernfrog.lactool.ui.component.form.SwitchRow
+import com.aliernfrog.lactool.impl.Progress
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
@@ -35,7 +40,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Suppress("UNCHECKED_CAST")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ExperimentalPage(
     mainViewModel: MainViewModel = koinViewModel(),
@@ -60,42 +65,66 @@ fun ExperimentalPage(
         title = stringResource(R.string.settings_experimental),
         onNavigateBackRequest = onNavigateBackRequest
     ) {
-        SwitchRow(
+        ExpressiveSwitchRow(
             title = stringResource(R.string.settings_experimental),
             description = stringResource(R.string.settings_experimental_description),
             checked = mainViewModel.prefs.experimentalOptionsEnabled.value,
-            shape = AppComponentShape,
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(vertical = 16.dp, horizontal = 12.dp)
+                .clip(AppComponentShape)
         ) {
             mainViewModel.prefs.experimentalOptionsEnabled.value = it
         }
 
-        FormSection(title = "Updates") {
-            ButtonRow(
-                title = "Check updates (ignore version)"
-            ) {
-                scope.launch {
-                    mainViewModel.checkUpdates(ignoreVersion = true)
-                }
-            }
-            ButtonRow(
-                title = "Show update toast"
-            ) {
-                mainViewModel.showUpdateToast()
-            }
-            ButtonRow(
-                title = "Show update dialog"
-            ) {
-                scope.launch {
-                    mainViewModel.updateSheetState.show()
-                }
-            }
+        ExpressiveSection(title = "Progress") {
+            VerticalSegmentor(
+                {
+                    ExpressiveButtonRow(
+                        title = "Set indeterminate progress"
+                    ) {
+                        mainViewModel.progressState.currentProgress = Progress(
+                            description = context.getString(R.string.info_pleaseWait)
+                        )
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
         }
 
-        FormSection(title = "Prefs", bottomDivider = false) {
-            sortedExperimentalOptions.forEach { pref ->
+        ExpressiveSection(title = "Updates") {
+            VerticalSegmentor(
+                {
+                    ExpressiveButtonRow(
+                        title = "Check updates (ignore version)"
+                    ) {
+                        scope.launch {
+                            mainViewModel.checkUpdates(ignoreVersion = true)
+                        }
+                    }
+                },
+                {
+                    ExpressiveButtonRow(
+                        title = "Show update toast"
+                    ) {
+                        mainViewModel.showUpdateToast()
+                    }
+                },
+                {
+                    ExpressiveButtonRow(
+                        title = "Show update dialog"
+                    ) {
+                        scope.launch {
+                            mainViewModel.updateSheetState.show()
+                        }
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
+
+        ExpressiveSection(title = "Prefs") {
+            val inputs: List<@Composable () -> Unit> = sortedExperimentalOptions.map { pref -> {
                 @Composable
                 fun TextField(
                     onValueChange: (String) -> Unit,
@@ -120,6 +149,7 @@ fun ExperimentalPage(
                 ) {
                     IconButton(
                         onClick = { pref.resetValue() },
+                        shapes = IconButtonDefaults.shapes(),
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
                         Icon(
@@ -130,7 +160,7 @@ fun ExperimentalPage(
                     when (pref.defaultValue) {
                         is Boolean -> {
                             pref as BasePreferenceManager.Preference<Boolean>
-                            SwitchRow(
+                            ExpressiveSwitchRow(
                                 title = pref.key,
                                 checked = pref.value
                             ) {
@@ -159,23 +189,29 @@ fun ExperimentalPage(
                         }
                     }
                 }
-            }
+            } }
 
-            ButtonRow(
-                title = "Reset experimental prefs",
-                contentColor = MaterialTheme.colorScheme.error
-            ) {
-                scope.launch {
-                    sortedExperimentalOptions.forEach {
-                        it.resetValue()
+            VerticalSegmentor(
+                *inputs.toTypedArray(),
+                {
+                    ExpressiveButtonRow(
+                        title = "Reset experimental prefs",
+                        contentColor = MaterialTheme.colorScheme.error
+                    ) {
+                        scope.launch {
+                            sortedExperimentalOptions.forEach {
+                                it.resetValue()
+                            }
+                            mainViewModel.topToastState.showAndroidToast(
+                                text = "Restored default values for experimental prefs",
+                                icon = Icons.Rounded.Done
+                            )
+                            GeneralUtil.restartApp(context)
+                        }
                     }
-                    mainViewModel.topToastState.showAndroidToast(
-                        text = "Restored default values for experimental prefs",
-                        icon = Icons.Rounded.Done
-                    )
-                    GeneralUtil.restartApp(context)
-                }
-            }
+                },
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
         }
     }
 }

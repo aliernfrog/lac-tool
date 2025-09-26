@@ -24,8 +24,10 @@ import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.filled.ViewInAr
 import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,7 +58,8 @@ import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
@@ -64,7 +67,7 @@ import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MapsMaterialsScreen(
     mapsEditViewModel: MapsEditViewModel = koinViewModel(),
@@ -94,6 +97,7 @@ fun MapsMaterialsScreen(
                 actions = {
                     Box {
                         IconButton(
+                            shapes = IconButtonDefaults.shapes(),
                             onClick = { listOptionsExpanded = true }
                         ) {
                             Icon(
@@ -270,13 +274,14 @@ private fun Suggestion(
             expanded = expanded,
             title = stringResource(titleRef),
             description = stringResource(descriptionRef).replace("%n", materials.size.toString()),
-            painter = painter,
-            minimizedHeaderContentColor = accentColor,
-            expandedHeaderColor = accentColor,
+            icon = {
+                ExpressiveRowIcon(painter = painter)
+            },
+            minimizedContainerColor = accentColor,
             onClickHeader = { expanded = !expanded }
         ) {
             materials.forEach { material ->
-                ButtonRow(
+                ExpressiveButtonRow(
                     title = material.name,
                     description = stringResource(R.string.mapsMaterials_clickToViewMore)
                 ) {

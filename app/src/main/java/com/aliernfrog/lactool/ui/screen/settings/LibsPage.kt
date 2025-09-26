@@ -18,7 +18,9 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.CorporateFare
 import androidx.compose.material.icons.filled.Engineering
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -48,15 +50,15 @@ import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppSmallTopBar
 import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.form.DividerRow
-import com.aliernfrog.lactool.ui.component.form.FormSection
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import com.mikepenz.aboutlibraries.entity.Library
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LibsPage(
     settingsViewModel: SettingsViewModel = koinViewModel(),
@@ -110,7 +112,6 @@ fun LibsPage(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .align(Alignment.CenterHorizontally)
                         .padding(horizontal = 16.dp)
                 )
                 lib.description?.let {
@@ -139,6 +140,7 @@ fun LibsPage(
                 ) {
                     lib.website?.let {
                         if (it.contains("://")) Button(
+                            shapes = ButtonDefaults.shapes(),
                             onClick = { uriHandler.openUri(it) }
                         ) {
                             ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.OpenInNew))
@@ -147,6 +149,7 @@ fun LibsPage(
                     }
                     lib.organization?.url?.let {
                         if (it.contains("://")) FilledTonalButton(
+                            shapes = ButtonDefaults.shapes(),
                             onClick = {
                                 uriHandler.openUri(it)
                             }
@@ -157,6 +160,7 @@ fun LibsPage(
                     }
                     lib.developers.forEach { dev ->
                         OutlinedButton(
+                            shapes = ButtonDefaults.shapes(),
                             onClick = {
                                 dev.organisationUrl?.let {
                                     if (it.contains("://")) uriHandler.openUri(it)
@@ -171,10 +175,8 @@ fun LibsPage(
             }
 
             lib.licenses.forEach { license ->
-                FormSection(
-                    title = license.name,
-                    topDivider = true,
-                    bottomDivider = false
+                ExpressiveSection(
+                    title = license.name
                 ) {
                     Text(
                         text = license.licenseContent ?: "",
