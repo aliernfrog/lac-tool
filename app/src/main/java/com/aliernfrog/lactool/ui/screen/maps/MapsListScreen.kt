@@ -85,7 +85,7 @@ import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_DEFAULT_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
-import com.aliernfrog.lactool.ui.component.SegmentedButtons
+import com.aliernfrog.lactool.ui.component.SingleChoiceConnectedButtonGroup
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.getMaxLineSpan
 import com.aliernfrog.lactool.ui.component.maps.GridMapItem
@@ -360,8 +360,8 @@ private fun Header(
             searchQuery = mapsListViewModel.searchQuery,
             onSearchQueryChange = { mapsListViewModel.searchQuery = it }
         )
-        SegmentedButtons(
-            options = mapsListViewModel.availableSegments.map {
+        SingleChoiceConnectedButtonGroup(
+            choices = mapsListViewModel.availableSegments.map {
                 stringResource(it.labelId)
             },
             selectedIndex = segmentIndex,

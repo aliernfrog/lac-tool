@@ -152,7 +152,7 @@
     <string name="mapsRoles_roleColor">رنگ رول/نقش</string>
     <string name="mapsRoles_addRole">اضافه کردن نقش/رول</string>
     <string name="mapsRoles_addedRole">نقش اضافه شده: {ROLE}</string>
-    <string name="mapsRoles_addRoleHint">پیش نمایش نقش/رول</string>
+    <string name="mapsRoles_addRole_preview">پیش نمایش نقش/رول</string>
     <string name="mapsRoles_illegalChars">نقش نمی تواند حاوی: \"{CHAR}\" باشد</string>
     <string name="mapsMaterials">مواد و منابع</string>
     <string name="mapsMaterials_description">در حال حاضر %n مواد دارد</string>

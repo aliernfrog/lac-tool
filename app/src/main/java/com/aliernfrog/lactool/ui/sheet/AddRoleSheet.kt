@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.sheet
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +12,11 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
@@ -33,15 +37,16 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aliernfrog.laclib.util.LACHelperUtil
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.form.FormSection
+import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AddRoleSheet(
     state: SheetState,
@@ -52,21 +57,23 @@ fun AddRoleSheet(
     val focusRequester = remember { FocusRequester() }
     var roleName by remember { mutableStateOf("") }
     var roleColor by remember { mutableStateOf("") }
-    val roleHtml = buildRoleHtml(roleName, roleColor)
+    val roleHtml = LACHelperUtil.buildRoleString(name = roleName, color = roleColor) ?: ""
+
     AppModalBottomSheet(sheetState = state) {
-        FormSection(null) {
-            MapRoleRow(
-                role = roleHtml.ifBlank { stringResource(R.string.mapsRoles_addRoleHint) },
-                alwaysShowRaw = roleHtml.isNotBlank(),
-                showTopDivider = false,
-                expanded = null,
-                onRoleDelete = {},
-                onClick = {},
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .clip(AppComponentShape)
-            )
-        }
+        MapRoleRow(
+            role = roleHtml.ifBlank { stringResource(R.string.mapsRoles_addRole_preview) },
+            description = if (roleHtml.isBlank()) stringResource(R.string.mapsRoles_addRole_preview_hint) else null,
+            alwaysShowRaw = roleHtml.isNotBlank(),
+            expanded = null,
+            onRoleDelete = {},
+            onClick = {},
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .clip(AppComponentShape)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+        )
+        DividerRow(Modifier.padding(12.dp))
+
         OutlinedTextField(
             value = roleName,
             onValueChange = { roleName = it },
@@ -82,9 +89,10 @@ fun AddRoleSheet(
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 12.dp)
                 .focusRequester(focusRequester)
         )
+
         OutlinedTextField(
             value = roleColor,
             onValueChange = { roleColor = it },
@@ -100,20 +108,22 @@ fun AddRoleSheet(
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(horizontal = 12.dp, vertical = 4.dp)
         )
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = 8.dp,
+                    horizontal = 12.dp,
                     vertical = 4.dp
                 )
         ) {
             Crossfade(roleName.isNotBlank() || roleColor.isNotBlank()) {
                 OutlinedButton(
                     enabled = it,
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         roleName = ""
                         roleColor = ""
@@ -126,6 +136,7 @@ fun AddRoleSheet(
             Crossfade(roleName.isNotBlank()) {
                 Button(
                     enabled = it,
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         onRoleAdd(roleHtml)
                         scope.launch { state.hide() }
@@ -144,13 +155,4 @@ fun AddRoleSheet(
             keyboardController?.show()
         } catch (_: Exception) {}
     }
-}
-
-private fun buildRoleHtml(name: String, color: String): String {
-    if (name.isBlank()) return ""
-    var html = name
-    if (!html.contains("[")) html = "[$html"
-    if (!html.contains("]")) html = "$html]"
-    if (color.isNotBlank()) html = "<color=$color>$html</color>"
-    return html
 }

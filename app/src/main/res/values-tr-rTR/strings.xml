@@ -187,7 +187,7 @@
     <string name="mapsRoles_roleColor">Rol rengi</string>
     <string name="mapsRoles_addRole">Rol ekle</string>
     <string name="mapsRoles_addedRole">Rol eklendi: {ROLE}</string>
-    <string name="mapsRoles_addRoleHint">Rol ön izlemesi</string>
+    <string name="mapsRoles_addRole_preview">Rol ön izlemesi</string>
     <string name="mapsRoles_illegalChars">Rol adı \"{CHAR}\" içeremez</string>
     <string name="mapsMaterials">Materyaller</string>
     <string name="mapsMaterials_description">Şu anda %n materyal var</string>

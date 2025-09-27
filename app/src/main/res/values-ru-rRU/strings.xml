@@ -183,7 +183,7 @@
     <string name="mapsRoles_roleColor">Цвет роли</string>
     <string name="mapsRoles_addRole">Добавить роль</string>
     <string name="mapsRoles_addedRole">Добавлена роль {ROLE}</string>
-    <string name="mapsRoles_addRoleHint">Предпросмотр роли</string>
+    <string name="mapsRoles_addRole_preview">Предпросмотр роли</string>
     <string name="mapsRoles_illegalChars">Роль не может содержать \"{CHAR}\"</string>
     <string name="mapsMaterials">Материалы</string>
     <string name="mapsMaterials_description">Сейчас используется %n материалов</string>

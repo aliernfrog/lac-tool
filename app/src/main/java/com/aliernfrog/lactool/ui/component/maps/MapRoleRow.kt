@@ -6,13 +6,23 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.CopyAll
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.ClipEntry
@@ -22,15 +32,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.component.form.DividerRow
-import com.aliernfrog.lactool.ui.component.form.ExpandableRow
+import com.aliernfrog.lactool.ui.component.form.BaseExpandableRow
+import com.aliernfrog.lactool.ui.component.form.ToggleExpandButton
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -40,8 +55,8 @@ fun MapRoleRow(
     role: String,
     expanded: Boolean?,
     modifier: Modifier = Modifier,
+    description: String? = null,
     alwaysShowRaw: Boolean = false,
-    showTopDivider: Boolean = true,
     topToastState: TopToastState? = null,
     onRoleDelete: (String) -> Unit,
     onClick: () -> Unit
@@ -52,56 +67,108 @@ fun MapRoleRow(
 
     val rawDifferent = role.removeHtml() != role
 
-    if (showTopDivider) DividerRow()
-    ExpandableRow(
-        title = HtmlCompat.fromHtml(
-            role.replace("<color", "<font color").replace("</color>", "</font>"),
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        ).toAnnotatedString().text, // TODO handle colors
-        description = role, // TODO better way to handle raw name
-        expanded = expanded ?: false,
+    BaseExpandableRow(
+        expanded = expanded == true,
         modifier = modifier,
-        onClickHeader = onClick
-    ) {
-        ExpressiveButtonRow(
-            title = stringResource(R.string.mapsRoles_copyRoleName),
-            icon = {
-                ExpressiveRowIcon(
-                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                )
+        onClickHeader = onClick,
+        header = { containerColor, contentColor ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.heightIn(56.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(vertical = 8.dp, horizontal = 18.dp)
+                ) {
+                    Text(
+                        text = HtmlCompat.fromHtml(
+                            role.replace("<color", "<font color").replace("</color>", "</font>"),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
+                        ).toAnnotatedString(),
+                        color = contentColor,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 19.sp
+                        ),
+                        modifier = Modifier.animateContentSize()
+                    )
+
+                    FadeVisibility(alwaysShowRaw || (expanded == true && rawDifferent) || description != null) {
+                        Text(
+                            text = description ?: role,
+                            color = contentColor,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontFamily = FontFamily.Monospace
+                            ),
+                            modifier = Modifier
+                                .alpha(0.7f)
+                                .animateContentSize()
+                        )
+                    }
+                }
+                expanded?.let {
+                    ToggleExpandButton(
+                        expanded = it,
+                        onClick = onClick,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                }
             }
-        ) { scope.launch {
-            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
-                context.getString(R.string.mapsRoles_copyRoleClipLabel),
-                role.removeHtml()
-            )))
-            topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-        } }
-        if (rawDifferent) ExpressiveButtonRow(
-            title = stringResource(R.string.mapsRoles_copyRoleRaw),
-            icon = {
-                ExpressiveRowIcon(
-                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                )
-            }
-        ) { scope.launch {
-            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
-                context.getString(R.string.mapsRoles_copyRoleClipLabel),
-                role
-            )))
-            topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-        } }
-        ExpressiveButtonRow(
-            title = stringResource(R.string.mapsRoles_deleteRole),
-            contentColor = MaterialTheme.colorScheme.error,
-            icon = {
-                ExpressiveRowIcon(
-                    painter = rememberVectorPainter(Icons.Rounded.Delete)
-                )
-            }
-        ) {
-            onRoleDelete(role)
         }
+    ) {
+        VerticalSegmentor(
+            {
+                ExpressiveButtonRow(
+                    title = stringResource(R.string.mapsRoles_copyRoleName),
+                    icon = {
+                        ExpressiveRowIcon(
+                            painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
+                        )
+                    }
+                ) { scope.launch {
+                    clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
+                        context.getString(R.string.mapsRoles_copyRoleClipLabel),
+                        role.removeHtml()
+                    )))
+                    topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                } }
+            },
+            {
+                if (rawDifferent) ExpressiveButtonRow(
+                    title = stringResource(R.string.mapsRoles_copyRoleRaw),
+                    icon = {
+                        ExpressiveRowIcon(
+                            painter = rememberVectorPainter(Icons.Rounded.CopyAll)
+                        )
+                    }
+                ) { scope.launch {
+                    clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
+                        context.getString(R.string.mapsRoles_copyRoleClipLabel),
+                        role
+                    )))
+                    topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.CopyAll)
+                } }
+            },
+            {
+                ExpressiveButtonRow(
+                    title = stringResource(R.string.mapsRoles_deleteRole),
+                    contentColor = MaterialTheme.colorScheme.error,
+                    icon = {
+                        ExpressiveRowIcon(
+                            painter = rememberVectorPainter(Icons.Rounded.Delete),
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    }
+                ) {
+                    onRoleDelete(role)
+                }
+            },
+            dynamic = true,
+            modifier = Modifier
+                .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+        )
     }
 }
 

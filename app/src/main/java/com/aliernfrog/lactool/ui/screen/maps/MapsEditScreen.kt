@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Done
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.rounded.FindReplace
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -30,6 +32,7 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
+import com.aliernfrog.lactool.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
@@ -75,7 +78,9 @@ fun MapsEditScreen(
         }
     ) {
         Column(
-            Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(mapsEditViewModel.scrollState)
         ) {
             GeneralActions(
                 onNavigateRequest = onNavigateRequest
@@ -84,7 +89,9 @@ fun MapsEditScreen(
                 OptionsActions()
             }
             MiscActions()
-            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
+            Spacer(Modifier
+                .navigationBarsPadding()
+                .height(AppFABPadding))
         }
     }
     if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
@@ -133,7 +140,8 @@ private fun GeneralActions(
                             options = LACMapType.entries.map { it.getName() },
                             selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            onSelect = { mapsEditViewModel.setMapType(LACMapType.entries[it]) }
+                            onSelect = { mapsEditViewModel.setMapType(LACMapType.entries[it]) },
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
                         )
                     }
                 }
@@ -296,6 +304,7 @@ private fun MiscActions(
                 }
             },
             {
+                val expandedRowColor = getExpandableRowDefaultExpandedContainerColor(fraction = 0.1f)
                 ExpandableRow(
                     expanded = mapsEditViewModel.objectFilterExpanded,
                     title = stringResource(R.string.mapsEdit_filterObjects),
@@ -305,12 +314,13 @@ private fun MiscActions(
                             painter = rememberVectorPainter(Icons.Rounded.FilterAlt)
                         )
                     },
+                    expandedContainerColor = expandedRowColor,
                     onClickHeader = {
                         mapsEditViewModel.objectFilterExpanded = !mapsEditViewModel.objectFilterExpanded
                     }
                 ) {
                     Column(Modifier.padding(vertical = 8.dp)) {
-                        FilterObjects()
+                        FilterObjects(containerColor = expandedRowColor)
                     }
                 }
             },
@@ -324,6 +334,7 @@ private fun MiscActions(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FilterObjects(
+    containerColor: Color,
     mapsEditViewModel: MapsEditViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
@@ -341,39 +352,59 @@ private fun FilterObjects(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                start = 16.dp,
-                end = 16.dp,
+                start = 12.dp,
+                end = 12.dp,
                 bottom = 4.dp
             )
     )
     ScrollableRow(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        gradientColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        modifier = Modifier.padding(horizontal = 12.dp),
+        gradientColor = containerColor
     ) {
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
-            SuggestionChip(
+            FilterChip(
+                selected = mapsEditViewModel.objectFilter == suggestion,
                 onClick = { mapsEditViewModel.objectFilter = suggestion },
                 label = { Text(suggestion.filterName ?: "-") }
             )
         }
     }
-    ExpressiveSwitchRow(
-        title = stringResource(R.string.mapsEdit_filterObjects_caseSensitive),
-        checked = mapsEditViewModel.objectFilter.caseSensitive
-    ) {
-        mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(caseSensitive = it)
-    }
-    ExpressiveSwitchRow(
-        title = stringResource(R.string.mapsEdit_filterObjects_exactMatch),
-        description = stringResource(R.string.mapsEdit_filterObjects_exactMatch_description),
-        checked = mapsEditViewModel.objectFilter.exactMatch
-    ) {
-        mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(exactMatch = it)
-    }
-    Text(
-        text = stringResource(R.string.mapsEdit_filterObjects_matches).replace("%n", matches.toString()),
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+
+    FilterChip(
+        selected = mapsEditViewModel.objectFilter.caseSensitive,
+        onClick = {
+            mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(
+                caseSensitive = !mapsEditViewModel.objectFilter.caseSensitive
+            )
+        },
+        label = {
+            Text(stringResource(R.string.mapsEdit_filterObjects_caseSensitive))
+        },
+        leadingIcon = if (mapsEditViewModel.objectFilter.caseSensitive) { {
+            ChipIcon(
+                painter = rememberVectorPainter(Icons.Default.Check)
+            )
+        } } else null,
+        modifier = Modifier.padding(horizontal = 12.dp)
     )
+
+    SingleChoiceConnectedButtonGroup(
+        choices = listOf(
+            // The order here is important as checks are hardcoded
+            stringResource(R.string.mapsEdit_filterObjects_filter_startsWith), // 0
+            stringResource(R.string.mapsEdit_filterObjects_filter_exact) // 1
+        ),
+        selectedIndex = if (mapsEditViewModel.objectFilter.exactMatch) 1 else 0,
+        onSelect = {
+            mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(
+                exactMatch = it == 1
+            )
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+    )
+
     Crossfade(targetState = matches > 0) {
         Button(
             onClick = { mapsEditViewModel.removeObjectFilterMatches(context) },
@@ -384,7 +415,7 @@ private fun FilterObjects(
             enabled = it,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 12.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,

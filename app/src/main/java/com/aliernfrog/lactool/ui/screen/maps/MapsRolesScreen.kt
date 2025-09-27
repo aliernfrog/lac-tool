@@ -29,6 +29,7 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
@@ -45,6 +46,9 @@ fun MapsRolesScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    val roles = mapsEditViewModel.mapEditor?.mapRoles ?: mutableListOf()
+
     AppScaffold(
         topBar = { scrollBehavior ->
             AppTopBar(
@@ -65,7 +69,6 @@ fun MapsRolesScreen(
             }
         }
     ) {
-        val roles = mapsEditViewModel.mapEditor?.mapRoles ?: mutableListOf()
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = mapsEditViewModel.rolesLazyListState
@@ -77,7 +80,7 @@ fun MapsRolesScreen(
                 ) { hasRoles ->
                     if (hasRoles) Text(
                         text = stringResource(R.string.mapsRoles_showingCount).replace("{COUNT}", roles.size.toString()),
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
                     ) else ErrorWithIcon(
                         error = stringResource(R.string.mapsRoles_noRoles),
                         painter = rememberVectorPainter(Icons.Rounded.Style),
@@ -90,14 +93,19 @@ fun MapsRolesScreen(
                 MapRoleRow(
                     role = it,
                     expanded = expanded,
-                    showTopDivider = index != 0,
                     topToastState = mapsEditViewModel.topToastState,
                     onRoleDelete = { role ->
                         mapsEditViewModel.pendingRoleDelete = role
                     },
                     onClick = {
                         mapsEditViewModel.rolesExpandedRoleIndex = if (expanded) -1 else index
-                    }
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .verticalSegmentedShape(
+                            index = index,
+                            totalSize = roles.size
+                        )
                 )
             }
             item {

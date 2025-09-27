@@ -161,7 +161,7 @@
     <string name="mapsRoles_roleColor">身份组颜色</string>
     <string name="mapsRoles_addRole">添加身份组</string>
     <string name="mapsRoles_addedRole">已添加身份组：{ROLE}</string>
-    <string name="mapsRoles_addRoleHint">身份组预览</string>
+    <string name="mapsRoles_addRole_preview">身份组预览</string>
     <string name="mapsRoles_illegalChars">身份组不能包含：“{CHAR}”</string>
     <string name="mapsMaterials">材质</string>
     <string name="mapsMaterials_description">目前有 %n 个材质</string>

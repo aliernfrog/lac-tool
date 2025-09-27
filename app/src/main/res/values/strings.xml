@@ -165,6 +165,8 @@
     <string name="mapsEdit_filterObjects_description">Filter objects by name and optionally remove them</string>
     <string name="mapsEdit_filterObjects_query">Query</string>
     <string name="mapsEdit_filterObjects_caseSensitive">Case sensitive</string>
+    <string name="mapsEdit_filterObjects_filter_startsWith">Starts with query</string>
+    <string name="mapsEdit_filterObjects_filter_exact">Exact match</string>
     <string name="mapsEdit_filterObjects_exactMatch">Exact match</string>
     <string name="mapsEdit_filterObjects_exactMatch_description">When disabled, objects starting with query will be included as well</string>
     <string name="mapsEdit_filterObjects_matches">%n matches</string>
@@ -187,7 +189,8 @@
     <string name="mapsRoles_roleColor">Role color</string>
     <string name="mapsRoles_addRole">Add role</string>
     <string name="mapsRoles_addedRole">Added role: {ROLE}</string>
-    <string name="mapsRoles_addRoleHint">Role preview</string>
+    <string name="mapsRoles_addRole_preview">Role preview</string>
+    <string name="mapsRoles_addRole_preview_hint">Give the role a name to preview</string>
     <string name="mapsRoles_illegalChars">Role can NOT contain: "{CHAR}"</string>
     <string name="mapsMaterials">Materials</string>
     <string name="mapsMaterials_description">Currently has %n materials</string>
