@@ -166,8 +166,6 @@
     <string name="mapsEdit_filterObjects_description">Objeleri ismiyle filtreleyin ve isterseniz kaldırın</string>
     <string name="mapsEdit_filterObjects_query">Sorgu</string>
     <string name="mapsEdit_filterObjects_caseSensitive">Büyük/küçük harf duyarlı</string>
-    <string name="mapsEdit_filterObjects_exactMatch">Tam eşleşme</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">Kapatıldığında, sorguyla başlayan objeler de dahil edilecektir</string>
     <string name="mapsEdit_filterObjects_matches">%n eşleşme</string>
     <string name="mapsEdit_filterObjects_removeMatches">Eşleşen objeleri kaldır</string>
     <string name="mapsEdit_filterObjects_removedMatches">%n eşleşen obje kaldırıldı</string>

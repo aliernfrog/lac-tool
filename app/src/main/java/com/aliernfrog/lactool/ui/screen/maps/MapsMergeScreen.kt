@@ -11,12 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.rounded.AddLocationAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,15 +26,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
-import com.aliernfrog.lactool.ui.component.form.FormSection
-import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
@@ -144,20 +147,28 @@ private fun MapsList(
     AnimatedVisibility(baseMap != null) {
         MapButtonWithActions(
             mapToMerge = baseMap ?: MutableMapToMerge(LACMapToMerge("-", "-")),
-            mapIndex = 0
+            mapIndex = 0,
+            modifier = Modifier
+                .padding(start = 12.dp, end = 12.dp, top = 8.dp)
+                .verticalSegmentedShape()
         )
     }
+
     AnimatedVisibility(mapsToMerge.isNotEmpty()) {
-        FormSection(
-            title = stringResource(R.string.mapsMerge_mapsToMerge),
-            topDivider = true,
-            bottomDivider = false
+        ExpressiveSection(
+            title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
             mapsToMerge.forEachIndexed { index, map ->
                 MapButtonWithActions(
                     mapToMerge = map,
                     mapIndex = index+1,
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .verticalSegmentedShape(
+                            index = index,
+                            totalSize = mapsToMerge.size
+                        )
                 )
             }
         }
@@ -168,20 +179,28 @@ private fun MapsList(
 private fun PickMapButton(
     onClick: () -> Unit
 ) {
-    RoundedButtonRow(
+    ExpressiveButtonRow(
         title = stringResource(R.string.mapsMerge_addMap),
-        painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt),
+        icon = {
+            ExpressiveRowIcon(
+                painter = rememberVectorPainter(Icons.Default.AddLocationAlt)
+            )
+        },
         containerColor = MaterialTheme.colorScheme.primary,
-        onClick = onClick
+        onClick = onClick,
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .verticalSegmentedShape()
     )
 }
 
 @Composable
 private fun MapButtonWithActions(
-    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
     mapToMerge: MutableMapToMerge,
     mapIndex: Int,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    mapsMergeViewModel: MapsMergeViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val isBase = mapIndex == 0
@@ -194,6 +213,7 @@ private fun MapButtonWithActions(
         onUpdateState = { mapsMergeViewModel.mapMerger.pushMapsState() },
         onMakeBase = { mapsMergeViewModel.makeMapBase(mapIndex, mapToMerge.mapName, context) },
         onRemove = { mapsMergeViewModel.removeMap(mapIndex, mapToMerge.mapName, context) },
+        modifier = modifier,
         onClickHeader = {
             if (!isBase) {
                 mapsMergeViewModel.optionsExpandedFor = if (expanded) 0

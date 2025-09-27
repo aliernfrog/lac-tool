@@ -77,6 +77,7 @@ fun ExpandableRow(
     modifier: Modifier = Modifier,
     description: String? = null,
     icon: (@Composable () -> Unit)? = null,
+    showTrailingComponent: Boolean = true,
     minimizedHeaderTrailingButtonText: String? = null,
     minimizedContainerColor: Color = Color.Transparent,
     expandedContainerColor: Color = getExpandableRowDefaultExpandedContainerColor(),
@@ -94,7 +95,7 @@ fun ExpandableRow(
                 title = title,
                 description = description,
                 icon = icon,
-                trailingComponent = minimizedHeaderTrailingButtonText?.let { trailingButtonText -> {
+                trailingComponent = if (showTrailingComponent) minimizedHeaderTrailingButtonText?.let { trailingButtonText -> {
                     Crossfade(
                         targetState = expanded
                     ) { showMinimizeButton ->
@@ -120,7 +121,7 @@ fun ExpandableRow(
                         expanded = expanded,
                         onClick = onClickHeader
                     )
-                },
+                } else null,
                 containerColor = containerColor,
                 contentColor = contentColor,
                 onClick = onClickHeader

@@ -162,8 +162,6 @@
     <string name="mapsEdit_filterObjects_description">Фильтруйте объекты по имени и по желанию удаляйте их</string>
     <string name="mapsEdit_filterObjects_query">Ключевое слово</string>
     <string name="mapsEdit_filterObjects_caseSensitive">Соблюдать регистр</string>
-    <string name="mapsEdit_filterObjects_exactMatch">Точное совпадение</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">Если отключить, объекты, начинающиеся с ключевого слова, также будут включены в список</string>
     <string name="mapsEdit_filterObjects_matches">%n совпадений</string>
     <string name="mapsEdit_filterObjects_removeMatches">Удалите совпавшие объекты</string>
     <string name="mapsEdit_filterObjects_removedMatches">Удалено %n совпадающих объектов</string>

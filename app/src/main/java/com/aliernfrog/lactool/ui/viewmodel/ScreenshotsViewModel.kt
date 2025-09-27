@@ -1,7 +1,7 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.net.Uri
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
@@ -14,9 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
@@ -28,7 +30,9 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -40,6 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +82,7 @@ class ScreenshotsViewModel(
         lastKnownStorageAccessType = storageAccessType
         screenshotsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(screenshotsDir)
+                val treeUri = screenshotsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -135,19 +140,35 @@ class ScreenshotsViewModel(
                 val scope = rememberCoroutineScope()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                ButtonRow(
-                    title = stringResource(R.string.screenshots_share),
-                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
-                ) {
-                    scope.launch { shareScreenshot(screenshot, context) }
-                }
-                ButtonRow(
-                    title = stringResource(R.string.screenshots_delete),
-                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
-                ) {
-                    showDeleteDialog = true
-                }
+                VerticalSegmentor(
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.screenshots_share),
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
+                                )
+                            }
+                        ) {
+                            scope.launch { shareScreenshot(screenshot, context) }
+                        }
+                    },
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.screenshots_delete),
+                            contentColor = MaterialTheme.colorScheme.error,
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                                    containerColor = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        ) {
+                            showDeleteDialog = true
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = screenshot.name,

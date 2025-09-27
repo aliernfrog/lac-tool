@@ -131,8 +131,6 @@
     <string name="mapsEdit_filterObjects_description">اشیاء را با نام فیلتر کنید و به صورت اختیاری آنها را حذف کنید</string>
     <string name="mapsEdit_filterObjects_query">پرسش</string>
     <string name="mapsEdit_filterObjects_caseSensitive">حساس به حروف کوچک و بزرگ</string>
-    <string name="mapsEdit_filterObjects_exactMatch">مطابقت کامل</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">در صورت غیرفعال شدن، اشیایی که با پرس و جو شروع می شوند نیز شامل می شوند</string>
     <string name="mapsEdit_filterObjects_matches">%n مطابقت دارد</string>
     <string name="mapsEdit_filterObjects_removeMatches">Remove matching objects</string>
     <string name="mapsEdit_filterObjects_removedMatches">%n شی منطبق حذف شد</string>

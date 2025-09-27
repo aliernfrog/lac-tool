@@ -140,8 +140,6 @@
     <string name="mapsEdit_filterObjects_description">按名称筛选物体并选择性地将其移除</string>
     <string name="mapsEdit_filterObjects_query">查询</string>
     <string name="mapsEdit_filterObjects_caseSensitive">区分大小写</string>
-    <string name="mapsEdit_filterObjects_exactMatch">精确匹配</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">禁用时，以查询开头的物体也将包括在内</string>
     <string name="mapsEdit_filterObjects_matches">%n 个匹配项</string>
     <string name="mapsEdit_filterObjects_removeMatches">移除匹配的物体</string>
     <string name="mapsEdit_filterObjects_removedMatches">已移除 %n 个匹配的物体</string>

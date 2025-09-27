@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.component.maps
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.PinDrop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -29,13 +31,17 @@ import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
-import com.aliernfrog.lactool.ui.component.form.SwitchRow
+import com.aliernfrog.lactool.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MapToMerge(
     mapToMerge: MutableMapToMerge,
+    modifier: Modifier = Modifier,
     isBaseMap: Boolean = false,
     expanded: Boolean = false,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
@@ -57,81 +63,101 @@ fun MapToMerge(
                 )
             )
         },
-        onClickHeader = onClickHeader
+        showTrailingComponent = !isBaseMap,
+        expandedContainerColor = if (isBaseMap) MaterialTheme.colorScheme.surfaceContainerHigh else
+            getExpandableRowDefaultExpandedContainerColor(),
+        onClickHeader = onClickHeader,
+        modifier = modifier
     ) {
-        if (!isBaseMap) OutlinedTextField(
-            value = mapToMerge.mergePosition,
-            onValueChange = {
-                mapToMerge.mergePosition = it
-                onUpdateState()
-            },
-            label = { Text(stringResource(R.string.mapsMerge_map_position)) },
-            supportingText = { Text(stringResource(
-                if (isCoordsValid) R.string.mapsMerge_map_position_description
-                else R.string.mapsMerge_map_position_invalid
-            )) },
-            isError = !isCoordsValid,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Decimal,
-                autoCorrectEnabled = false
-            ),
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 8.dp
-                )
-        )
-        SwitchRow(
-            title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
-            checked = mapToMerge.mergeSpawnpoints,
-            onCheckedChange = {
-                mapToMerge.mergeSpawnpoints = it
-                onUpdateState()
-            },
-            contentColor = contentColor
-        )
-        SwitchRow(
-            title = stringResource(R.string.mapsMerge_map_includeRacingCheckpoints),
-            checked = mapToMerge.mergeRacingCheckpoints,
-            onCheckedChange = {
-                mapToMerge.mergeRacingCheckpoints = it
-                onUpdateState()
-            },
-            contentColor = contentColor
-        )
-        SwitchRow(
-            title = stringResource(R.string.mapsMerge_map_includeTDMSpawnpoints),
-            checked = mapToMerge.mergeTDMSpawnpoints,
-            onCheckedChange = {
-                mapToMerge.mergeTDMSpawnpoints = it
-                onUpdateState()
-            },
-            contentColor = contentColor
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-        ) {
-            if (!isBaseMap) OutlinedButton(
-                onClick = onMakeBase
+        Column {
+            if (!isBaseMap) OutlinedTextField(
+                value = mapToMerge.mergePosition,
+                onValueChange = {
+                    mapToMerge.mergePosition = it
+                    onUpdateState()
+                },
+                label = { Text(stringResource(R.string.mapsMerge_map_position)) },
+                supportingText = { Text(stringResource(
+                    if (isCoordsValid) R.string.mapsMerge_map_position_description
+                    else R.string.mapsMerge_map_position_invalid
+                )) },
+                isError = !isCoordsValid,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Decimal,
+                    autoCorrectEnabled = false
+                ),
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 8.dp
+                    )
+            )
+
+            VerticalSegmentor(
+                {
+                    ExpressiveSwitchRow(
+                        title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
+                        checked = mapToMerge.mergeSpawnpoints,
+                        onCheckedChange = {
+                            mapToMerge.mergeSpawnpoints = it
+                            onUpdateState()
+                        },
+                        contentColor = contentColor
+                    )
+                },
+                {
+                    ExpressiveSwitchRow(
+                        title = stringResource(R.string.mapsMerge_map_includeRacingCheckpoints),
+                        checked = mapToMerge.mergeRacingCheckpoints,
+                        onCheckedChange = {
+                            mapToMerge.mergeRacingCheckpoints = it
+                            onUpdateState()
+                        },
+                        contentColor = contentColor
+                    )
+                },
+                {
+                    ExpressiveSwitchRow(
+                        title = stringResource(R.string.mapsMerge_map_includeTDMSpawnpoints),
+                        checked = mapToMerge.mergeTDMSpawnpoints,
+                        onCheckedChange = {
+                            mapToMerge.mergeTDMSpawnpoints = it
+                            onUpdateState()
+                        },
+                        contentColor = contentColor
+                    )
+                },
+                itemContainerColor = if (isBaseMap) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceContainerHigh,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
             ) {
-                ButtonIcon(rememberVectorPainter(Icons.Default.Home))
-                Text(stringResource(R.string.mapsMerge_map_makeBase))
-            }
-            Button(
-                onClick = onRemove,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError
-                )
-            ) {
-                ButtonIcon(rememberVectorPainter(Icons.Default.Close))
-                Text(stringResource(R.string.mapsMerge_map_remove))
+                if (!isBaseMap) OutlinedButton(
+                    onClick = onMakeBase,
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Home))
+                    Text(stringResource(R.string.mapsMerge_map_makeBase))
+                }
+                Button(
+                    onClick = onRemove,
+                    shapes = ButtonDefaults.shapes(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                    )
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Close))
+                    Text(stringResource(R.string.mapsMerge_map_remove))
+                }
             }
         }
     }

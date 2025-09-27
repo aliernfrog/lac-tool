@@ -167,8 +167,6 @@
     <string name="mapsEdit_filterObjects_caseSensitive">Case sensitive</string>
     <string name="mapsEdit_filterObjects_filter_startsWith">Starts with query</string>
     <string name="mapsEdit_filterObjects_filter_exact">Exact match</string>
-    <string name="mapsEdit_filterObjects_exactMatch">Exact match</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">When disabled, objects starting with query will be included as well</string>
     <string name="mapsEdit_filterObjects_matches">%n matches</string>
     <string name="mapsEdit_filterObjects_removeMatches">Remove matching objects</string>
     <string name="mapsEdit_filterObjects_removedMatches">Removed %n matching objects</string>

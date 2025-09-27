@@ -1,12 +1,12 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
@@ -21,9 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -37,7 +39,9 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -50,6 +54,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,38 +180,57 @@ class MapsViewModel(
                     }
                 }
 
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_set),
-                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate),
-                    description = if (hasThumbnail) stringResource(R.string.maps_thumbnail_set_overrides) else null
-                ) {
-                    thumbnailPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
-
-                if (!hasThumbnail) return@MediaViewData
-
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_share),
-                    painter = rememberVectorPainter(Icons.Default.Share)
-                ) {
-                    scope.launch {
-                        activeProgress = Progress(context.getString(R.string.info_sharing))
-                        map.runInIOThreadSafe {
-                            FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                VerticalSegmentor(
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.maps_thumbnail_set),
+                            description = if (hasThumbnail) stringResource(R.string.maps_thumbnail_set_overrides) else null,
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate)
+                                )
+                            }
+                        ) {
+                            thumbnailPickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
                         }
-                        activeProgress = null
-                    }
-                }
-
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_delete),
-                    painter = rememberVectorPainter(Icons.Default.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
-                ) {
-                    showDeleteDialog = true
-                }
+                    },
+                    {
+                        if (hasThumbnail) ExpressiveButtonRow(
+                            title = stringResource(R.string.maps_thumbnail_share),
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Default.Share)
+                                )
+                            }
+                        ) {
+                            scope.launch {
+                                activeProgress = Progress(context.getString(R.string.info_sharing))
+                                map.runInIOThreadSafe {
+                                    FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                                }
+                                activeProgress = null
+                            }
+                        }
+                    },
+                    {
+                        if (hasThumbnail) ExpressiveButtonRow(
+                            title = stringResource(R.string.maps_thumbnail_delete),
+                            contentColor = MaterialTheme.colorScheme.error,
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Default.Delete),
+                                    containerColor = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        ) {
+                            showDeleteDialog = true
+                        }
+                    },
+                    dynamic = true,
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),
@@ -265,7 +289,7 @@ class MapsViewModel(
         lastKnownStorageAccessType = storageAccessType
         mapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(mapsDir)
+                val treeUri = mapsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -292,7 +316,7 @@ class MapsViewModel(
         lastKnownStorageAccessType = storageAccessType
         exportedMapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(exportedMapsDir)
+                val treeUri = exportedMapsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {

@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
+import android.content.ClipData
 import android.content.Context
 import android.net.Uri
 import androidx.compose.animation.Crossfade
@@ -31,10 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
@@ -48,7 +49,9 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -63,6 +66,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -217,7 +221,7 @@ class WallpapersViewModel(
         lastKnownStorageAccessType = storageAccessType
         wallpapersFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(wallpapersDir)
+                val treeUri = wallpapersDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -255,31 +259,56 @@ class WallpapersViewModel(
             title = wallpaper.name,
             options = {
                 val context = LocalContext.current
-                val clipboardManager = LocalClipboardManager.current
+                val clipboard = LocalClipboard.current
                 val scope = rememberCoroutineScope()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                ButtonRow(
-                    title = stringResource(R.string.wallpapers_copyImportUrl),
-                    description = stringResource(R.string.wallpapers_copyImportUrlDescription),
-                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                ) {
-                    clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)))
-                    topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-                }
-                ButtonRow(
-                    title = stringResource(R.string.wallpapers_share),
-                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
-                ) {
-                    scope.launch { shareImportedWallpaper(wallpaper, context) }
-                }
-                ButtonRow(
-                    title = stringResource(R.string.wallpapers_delete),
-                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
-                ) {
-                    showDeleteDialog = true
-                }
+                VerticalSegmentor(
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.wallpapers_copyImportUrl),
+                            description = stringResource(R.string.wallpapers_copyImportUrlDescription),
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
+                                )
+                            }
+                        ) { scope.launch {
+                            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
+                                null,
+                                GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)
+                            )))
+                            topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                        } }
+                    },
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.wallpapers_share),
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
+                                )
+                            }
+                        ) {
+                            scope.launch { shareImportedWallpaper(wallpaper, context) }
+                        }
+                    },
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.wallpapers_delete),
+                            contentColor = MaterialTheme.colorScheme.error,
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                                    containerColor = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        ) {
+                            showDeleteDialog = true
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = wallpaper.name,
