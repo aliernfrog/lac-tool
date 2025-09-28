@@ -182,9 +182,6 @@
     <string name="mapsMerge_map_position">位置（X,Y,Z）</string>
     <string name="mapsMerge_map_position_description">此地图将添加到基础地图的此位置</string>
     <string name="mapsMerge_map_position_invalid">提供的位置无效。将使用 0,0,0</string>
-    <string name="mapsMerge_map_includeSpawnpoints">包括出生点</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">包括比赛检查点</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">包括团队死亡竞赛出生点</string>
     <string name="mapsMerge_map_makeBase">设为基础</string>
     <string name="mapsMerge_map_madeBase">已设立 {MAP} 个基础</string>
     <string name="mapsMerge_map_remove">移除</string>

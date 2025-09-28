@@ -402,7 +402,12 @@ private fun FilterObjects(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+            .padding(horizontal = 12.dp)
+    )
+
+    Text(
+        text = stringResource(R.string.mapsEdit_filterObjects_matches).replace("%n", matches.toString()),
+        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
     )
 
     Crossfade(targetState = matches > 0) {

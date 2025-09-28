@@ -173,9 +173,6 @@
     <string name="mapsMerge_map_position">موقعیت (X,Y,Z)</string>
     <string name="mapsMerge_map_position_description">این نقشه روی این موقعیت در نقشه پایه اضافه خواهد شد</string>
     <string name="mapsMerge_map_position_invalid">موقعیت نامعتبر ارائه شده 0,0,0 استفاده خواهد شد</string>
-    <string name="mapsMerge_map_includeSpawnpoints">شامل نقاط اسپاون</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">شامل پست های بازرسی مسابقه</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">شامل نقاط اسپان مسابقه مرگ تیم</string>
     <string name="mapsMerge_map_makeBase">ساخت پایه</string>
     <string name="mapsMerge_map_madeBase">پایه {MAP} ساخته شده است</string>
     <string name="mapsMerge_map_remove">پاک کردن</string>

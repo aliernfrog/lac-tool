@@ -207,9 +207,6 @@
     <string name="mapsMerge_map_position">Позиция (X,Y,Z)</string>
     <string name="mapsMerge_map_position_description">Карта будет добавлена на эту позицию в главной карте</string>
     <string name="mapsMerge_map_position_invalid">Указана неправильная позиция. Будет использовано значение 0,0,0</string>
-    <string name="mapsMerge_map_includeSpawnpoints">Включить точки спавна</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">Включите контрольные точки для гонок</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">Включить точки спавна для TDM</string>
     <string name="mapsMerge_map_makeBase">Сделать главной</string>
     <string name="mapsMerge_map_madeBase">Карта {MAP} сделана главной</string>
     <string name="mapsMerge_map_remove">Удалить</string>

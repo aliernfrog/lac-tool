@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -162,7 +161,6 @@ private fun MapsList(
                 MapButtonWithActions(
                     mapToMerge = map,
                     mapIndex = index+1,
-                    containerColor = MaterialTheme.colorScheme.surface,
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .verticalSegmentedShape(
@@ -199,17 +197,16 @@ private fun MapButtonWithActions(
     mapToMerge: MutableMapToMerge,
     mapIndex: Int,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     mapsMergeViewModel: MapsMergeViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val isBase = mapIndex == 0
     val expanded = mapsMergeViewModel.optionsExpandedFor == mapIndex
+
     MapToMerge(
         mapToMerge = mapToMerge,
         isBaseMap = isBase,
         expanded = expanded || isBase,
-        containerColor = containerColor,
         onUpdateState = { mapsMergeViewModel.mapMerger.pushMapsState() },
         onMakeBase = { mapsMergeViewModel.makeMapBase(mapIndex, mapToMerge.mapName, context) },
         onRemove = { mapsMergeViewModel.removeMap(mapIndex, mapToMerge.mapName, context) },

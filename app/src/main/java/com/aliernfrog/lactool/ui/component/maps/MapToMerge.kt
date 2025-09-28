@@ -2,11 +2,13 @@ package com.aliernfrog.lactool.ui.component.maps
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.rounded.Home
@@ -14,15 +16,14 @@ import androidx.compose.material.icons.rounded.PinDrop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -31,9 +32,9 @@ import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.ChipIcon
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 
@@ -44,8 +45,6 @@ fun MapToMerge(
     modifier: Modifier = Modifier,
     isBaseMap: Boolean = false,
     expanded: Boolean = false,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentColor: Color = contentColorFor(containerColor),
     onUpdateState: () -> Unit,
     onMakeBase: () -> Unit,
     onRemove: () -> Unit,
@@ -95,43 +94,54 @@ fun MapToMerge(
                     )
             )
 
-            VerticalSegmentor(
-                {
-                    ExpressiveSwitchRow(
-                        title = stringResource(R.string.mapsMerge_map_includeSpawnpoints),
-                        checked = mapToMerge.mergeSpawnpoints,
-                        onCheckedChange = {
-                            mapToMerge.mergeSpawnpoints = it
-                            onUpdateState()
+            ExpressiveSection(stringResource(R.string.mapsMerge_map_objects)) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                ) {
+                    fun chipLeadingIcon(checked: Boolean): (@Composable () -> Unit)? = if (checked) { {
+                        ChipIcon(
+                            painter = rememberVectorPainter(Icons.Default.Check)
+                        )
+                    } } else null
+
+                    FilterChip(
+                        selected = mapToMerge.mergeSpawnpoints,
+                        label = {
+                            Text(stringResource(R.string.mapsMerge_map_objects_spawnpoints))
                         },
-                        contentColor = contentColor
-                    )
-                },
-                {
-                    ExpressiveSwitchRow(
-                        title = stringResource(R.string.mapsMerge_map_includeRacingCheckpoints),
-                        checked = mapToMerge.mergeRacingCheckpoints,
-                        onCheckedChange = {
-                            mapToMerge.mergeRacingCheckpoints = it
+                        leadingIcon = chipLeadingIcon(mapToMerge.mergeSpawnpoints),
+                        onClick = {
+                            mapToMerge.mergeSpawnpoints = !mapToMerge.mergeSpawnpoints
                             onUpdateState()
-                        },
-                        contentColor = contentColor
+                        }
                     )
-                },
-                {
-                    ExpressiveSwitchRow(
-                        title = stringResource(R.string.mapsMerge_map_includeTDMSpawnpoints),
-                        checked = mapToMerge.mergeTDMSpawnpoints,
-                        onCheckedChange = {
-                            mapToMerge.mergeTDMSpawnpoints = it
+
+                    FilterChip(
+                        selected = mapToMerge.mergeRacingCheckpoints,
+                        label = {
+                            Text(stringResource(R.string.mapsMerge_map_objects_racingCheckpoints))
+                        },
+                        leadingIcon = chipLeadingIcon(mapToMerge.mergeRacingCheckpoints),
+                        onClick = {
+                            mapToMerge.mergeRacingCheckpoints = !mapToMerge.mergeRacingCheckpoints
                             onUpdateState()
-                        },
-                        contentColor = contentColor
+                        }
                     )
-                },
-                itemContainerColor = if (isBaseMap) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceContainerHigh,
-                modifier = Modifier.padding(horizontal = 12.dp)
-            )
+
+                    FilterChip(
+                        selected = mapToMerge.mergeTDMSpawnpoints,
+                        label = {
+                            Text(stringResource(R.string.mapsMerge_map_objects_tdmSpawnpoints))
+                        },
+                        leadingIcon = chipLeadingIcon(mapToMerge.mergeTDMSpawnpoints),
+                        onClick = {
+                            mapToMerge.mergeTDMSpawnpoints = !mapToMerge.mergeTDMSpawnpoints
+                        }
+                    )
+                }
+            }
 
             Row(
                 modifier = Modifier

@@ -211,9 +211,6 @@
     <string name="mapsMerge_map_position">Konum (X,Y,Z)</string>
     <string name="mapsMerge_map_position_description">Bu harita, temel haritada bu konuma eklenecek</string>
     <string name="mapsMerge_map_position_invalid">Geçersiz konum girildi. 0,0,0 kullanılacak</string>
-    <string name="mapsMerge_map_includeSpawnpoints">Doğma noktalarını dahil et</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">Yarış kontrol noktalarını dahil et</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">Team death-match doğma noktalarını dahil et</string>
     <string name="mapsMerge_map_makeBase">Temel harita yap</string>
     <string name="mapsMerge_map_madeBase">{MAP} temel yapıldı</string>
     <string name="mapsMerge_map_remove">Kaldır</string>

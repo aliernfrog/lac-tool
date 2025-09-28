@@ -214,9 +214,10 @@
     <string name="mapsMerge_map_position">Position (X,Y,Z)</string>
     <string name="mapsMerge_map_position_description">This map will be added on this position in the base map</string>
     <string name="mapsMerge_map_position_invalid">Invalid position provided. 0,0,0 will be used</string>
-    <string name="mapsMerge_map_includeSpawnpoints">Include spawnpoints</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">Include racing checkpoints</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">Include team death-match spawnpoints</string>
+    <string name="mapsMerge_map_objects">Objects to include</string>
+    <string name="mapsMerge_map_objects_spawnpoints">Spawnpoints</string>
+    <string name="mapsMerge_map_objects_racingCheckpoints">Racing checkpoints</string>
+    <string name="mapsMerge_map_objects_tdmSpawnpoints">Team death-match spawnpoints</string>
     <string name="mapsMerge_map_makeBase">Make base</string>
     <string name="mapsMerge_map_madeBase">Made {MAP} base</string>
     <string name="mapsMerge_map_remove">Remove</string>
