@@ -3,7 +3,9 @@ package com.aliernfrog.lactool.ui.component
 import android.app.Activity
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -14,10 +16,12 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun LazyAdaptiveVerticalGrid(
     modifier: Modifier = Modifier,
+    state: LazyGridState = rememberLazyGridState(),
     maxLineSpan: Int = getMaxLineSpan(),
     content: LazyGridScope.(maxLineSpan: Int) -> Unit
 ) {
     LazyVerticalGrid(
+        state = state,
         columns = GridCells.Fixed(maxLineSpan),
         modifier = modifier
     ) {

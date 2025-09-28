@@ -9,8 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FindReplace
 import androidx.compose.material.icons.rounded.Info
@@ -38,6 +38,7 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
 import com.aliernfrog.lactool.ui.component.expressive.getTextFieldColors
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.getExpandableRowDefaultExpandedContainerColor
+import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
@@ -57,6 +58,13 @@ fun MapsEditScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var showFABLabel by remember { mutableStateOf(true) }
+
+    ScrollAccessibilityListener(
+        scrollState = mapsEditViewModel.scrollState,
+        onShowLabelsStateChange = { showFABLabel = it }
+    )
+
     AppScaffold(
         topBar = { scrollBehavior ->
             AppTopBar(
@@ -70,8 +78,9 @@ fun MapsEditScreen(
         topAppBarState = mapsEditViewModel.topAppBarState,
         floatingActionButton = {
             FloatingActionButton(
-                icon = Icons.Rounded.Done,
-                containerColor = MaterialTheme.colorScheme.primary
+                icon = Icons.Default.Save,
+                text = stringResource(R.string.mapsEdit_save),
+                showText = showFABLabel
             ) {
                 scope.launch {
                     mapsEditViewModel.saveAndFinishEditing(
@@ -82,11 +91,7 @@ fun MapsEditScreen(
             }
         }
     ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(mapsEditViewModel.scrollState)
-        ) {
+        Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
             GeneralActions(
                 onNavigateRequest = onNavigateRequest
             )
@@ -94,11 +99,10 @@ fun MapsEditScreen(
                 OptionsActions()
             }
             MiscActions()
-            Spacer(Modifier
-                .navigationBarsPadding()
-                .height(AppFABPadding))
+            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
         }
     }
+
     if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
         onDismissRequest = { mapsEditViewModel.saveWarningShown = false },
         onKeepEditing = { mapsEditViewModel.saveWarningShown = false },

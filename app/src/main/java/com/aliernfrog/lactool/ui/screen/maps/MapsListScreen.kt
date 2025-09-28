@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -90,6 +92,8 @@ import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.getMaxLineSpan
 import com.aliernfrog.lactool.ui.component.maps.GridMapItem
 import com.aliernfrog.lactool.ui.component.maps.ListMapItem
+import com.aliernfrog.lactool.ui.component.util.LazyGridScrollAccessibilityListener
+import com.aliernfrog.lactool.ui.component.util.LazyListScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
@@ -120,6 +124,7 @@ fun MapsListScreen(
     val listStyle = ListStyle.entries[mapsListViewModel.prefs.mapsListStyle.value]
     val showMapThumbnails = mapsListViewModel.prefs.showMapThumbnailsInList.value
     var multiSelectionDropdownShown by remember { mutableStateOf(false) }
+    var showFABLabel by remember { mutableStateOf(true) }
 
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
     val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
@@ -229,6 +234,7 @@ fun MapsListScreen(
                     if (showStorage) FloatingActionButton(
                         icon = Icons.Outlined.SdCard,
                         text = stringResource(R.string.mapsList_storage),
+                        showText = showFABLabel,
                         onClick = {
                             val intent = Intent(Intent.ACTION_GET_CONTENT).setType("text/plain")
                             launcher.launch(intent)
@@ -284,12 +290,26 @@ fun MapsListScreen(
             state = mapsListViewModel.pagerState,
             beyondViewportPageCount = 1
         ) { page ->
+            val lazyListState = rememberLazyListState()
+            val lazyGridState = rememberLazyGridState()
+
             val segment = mapsListViewModel.availableSegments[page]
             val mapsToShow = mapsListViewModel.getFilteredMaps(segment)
+
+            LazyListScrollAccessibilityListener(
+                lazyListState = lazyListState,
+                onShowLabelsStateChange = { showFABLabel = it }
+            )
+
+            LazyGridScrollAccessibilityListener(
+                lazyGridState = lazyGridState,
+                onShowLabelsStateChange = { showFABLabel = it }
+            )
 
             AnimatedContent(targetState = listStyle) { style ->
                 when (style) {
                     ListStyle.LIST -> LazyColumn(
+                        state = lazyListState,
                         modifier = Modifier.fillMaxSize()
                     ) {
                         item {
@@ -315,6 +335,7 @@ fun MapsListScreen(
                         }
                     }
                     ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                        state = lazyGridState,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 10.dp),

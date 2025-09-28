@@ -189,7 +189,7 @@
     <string name="mapsMerge_merge">合并</string>
     <string name="mapsMerge_merging">正在合并…</string>
     <string name="mapsMerge_pickName">选取新地图的名称</string>
-    <string name="mapsMerge_noEnoughMaps">没有足够的地图可以合并</string>
+    <string name="mapsMerge_notEnoughMaps">没有足够的地图可以合并</string>
     <string name="mapsMerge_merged">已将地图合并至 {MAP} 地图</string>
     <string name="wallpapers">壁纸</string>
     <string name="wallpapers_permissions">LAC 壁纸文件夹</string>

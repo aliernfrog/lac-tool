@@ -218,7 +218,7 @@
     <string name="mapsMerge_merge">Birleştir</string>
     <string name="mapsMerge_merging">Birleştiriliyor..</string>
     <string name="mapsMerge_pickName">Yeni harita için isim seçin</string>
-    <string name="mapsMerge_noEnoughMaps">Birleştirilecek yeterli harita yok</string>
+    <string name="mapsMerge_notEnoughMaps">Birleştirilecek yeterli harita yok</string>
     <string name="mapsMerge_merged">Haritalar {MAP} haritasında birleştirildi</string>
     <string name="wallpapers">Duvar kağıtları</string>
     <string name="wallpapers_permissions">LAC duvar kağıtları klasörü</string>

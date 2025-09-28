@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,26 +10,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.ClearAll
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -43,6 +50,7 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
+import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
@@ -93,6 +101,13 @@ private fun MergeScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
+    var showToolbarLabels by remember { mutableStateOf(true) }
+
+    ScrollAccessibilityListener(
+        scrollState = mapsMergeViewModel.scrollState,
+        onShowLabelsStateChange = { showToolbarLabels = it }
+    )
+
     AppScaffold(
         topBar = { scrollBehavior ->
             AppTopBar(
@@ -118,49 +133,62 @@ private fun MergeScreen(
 
             HorizontalFloatingToolbar(
                 expanded = true,
-                floatingActionButton = {
-                    FloatingToolbarDefaults.VibrantFloatingActionButton(
-                        onClick = {
-                            mapsMergeViewModel.mergeMapDialogShown = true
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .systemBarsPadding()
             ) {
-                IconButton(
-                    onClick = { mapsMergeViewModel.mapListShown = true },
-                    shapes = IconButtonDefaults.shapes()
-                ) {
+                @Composable
+                fun ButtonContent(icon: ImageVector, label: String) {
                     Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.mapsMerge_addMap)
+                        icon, label
+                    )
+
+                    AnimatedVisibility(showToolbarLabels) {
+                        Text(
+                            text = label,
+                            modifier = Modifier.padding(start = 6.dp)
+                        )
+                    }
+                }
+
+                Crossfade(mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty()) { enabled ->
+                    TextButton(
+                        onClick = { mapsMergeViewModel.mapMerger.clearMaps() },
+                        shapes = ButtonDefaults.shapes(),
+                        enabled = enabled
+                    ) {
+                        ButtonContent(
+                            icon = Icons.Default.ClearAll,
+                            label = stringResource(R.string.mapsMerge_clearMaps)
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(4.dp))
+
+                FilledTonalButton(
+                    onClick = { mapsMergeViewModel.mapListShown = true },
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonContent(
+                        icon = Icons.Default.Add,
+                        label = stringResource(R.string.mapsMerge_addMap)
                     )
                 }
 
-                IconButton(
-                    onClick = {
-                        mapsMergeViewModel.mapMerger.clearMaps()
-                    },
-                    enabled = mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty(),
-                    shapes = IconButtonDefaults.shapes(),
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError,
-                        disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f)
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ClearAll,
-                        contentDescription = stringResource(R.string.mapsMerge_clearMaps)
-                    )
+                Spacer(Modifier.width(4.dp))
+
+                Crossfade(mapsMergeViewModel.hasEnoughMaps) { enabled ->
+                    TextButton(
+                        onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
+                        shapes = ButtonDefaults.shapes(),
+                        enabled = enabled
+                    ) {
+                        ButtonContent(
+                            icon = Icons.Default.Save,
+                            label = stringResource(R.string.mapsMerge_merge)
+                        )
+                    }
                 }
             }
         }

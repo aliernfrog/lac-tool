@@ -147,6 +147,7 @@
     <string name="mapsList_noSharedMaps">You have not shared any maps to LAC Tool</string>
     <string name="mapsList_searchNoMatches">No matching maps found</string>
     <string name="mapsEdit">Edit map</string>
+    <string name="mapsEdit_save">Save</string>
     <string name="mapsEdit_general">General</string>
     <string name="mapsEdit_serverName">Server name</string>
     <string name="mapsEdit_mapType">Map type</string>
@@ -208,7 +209,7 @@
     <string name="mapsMaterials_material_delete_description">Material will be removed from %n objects after deleted</string>
     <string name="mapsMaterials_deleted">Deleted \"{MATERIAL}\" and removed it from {REPLACEDCOUNT} objects</string>
     <string name="mapsMerge">Merge maps</string>
-    <string name="mapsMerge_addMap">Add maps to merge</string>
+    <string name="mapsMerge_addMap">Add maps</string>
     <string name="mapsMerge_clearMaps">Clear maps</string>
     <string name="mapsMerge_mapsToMerge">Maps to merge</string>
     <string name="mapsMerge_base_description">This is the base map. Other maps will be added on top of this map and options of this map will be used</string>
@@ -226,7 +227,7 @@
     <string name="mapsMerge_merge">Merge</string>
     <string name="mapsMerge_merging">Merging..</string>
     <string name="mapsMerge_pickName">Pick name for new map</string>
-    <string name="mapsMerge_noEnoughMaps">No enough maps to merge</string>
+    <string name="mapsMerge_notEnoughMaps">No maps to merge</string>
     <string name="mapsMerge_merged">Merged maps in {MAP} map</string>
     <string name="wallpapers">Wallpapers</string>
     <string name="wallpapers_permissions">LAC wallpapers folder</string>

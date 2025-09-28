@@ -180,7 +180,7 @@
     <string name="mapsMerge_merge">ادغام</string>
     <string name="mapsMerge_merging">درحال ادغام</string>
     <string name="mapsMerge_pickName">برای مپ جدیدتان یک اسم بزارید</string>
-    <string name="mapsMerge_noEnoughMaps">مپ های کافی برای ادغام وجود ندارد</string>
+    <string name="mapsMerge_notEnoughMaps">مپ های کافی برای ادغام وجود ندارد</string>
     <string name="mapsMerge_merged">مپ ها در مپ {MAP} ادغام شدند</string>
     <string name="wallpapers">والپیپر ها</string>
     <string name="wallpapers_permissions">پوشه‌ی والپیپرهای LAC</string>

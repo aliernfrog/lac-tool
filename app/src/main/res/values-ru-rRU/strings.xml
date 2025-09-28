@@ -214,7 +214,7 @@
     <string name="mapsMerge_merge">Объединить</string>
     <string name="mapsMerge_merging">Слияние..</string>
     <string name="mapsMerge_pickName">Выберите имя для новой карты</string>
-    <string name="mapsMerge_noEnoughMaps">Недостаточно карт для слияния</string>
+    <string name="mapsMerge_notEnoughMaps">Недостаточно карт для слияния</string>
     <string name="mapsMerge_merged">Объединение карт в карту {MAP} завершено</string>
     <string name="wallpapers">Обои</string>
     <string name="wallpapers_permissions">Папка с обоями LAC</string>

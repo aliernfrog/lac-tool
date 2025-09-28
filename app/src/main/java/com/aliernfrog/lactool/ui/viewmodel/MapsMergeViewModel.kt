@@ -48,7 +48,7 @@ class MapsMergeViewModel(
         context: Context,
         newMapName: String
     ) {
-        if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
+        if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_notEnoughMaps)
         val mapsFile = mapsViewModel.getMapsFile(context)
         val newFileName = "$newMapName.txt"
         val output = mapsFile.findFile(newFileName)
@@ -57,7 +57,7 @@ class MapsMergeViewModel(
         withContext(Dispatchers.IO) {
             Thread.sleep(2000) // Can't live without seeing progress indicator
             val newMapContent = mapMerger.mergeMaps(
-                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_noEnoughMaps) }
+                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_notEnoughMaps) }
             ) ?: return@withContext
             mapsFile.createFile(newFileName)!!.writeFile(newMapContent, context)
             mergeMapDialogShown = false
