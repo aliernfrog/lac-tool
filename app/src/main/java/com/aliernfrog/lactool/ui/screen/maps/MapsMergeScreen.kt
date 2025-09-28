@@ -2,25 +2,32 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddLocationAlt
-import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.ClearAll
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
@@ -77,7 +84,7 @@ fun MapsMergeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MergeScreen(
     mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
@@ -96,30 +103,66 @@ private fun MergeScreen(
                 }
             )
         },
-        topAppBarState = mapsMergeViewModel.topAppBarState,
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = mapsMergeViewModel.hasEnoughMaps && !mapsMergeViewModel.mergeMapDialogShown,
-                modifier = Modifier.systemBarsPadding(),
-                enter = scaleIn() + fadeIn(),
-                exit = scaleOut() + fadeOut()
-            ) {
-                FloatingActionButton(
-                    icon = Icons.Default.Build,
-                    text = stringResource(R.string.mapsMerge_merge),
-                    onClick = { mapsMergeViewModel.mergeMapDialogShown = true }
-                )
-            }
-        }
+        topAppBarState = mapsMergeViewModel.topAppBarState
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
-            PickMapButton {
-                mapsMergeViewModel.mapListShown = true
+        Box {
+            Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
+                PickMapButton {
+                    mapsMergeViewModel.mapListShown = true
+                }
+                MapsList(
+                    maps = mapsMergeViewModel.mapMerger.mapsToMerge
+                )
+                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
             }
-            MapsList(
-                maps = mapsMergeViewModel.mapMerger.mapsToMerge
-            )
-            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
+
+            HorizontalFloatingToolbar(
+                expanded = true,
+                floatingActionButton = {
+                    FloatingToolbarDefaults.VibrantFloatingActionButton(
+                        onClick = {
+                            mapsMergeViewModel.mergeMapDialogShown = true
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .systemBarsPadding()
+            ) {
+                IconButton(
+                    onClick = { mapsMergeViewModel.mapListShown = true },
+                    shapes = IconButtonDefaults.shapes()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.mapsMerge_addMap)
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        mapsMergeViewModel.mapMerger.clearMaps()
+                    },
+                    enabled = mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty(),
+                    shapes = IconButtonDefaults.shapes(),
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError,
+                        disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ClearAll,
+                        contentDescription = stringResource(R.string.mapsMerge_clearMaps)
+                    )
+                }
+            }
         }
     }
 
