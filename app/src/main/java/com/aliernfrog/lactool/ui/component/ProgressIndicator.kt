@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,6 +67,7 @@ fun VerticalProgressIndicator(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun CircularProgress(
     progress: Progress?,
@@ -77,7 +80,7 @@ private fun CircularProgress(
             modifier = modifier
         )
         val animated by animateFloatAsState(it)
-        CircularProgressIndicator(
+        CircularWavyProgressIndicator(
             progress = { animated },
             color = color ?: ProgressIndicatorDefaults.circularColor,
             modifier = modifier
