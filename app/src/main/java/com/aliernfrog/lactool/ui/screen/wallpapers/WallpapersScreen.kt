@@ -166,6 +166,7 @@ fun WallpapersScreen(
         AnimatedContent(targetState = listStyle) { style ->
             when (style) {
                 ListStyle.LIST -> LazyColumn(
+                    state = lazyListState,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     item {
@@ -181,6 +182,7 @@ fun WallpapersScreen(
                     }
                 }
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                    state = lazyGridState,
                     modifier = Modifier.fillMaxSize()
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
