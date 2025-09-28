@@ -13,6 +13,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FindReplace
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.Terrain
+import androidx.compose.material.icons.rounded.Texture
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -120,9 +124,21 @@ private fun GeneralActions(
             {
                 FadeVisibility(visible = mapsEditViewModel.mapEditor?.serverName != null) {
                     TextField(
-                        label = stringResource(R.string.mapsEdit_serverName),
                         value = mapsEditViewModel.mapEditor?.serverName ?: "",
-                        onValueChange = { mapsEditViewModel.setServerName(it) }
+                        onValueChange = {
+                            mapsEditViewModel.setServerName(it)
+                        },
+                        label = {
+                            Text(stringResource(R.string.mapsEdit_serverName))
+                        },
+                        leadingIcon = {
+                            ExpressiveRowIcon(
+                                painter = rememberVectorPainter(Icons.Rounded.Info),
+                                modifier = Modifier.padding(start = 18.dp, end = 12.dp)
+                            )
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             },
@@ -132,6 +148,9 @@ private fun GeneralActions(
                         expanded = mapsEditViewModel.mapTypesExpanded,
                         title = stringResource(R.string.mapsEdit_mapType),
                         minimizedHeaderTrailingButtonText = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
+                        icon = {
+                            ExpressiveRowIcon(rememberVectorPainter(Icons.Rounded.Terrain))
+                        },
                         onClickHeader = {
                             mapsEditViewModel.mapTypesExpanded = !mapsEditViewModel.mapTypesExpanded
                         }
@@ -155,6 +174,9 @@ private fun GeneralActions(
                         title = stringResource(R.string.mapsRoles),
                         description = stringResource(R.string.mapsRoles_description)
                             .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
+                        icon = {
+                            ExpressiveRowIcon(rememberVectorPainter(Icons.Rounded.Shield))
+                        },
                         trailingComponent = {
                             FilledTonalIconButton(
                                 shapes = IconButtonDefaults.shapes(),
@@ -179,6 +201,9 @@ private fun GeneralActions(
                         title = stringResource(R.string.mapsMaterials),
                         description = stringResource(R.string.mapsMaterials_description)
                             .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
+                        icon = {
+                            ExpressiveRowIcon(rememberVectorPainter(Icons.Rounded.Texture))
+                        },
                         trailingComponent = {
                             FilledTonalIconButton(
                                 shapes = IconButtonDefaults.shapes(),
@@ -207,14 +232,20 @@ private fun OptionsActions(
     val optionsComponents: List<@Composable () -> Unit> = mapsEditViewModel.mapEditor?.mapOptions.orEmpty().map { option -> {
         when (option.type) {
             LACMapOptionType.NUMBER -> TextField(
-                label = option.label,
                 value = option.value,
                 onValueChange = {
                     option.value = it
                     mapsEditViewModel.mapEditor?.pushMapOptionsState()
                 },
-                placeholder = option.value,
-                numberOnly = true
+                label = {
+                    Text(option.label)
+                },
+                isError = option.value.toIntOrNull() == null,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    autoCorrectEnabled = null
+                ),
+                modifier = Modifier.fillMaxWidth()
             )
             LACMapOptionType.BOOLEAN -> ExpressiveSwitchRow(
                 title = option.label,
@@ -430,31 +461,4 @@ private fun FilterObjects(
             Text(stringResource(R.string.mapsEdit_filterObjects_removeMatches))
         }
     }
-}
-
-@Composable
-private fun TextField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String? = null,
-    numberOnly: Boolean = false
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        placeholder = if (placeholder != null) { { Text(placeholder) } } else null,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = if (numberOnly) KeyboardType.Number else KeyboardType.Text,
-            autoCorrectEnabled = null
-        ),
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = 16.dp,
-                vertical = 4.dp
-            )
-    )
 }
