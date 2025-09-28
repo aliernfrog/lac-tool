@@ -35,6 +35,7 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
+import com.aliernfrog.lactool.ui.component.expressive.getTextFieldColors
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
@@ -138,6 +139,7 @@ private fun GeneralActions(
                             )
                         },
                         singleLine = true,
+                        colors = getTextFieldColors(),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -241,10 +243,12 @@ private fun OptionsActions(
                     Text(option.label)
                 },
                 isError = option.value.toIntOrNull() == null,
+                singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     autoCorrectEnabled = null
                 ),
+                colors = getTextFieldColors(),
                 modifier = Modifier.fillMaxWidth()
             )
             LACMapOptionType.BOOLEAN -> ExpressiveSwitchRow(
