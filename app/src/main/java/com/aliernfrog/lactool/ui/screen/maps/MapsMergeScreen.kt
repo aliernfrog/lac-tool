@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -121,14 +122,18 @@ private fun MergeScreen(
         topAppBarState = mapsMergeViewModel.topAppBarState
     ) {
         Box {
-            Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
+            Column(Modifier
+                .fillMaxSize()
+                .verticalScroll(mapsMergeViewModel.scrollState)) {
                 PickMapButton {
                     mapsMergeViewModel.mapListShown = true
                 }
                 MapsList(
                     maps = mapsMergeViewModel.mapMerger.mapsToMerge
                 )
-                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
+                Spacer(Modifier
+                    .navigationBarsPadding()
+                    .height(AppFABPadding))
             }
 
             HorizontalFloatingToolbar(
@@ -136,58 +141,90 @@ private fun MergeScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .systemBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 @Composable
-                fun ButtonContent(icon: ImageVector, label: String) {
-                    Icon(
-                        icon, label
-                    )
-
-                    AnimatedVisibility(showToolbarLabels) {
-                        Text(
-                            text = label,
-                            modifier = Modifier.padding(start = 6.dp)
+                fun ToolbarContent(showLabelsOverride: Boolean?) {
+                    @Composable
+                    fun ButtonContent(icon: ImageVector, label: String, isMain: Boolean = false) {
+                        Icon(
+                            icon, label
                         )
+
+                        if (showLabelsOverride != false || isMain) {
+                            AnimatedVisibility(showToolbarLabels || showLabelsOverride == true) {
+                                Text(
+                                    text = label,
+                                    modifier = Modifier.padding(start = 6.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Crossfade(mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty()) { enabled ->
+                        TextButton(
+                            onClick = { mapsMergeViewModel.mapMerger.clearMaps() },
+                            shapes = ButtonDefaults.shapes(),
+                            enabled = enabled
+                        ) {
+                            ButtonContent(
+                                icon = Icons.Default.ClearAll,
+                                label = stringResource(R.string.mapsMerge_clearMaps)
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.width(4.dp))
+
+                    FilledTonalButton(
+                        onClick = { mapsMergeViewModel.mapListShown = true },
+                        shapes = ButtonDefaults.shapes()
+                    ) {
+                        ButtonContent(
+                            icon = Icons.Default.Add,
+                            label = stringResource(R.string.mapsMerge_addMap),
+                            isMain = true
+                        )
+                    }
+
+                    Spacer(Modifier.width(4.dp))
+
+                    Crossfade(mapsMergeViewModel.hasEnoughMaps) { enabled ->
+                        TextButton(
+                            onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
+                            shapes = ButtonDefaults.shapes(),
+                            enabled = enabled
+                        ) {
+                            ButtonContent(
+                                icon = Icons.Default.Save,
+                                label = stringResource(R.string.mapsMerge_merge)
+                            )
+                        }
                     }
                 }
 
-                Crossfade(mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty()) { enabled ->
-                    TextButton(
-                        onClick = { mapsMergeViewModel.mapMerger.clearMaps() },
-                        shapes = ButtonDefaults.shapes(),
-                        enabled = enabled
-                    ) {
-                        ButtonContent(
-                            icon = Icons.Default.ClearAll,
-                            label = stringResource(R.string.mapsMerge_clearMaps)
-                        )
-                    }
-                }
+                SubcomposeLayout { constraints ->
+                    val fullContentPlaceables = subcompose("fullContent") {
+                        ToolbarContent(showLabelsOverride = true)
+                    }.map { it.measure(constraints) }
 
-                Spacer(Modifier.width(4.dp))
+                    val fullWidth = fullContentPlaceables.sumOf { it.width }
 
-                FilledTonalButton(
-                    onClick = { mapsMergeViewModel.mapListShown = true },
-                    shapes = ButtonDefaults.shapes()
-                ) {
-                    ButtonContent(
-                        icon = Icons.Default.Add,
-                        label = stringResource(R.string.mapsMerge_addMap)
-                    )
-                }
+                    val placeables = (if (fullWidth <= constraints.maxWidth) subcompose("dynamic") {
+                        ToolbarContent(showLabelsOverride = null)
+                    } else subcompose("noLabels") {
+                        ToolbarContent(showLabelsOverride = false)
+                    }).map { it.measure(constraints) }
 
-                Spacer(Modifier.width(4.dp))
+                    val width = placeables.sumOf { it.width }
+                    val height = placeables.maxOfOrNull { it.height } ?: 0
 
-                Crossfade(mapsMergeViewModel.hasEnoughMaps) { enabled ->
-                    TextButton(
-                        onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
-                        shapes = ButtonDefaults.shapes(),
-                        enabled = enabled
-                    ) {
-                        ButtonContent(
-                            icon = Icons.Default.Save,
-                            label = stringResource(R.string.mapsMerge_merge)
-                        )
+                    layout(width, height) {
+                        var xPos = 0
+                        placeables.forEach {
+                            it.placeRelative(xPos, 0)
+                            xPos += it.width
+                        }
                     }
                 }
             }
