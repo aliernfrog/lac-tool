@@ -17,9 +17,12 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -96,6 +99,7 @@ class WallpapersViewModel(
             }
         }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     suspend fun onWallpaperPick(uri: Uri, context: Context) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         withContext(Dispatchers.IO) {
@@ -129,6 +133,7 @@ class WallpapersViewModel(
                             Crossfade(importName != originalName) { enabled ->
                                 IconButton(
                                     onClick = { importName = originalName },
+                                    shapes = IconButtonDefaults.shapes(),
                                     enabled = enabled
                                 ) {
                                     Icon(
@@ -150,6 +155,7 @@ class WallpapersViewModel(
                             .padding(8.dp)
                     ) {
                         Button(
+                            shapes = ButtonDefaults.shapes(),
                             onClick = { scope.launch {
                                 importWallpaper(
                                     file = file,

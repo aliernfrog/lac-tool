@@ -133,6 +133,7 @@ fun MediaView(
                                 optionsHeight = size.height.toDp()+48.dp // 48dp drag handle height
                             }
                         }
+                        .padding(bottom = 16.dp)
                         .navigationBarsPadding()
                         .imePadding()
                         .verticalScroll(rememberScrollState())
