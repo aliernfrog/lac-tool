@@ -28,8 +28,10 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +60,7 @@ import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.form.DividerRow
@@ -235,57 +238,67 @@ private fun Suggestions(
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
     val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibilityColumn(hasSuggestions) {
-        Suggestion(
-            titleRef = R.string.mapsMaterials_failedMaterials,
-            descriptionRef = R.string.mapsMaterials_failedMaterials_description,
-            painter = rememberVectorPainter(Icons.Default.Error),
-            accentColor = MaterialTheme.colorScheme.error,
-            materials = mapsEditViewModel.failedMaterials,
-            onMaterialClick = {
-                mapsEditViewModel.openDownloadableMaterialOptions(it)
-            }
+        VerticalSegmentor(
+            {
+                Suggestion(
+                    title = stringResource(R.string.mapsMaterials_failedMaterials),
+                    description = stringResource(R.string.mapsMaterials_failedMaterials_description),
+                    painter = rememberVectorPainter(Icons.Default.Error),
+                    accentColor = MaterialTheme.colorScheme.error,
+                    materials = mapsEditViewModel.failedMaterials,
+                    onMaterialClick = {
+                        mapsEditViewModel.openDownloadableMaterialOptions(it)
+                    }
+                )
+            },
+            {
+                Suggestion(
+                    title = stringResource(R.string.mapsMaterials_unusedMaterials),
+                    description = stringResource(R.string.mapsMaterials_unusedMaterials_description),
+                    painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
+                    accentColor = MaterialTheme.colorScheme.secondary,
+                    materials = unusedMaterials,
+                    onMaterialClick = {
+                        mapsEditViewModel.openDownloadableMaterialOptions(it)
+                    }
+                )
+            },
+            dynamic = true,
+            modifier = Modifier.padding(horizontal = 12.dp)
         )
-        Suggestion(
-            titleRef = R.string.mapsMaterials_unusedMaterials,
-            descriptionRef = R.string.mapsMaterials_unusedMaterials_description,
-            painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
-            accentColor = MaterialTheme.colorScheme.secondary,
-            materials = unusedMaterials,
-            onMaterialClick = {
-                mapsEditViewModel.openDownloadableMaterialOptions(it)
-            }
-        )
-        DividerRow(Modifier.padding(8.dp))
+        DividerRow(Modifier.padding(16.dp))
     }
 }
 
 @Composable
 private fun Suggestion(
-    titleRef: Int,
-    descriptionRef: Int,
+    title: String,
+    description: String,
     painter: Painter,
     accentColor: Color,
     materials: List<LACMapDownloadableMaterial>,
     onMaterialClick: (LACMapDownloadableMaterial) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    FadeVisibility(materials.isNotEmpty()) {
-        ExpandableRow(
-            expanded = expanded,
-            title = stringResource(titleRef),
-            description = stringResource(descriptionRef).replace("%n", materials.size.toString()),
-            icon = {
-                ExpressiveRowIcon(painter = painter)
-            },
-            minimizedContainerColor = accentColor,
-            onClickHeader = { expanded = !expanded }
-        ) {
-            materials.forEach { material ->
-                ExpressiveButtonRow(
-                    title = material.name,
-                    description = stringResource(R.string.mapsMaterials_clickToViewMore)
-                ) {
-                    onMaterialClick(material)
+    CompositionLocalProvider(LocalContentColor provides accentColor) {
+        FadeVisibility(materials.isNotEmpty()) {
+            ExpandableRow(
+                expanded = expanded,
+                title = title,
+                description = description.replace("%n", materials.size.toString()),
+                icon = {
+                    ExpressiveRowIcon(painter = painter)
+                },
+                minimizedContainerColor = accentColor,
+                onClickHeader = { expanded = !expanded }
+            ) {
+                materials.forEach { material ->
+                    ExpressiveButtonRow(
+                        title = material.name,
+                        description = stringResource(R.string.mapsMaterials_clickToViewMore)
+                    ) {
+                        onMaterialClick(material)
+                    }
                 }
             }
         }

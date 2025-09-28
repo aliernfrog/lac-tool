@@ -177,7 +177,7 @@ private fun Header(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = stringResource(R.string.screenshots_clickHint),
