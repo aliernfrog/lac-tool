@@ -5,26 +5,28 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.rounded.Brush
 import androidx.compose.material.icons.rounded.Contrast
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -70,8 +72,10 @@ fun AppearancePage(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Theme.entries.forEach { theme ->
-                    val selected = settingsViewModel.prefs.theme.value == theme.ordinal
                     val isLightThemeItem = theme == Theme.LIGHT
+                    val selected = settingsViewModel.prefs.theme.value == theme.ordinal
+                    val onSelect = { settingsViewModel.prefs.theme.value = theme.ordinal }
+
                     val containerColor by animateColorAsState(
                         if (selected) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.surfaceContainerHigh
@@ -83,13 +87,16 @@ fun AppearancePage(
                     val roundness by animateDpAsState(
                         if (selected) AppRoundnessSize else AppRoundnessSize+16.dp
                     )
+                    val weight by animateFloatAsState(
+                        if (selected) 1.1f else 1f
+                    )
 
-                    val rotation = remember { Animatable(
+                    val iconRotation = remember { Animatable(
                         if (isLightThemeItem && selected) 90f else 0f
                     ) }
 
                     LaunchedEffect(selected) {
-                        if (isLightThemeItem) rotation.animateTo(
+                        if (isLightThemeItem) iconRotation.animateTo(
                             targetValue = if (selected) 90f else 0f,
                             animationSpec = tween(durationMillis = 800, easing = EaseInOut)
                         )
@@ -97,19 +104,16 @@ fun AppearancePage(
 
                     CompositionLocalProvider(LocalContentColor provides contentColor) {
                         Box(
-                            Modifier.weight(1f)
+                            Modifier.weight(weight)
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(roundness))
                                     .background(containerColor)
-                                    .clickable {
-                                        settingsViewModel.prefs.theme.value = theme.ordinal
-                                    }
-                                    .padding(vertical = 32.dp)
+                                    .clickable(onClick = onSelect)
+                                    .padding(top = 28.dp, bottom = 0.dp)
                             ) {
                                 @Composable
                                 fun ThemeIcon(useFilled: Boolean) {
@@ -119,7 +123,7 @@ fun AppearancePage(
                                         modifier = Modifier
                                             .size(32.dp)
                                             .graphicsLayer {
-                                                rotationZ = rotation.value
+                                                rotationZ = iconRotation.value
                                             }
                                     )
                                 }
@@ -131,24 +135,19 @@ fun AppearancePage(
                                     ThemeIcon(useFilled = useFilled)
                                 }
 
+                                Spacer(Modifier.height(4.dp))
+
                                 Text(
                                     text = stringResource(theme.label),
                                     style = MaterialTheme.typography.labelLarge
                                 )
-                            }
 
-                            androidx.compose.animation.AnimatedVisibility(
-                                visible = selected,
-                                enter = fadeIn(),
-                                exit = fadeOut(),
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(bottom = 8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.RadioButtonChecked,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
+                                RadioButton(
+                                    selected = selected,
+                                    onClick = onSelect,
+                                    colors = RadioButtonDefaults.colors(
+                                        selectedColor = MaterialTheme.colorScheme.onPrimary
+                                    )
                                 )
                             }
                         }

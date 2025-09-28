@@ -36,10 +36,10 @@ fun SingleChoiceConnectedButtonGroup(
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
     ) {
         choices.forEachIndexed { index, choice ->
-            val checked = selectedIndex == index
-            val weight by animateFloatAsState(if (checked) selectedItemWeight else 1f)
+            val selected = selectedIndex == index
+            val weight by animateFloatAsState(if (selected) selectedItemWeight else 1f)
             ToggleButton(
-                checked = checked,
+                checked = selected,
                 onCheckedChange = {
                     onSelect(index)
                 },
@@ -54,7 +54,7 @@ fun SingleChoiceConnectedButtonGroup(
                     .semantics { Role.RadioButton }
             ) {
                 AnimatedVisibility(
-                    visible = checked
+                    visible = selected
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
