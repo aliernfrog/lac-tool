@@ -28,6 +28,7 @@ fun SingleChoiceConnectedButtonGroup(
     choices: List<String>,
     selectedIndex: Int,
     modifier: Modifier = Modifier,
+    selectedItemWeight: Float = 1.1f,
     onSelect: (Int) -> Unit
 ) {
     Row(
@@ -36,7 +37,7 @@ fun SingleChoiceConnectedButtonGroup(
     ) {
         choices.forEachIndexed { index, choice ->
             val checked = selectedIndex == index
-            val weight by animateFloatAsState(if (checked) 1.5f else 1f)
+            val weight by animateFloatAsState(if (checked) selectedItemWeight else 1f)
             ToggleButton(
                 checked = checked,
                 onCheckedChange = {
