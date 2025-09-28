@@ -146,13 +146,14 @@ class WallpapersViewModel(
                         singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
+                            .padding(horizontal = 12.dp)
                     )
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(start = 12.dp, end = 12.dp, top = 8.dp)
                     ) {
                         Button(
                             shapes = ButtonDefaults.shapes(),
