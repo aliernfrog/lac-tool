@@ -100,8 +100,6 @@
     <string name="maps_thumbnail_set_overrides">Bu mevcut resmin üzerine yazacaktır, yedeklediğinizden emin olun</string>
     <string name="maps_thumbnail_set_done">Harita resmi ayarlandı</string>
     <string name="maps_thumbnail_setting">Harita resmi ayarlanıyor..</string>
-    <string name="maps_thumbnail_share">Resmi paylaş</string>
-    <string name="maps_thumbnail_delete">Resmi sil</string>
     <string name="maps_thumbnail_deleted">Harita resmi silindi</string>
     <string name="maps_thumbnail_deleting">Harita resmi siliniyor..</string>
     <string name="maps_thumbnail_id">{MAP} haritasının resmi</string>
@@ -237,8 +235,6 @@
     <string name="wallpapers_list_active">Şu anki duvar kağıdı</string>
     <string name="wallpapers_copyImportUrl">İçe aktarma URL\'sini kopyala</string>
     <string name="wallpapers_copyImportUrlDescription">LAC içinden duvar kağıdı içe aktarmak için kullanılabilen bir URL</string>
-    <string name="wallpapers_share">Duvar kağıdını paylaş</string>
-    <string name="wallpapers_delete">Duvar kağıdını sil</string>
     <string name="wallpapers_deleting">Duvar kağıdı siliniyor..</string>
     <string name="wallpapers_deleted">Duvar kağıdı silindi</string>
     <string name="screenshots">Fotoğraflar</string>
@@ -247,8 +243,6 @@
     <string name="screenshots_permissions_recommendedPath_description">LAC ekran görüntüleri bu klasörde saklanır</string>
     <string name="screenshots_noScreenshots">Oyun içi cep telefonunu kullanarak bir fotoğraf çekmediniz</string>
     <string name="screenshots_clickHint">Daha fazla işlem için fotoğraflara tıklayın</string>
-    <string name="screenshots_share">Fotoğrafı paylaş</string>
-    <string name="screenshots_delete">Fotoğrafı sil</string>
     <string name="screenshots_deleting">Fotoğraf siliniyor..</string>
     <string name="screenshots_deleted">Fotoğraf silindi</string>
     <string name="settings">Ayarlar</string>

@@ -95,12 +95,10 @@
     <string name="maps_duplicating">Duplicating {NAME} as {NEW_NAME}..</string>
     <string name="maps_thumbnail">Map thumbnail</string>
     <string name="maps_thumbnail_noThumbnail">No thumbnail</string>
-    <string name="maps_thumbnail_set">Pick a thumbnail</string>
+    <string name="maps_thumbnail_set">Pick thumbnail</string>
     <string name="maps_thumbnail_set_overrides">This will override existing thumbnail, make sure to back it up</string>
     <string name="maps_thumbnail_set_done">Set map thumbnail</string>
     <string name="maps_thumbnail_setting">Setting map thumbnail..</string>
-    <string name="maps_thumbnail_share">Share thumbnail</string>
-    <string name="maps_thumbnail_delete">Delete thumbnail</string>
     <string name="maps_thumbnail_deleted">Deleted map thumbnail</string>
     <string name="maps_thumbnail_deleting">Deleting map thumbnail..</string>
     <string name="maps_thumbnail_id">thumbnail of {MAP}</string>
@@ -246,8 +244,6 @@
     <string name="wallpapers_list_active">Current wallpaper</string>
     <string name="wallpapers_copyImportUrl">Copy import URL</string>
     <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
-    <string name="wallpapers_share">Share wallpaper</string>
-    <string name="wallpapers_delete">Delete wallpaper</string>
     <string name="wallpapers_deleting">Deleting wallpaper..</string>
     <string name="wallpapers_deleted">Deleted the wallpaper</string>
     <string name="screenshots">Screenshots</string>
@@ -256,8 +252,6 @@
     <string name="screenshots_permissions_recommendedPath_description">LAC screenshots are stored in this folder</string>
     <string name="screenshots_noScreenshots">You have not taken any screenshots from the in-game cellphone</string>
     <string name="screenshots_clickHint">Click screenshots to view more actions</string>
-    <string name="screenshots_share">Share screenshot</string>
-    <string name="screenshots_delete">Delete screenshot</string>
     <string name="screenshots_deleting">Deleting screenshot..</string>
     <string name="screenshots_deleted">Deleted the screenshot</string>
     <string name="settings">Settings</string>

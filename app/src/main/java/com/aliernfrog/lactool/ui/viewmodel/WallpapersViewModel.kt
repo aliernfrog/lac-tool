@@ -6,15 +6,19 @@ import android.net.Uri
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -52,9 +56,6 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -115,7 +116,7 @@ class WallpapersViewModel(
             mainViewModel.showMediaView(MediaViewData(
                 model = file.painterModel,
                 title = context.getString(R.string.wallpapers_chosen),
-                options = {
+                optionsSheetContent = {
                     val scope = rememberCoroutineScope()
                     val originalName = remember { file.nameWithoutExtension }
                     var importName by remember { mutableStateOf(originalName) }
@@ -259,63 +260,63 @@ class WallpapersViewModel(
         }
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openWallpaperOptions(wallpaper: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         mainViewModel.showMediaView(MediaViewData(
             model = wallpaper.painterModel,
             title = wallpaper.name,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
                 val clipboard = LocalClipboard.current
                 val scope = rememberCoroutineScope()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                VerticalSegmentor(
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.wallpapers_copyImportUrl),
-                            description = stringResource(R.string.wallpapers_copyImportUrlDescription),
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                                )
-                            }
-                        ) { scope.launch {
+                IconButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = IconButtonDefaults.shapes()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.action_delete)
+                    )
+                }
+
+                Spacer(Modifier.width(4.dp))
+
+                // TODO show description of this with a dialog on click
+                Button(
+                    onClick = {
+                        scope.launch {
                             clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
                                 null,
                                 GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)
                             )))
                             topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-                        } }
-                    },
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.wallpapers_share),
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
-                                )
-                            }
-                        ) {
-                            scope.launch { shareImportedWallpaper(wallpaper, context) }
                         }
                     },
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.wallpapers_delete),
-                            contentColor = MaterialTheme.colorScheme.error,
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                                    containerColor = MaterialTheme.colorScheme.error
-                                )
-                            }
-                        ) {
-                            showDeleteDialog = true
-                        }
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.ContentCopy))
+                    Text(stringResource(R.string.wallpapers_copyImportUrl))
+                }
+
+                Spacer(Modifier.width(4.dp))
+
+                IconButton(
+                    onClick = {
+                        scope.launch { shareImportedWallpaper(wallpaper, context) }
                     },
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                )
+                    shapes = IconButtonDefaults.shapes()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(R.string.action_share)
+                    )
+                }
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = wallpaper.name,

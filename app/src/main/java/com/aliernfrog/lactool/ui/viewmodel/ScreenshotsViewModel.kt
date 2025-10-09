@@ -1,13 +1,20 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.IosShare
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +37,6 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -45,6 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.component.ButtonIcon
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,45 +135,39 @@ class ScreenshotsViewModel(
         progressState.currentProgress = null
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openScreenshotOptions(screenshot: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         mainViewModel.showMediaView(MediaViewData(
             model = screenshot.painterModel,
             title = screenshot.name,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                VerticalSegmentor(
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.screenshots_share),
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
-                                )
-                            }
-                        ) {
-                            scope.launch { shareScreenshot(screenshot, context) }
-                        }
+                TextButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Delete))
+                    Text(stringResource(R.string.action_delete))
+                }
+
+                Spacer(Modifier.width(4.dp))
+
+                FilledTonalButton(
+                    onClick = {
+                        scope.launch { shareScreenshot(screenshot, context) }
                     },
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.screenshots_delete),
-                            contentColor = MaterialTheme.colorScheme.error,
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                                    containerColor = MaterialTheme.colorScheme.error
-                                )
-                            }
-                        ) {
-                            showDeleteDialog = true
-                        }
-                    },
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                )
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Share))
+                    Text(stringResource(R.string.action_share))
+                }
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = screenshot.name,

@@ -96,8 +96,6 @@
     <string name="maps_thumbnail_set_overrides">Это действие удалит существующую миниатюру, не забудьте сделать резервную копию</string>
     <string name="maps_thumbnail_set_done">Миниатюра карты изменена</string>
     <string name="maps_thumbnail_setting">Установка миниатюры для карты..</string>
-    <string name="maps_thumbnail_share">Поделиться миниатюрой</string>
-    <string name="maps_thumbnail_delete">Удалить миниатюру</string>
     <string name="maps_thumbnail_deleted">Миниатюра карты удалена</string>
     <string name="maps_thumbnail_deleting">Удаление миниатюры..</string>
     <string name="maps_thumbnail_id">миниатюра для {MAP}</string>
@@ -233,8 +231,6 @@
     <string name="wallpapers_list_active">Текущие обои</string>
     <string name="wallpapers_copyImportUrl">Скопировать URL для импорта</string>
     <string name="wallpapers_copyImportUrlDescription">URL-адрес, который можно использовать в LAC для импорта обоев</string>
-    <string name="wallpapers_share">Поделиться обоями</string>
-    <string name="wallpapers_delete">Удалить обои</string>
     <string name="wallpapers_deleting">Удаление обоев..</string>
     <string name="wallpapers_deleted">Обои удалены</string>
     <string name="screenshots">Снимки</string>
@@ -243,8 +239,6 @@
     <string name="screenshots_permissions_recommendedPath_description">Снимки LAC хранятся в этой папке</string>
     <string name="screenshots_noScreenshots">Вы не сделали ни одного снимка с помощью внутриигрового мобильного телефона</string>
     <string name="screenshots_clickHint">Нажмите на снимки, чтобы увидеть больше действий</string>
-    <string name="screenshots_share">Поделиться снимком</string>
-    <string name="screenshots_delete">Удалить снимок</string>
     <string name="screenshots_deleting">Удаление снимка..</string>
     <string name="screenshots_deleted">Снимок удалён</string>
     <string name="settings">Настройки</string>

@@ -13,8 +13,15 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,9 +46,6 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -55,6 +59,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.component.ButtonIcon
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -149,6 +154,7 @@ class MapsViewModel(
         activeProgress = null
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openMapThumbnailViewer(map: MapFile) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
@@ -156,7 +162,7 @@ class MapsViewModel(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
                 var showDeleteDialog by remember { mutableStateOf(false) }
@@ -180,57 +186,51 @@ class MapsViewModel(
                     }
                 }
 
-                VerticalSegmentor(
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.maps_thumbnail_set),
-                            description = if (hasThumbnail) stringResource(R.string.maps_thumbnail_set_overrides) else null,
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate)
-                                )
+                if (hasThumbnail) IconButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.padding(end = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.action_delete)
+                    )
+                }
+
+                // TODO show reminder that this will remove existing thumbnail
+                Button(
+                    onClick = {
+                        thumbnailPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.AddPhotoAlternate))
+                    Text(stringResource(R.string.maps_thumbnail_set))
+                }
+
+                if (hasThumbnail) IconButton(
+                    onClick = {
+                        scope.launch {
+                            activeProgress = Progress(context.getString(R.string.info_sharing))
+                            map.runInIOThreadSafe {
+                                FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
                             }
-                        ) {
-                            thumbnailPickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
+                            activeProgress = null
                         }
                     },
-                    {
-                        if (hasThumbnail) ExpressiveButtonRow(
-                            title = stringResource(R.string.maps_thumbnail_share),
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Default.Share)
-                                )
-                            }
-                        ) {
-                            scope.launch {
-                                activeProgress = Progress(context.getString(R.string.info_sharing))
-                                map.runInIOThreadSafe {
-                                    FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
-                                }
-                                activeProgress = null
-                            }
-                        }
-                    },
-                    {
-                        if (hasThumbnail) ExpressiveButtonRow(
-                            title = stringResource(R.string.maps_thumbnail_delete),
-                            contentColor = MaterialTheme.colorScheme.error,
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Default.Delete),
-                                    containerColor = MaterialTheme.colorScheme.error
-                                )
-                            }
-                        ) {
-                            showDeleteDialog = true
-                        }
-                    },
-                    dynamic = true,
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                )
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.padding(start = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(R.string.action_share)
+                    )
+                }
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),

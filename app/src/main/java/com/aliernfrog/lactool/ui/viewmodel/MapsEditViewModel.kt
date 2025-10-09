@@ -212,7 +212,7 @@ class MapsEditViewModel(
                     contentColor = Color.Red
                 )
             },
-            options = {
+            optionsSheetContent = {
                 val context = LocalContext.current
                 val clipboard = LocalClipboard.current
                 val scope = rememberCoroutineScope()

@@ -1,8 +1,13 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
@@ -16,6 +21,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,6 +36,7 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -109,11 +116,11 @@ fun MediaView(
 
     LaunchedEffect(overlayCanBeShown) {
         showOverlay = overlayCanBeShown
-        if (data.options != null && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
+        if (data.optionsSheetContent != null && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
     }
 
     LaunchedEffect(showOverlay) {
-        if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
+        if (data.optionsSheetContent == null) return@LaunchedEffect bottomSheetState.hide()
         if (showOverlay && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
         else if (!showOverlay && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
     }
@@ -125,7 +132,7 @@ fun MediaView(
 
     BottomSheetScaffold(
         sheetContent = {
-            data.options?.let {
+            data.optionsSheetContent?.let {
                 Column(
                     modifier = Modifier
                         .onSizeChanged { size ->
@@ -136,10 +143,9 @@ fun MediaView(
                         .padding(bottom = 8.dp)
                         .navigationBarsPadding()
                         .imePadding()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    it.invoke()
-                }
+                        .verticalScroll(rememberScrollState()),
+                    content = it
+                )
             }
         },
         sheetPeekHeight = sheetPeekHeight,
@@ -260,6 +266,22 @@ fun MediaView(
                                     showOverlay = !showOverlay && overlayCanBeShown
                                 }
                             )
+                    )
+                }
+            }
+            data.toolbarContent?.let { toolbarContent ->
+                AnimatedVisibility(
+                    visible = showOverlay,
+                    enter = slideInVertically { it } + fadeIn(),
+                    exit = slideOutVertically { it } + fadeOut(),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .systemBarsPadding()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                ) {
+                    HorizontalFloatingToolbar(
+                        expanded = true,
+                        content = toolbarContent
                     )
                 }
             }
