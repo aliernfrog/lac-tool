@@ -1,45 +1,42 @@
 package com.aliernfrog.lactool.ui.screen.settings
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Brush
 import androidx.compose.material.icons.rounded.Contrast
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.VerticalSegmentor
@@ -47,12 +44,12 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSwitchRow
 import com.aliernfrog.lactool.ui.component.expressive.toRowFriendlyColor
-import com.aliernfrog.lactool.ui.theme.AppRoundnessSize
 import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.theme.supportsMaterialYou
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppearancePage(
     settingsViewModel: SettingsViewModel = koinViewModel(),
@@ -69,27 +66,13 @@ fun AppearancePage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
             ) {
-                Theme.entries.forEach { theme ->
+                Theme.entries.forEachIndexed { index, theme ->
                     val isLightThemeItem = theme == Theme.LIGHT
                     val selected = settingsViewModel.prefs.theme.value == theme.ordinal
                     val onSelect = { settingsViewModel.prefs.theme.value = theme.ordinal }
-
-                    val containerColor by animateColorAsState(
-                        if (selected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.surfaceContainerHigh
-                    )
-                    val contentColor by animateColorAsState(
-                        if (selected) MaterialTheme.colorScheme.onPrimary
-                        else MaterialTheme.colorScheme.onSurface
-                    )
-                    val roundness by animateDpAsState(
-                        if (selected) AppRoundnessSize else AppRoundnessSize+16.dp
-                    )
-                    val weight by animateFloatAsState(
-                        if (selected) 1.1f else 1f
-                    )
+                    val weight by animateFloatAsState(if (selected) 1.1f else 1f)
 
                     val iconRotation = remember { Animatable(
                         if (isLightThemeItem && selected) 90f else 0f
@@ -102,18 +85,26 @@ fun AppearancePage(
                         )
                     }
 
-                    CompositionLocalProvider(LocalContentColor provides contentColor) {
-                        Box(
-                            Modifier.weight(weight)
-                        ) {
+                    ToggleButton(
+                        checked = selected,
+                        onCheckedChange = { onSelect() },
+                        shapes = when (index) {
+                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                            Theme.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                        },
+                        modifier = Modifier
+                            .weight(weight)
+                            .animateContentSize()
+                            .semantics { Role.RadioButton }
+                    ) {
+                        Box {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(roundness))
-                                    .background(containerColor)
-                                    .clickable(onClick = onSelect)
-                                    .padding(top = 28.dp, bottom = 0.dp)
+                                    .padding(top = 24.dp)
                             ) {
                                 @Composable
                                 fun ThemeIcon(useFilled: Boolean) {
@@ -135,8 +126,6 @@ fun AppearancePage(
                                     ThemeIcon(useFilled = useFilled)
                                 }
 
-                                Spacer(Modifier.height(4.dp))
-
                                 Text(
                                     text = stringResource(theme.label),
                                     style = MaterialTheme.typography.labelLarge
@@ -144,9 +133,10 @@ fun AppearancePage(
 
                                 RadioButton(
                                     selected = selected,
-                                    onClick = onSelect,
+                                    onClick = { onSelect() },
                                     colors = RadioButtonDefaults.colors(
-                                        selectedColor = MaterialTheme.colorScheme.onPrimary
+                                        selectedColor = LocalContentColor.current,
+                                        unselectedColor = LocalContentColor.current
                                     )
                                 )
                             }
