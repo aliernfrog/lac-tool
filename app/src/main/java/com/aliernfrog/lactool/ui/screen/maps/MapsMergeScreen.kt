@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -18,13 +19,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.ClearAll
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -46,9 +47,10 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
+import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
@@ -122,18 +124,12 @@ private fun MergeScreen(
         topAppBarState = mapsMergeViewModel.topAppBarState
     ) {
         Box {
-            Column(Modifier
-                .fillMaxSize()
-                .verticalScroll(mapsMergeViewModel.scrollState)) {
-                PickMapButton {
-                    mapsMergeViewModel.mapListShown = true
-                }
+            Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
                 MapsList(
-                    maps = mapsMergeViewModel.mapMerger.mapsToMerge
+                    maps = mapsMergeViewModel.mapMerger.mapsToMerge,
+                    onPickMapRequest = { mapsMergeViewModel.mapListShown = true }
                 )
-                Spacer(Modifier
-                    .navigationBarsPadding()
-                    .height(AppFABPadding))
+                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
             }
 
             HorizontalFloatingToolbar(
@@ -245,23 +241,47 @@ private fun MergeScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MapsList(
-    maps: List<MutableMapToMerge>
+    maps: List<MutableMapToMerge>,
+    onPickMapRequest: () -> Unit
 ) {
     val baseMap = maps.firstOrNull()
     val mapsToMerge = maps.toList().drop(1)
-    AnimatedVisibility(baseMap != null) {
-        MapButtonWithActions(
-            mapToMerge = baseMap ?: MutableMapToMerge(LACMapToMerge("-", "-")),
-            mapIndex = 0,
-            modifier = Modifier
-                .padding(start = 12.dp, end = 12.dp, top = 8.dp)
-                .verticalSegmentedShape()
+
+    FadeVisibility(maps.isEmpty()) {
+        ErrorWithIcon(
+            error = stringResource(R.string.mapsMerge_noMaps),
+            painter = rememberVectorPainter(Icons.Default.AddLocationAlt),
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            button = {
+                Button(
+                    onClick = onPickMapRequest,
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Add))
+                    Text(stringResource(R.string.mapsMerge_addMap))
+                }
+            }
         )
     }
 
-    AnimatedVisibility(mapsToMerge.isNotEmpty()) {
+    FadeVisibility(baseMap != null) {
+        ExpressiveSection(
+            title = stringResource(R.string.mapsMerge_base)
+        ) {
+            MapButtonWithActions(
+                mapToMerge = baseMap ?: MutableMapToMerge(LACMapToMerge("-", "-")),
+                mapIndex = 0,
+                modifier = Modifier
+                    .padding(start = 12.dp, end = 12.dp, top = 8.dp)
+                    .verticalSegmentedShape()
+            )
+        }
+    }
+
+    FadeVisibility(mapsToMerge.isNotEmpty()) {
         ExpressiveSection(
             title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
@@ -279,25 +299,6 @@ private fun MapsList(
             }
         }
     }
-}
-
-@Composable
-private fun PickMapButton(
-    onClick: () -> Unit
-) {
-    ExpressiveButtonRow(
-        title = stringResource(R.string.mapsMerge_addMap),
-        icon = {
-            ExpressiveRowIcon(
-                painter = rememberVectorPainter(Icons.Default.AddLocationAlt)
-            )
-        },
-        containerColor = MaterialTheme.colorScheme.primary,
-        onClick = onClick,
-        modifier = Modifier
-            .padding(horizontal = 12.dp)
-            .verticalSegmentedShape()
-    )
 }
 
 @Composable
