@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +17,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.NotStarted
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.RestartAlt
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ContainedLoadingIndicator
@@ -36,12 +40,16 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.FadeVisibility
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
@@ -197,12 +205,6 @@ private fun ShizukuSetupGuide(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    if (shizukuViewModel.shizukuInstalled) Text(
-        text = stringResource(R.string.permissions_shizuku_introduction),
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(8.dp)
-    )
-
     AnimatedContent(shizukuViewModel.status) { status ->
         val title = when (status) {
             ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> R.string.permissions_shizuku_install_title
@@ -216,7 +218,13 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.UNAUTHORIZED -> R.string.permissions_shizuku_permission_description
             else -> null
         }
-        val button: @Composable () -> Unit = { when (status) {
+        val icon = when (status) {
+            ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> Icons.Default.Download
+            ShizukuStatus.WAITING_FOR_BINDER -> Icons.Default.NotStarted
+            ShizukuStatus.UNAUTHORIZED -> Icons.Default.Security
+            else -> null
+        }
+        val button: (@Composable () -> Unit)? = { when (status) {
             ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> {
                 Button(
                     shapes = ButtonDefaults.shapes(),
@@ -247,19 +255,42 @@ private fun ShizukuSetupGuide(
                     Text(stringResource(R.string.permissions_shizuku_permission_grant))
                 }
             }
-            else -> {}
+            else -> null
         } }
 
-        CardWithActions(
-            title = title?.let { stringResource(it) } ?: "",
-            buttons = { button() },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth().padding(12.dp)
         ) {
+            icon?.let {
+                ExpressiveRowIcon(
+                    painter = rememberVectorPainter(it),
+                    iconSize = 40.dp
+                )
+            }
+
+            title?.let {
+                Text(
+                    text = stringResource(it),
+                    style = MaterialTheme.typography.titleLargeEmphasized,
+                    textAlign = TextAlign.Center
+                )
+            }
+
             description?.let {
                 Text(
                     text = stringResource(it),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLargeEmphasized
                 )
+            }
+
+            button?.let {
+                Box(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    it()
+                }
             }
         }
     }
@@ -299,6 +330,19 @@ private fun ShizukuSetupGuide(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+    }
+
+    if (shizukuViewModel.shizukuInstalled) ExpressiveButtonRow(
+        title = stringResource(R.string.info),
+        description = stringResource(R.string.permissions_shizuku_introduction),
+        icon = {
+            ExpressiveRowIcon(rememberVectorPainter(Icons.Default.Info))
+        },
+        modifier = Modifier
+            .padding(12.dp)
+            .verticalSegmentedShape()
+    ) {
+        // TODO navigate to settings > storage after migration to navigation3
     }
 
     Spacer(Modifier.navigationBarsPadding())

@@ -14,6 +14,7 @@
     <string name="intent_downloadMap">Download map</string>
     <string name="warning_error">Something went wrong</string>
     <string name="warning_pickFile_failed">Failed to pick file</string>
+    <string name="info">Info</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
     <string name="info_pleaseWait">Please wait..</string>
     <string name="info_sharing">Sharing..</string>

@@ -45,7 +45,6 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant
 import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.enum.isCompatible
 import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.folderPickerSupportsInitialUri
 import com.aliernfrog.lactool.ui.component.ButtonIcon

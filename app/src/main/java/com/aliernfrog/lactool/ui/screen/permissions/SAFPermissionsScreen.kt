@@ -36,7 +36,6 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.data.requiresAndroidData
 import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.enum.isCompatible
 import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
@@ -44,6 +43,7 @@ import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
 import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.extension.takePersistablePermissions
@@ -56,9 +56,11 @@ fun SAFPermissionsScreen(
     vararg permissionsData: PermissionData,
     onUpdateStateRequest: () -> Unit
 ) {
+    val mainViewModel = koinViewModel<MainViewModel>()
     val context = LocalContext.current
     val requiresAndroidData = permissionsData.any { it.requiresAndroidData }
     val needsToDowngradeFiles = requiresAndroidData && GeneralUtil.documentsUIRestrictsAndroidData(context)
+            && !mainViewModel.prefs.ignoreDocumentsUIRestrictions.value
 
     AnimatedContent(needsToDowngradeFiles) {
         if (it) DowngradeFiles()
