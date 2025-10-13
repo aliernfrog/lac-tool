@@ -21,6 +21,7 @@ fun CustomMessageDialog(
     text: String?,
     icon: ImageVector? = null,
     confirmButton: (@Composable () -> Unit)? = null,
+    dismissButtonText: String = stringResource(R.string.action_dismiss),
     onDismissRequest: () -> Unit
 ) {
     @Composable
@@ -29,7 +30,7 @@ fun CustomMessageDialog(
             shapes = ButtonDefaults.shapes(),
             onClick = onDismissRequest
         ) {
-            Text(stringResource(R.string.action_dismiss))
+            Text(dismissButtonText)
         }
     }
 

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -60,6 +61,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
 import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -165,6 +167,7 @@ class MapsViewModel(
             toolbarContent = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
+                var showBackupReminderDialog by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 val thumbnailPickerLauncher = rememberLauncherForActivityResult(
@@ -186,6 +189,12 @@ class MapsViewModel(
                     }
                 }
 
+                fun launchThumbnailPicker() {
+                    thumbnailPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+
                 if (hasThumbnail) IconButton(
                     onClick = { showDeleteDialog = true },
                     colors = IconButtonDefaults.iconButtonColors(
@@ -200,12 +209,10 @@ class MapsViewModel(
                     )
                 }
 
-                // TODO show reminder that this will remove existing thumbnail
                 Button(
                     onClick = {
-                        thumbnailPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
+                        if (hasThumbnail) showBackupReminderDialog = true
+                        else launchThumbnailPicker()
                     },
                     shapes = ButtonDefaults.shapes()
                 ) {
@@ -231,6 +238,25 @@ class MapsViewModel(
                         contentDescription = stringResource(R.string.action_share)
                     )
                 }
+
+                if (showBackupReminderDialog) CustomMessageDialog(
+                    title = stringResource(R.string.info_reminder),
+                    text = stringResource(R.string.maps_thumbnail_set_overrides),
+                    dismissButtonText = stringResource(R.string.action_cancel),
+                    icon = Icons.Default.Warning,
+                    onDismissRequest = { showBackupReminderDialog = false },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showBackupReminderDialog = false
+                                launchThumbnailPicker()
+                            },
+                            shapes = ButtonDefaults.shapes()
+                        ) {
+                            Text(stringResource(R.string.action_ok))
+                        }
+                    }
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),
