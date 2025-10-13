@@ -5,13 +5,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
@@ -51,9 +50,11 @@ fun AllFilesPermissionsScreen(
             .verticalScroll(rememberScrollState())
             .navigationBarsPadding()
     ) {
-        CardWithActions(
+        PermissionsScreenAction(
             title = stringResource(R.string.permissions_allFiles_title),
-            buttons = {
+            description = stringResource(R.string.permissions_allFiles_description),
+            icon = Icons.Default.Security,
+            button = {
                 Button(
                     shapes = ButtonDefaults.shapes(),
                     onClick = {
@@ -62,14 +63,8 @@ fun AllFilesPermissionsScreen(
                 ) {
                     Text(stringResource(R.string.permissions_allFiles_grant))
                 }
-            },
-            modifier = Modifier.fillMaxWidth().padding(
-                vertical = 8.dp,
-                horizontal = 12.dp
-            )
-        ) {
-            Text(stringResource(R.string.permissions_allFiles_description))
-        }
+            }
+        )
 
         ExpressiveSection(
             title = stringResource(R.string.permissions_other)

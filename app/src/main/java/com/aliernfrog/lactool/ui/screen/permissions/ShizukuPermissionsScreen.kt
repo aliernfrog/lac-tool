@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +39,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.ShizukuStatus
@@ -258,41 +256,12 @@ private fun ShizukuSetupGuide(
             else -> null
         } }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth().padding(12.dp)
-        ) {
-            icon?.let {
-                ExpressiveRowIcon(
-                    painter = rememberVectorPainter(it),
-                    iconSize = 40.dp
-                )
-            }
-
-            title?.let {
-                Text(
-                    text = stringResource(it),
-                    style = MaterialTheme.typography.titleLargeEmphasized,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            description?.let {
-                Text(
-                    text = stringResource(it),
-                    style = MaterialTheme.typography.bodyLargeEmphasized
-                )
-            }
-
-            button?.let {
-                Box(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    it()
-                }
-            }
-        }
+        PermissionsScreenAction(
+            title = title?.let { stringResource(it) },
+            description = description?.let { stringResource(it) },
+            icon = icon,
+            button = button
+        )
     }
 
     FadeVisibility(
