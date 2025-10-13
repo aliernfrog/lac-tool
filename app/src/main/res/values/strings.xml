@@ -39,6 +39,7 @@
     <string name="permissions_notRecommendedFolder_advanced_show">Show advanced options</string>
     <string name="permissions_notRecommendedFolder_advanced_hide">Hide advanced options</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Use the selected folder anyway</string>
+    <string name="permissions_saf_foldersNeeded">Following folders must be chosen in order to proceed</string>
     <string name="permissions_saf_allFiles">Access all files</string>
     <string name="permissions_saf_allFiles_description">Lets LAC Tool access all files, this may be easier to setup</string>
     <string name="permissions_setupShizuku">Use Shizuku</string>

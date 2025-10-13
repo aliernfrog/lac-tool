@@ -15,11 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +44,6 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
-import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
@@ -164,6 +168,15 @@ private fun SAFPermissionsList(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
+        item {
+            PermissionsScreenAction(
+                title = null,
+                description = stringResource(R.string.permissions_saf_foldersNeeded),
+                icon = Icons.Default.Folder,
+                button = null
+            )
+        }
+
         itemsIndexed(missingPermissions) { index, permissionData ->
             var introDialogShown by remember { mutableStateOf(false) }
             if (introDialogShown) ChooseFolderIntroDialog(
@@ -181,15 +194,22 @@ private fun SAFPermissionsList(
                 else openFolderPicker(permissionData)
             }
 
-            if (index != 0) DividerRow(Modifier.fillMaxWidth())
             ListItem(
+                colors = ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                ),
                 headlineContent = { Text(stringResource(permissionData.title)) },
                 supportingContent = {
                     Column(Modifier.fillMaxWidth()) {
                         permissionData.content()
 
                         permissionData.recommendedPathWarning?.let { warning ->
-                            Card(Modifier.padding(vertical = 8.dp)) {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ),
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            ) {
                                 Text(
                                     text = stringResource(warning),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -208,7 +228,10 @@ private fun SAFPermissionsList(
                         }
                     }
                 },
-                modifier = Modifier.clickable(onClick = ::onClick)
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .verticalSegmentedShape(index = index, totalSize = missingPermissions.size)
+                    .clickable(onClick = ::onClick)
             )
         }
 
