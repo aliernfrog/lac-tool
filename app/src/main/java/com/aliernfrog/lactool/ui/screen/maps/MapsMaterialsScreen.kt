@@ -14,8 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -59,14 +60,14 @@ import com.aliernfrog.lactool.ui.component.ImageButtonInfo
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
+import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.component.VerticalSegmentor
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -137,8 +138,6 @@ fun MapsMaterialsScreen(
                     mapsEditViewModel.openDownloadableMaterialOptions(material)
                 },
                 modifier = modifier
-                    .padding(8.dp)
-                    .clip(AppComponentShape)
             ) {
                 if (!minified || failed || material.usedBy.isEmpty()) ImageButtonOverlay(
                     title = if (minified) null else material.name,
@@ -195,27 +194,41 @@ fun MapsMaterialsScreen(
                     when (style) {
                         ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
                             item {
-                                Suggestions()
+                                Suggestions(
+                                    modifier = Modifier.padding(horizontal = 12.dp)
+                                )
                             }
-                            items(materials) {
-                                MaterialButton(it)
+                            itemsIndexed(materials) { index, material ->
+                                MaterialButton(
+                                    material = material,
+                                    modifier = Modifier
+                                        .padding(horizontal = 12.dp)
+                                        .verticalSegmentedShape(index, totalSize = materials.size)
+                                )
                             }
                             item {
                                 Spacer(Modifier.navigationBarsPadding())
                             }
                         }
                         ListStyle.GRID -> LazyAdaptiveVerticalGrid(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 10.dp)
                         ) { maxLineSpan: Int ->
                             item(span = { GridItemSpan(maxLineSpan) }) {
-                                Suggestions()
+                                Suggestions(
+                                    modifier = Modifier.padding(horizontal = 2.dp)
+                                )
                             }
                             items(materials) {
                                 MaterialButton(
                                     material = it,
                                     contentScale = ContentScale.Crop,
                                     minified = true,
-                                    modifier = Modifier.aspectRatio(1f)
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .aspectRatio(1f)
+                                        .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
                                 )
                             }
                             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -233,11 +246,15 @@ fun MapsMaterialsScreen(
 
 @Composable
 private fun Suggestions(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel()
+    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
+    modifier: Modifier
 ) {
     val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
     val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
-    FadeVisibilityColumn(hasSuggestions) {
+    FadeVisibilityColumn(
+        visible = hasSuggestions,
+        modifier = modifier
+    ) {
         VerticalSegmentor(
             {
                 Suggestion(
@@ -264,9 +281,8 @@ private fun Suggestions(
                 )
             },
             dynamic = true,
-            modifier = Modifier.padding(horizontal = 12.dp)
+            modifier = Modifier.padding(bottom = 24.dp)
         )
-        DividerRow(Modifier.padding(16.dp))
     }
 }
 
@@ -292,12 +308,14 @@ private fun Suggestion(
                 minimizedContainerColor = accentColor,
                 onClickHeader = { expanded = !expanded }
             ) {
-                materials.forEach { material ->
-                    ExpressiveButtonRow(
-                        title = material.name,
-                        description = stringResource(R.string.mapsMaterials_clickToViewMore)
-                    ) {
-                        onMaterialClick(material)
+                Column {
+                    materials.forEach { material ->
+                        ExpressiveButtonRow(
+                            title = material.name,
+                            description = stringResource(R.string.mapsMaterials_clickToViewMore)
+                        ) {
+                            onMaterialClick(material)
+                        }
                     }
                 }
             }

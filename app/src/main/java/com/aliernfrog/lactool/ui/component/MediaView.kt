@@ -137,7 +137,8 @@ fun MediaView(
                     modifier = Modifier
                         .onSizeChanged { size ->
                             with(density) {
-                                optionsHeight = size.height.toDp()+48.dp // 48dp drag handle height
+                                optionsHeight =
+                                    size.height.toDp() + 48.dp // 48dp drag handle height
                             }
                         }
                         .padding(bottom = 8.dp)
@@ -176,7 +177,9 @@ fun MediaView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.weight(1f).fillMaxWidth(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
@@ -217,9 +220,13 @@ fun MediaView(
                     .offset { IntOffset(x = 0, y = animatedOffsetY.roundToPx()) }
                     .pointerInput(Unit) {
                         if (!isZoomedIn) detectVerticalDragGestures(
-                            onDragEnd =  {
-                                if (zoomState.scale <= 1f && offsetY.value.absoluteValue > viewportHeight.value/7) onDismissRequest()
-                                offsetY = 0.dp
+                            onDragEnd = {
+                                if (zoomState.scale <= 1f && offsetY.value.absoluteValue > viewportHeight.value / 6) {
+                                    val isPositiveOffset = offsetY.value > 0
+                                    val absOffsetToSet = (viewportHeight/(1.6.dp)).dp
+                                    onDismissRequest()
+                                    offsetY = if (isPositiveOffset) absOffsetToSet else -absOffsetToSet
+                                } else offsetY = 0.dp
                             },
                             onVerticalDrag = { _, dragAmount ->
                                 if (zoomState.scale <= 1f) with(density) {
