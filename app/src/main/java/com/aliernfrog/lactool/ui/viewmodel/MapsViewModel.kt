@@ -1,29 +1,39 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -37,7 +47,6 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -50,6 +59,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -144,6 +156,7 @@ class MapsViewModel(
         activeProgress = null
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openMapThumbnailViewer(map: MapFile) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
@@ -151,9 +164,10 @@ class MapsViewModel(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
+                var showBackupReminderDialog by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 val thumbnailPickerLauncher = rememberLauncherForActivityResult(
@@ -175,38 +189,74 @@ class MapsViewModel(
                     }
                 }
 
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_set),
-                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate),
-                    description = if (hasThumbnail) stringResource(R.string.maps_thumbnail_set_overrides) else null
-                ) {
+                fun launchThumbnailPicker() {
                     thumbnailPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 }
 
-                if (!hasThumbnail) return@MediaViewData
-
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_share),
-                    painter = rememberVectorPainter(Icons.Default.Share)
+                if (hasThumbnail) IconButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.padding(end = 4.dp)
                 ) {
-                    scope.launch {
-                        activeProgress = Progress(context.getString(R.string.info_sharing))
-                        map.runInIOThreadSafe {
-                            FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.action_delete)
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        if (hasThumbnail) showBackupReminderDialog = true
+                        else launchThumbnailPicker()
+                    },
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.AddPhotoAlternate))
+                    Text(stringResource(R.string.maps_thumbnail_set))
+                }
+
+                if (hasThumbnail) IconButton(
+                    onClick = {
+                        scope.launch {
+                            activeProgress = Progress(context.getString(R.string.info_sharing))
+                            map.runInIOThreadSafe {
+                                FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                            }
+                            activeProgress = null
                         }
-                        activeProgress = null
-                    }
+                    },
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.padding(start = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(R.string.action_share)
+                    )
                 }
 
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_delete),
-                    painter = rememberVectorPainter(Icons.Default.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
-                ) {
-                    showDeleteDialog = true
-                }
+                if (showBackupReminderDialog) CustomMessageDialog(
+                    title = stringResource(R.string.info_reminder),
+                    text = stringResource(R.string.maps_thumbnail_set_overrides),
+                    dismissButtonText = stringResource(R.string.action_cancel),
+                    icon = Icons.Default.Warning,
+                    onDismissRequest = { showBackupReminderDialog = false },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showBackupReminderDialog = false
+                                launchThumbnailPicker()
+                            },
+                            shapes = ButtonDefaults.shapes()
+                        ) {
+                            Text(stringResource(R.string.action_ok))
+                        }
+                    }
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),
@@ -265,7 +315,7 @@ class MapsViewModel(
         lastKnownStorageAccessType = storageAccessType
         mapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(mapsDir)
+                val treeUri = mapsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -292,7 +342,7 @@ class MapsViewModel(
         lastKnownStorageAccessType = storageAccessType
         exportedMapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(exportedMapsDir)
+                val treeUri = exportedMapsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {

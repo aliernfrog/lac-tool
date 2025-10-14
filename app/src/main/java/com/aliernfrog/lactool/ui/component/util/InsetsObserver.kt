@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.component
+package com.aliernfrog.lactool.ui.component.util
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.imePadding

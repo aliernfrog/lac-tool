@@ -2,7 +2,10 @@ package com.aliernfrog.lactool.ui.screen.permissions
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -13,9 +16,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.NotStarted
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.RestartAlt
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -25,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -32,16 +42,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.ShizukuStatus
-import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
 import com.aliernfrog.lactool.ui.component.FadeVisibility
-import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
 import rikka.shizuku.Shizuku
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ShizukuPermissionsScreen(
     shizukuViewModel: ShizukuViewModel = koinViewModel(),
@@ -64,13 +77,25 @@ fun ShizukuPermissionsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .navigationBarsPadding()
+                .navigationBarsPadding(),
+            verticalArrangement = if (isLoading) Arrangement.Center else Arrangement.Top
         ) {
             if (isLoading) {
-                VerticalProgressIndicator(
-                    progress = Progress(stringResource(R.string.permissions_shizuku_waitingService)),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = 12.dp)
+                        .clip(AppComponentShape)
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                ) {
+                    ContainedLoadingIndicator()
+                    Text(
+                        text = stringResource(R.string.permissions_shizuku_waitingService),
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
                 AnimatedVisibility(
                     visible = shizukuViewModel.timedOut,
                     modifier = Modifier.fillMaxWidth()
@@ -92,6 +117,7 @@ fun ShizukuPermissionsScreen(
                                 .padding(16.dp),
                             buttons = {
                                 if (shizukuViewModel.shizukuInstalled) TextButton(
+                                    shapes = ButtonDefaults.shapes(),
                                     onClick = {
                                         shizukuViewModel.launchShizuku(context)
                                     }
@@ -100,6 +126,7 @@ fun ShizukuPermissionsScreen(
                                     Text(stringResource(R.string.permissions_shizuku_openShizuku))
                                 }
                                 Button(
+                                    shapes = ButtonDefaults.shapes(),
                                     onClick = {
                                         shizukuViewModel.prefs.shizukuNeverLoad.value = false
                                         GeneralUtil.restartApp(context)
@@ -119,6 +146,7 @@ fun ShizukuPermissionsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun ProblematicManagerCard(
     modifier: Modifier = Modifier,
@@ -134,6 +162,7 @@ private fun ProblematicManagerCard(
         modifier = modifier,
         buttons = {
             TextButton(
+                shapes = ButtonDefaults.shapes(),
                 onClick = {
                     uriHandler.openUri(ShizukuViewModel.SHIZUKU_RELEASES_URL)
                 }
@@ -143,6 +172,7 @@ private fun ProblematicManagerCard(
             }
 
             Button(
+                shapes = ButtonDefaults.shapes(),
                 onClick = {
                     uriHandler.openUri(ShizukuViewModel.SHIZUKU_RECOMMENDED_VERSION_DOWNLOAD_URL)
                 }
@@ -160,23 +190,18 @@ private fun ProblematicManagerCard(
         Text(
             text = stringResource(R.string.permissions_shizuku_problematicVersion_note)
                 .replace("{CURRENT_VERSION}", currentManagerVersion),
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmallEmphasized
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun ShizukuSetupGuide(
     shizukuViewModel: ShizukuViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-
-    if (shizukuViewModel.shizukuInstalled) Text(
-        text = stringResource(R.string.permissions_shizuku_introduction),
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(8.dp)
-    )
 
     AnimatedContent(shizukuViewModel.status) { status ->
         val title = when (status) {
@@ -191,9 +216,16 @@ private fun ShizukuSetupGuide(
             ShizukuStatus.UNAUTHORIZED -> R.string.permissions_shizuku_permission_description
             else -> null
         }
-        val button: @Composable () -> Unit = { when (status) {
+        val icon = when (status) {
+            ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> Icons.Default.Download
+            ShizukuStatus.WAITING_FOR_BINDER -> Icons.Default.NotStarted
+            ShizukuStatus.UNAUTHORIZED -> Icons.Default.Security
+            else -> null
+        }
+        val button: (@Composable () -> Unit)? = { when (status) {
             ShizukuStatus.UNKNOWN, ShizukuStatus.NOT_INSTALLED -> {
                 Button(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         shizukuViewModel.launchShizuku(context)
                     }
@@ -204,6 +236,7 @@ private fun ShizukuSetupGuide(
             }
             ShizukuStatus.WAITING_FOR_BINDER -> {
                 Button(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         shizukuViewModel.launchShizuku(context)
                     }
@@ -214,26 +247,21 @@ private fun ShizukuSetupGuide(
             }
             ShizukuStatus.UNAUTHORIZED -> {
                 Button(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = { Shizuku.requestPermission(0) }
                 ) {
                     Text(stringResource(R.string.permissions_shizuku_permission_grant))
                 }
             }
-            else -> {}
+            else -> null
         } }
 
-        CardWithActions(
-            title = title?.let { stringResource(it) } ?: "",
-            buttons = { button() },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
-        ) {
-            description?.let {
-                Text(
-                    text = stringResource(it),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
+        PermissionsScreenAction(
+            title = title?.let { stringResource(it) },
+            description = description?.let { stringResource(it) },
+            icon = icon,
+            button = button
+        )
     }
 
     FadeVisibility(
@@ -243,6 +271,7 @@ private fun ShizukuSetupGuide(
             title = stringResource(R.string.permissions_shizuku_rooted),
             buttons = {
                 OutlinedButton(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         uriHandler.openUri(ShizukuViewModel.SUI_GITHUB)
                     }
@@ -251,6 +280,7 @@ private fun ShizukuSetupGuide(
                     Text(stringResource(R.string.permissions_shizuku_sui))
                 }
                 Button(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = {
                         shizukuViewModel.launchShizuku(context)
                     }
@@ -270,4 +300,19 @@ private fun ShizukuSetupGuide(
             )
         }
     }
+
+    if (shizukuViewModel.shizukuInstalled) ExpressiveButtonRow(
+        title = stringResource(R.string.info),
+        description = stringResource(R.string.permissions_shizuku_introduction),
+        icon = {
+            ExpressiveRowIcon(rememberVectorPainter(Icons.Default.Info))
+        },
+        modifier = Modifier
+            .padding(12.dp)
+            .verticalSegmentedShape()
+    ) {
+        // TODO navigate to settings > storage after migration to navigation3
+    }
+
+    Spacer(Modifier.navigationBarsPadding())
 }

@@ -1,5 +1,7 @@
 package com.aliernfrog.lactool.data
 
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.runtime.Composable
@@ -20,5 +22,6 @@ data class MediaViewData(
             contentColor = Color.Red
         )
     },
-    val options: (@Composable () -> Unit)? = null
+    val toolbarContent: (@Composable RowScope.() -> Unit)? = null,
+    val optionsSheetContent: (@Composable ColumnScope.() -> Unit)? = null
 )

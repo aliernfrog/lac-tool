@@ -1,4 +1,4 @@
-package com.aliernfrog.lactool.ui.component.form
+package com.aliernfrog.lactool.ui.component.expressive
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -11,27 +11,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FormSection(
+fun ExpressiveSection(
     title: String?,
     modifier: Modifier = Modifier,
-    topDivider: Boolean = false,
-    bottomDivider: Boolean = true,
     titleColor: Color = MaterialTheme.colorScheme.primary,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(modifier) {
-        if (topDivider) DividerRow(Modifier.padding(16.dp))
-
-        if (title != null) Text(
-            text = title,
+        Text(
+            text = title ?: "",
             color = titleColor,
+            style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(
                 horizontal = 16.dp,
                 vertical = 8.dp
             )
         )
         content()
-
-        if (bottomDivider) DividerRow(Modifier.padding(16.dp))
     }
 }

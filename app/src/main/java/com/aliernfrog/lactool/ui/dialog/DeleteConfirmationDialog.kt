@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DeleteConfirmationDialog(
     name: String,
@@ -28,6 +30,7 @@ fun DeleteConfirmationDialog(
         confirmButton = {
             Button(
                 onClick = onConfirmDelete,
+                shapes = ButtonDefaults.shapes(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error,
                     contentColor = MaterialTheme.colorScheme.onError
@@ -37,7 +40,10 @@ fun DeleteConfirmationDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(
+                onClick = onDismissRequest,
+                shapes = ButtonDefaults.shapes()
+            ) {
                 Text(stringResource(R.string.action_cancel))
             }
         },
@@ -49,8 +55,7 @@ fun DeleteConfirmationDialog(
         },
         text = {
             Text(
-                text = stringResource(R.string.info_deleteQuestion)
-                    .replace("{NAME}", name),
+                text = stringResource(R.string.info_deleteQuestion).replace("{NAME}", name),
                 modifier = Modifier.verticalScroll(rememberScrollState())
             )
         }

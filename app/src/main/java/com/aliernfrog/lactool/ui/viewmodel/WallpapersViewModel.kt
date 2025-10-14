@@ -1,24 +1,32 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
+import android.content.ClipData
 import android.content.Context
 import android.net.Uri
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material.icons.rounded.IosShare
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,10 +39,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
@@ -48,7 +56,6 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -63,6 +70,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,6 +101,7 @@ class WallpapersViewModel(
             }
         }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     suspend fun onWallpaperPick(uri: Uri, context: Context) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         withContext(Dispatchers.IO) {
@@ -107,7 +117,7 @@ class WallpapersViewModel(
             mainViewModel.showMediaView(MediaViewData(
                 model = file.painterModel,
                 title = context.getString(R.string.wallpapers_chosen),
-                options = {
+                optionsSheetContent = {
                     val scope = rememberCoroutineScope()
                     val originalName = remember { file.nameWithoutExtension }
                     var importName by remember { mutableStateOf(originalName) }
@@ -125,6 +135,7 @@ class WallpapersViewModel(
                             Crossfade(importName != originalName) { enabled ->
                                 IconButton(
                                     onClick = { importName = originalName },
+                                    shapes = IconButtonDefaults.shapes(),
                                     enabled = enabled
                                 ) {
                                     Icon(
@@ -137,15 +148,17 @@ class WallpapersViewModel(
                         singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
+                            .padding(horizontal = 12.dp)
                     )
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(start = 12.dp, end = 12.dp, top = 8.dp)
                     ) {
                         Button(
+                            shapes = ButtonDefaults.shapes(),
                             onClick = { scope.launch {
                                 importWallpaper(
                                     file = file,
@@ -217,7 +230,7 @@ class WallpapersViewModel(
         lastKnownStorageAccessType = storageAccessType
         wallpapersFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(wallpapersDir)
+                val treeUri = wallpapersDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -248,38 +261,71 @@ class WallpapersViewModel(
         }
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openWallpaperOptions(wallpaper: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         mainViewModel.showMediaView(MediaViewData(
             model = wallpaper.painterModel,
             title = wallpaper.name,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
-                val clipboardManager = LocalClipboardManager.current
+                val clipboard = LocalClipboard.current
                 val scope = rememberCoroutineScope()
+                var showHelpDialog by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                ButtonRow(
-                    title = stringResource(R.string.wallpapers_copyImportUrl),
-                    description = stringResource(R.string.wallpapers_copyImportUrlDescription),
-                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
+                IconButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = IconButtonDefaults.shapes()
                 ) {
-                    clipboardManager.setText(AnnotatedString(GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)))
-                    topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.action_delete)
+                    )
                 }
-                ButtonRow(
-                    title = stringResource(R.string.wallpapers_share),
-                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
+
+                Spacer(Modifier.width(4.dp))
+
+                Button(
+                    onClick = {
+                        scope.launch {
+                            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
+                                null,
+                                GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)
+                            )))
+                            showHelpDialog = true
+                        }
+                    },
+                    shapes = ButtonDefaults.shapes()
                 ) {
-                    scope.launch { shareImportedWallpaper(wallpaper, context) }
+                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.AddToHomeScreen))
+                    Text(stringResource(R.string.wallpapers_use))
                 }
-                ButtonRow(
-                    title = stringResource(R.string.wallpapers_delete),
-                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
+
+                Spacer(Modifier.width(4.dp))
+
+                IconButton(
+                    onClick = {
+                        scope.launch { shareImportedWallpaper(wallpaper, context) }
+                    },
+                    shapes = IconButtonDefaults.shapes()
                 ) {
-                    showDeleteDialog = true
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(R.string.action_share)
+                    )
                 }
+
+                if (showHelpDialog) CustomMessageDialog(
+                    title = stringResource(R.string.wallpapers_copied_title),
+                    text = stringResource(R.string.wallpapers_copied_description),
+                    dismissButtonText = stringResource(R.string.action_ok),
+                    icon = Icons.Default.ContentCopy,
+                    onDismissRequest = { showHelpDialog = false }
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = wallpaper.name,

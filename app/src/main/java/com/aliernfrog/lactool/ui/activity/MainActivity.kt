@@ -28,7 +28,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.aliernfrog.lactool.ui.component.InsetsObserver
+import com.aliernfrog.lactool.ui.component.util.InsetsObserver
 import com.aliernfrog.lactool.ui.component.MediaView
 import com.aliernfrog.lactool.ui.screen.MainScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme

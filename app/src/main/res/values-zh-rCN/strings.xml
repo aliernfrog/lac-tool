@@ -140,8 +140,6 @@
     <string name="mapsEdit_filterObjects_description">按名称筛选物体并选择性地将其移除</string>
     <string name="mapsEdit_filterObjects_query">查询</string>
     <string name="mapsEdit_filterObjects_caseSensitive">区分大小写</string>
-    <string name="mapsEdit_filterObjects_exactMatch">精确匹配</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">禁用时，以查询开头的物体也将包括在内</string>
     <string name="mapsEdit_filterObjects_matches">%n 个匹配项</string>
     <string name="mapsEdit_filterObjects_removeMatches">移除匹配的物体</string>
     <string name="mapsEdit_filterObjects_removedMatches">已移除 %n 个匹配的物体</string>
@@ -161,7 +159,7 @@
     <string name="mapsRoles_roleColor">身份组颜色</string>
     <string name="mapsRoles_addRole">添加身份组</string>
     <string name="mapsRoles_addedRole">已添加身份组：{ROLE}</string>
-    <string name="mapsRoles_addRoleHint">身份组预览</string>
+    <string name="mapsRoles_addRole_preview">身份组预览</string>
     <string name="mapsRoles_illegalChars">身份组不能包含：“{CHAR}”</string>
     <string name="mapsMaterials">材质</string>
     <string name="mapsMaterials_description">目前有 %n 个材质</string>
@@ -184,9 +182,6 @@
     <string name="mapsMerge_map_position">位置（X,Y,Z）</string>
     <string name="mapsMerge_map_position_description">此地图将添加到基础地图的此位置</string>
     <string name="mapsMerge_map_position_invalid">提供的位置无效。将使用 0,0,0</string>
-    <string name="mapsMerge_map_includeSpawnpoints">包括出生点</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">包括比赛检查点</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">包括团队死亡竞赛出生点</string>
     <string name="mapsMerge_map_makeBase">设为基础</string>
     <string name="mapsMerge_map_madeBase">已设立 {MAP} 个基础</string>
     <string name="mapsMerge_map_remove">移除</string>
@@ -194,7 +189,7 @@
     <string name="mapsMerge_merge">合并</string>
     <string name="mapsMerge_merging">正在合并…</string>
     <string name="mapsMerge_pickName">选取新地图的名称</string>
-    <string name="mapsMerge_noEnoughMaps">没有足够的地图可以合并</string>
+    <string name="mapsMerge_notEnoughMaps">没有足够的地图可以合并</string>
     <string name="mapsMerge_merged">已将地图合并至 {MAP} 地图</string>
     <string name="wallpapers">壁纸</string>
     <string name="wallpapers_permissions">LAC 壁纸文件夹</string>
@@ -209,10 +204,6 @@
     <string name="wallpapers_chosen_importing">正在导入壁纸</string>
     <string name="wallpapers_chosen_imported">已导入壁纸</string>
     <string name="wallpapers_list_active">当前壁纸</string>
-    <string name="wallpapers_copyImportUrl">复制导入 URL</string>
-    <string name="wallpapers_copyImportUrlDescription">可在 LAC 中用于导入壁纸的 URL</string>
-    <string name="wallpapers_share">分享壁纸</string>
-    <string name="wallpapers_delete">删除壁纸</string>
     <string name="wallpapers_deleted">已删除壁纸</string>
     <string name="screenshots">截图</string>
     <string name="screenshots_permissions">LAC 截图文件夹</string>
@@ -220,7 +211,6 @@
     <string name="screenshots_permissions_recommendedPath_description">LAC 截图存储在此文件夹中</string>
     <string name="screenshots_noScreenshots">您还没有对游戏内手机进行截图</string>
     <string name="screenshots_clickHint">点击截图查看更多操作</string>
-    <string name="screenshots_delete">删除截图</string>
     <string name="screenshots_deleted">已删除截图</string>
     <string name="settings">设置</string>
     <string name="settings_updateNotification_updateAvailable">有可用更新：{VERSION}</string>
@@ -251,7 +241,6 @@
     <string name="settings_storage_storageAccessType_allFiles">所有文件访问（旧版）</string>
     <string name="settings_storage_storageAccessType_allFiles_description">访问所有文件，这可能更容易设置</string>
     <string name="settings_storage_folders">文件夹</string>
-    <string name="settings_storage_folders_default">默认：%s</string>
     <string name="settings_storage_folders_notSet">未配置</string>
     <string name="settings_storage_folders_recommendedFolder">推荐文件夹</string>
     <string name="settings_storage_folders_choose">选择文件夹</string>
@@ -273,8 +262,6 @@
     <string name="settings_about">关于</string>
     <string name="settings_about_changelog">更新日志</string>
     <string name="settings_about_update">更新</string>
-    <string name="settings_about_autoCheckUpdates">自动检查更新</string>
-    <string name="settings_about_autoCheckUpdates_description">启动时自动检查 LAC Tool 更新</string>
     <string name="settings_about_credits">鸣谢</string>
     <string name="settings_about_libs">库</string>
     <string name="settings_about_libs_description">用于制作 LAC Tool 的库</string>

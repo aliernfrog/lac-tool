@@ -18,14 +18,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,8 +59,11 @@ import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
+import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
+import com.aliernfrog.lactool.ui.component.util.LazyGridScrollAccessibilityListener
+import com.aliernfrog.lactool.ui.component.util.LazyListScrollAccessibilityListener
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
@@ -70,6 +78,8 @@ fun WallpapersScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val listStyle = ListStyle.entries[wallpapersViewModel.prefs.wallpapersListStyle.value]
+    var showFABLabel by remember { mutableStateOf(true) }
+
     val mediaPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
@@ -99,6 +109,7 @@ fun WallpapersScreen(
             FloatingActionButton(
                 icon = Icons.Default.Add,
                 text = stringResource(R.string.wallpapers_add),
+                showText = showFABLabel,
                 onClick = {
                     mediaPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -121,8 +132,6 @@ fun WallpapersScreen(
                     wallpapersViewModel.openWallpaperOptions(wallpaper)
                 },
                 modifier = modifier
-                    .padding(8.dp)
-                    .clip(AppComponentShape)
             ) {
                 if (showOverlay) ImageButtonOverlay(
                     title = if (wallpaper == wallpapersViewModel.activeWallpaper) stringResource(R.string.wallpapers_list_active)
@@ -133,25 +142,47 @@ fun WallpapersScreen(
         }
 
         @Composable
-        fun ListHeader() {
+        fun ListHeader(modifier: Modifier) {
             Header(
+                modifier = modifier,
                 wallpaperButton = {
                     WallpaperButton(it)
                 }
             )
         }
 
+        val lazyListState = rememberLazyListState()
+        val lazyGridState = rememberLazyGridState()
+
+        LazyListScrollAccessibilityListener(
+            lazyListState = lazyListState,
+            onShowLabelsStateChange = { showFABLabel = it }
+        )
+
+        LazyGridScrollAccessibilityListener(
+            lazyGridState = lazyGridState,
+            onShowLabelsStateChange = { showFABLabel = it }
+        )
+
         AnimatedContent(targetState = listStyle) { style ->
             when (style) {
                 ListStyle.LIST -> LazyColumn(
+                    state = lazyListState,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     item {
-                        ListHeader()
+                        ListHeader(
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
                     }
 
-                    items(wallpapersViewModel.wallpapersToShow) {
-                        WallpaperButton(it)
+                    itemsIndexed(wallpapersViewModel.wallpapersToShow) { index, wallpaper ->
+                        WallpaperButton(
+                            wallpaper = wallpaper,
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .verticalSegmentedShape(index, totalSize = wallpapersViewModel.wallpapersToShow.size)
+                        )
                     }
 
                     item {
@@ -159,10 +190,15 @@ fun WallpapersScreen(
                     }
                 }
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
-                    modifier = Modifier.fillMaxSize()
+                    state = lazyGridState,
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp)
+                        .fillMaxSize()
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        ListHeader()
+                        ListHeader(
+                            modifier = Modifier.padding(horizontal = 2.dp)
+                        )
                     }
 
                     items(wallpapersViewModel.wallpapersToShow) {
@@ -170,7 +206,10 @@ fun WallpapersScreen(
                             wallpaper = it,
                             contentScale = ContentScale.Crop,
                             showOverlay = false,
-                            modifier = Modifier.aspectRatio(1f)
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
                         )
                     }
 
@@ -183,8 +222,10 @@ fun WallpapersScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Header(
+    modifier: Modifier,
     wallpapersViewModel: WallpapersViewModel = koinViewModel(),
     wallpaperButton: @Composable (wallpaper: FileWrapper) -> Unit
 ) {
@@ -192,12 +233,12 @@ private fun Header(
             || wallpapersViewModel.activeWallpaper != null
     var listOptionsExpanded by remember { mutableStateOf(false) }
 
-    Column {
+    Column(modifier) {
         FadeVisibility(hasAtLeastOneWallpaper) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(vertical = 8.dp)
             ) {
                 Text(
                     text = stringResource(R.string.wallpapers_clickHint),
@@ -207,7 +248,8 @@ private fun Header(
                 )
                 Box {
                     IconButton(
-                        onClick = { listOptionsExpanded = true }
+                        onClick = { listOptionsExpanded = true },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,

@@ -131,8 +131,6 @@
     <string name="mapsEdit_filterObjects_description">اشیاء را با نام فیلتر کنید و به صورت اختیاری آنها را حذف کنید</string>
     <string name="mapsEdit_filterObjects_query">پرسش</string>
     <string name="mapsEdit_filterObjects_caseSensitive">حساس به حروف کوچک و بزرگ</string>
-    <string name="mapsEdit_filterObjects_exactMatch">مطابقت کامل</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">در صورت غیرفعال شدن، اشیایی که با پرس و جو شروع می شوند نیز شامل می شوند</string>
     <string name="mapsEdit_filterObjects_matches">%n مطابقت دارد</string>
     <string name="mapsEdit_filterObjects_removeMatches">Remove matching objects</string>
     <string name="mapsEdit_filterObjects_removedMatches">%n شی منطبق حذف شد</string>
@@ -152,7 +150,7 @@
     <string name="mapsRoles_roleColor">رنگ رول/نقش</string>
     <string name="mapsRoles_addRole">اضافه کردن نقش/رول</string>
     <string name="mapsRoles_addedRole">نقش اضافه شده: {ROLE}</string>
-    <string name="mapsRoles_addRoleHint">پیش نمایش نقش/رول</string>
+    <string name="mapsRoles_addRole_preview">پیش نمایش نقش/رول</string>
     <string name="mapsRoles_illegalChars">نقش نمی تواند حاوی: \"{CHAR}\" باشد</string>
     <string name="mapsMaterials">مواد و منابع</string>
     <string name="mapsMaterials_description">در حال حاضر %n مواد دارد</string>
@@ -175,9 +173,6 @@
     <string name="mapsMerge_map_position">موقعیت (X,Y,Z)</string>
     <string name="mapsMerge_map_position_description">این نقشه روی این موقعیت در نقشه پایه اضافه خواهد شد</string>
     <string name="mapsMerge_map_position_invalid">موقعیت نامعتبر ارائه شده 0,0,0 استفاده خواهد شد</string>
-    <string name="mapsMerge_map_includeSpawnpoints">شامل نقاط اسپاون</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">شامل پست های بازرسی مسابقه</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">شامل نقاط اسپان مسابقه مرگ تیم</string>
     <string name="mapsMerge_map_makeBase">ساخت پایه</string>
     <string name="mapsMerge_map_madeBase">پایه {MAP} ساخته شده است</string>
     <string name="mapsMerge_map_remove">پاک کردن</string>
@@ -185,7 +180,7 @@
     <string name="mapsMerge_merge">ادغام</string>
     <string name="mapsMerge_merging">درحال ادغام</string>
     <string name="mapsMerge_pickName">برای مپ جدیدتان یک اسم بزارید</string>
-    <string name="mapsMerge_noEnoughMaps">مپ های کافی برای ادغام وجود ندارد</string>
+    <string name="mapsMerge_notEnoughMaps">مپ های کافی برای ادغام وجود ندارد</string>
     <string name="mapsMerge_merged">مپ ها در مپ {MAP} ادغام شدند</string>
     <string name="wallpapers">والپیپر ها</string>
     <string name="wallpapers_permissions">پوشه‌ی والپیپرهای LAC</string>
@@ -196,10 +191,6 @@
     <string name="wallpapers_chosen_import">وارد کردن</string>
     <string name="wallpapers_chosen_importing">واردات والپیپر</string>
     <string name="wallpapers_chosen_imported">والپیپر وارد شد</string>
-    <string name="wallpapers_copyImportUrl">URL واردات را کپی کنید</string>
-    <string name="wallpapers_copyImportUrlDescription">URL که می تواند در LAC برای وارد کردن والپیپر استفاده شود</string>
-    <string name="wallpapers_share">به اشتراک گذاری والپیپر</string>
-    <string name="wallpapers_delete">حذف والپیپر</string>
     <string name="wallpapers_deleting">پاک کردن والپیپر</string>
     <string name="wallpapers_deleted">والپیپر حذف شد</string>
     <string name="screenshots">اسکرین شات ها</string>
@@ -208,8 +199,6 @@
     <string name="screenshots_permissions_recommendedPath_description">اسکرین شات های LAC در این پوشه ذخیره می شوند</string>
     <string name="screenshots_noScreenshots">هیچ اسکرین شات از تلفن همراه درون بازی نگرفته اید</string>
     <string name="screenshots_clickHint">برای مشاهده اقدامات بیشتر روی تصاویر کلیک کنید</string>
-    <string name="screenshots_share">ارسال اسکرین شات</string>
-    <string name="screenshots_delete">حذف اسکرین شات</string>
     <string name="screenshots_deleting">در حال حذف اسکرین شات</string>
     <string name="screenshots_deleted">اسکرین شات پاک شد</string>
     <string name="settings">تنظیمات</string>
@@ -241,7 +230,6 @@
     <string name="settings_storage_storageAccessType_shizuku">شیزکو</string>
     <string name="settings_storage_storageAccessType_shizuku_description">از Shizuku برای دسترسی به فضای ذخیره سازی استفاده کنید</string>
     <string name="settings_storage_folders">پوشه ها</string>
-    <string name="settings_storage_folders_default">پیش‌فرض : %s</string>
     <string name="settings_storage_folders_notSet">پیکربندی نشده است</string>
     <string name="settings_storage_folders_recommendedFolder">پوشه پیشنهادی</string>
     <string name="settings_storage_folders_choose">انتخاب پوشه</string>
@@ -263,8 +251,6 @@
     <string name="settings_about">درباره</string>
     <string name="settings_about_changelog">تغییرات</string>
     <string name="settings_about_update">به‌روزرسانی</string>
-    <string name="settings_about_autoCheckUpdates">بررسی خودکار به‌روزرسانی‌ها</string>
-    <string name="settings_about_autoCheckUpdates_description">به‌روزرسانی‌های ابزار LAC را به‌طور خودکار هنگام راه‌اندازی بررسی کنید</string>
     <string name="settings_about_credits_gameDev">توسعه دهنده‌ی LAC</string>
     <string name="settings_about_credits_appDev">توسعه‌دهنده‌ی ابزار LAC</string>
     <string name="settings_about_credits_ui">UI</string>

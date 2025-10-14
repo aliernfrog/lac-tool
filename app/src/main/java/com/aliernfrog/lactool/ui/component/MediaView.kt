@@ -1,8 +1,13 @@
 package com.aliernfrog.lactool.ui.component
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
@@ -16,6 +21,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -27,9 +33,13 @@ import androidx.compose.material.icons.filled.ZoomInMap
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -67,7 +77,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MediaView(
     data: MediaViewData,
@@ -98,19 +108,19 @@ fun MediaView(
         if (optionsHeight == 0.dp || optionsHeight > maxPeekHeight) maxPeekHeight
         else optionsHeight
     }
-    
+
     BackHandler {
         if (isZoomedIn) scope.launch { zoomState.reset() }
         else onDismissRequest()
     }
-    
+
     LaunchedEffect(overlayCanBeShown) {
         showOverlay = overlayCanBeShown
-        if (data.options != null && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
+        if (data.optionsSheetContent != null && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
     }
-    
+
     LaunchedEffect(showOverlay) {
-        if (data.options == null) return@LaunchedEffect bottomSheetState.hide()
+        if (data.optionsSheetContent == null) return@LaunchedEffect bottomSheetState.hide()
         if (showOverlay && overlayCanBeShown && bottomSheetState.targetValue == SheetValue.Hidden) bottomSheetState.partialExpand()
         else if (!showOverlay && bottomSheetState.targetValue != SheetValue.Hidden) bottomSheetState.hide()
     }
@@ -122,20 +132,21 @@ fun MediaView(
 
     BottomSheetScaffold(
         sheetContent = {
-            data.options?.let {
+            data.optionsSheetContent?.let {
                 Column(
                     modifier = Modifier
-                        .onSizeChanged {
+                        .onSizeChanged { size ->
                             with(density) {
-                                optionsHeight = it.height.toDp()+48.dp // 48dp drag handle height
+                                optionsHeight =
+                                    size.height.toDp() + 48.dp // 48dp drag handle height
                             }
                         }
+                        .padding(bottom = 8.dp)
                         .navigationBarsPadding()
                         .imePadding()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    it.invoke()
-                }
+                        .verticalScroll(rememberScrollState()),
+                    content = it
+                )
             }
         },
         sheetPeekHeight = sheetPeekHeight,
@@ -166,10 +177,13 @@ fun MediaView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.weight(1f).fillMaxWidth(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
+                            shapes = IconButtonDefaults.shapes(),
                             onClick = onDismissRequest,
                             modifier = Modifier.padding(8.dp)
                         ) {
@@ -188,6 +202,7 @@ fun MediaView(
                         }
                     }
                     IconButton(
+                        shapes = IconButtonDefaults.shapes(),
                         onClick = { mainViewModel.prefs.showMediaViewGuide.value = true },
                         modifier = Modifier.padding(8.dp)
                     ) {
@@ -205,9 +220,13 @@ fun MediaView(
                     .offset { IntOffset(x = 0, y = animatedOffsetY.roundToPx()) }
                     .pointerInput(Unit) {
                         if (!isZoomedIn) detectVerticalDragGestures(
-                            onDragEnd =  {
-                                if (zoomState.scale <= 1f && offsetY.value.absoluteValue > viewportHeight.value/7) onDismissRequest()
-                                offsetY = 0.dp
+                            onDragEnd = {
+                                if (zoomState.scale <= 1f && offsetY.value.absoluteValue > viewportHeight.value / 6) {
+                                    val isPositiveOffset = offsetY.value > 0
+                                    val absOffsetToSet = (viewportHeight/(1.6.dp)).dp
+                                    onDismissRequest()
+                                    offsetY = if (isPositiveOffset) absOffsetToSet else -absOffsetToSet
+                                } else offsetY = 0.dp
                             },
                             onVerticalDrag = { _, dragAmount ->
                                 if (zoomState.scale <= 1f) with(density) {
@@ -257,6 +276,22 @@ fun MediaView(
                     )
                 }
             }
+            data.toolbarContent?.let { toolbarContent ->
+                AnimatedVisibility(
+                    visible = showOverlay,
+                    enter = slideInVertically { it } + fadeIn(),
+                    exit = slideOutVertically { it } + fadeOut(),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .systemBarsPadding()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                ) {
+                    HorizontalFloatingToolbar(
+                        expanded = true,
+                        content = toolbarContent
+                    )
+                }
+            }
         }
     }
 
@@ -267,6 +302,7 @@ fun MediaView(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GuideDialog(
     onDismissRequest: () -> Unit
@@ -275,6 +311,7 @@ private fun GuideDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
+                shapes = ButtonDefaults.shapes(),
                 onClick = onDismissRequest
             ) {
                 Text(stringResource(R.string.action_ok))

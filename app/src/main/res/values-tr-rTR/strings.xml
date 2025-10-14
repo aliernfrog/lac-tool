@@ -100,8 +100,6 @@
     <string name="maps_thumbnail_set_overrides">Bu mevcut resmin üzerine yazacaktır, yedeklediğinizden emin olun</string>
     <string name="maps_thumbnail_set_done">Harita resmi ayarlandı</string>
     <string name="maps_thumbnail_setting">Harita resmi ayarlanıyor..</string>
-    <string name="maps_thumbnail_share">Resmi paylaş</string>
-    <string name="maps_thumbnail_delete">Resmi sil</string>
     <string name="maps_thumbnail_deleted">Harita resmi silindi</string>
     <string name="maps_thumbnail_deleting">Harita resmi siliniyor..</string>
     <string name="maps_thumbnail_id">{MAP} haritasının resmi</string>
@@ -166,8 +164,6 @@
     <string name="mapsEdit_filterObjects_description">Objeleri ismiyle filtreleyin ve isterseniz kaldırın</string>
     <string name="mapsEdit_filterObjects_query">Sorgu</string>
     <string name="mapsEdit_filterObjects_caseSensitive">Büyük/küçük harf duyarlı</string>
-    <string name="mapsEdit_filterObjects_exactMatch">Tam eşleşme</string>
-    <string name="mapsEdit_filterObjects_exactMatch_description">Kapatıldığında, sorguyla başlayan objeler de dahil edilecektir</string>
     <string name="mapsEdit_filterObjects_matches">%n eşleşme</string>
     <string name="mapsEdit_filterObjects_removeMatches">Eşleşen objeleri kaldır</string>
     <string name="mapsEdit_filterObjects_removedMatches">%n eşleşen obje kaldırıldı</string>
@@ -187,7 +183,7 @@
     <string name="mapsRoles_roleColor">Rol rengi</string>
     <string name="mapsRoles_addRole">Rol ekle</string>
     <string name="mapsRoles_addedRole">Rol eklendi: {ROLE}</string>
-    <string name="mapsRoles_addRoleHint">Rol ön izlemesi</string>
+    <string name="mapsRoles_addRole_preview">Rol ön izlemesi</string>
     <string name="mapsRoles_illegalChars">Rol adı \"{CHAR}\" içeremez</string>
     <string name="mapsMaterials">Materyaller</string>
     <string name="mapsMaterials_description">Şu anda %n materyal var</string>
@@ -213,9 +209,6 @@
     <string name="mapsMerge_map_position">Konum (X,Y,Z)</string>
     <string name="mapsMerge_map_position_description">Bu harita, temel haritada bu konuma eklenecek</string>
     <string name="mapsMerge_map_position_invalid">Geçersiz konum girildi. 0,0,0 kullanılacak</string>
-    <string name="mapsMerge_map_includeSpawnpoints">Doğma noktalarını dahil et</string>
-    <string name="mapsMerge_map_includeRacingCheckpoints">Yarış kontrol noktalarını dahil et</string>
-    <string name="mapsMerge_map_includeTDMSpawnpoints">Team death-match doğma noktalarını dahil et</string>
     <string name="mapsMerge_map_makeBase">Temel harita yap</string>
     <string name="mapsMerge_map_madeBase">{MAP} temel yapıldı</string>
     <string name="mapsMerge_map_remove">Kaldır</string>
@@ -223,7 +216,7 @@
     <string name="mapsMerge_merge">Birleştir</string>
     <string name="mapsMerge_merging">Birleştiriliyor..</string>
     <string name="mapsMerge_pickName">Yeni harita için isim seçin</string>
-    <string name="mapsMerge_noEnoughMaps">Birleştirilecek yeterli harita yok</string>
+    <string name="mapsMerge_notEnoughMaps">Birleştirilecek yeterli harita yok</string>
     <string name="mapsMerge_merged">Haritalar {MAP} haritasında birleştirildi</string>
     <string name="wallpapers">Duvar kağıtları</string>
     <string name="wallpapers_permissions">LAC duvar kağıtları klasörü</string>
@@ -240,10 +233,6 @@
     <string name="wallpapers_chosen_importing">Duvar kağıdı içe aktarılıyor</string>
     <string name="wallpapers_chosen_imported">Duvar kağıdı içe aktarıldı</string>
     <string name="wallpapers_list_active">Şu anki duvar kağıdı</string>
-    <string name="wallpapers_copyImportUrl">İçe aktarma URL\'sini kopyala</string>
-    <string name="wallpapers_copyImportUrlDescription">LAC içinden duvar kağıdı içe aktarmak için kullanılabilen bir URL</string>
-    <string name="wallpapers_share">Duvar kağıdını paylaş</string>
-    <string name="wallpapers_delete">Duvar kağıdını sil</string>
     <string name="wallpapers_deleting">Duvar kağıdı siliniyor..</string>
     <string name="wallpapers_deleted">Duvar kağıdı silindi</string>
     <string name="screenshots">Fotoğraflar</string>
@@ -252,8 +241,6 @@
     <string name="screenshots_permissions_recommendedPath_description">LAC ekran görüntüleri bu klasörde saklanır</string>
     <string name="screenshots_noScreenshots">Oyun içi cep telefonunu kullanarak bir fotoğraf çekmediniz</string>
     <string name="screenshots_clickHint">Daha fazla işlem için fotoğraflara tıklayın</string>
-    <string name="screenshots_share">Fotoğrafı paylaş</string>
-    <string name="screenshots_delete">Fotoğrafı sil</string>
     <string name="screenshots_deleting">Fotoğraf siliniyor..</string>
     <string name="screenshots_deleted">Fotoğraf silindi</string>
     <string name="settings">Ayarlar</string>
@@ -288,7 +275,6 @@
     <string name="settings_storage_storageAccessType_allFiles">Bütün dosyalara erişim (eski)</string>
     <string name="settings_storage_storageAccessType_allFiles_description">Bütün dosyalara eriş, bunun kurulumu daha kolay olabilir</string>
     <string name="settings_storage_folders">Klasörler</string>
-    <string name="settings_storage_folders_default">Varsayılan: %s</string>
     <string name="settings_storage_folders_notSet">Ayarlanmadı</string>
     <string name="settings_storage_folders_recommendedFolder">Önerilen klasör</string>
     <string name="settings_storage_folders_choose">Klasör seç</string>
@@ -310,8 +296,6 @@
     <string name="settings_about">Hakkında</string>
     <string name="settings_about_changelog">Değişiklik günlüğü</string>
     <string name="settings_about_update">Güncelle</string>
-    <string name="settings_about_autoCheckUpdates">Güncellemeleri otomatik olarak denetle</string>
-    <string name="settings_about_autoCheckUpdates_description">LAC Tool başlatıldığında güncellemeleri kontrol et</string>
     <string name="settings_about_credits">Emeği geçenler</string>
     <string name="settings_about_libs">Kütüphaneler</string>
     <string name="settings_about_libs_description">LAC Tool\'u yapmak için kullanılan kütüphaneler</string>

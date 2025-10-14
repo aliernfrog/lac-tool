@@ -29,9 +29,13 @@ fun FadeVisibility(
 @Composable
 fun FadeVisibilityColumn(
     visible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
-    FadeVisibility(visible) {
+    FadeVisibility(
+        visible = visible,
+        modifier = modifier
+    ) {
         Column(content = content)
     }
 }

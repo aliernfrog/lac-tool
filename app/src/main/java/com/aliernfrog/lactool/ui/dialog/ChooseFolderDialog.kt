@@ -11,7 +11,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,8 +30,9 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.folderPickerSupportsInitialUri
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ChooseFolderIntroDialog(
     permissionData: PermissionData,
@@ -40,6 +43,7 @@ fun ChooseFolderIntroDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             Button(
+                shapes = ButtonDefaults.shapes(),
                 onClick = onConfirm
             ) {
                 Text(stringResource(R.string.action_ok))
@@ -47,6 +51,7 @@ fun ChooseFolderIntroDialog(
         },
         dismissButton = {
             TextButton(
+                shapes = ButtonDefaults.shapes(),
                 onClick = onDismissRequest
             ) {
                 Text(stringResource(R.string.action_cancel))
@@ -77,6 +82,7 @@ fun ChooseFolderIntroDialog(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun UnrecommendedFolderDialog(
     permissionData: PermissionData,
@@ -91,6 +97,7 @@ fun UnrecommendedFolderDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             Button(
+                shapes = ButtonDefaults.shapes(),
                 onClick = onChooseFolderRequest
             ) {
                 Text(stringResource(R.string.permissions_notRecommendedFolder_chooseRecommendedFolder))
@@ -98,6 +105,7 @@ fun UnrecommendedFolderDialog(
         },
         dismissButton = {
             TextButton(
+                shapes = ButtonDefaults.shapes(),
                 onClick = onDismissRequest
             ) {
                 Text(stringResource(R.string.action_cancel))
@@ -128,7 +136,7 @@ fun UnrecommendedFolderDialog(
                 }
 
                 AnimatedVisibility(showAdvancedOptions) {
-                    ButtonRow(
+                    ExpressiveButtonRow(
                         title = stringResource(R.string.permissions_notRecommendedFolder_useAnyway),
                         description = permissionData.useUnrecommendedAnywayDescription?.let {
                             stringResource(it)

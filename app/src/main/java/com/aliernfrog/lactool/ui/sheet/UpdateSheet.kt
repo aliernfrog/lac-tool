@@ -7,14 +7,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -23,24 +24,16 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.ui.component.BaseModalBottomSheet
@@ -49,7 +42,7 @@ import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun UpdateSheet(
     sheetState: SheetState,
@@ -82,6 +75,8 @@ fun UpdateSheet(
                     .padding(horizontal = 16.dp),
                 markdown = latestVersionInfo.body,
                 linkColor = MaterialTheme.colorScheme.primary,
+                syntaxHighlightColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                syntaxHighlightTextColor = MaterialTheme.colorScheme.onSurface,
                 style = LocalTextStyle.current.copy(
                     color = LocalContentColor.current
                 ),
@@ -91,7 +86,10 @@ fun UpdateSheet(
             )
             TextButton(
                 onClick = { uriHandler.openUri(latestVersionInfo.htmlUrl) },
-                modifier = Modifier.padding(horizontal = 16.dp).align(Alignment.End)
+                shapes = ButtonDefaults.shapes(),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .align(Alignment.End)
             ) {
                 ButtonIcon(
                     painter = painterResource(R.drawable.github)
@@ -104,6 +102,7 @@ fun UpdateSheet(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Actions(
     versionName: String,
@@ -112,55 +111,51 @@ private fun Actions(
     onUpdateClick: () -> Unit,
     onCheckUpdatesRequest: () -> Unit
 ) {
-    val density = LocalDensity.current
     val versionNameScrollState = rememberScrollState()
-    var actionsWidth by remember { mutableStateOf(Dp.Infinity) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-            .onSizeChanged {
-                with(density) {
-                    actionsWidth = it.width.toDp()
-                }
-            },
+            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .horizontalFadingEdge(
-                    scrollState = versionNameScrollState,
-                    edgeColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                    isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
-                )
-                .horizontalScroll(versionNameScrollState),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(end = 12.dp)
         ) {
-            Text(
-                text = versionName,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+            Row(
+                modifier = Modifier
+                    .horizontalFadingEdge(
+                        scrollState = versionNameScrollState,
+                        edgeColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        isRTL = LocalLayoutDirection.current == LayoutDirection.Rtl
+                    )
+                    .horizontalScroll(versionNameScrollState),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = versionName,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
             Text(
                 text = stringResource(
                     if (preRelease) R.string.updates_preRelease
                     else R.string.updates_stable
                 ),
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Light,
-                color = LocalContentColor.current.copy(alpha = 0.7f),
-                modifier = Modifier.padding(horizontal = 6.dp)
+                color = LocalContentColor.current.copy(alpha = 0.7f)
             )
         }
         AnimatedContent(
-            targetState = updateAvailable,
-            modifier = Modifier.widthIn(max = actionsWidth/2)
+            targetState = updateAvailable
         ) { showUpdate ->
             if (showUpdate) Button(
-                onClick = onUpdateClick
+                onClick = onUpdateClick,
+                shapes = ButtonDefaults.shapes()
             ) {
                 ButtonIcon(
                     painter = rememberVectorPainter(Icons.Default.Update)
@@ -168,7 +163,8 @@ private fun Actions(
                 Text(stringResource(R.string.updates_update))
             }
             else OutlinedButton(
-                onClick = onCheckUpdatesRequest
+                onClick = onCheckUpdatesRequest,
+                shapes = ButtonDefaults.shapes()
             ) {
                 ButtonIcon(
                     painter = rememberVectorPainter(Icons.Default.Refresh)
