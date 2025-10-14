@@ -247,8 +247,9 @@
     <string name="wallpapers_chosen_importing">Importing wallpaper</string>
     <string name="wallpapers_chosen_imported">Imported the wallpaper</string>
     <string name="wallpapers_list_active">Current wallpaper</string>
-    <string name="wallpapers_copyImportUrl">Copy import URL</string>
-    <string name="wallpapers_copyImportUrlDescription">An URL which can be used in LAC to import wallpapers</string>
+    <string name="wallpapers_use">Use wallpaper</string>
+    <string name="wallpapers_copied_title">Copied import URL</string>
+    <string name="wallpapers_copied_description">You can paste the copied URL to the in-game cellphone settings to use this wallpaper</string>
     <string name="wallpapers_deleting">Deleting wallpaper..</string>
     <string name="wallpapers_deleted">Deleted the wallpaper</string>
     <string name="screenshots">Screenshots</string>

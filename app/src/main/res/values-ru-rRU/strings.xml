@@ -229,8 +229,6 @@
     <string name="wallpapers_chosen_importing">Импортировано обоев</string>
     <string name="wallpapers_chosen_imported">Обои импортированы</string>
     <string name="wallpapers_list_active">Текущие обои</string>
-    <string name="wallpapers_copyImportUrl">Скопировать URL для импорта</string>
-    <string name="wallpapers_copyImportUrlDescription">URL-адрес, который можно использовать в LAC для импорта обоев</string>
     <string name="wallpapers_deleting">Удаление обоев..</string>
     <string name="wallpapers_deleted">Обои удалены</string>
     <string name="screenshots">Снимки</string>

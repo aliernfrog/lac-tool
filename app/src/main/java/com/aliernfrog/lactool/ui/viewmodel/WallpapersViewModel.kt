@@ -11,12 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
@@ -71,6 +71,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -270,6 +271,7 @@ class WallpapersViewModel(
                 val context = LocalContext.current
                 val clipboard = LocalClipboard.current
                 val scope = rememberCoroutineScope()
+                var showHelpDialog by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 IconButton(
@@ -287,7 +289,6 @@ class WallpapersViewModel(
 
                 Spacer(Modifier.width(4.dp))
 
-                // TODO show description of this with a dialog on click
                 Button(
                     onClick = {
                         scope.launch {
@@ -295,13 +296,13 @@ class WallpapersViewModel(
                                 null,
                                 GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)
                             )))
-                            topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                            showHelpDialog = true
                         }
                     },
                     shapes = ButtonDefaults.shapes()
                 ) {
-                    ButtonIcon(rememberVectorPainter(Icons.Default.ContentCopy))
-                    Text(stringResource(R.string.wallpapers_copyImportUrl))
+                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.AddToHomeScreen))
+                    Text(stringResource(R.string.wallpapers_use))
                 }
 
                 Spacer(Modifier.width(4.dp))
@@ -317,6 +318,14 @@ class WallpapersViewModel(
                         contentDescription = stringResource(R.string.action_share)
                     )
                 }
+
+                if (showHelpDialog) CustomMessageDialog(
+                    title = stringResource(R.string.wallpapers_copied_title),
+                    text = stringResource(R.string.wallpapers_copied_description),
+                    dismissButtonText = stringResource(R.string.action_ok),
+                    icon = Icons.Default.ContentCopy,
+                    onDismissRequest = { showHelpDialog = false }
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = wallpaper.name,

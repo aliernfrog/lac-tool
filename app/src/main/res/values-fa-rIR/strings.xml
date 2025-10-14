@@ -191,8 +191,6 @@
     <string name="wallpapers_chosen_import">وارد کردن</string>
     <string name="wallpapers_chosen_importing">واردات والپیپر</string>
     <string name="wallpapers_chosen_imported">والپیپر وارد شد</string>
-    <string name="wallpapers_copyImportUrl">URL واردات را کپی کنید</string>
-    <string name="wallpapers_copyImportUrlDescription">URL که می تواند در LAC برای وارد کردن والپیپر استفاده شود</string>
     <string name="wallpapers_deleting">پاک کردن والپیپر</string>
     <string name="wallpapers_deleted">والپیپر حذف شد</string>
     <string name="screenshots">اسکرین شات ها</string>

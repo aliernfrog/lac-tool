@@ -204,8 +204,6 @@
     <string name="wallpapers_chosen_importing">正在导入壁纸</string>
     <string name="wallpapers_chosen_imported">已导入壁纸</string>
     <string name="wallpapers_list_active">当前壁纸</string>
-    <string name="wallpapers_copyImportUrl">复制导入 URL</string>
-    <string name="wallpapers_copyImportUrlDescription">可在 LAC 中用于导入壁纸的 URL</string>
     <string name="wallpapers_deleted">已删除壁纸</string>
     <string name="screenshots">截图</string>
     <string name="screenshots_permissions">LAC 截图文件夹</string>
