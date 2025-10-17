@@ -96,7 +96,7 @@ class WallpapersViewModel(
     private var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
 
-    val wallpapersToShow: List<FileWrapper>
+    val otherWallpapersToShow: List<FileWrapper>
         get() {
             val sorting = ListSorting.entries[prefs.wallpapersListOptions.sorting.value]
             val reversed = prefs.wallpapersListOptions.sortingReversed.value

@@ -248,6 +248,7 @@
     <string name="wallpapers_chosen_importing">Importing wallpaper</string>
     <string name="wallpapers_chosen_imported">Imported the wallpaper</string>
     <string name="wallpapers_list_active">Current wallpaper</string>
+    <string name="wallpapers_list_other">Other wallpapers</string>
     <string name="wallpapers_use">Use wallpaper</string>
     <string name="wallpapers_copied_title">Copied import URL</string>
     <string name="wallpapers_copied_description">You can paste the copied URL to the in-game cellphone settings to use this wallpaper</string>
