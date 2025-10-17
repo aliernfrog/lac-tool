@@ -70,7 +70,7 @@
     <string name="permissions_allFiles_denied">Permission was denied</string>
     <string name="permissions_allFiles_saf">Access specific directories</string>
     <string name="permissions_allFiles_saf_description">Lets LAC Tool only access the directories it needs, this may be complicated to setup</string>
-    <string name="list_options">List options</string>
+    <string name="list_options">Sorting and style</string>
     <string name="list_sorting">Sort</string>
     <string name="list_sorting_name">By name</string>
     <string name="list_sorting_date">By date</string>
@@ -79,6 +79,7 @@
     <string name="list_style">Style</string>
     <string name="list_style_list">List</string>
     <string name="list_style_grid">Grid</string>
+    <string name="list_style_grid_itemsPerRow">Items per row</string>
     <string name="maps">Maps</string>
     <string name="maps_permissions">LAC maps folder</string>
     <string name="maps_permissions_description">You need to choose the folder where your LAC maps are stored</string>

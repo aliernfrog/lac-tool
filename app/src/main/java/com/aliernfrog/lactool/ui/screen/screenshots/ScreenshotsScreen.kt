@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,12 +52,13 @@ import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonInfo
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
-import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
+import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,12 +68,19 @@ fun ScreenshotsScreen(
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val listStyle = ListStyle.entries[screenshotsViewModel.prefs.screenshotsListStyle.value]
+    val listStylePref = screenshotsViewModel.prefs.screenshotsListOptions.styleGroup.getCurrent()
+    val gridMaxLineSpanPref = screenshotsViewModel.prefs.screenshotsListOptions.gridMaxLineSpanGroup.getCurrent()
+    val listStyle = ListStyle.entries[listStylePref.value]
     
     LaunchedEffect(Unit) {
         screenshotsViewModel.getScreenshotsFile(context)
         screenshotsViewModel.fetchScreenshots()
     }
+
+    ListViewOptionsSheet(
+        sheetState = screenshotsViewModel.listViewOptionsSheetState,
+        listViewOptionsPreference = screenshotsViewModel.prefs.screenshotsListOptions
+    )
     
     AppScaffold(
         topBar = { scrollBehavior ->
@@ -144,7 +153,8 @@ fun ScreenshotsScreen(
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    maxLineSpan = gridMaxLineSpanPref.value
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Header(
@@ -173,14 +183,13 @@ fun ScreenshotsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun Header(
     screenshotsViewModel: ScreenshotsViewModel = koinViewModel(),
     modifier: Modifier
 ) {
-    var listOptionsExpanded by remember { mutableStateOf(false) }
-    
+    val scope = rememberCoroutineScope()
     Column(modifier) {
         ErrorWithIcon(
             error = stringResource(R.string.screenshots_noScreenshots),
@@ -202,7 +211,9 @@ private fun Header(
                 )
                 Box {
                     IconButton(
-                        onClick = { listOptionsExpanded = true },
+                        onClick = { scope.launch {
+                            screenshotsViewModel.listViewOptionsSheetState.show()
+                        } },
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
@@ -210,13 +221,6 @@ private fun Header(
                             contentDescription = stringResource(R.string.list_options)
                         )
                     }
-                    ListViewOptionsDropdown(
-                        expanded = listOptionsExpanded,
-                        onDismissRequest = { listOptionsExpanded = false },
-                        sortingPref = screenshotsViewModel.prefs.screenshotsListSorting,
-                        sortingReversedPref = screenshotsViewModel.prefs.screenshotsListSortingReversed,
-                        stylePref = screenshotsViewModel.prefs.screenshotsListStyle
-                    )
                 }
             }
         }

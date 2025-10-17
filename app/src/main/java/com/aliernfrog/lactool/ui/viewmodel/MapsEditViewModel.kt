@@ -83,6 +83,7 @@ class MapsEditViewModel(
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
+    val materialsListOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
 
     val addRoleSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
     var mapTypesExpanded by mutableStateOf(false)

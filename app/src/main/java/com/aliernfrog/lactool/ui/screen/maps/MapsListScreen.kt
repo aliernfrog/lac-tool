@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
-import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -54,15 +53,12 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,17 +80,16 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
-import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_DEFAULT_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SingleChoiceConnectedButtonGroup
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.getMaxLineSpan
 import com.aliernfrog.lactool.ui.component.maps.GridMapItem
 import com.aliernfrog.lactool.ui.component.maps.ListMapItem
 import com.aliernfrog.lactool.ui.component.util.LazyGridScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.component.util.LazyListScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
+import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
@@ -121,13 +116,12 @@ fun MapsListScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val isMultiSelecting = mapsListViewModel.selectedMaps.isNotEmpty()
-    val listStyle = ListStyle.entries[mapsListViewModel.prefs.mapsListStyle.value]
+    val listStylePref = mapsListViewModel.prefs.mapsListOptions.styleGroup.getCurrent()
+    val gridMaxLineSpanPref = mapsListViewModel.prefs.mapsListOptions.gridMaxLineSpanGroup.getCurrent()
+    val listStyle = ListStyle.entries[listStylePref.value]
     val showMapThumbnails = mapsListViewModel.prefs.showMapThumbnailsInList.value
     var multiSelectionDropdownShown by remember { mutableStateOf(false) }
     var showFABLabel by remember { mutableStateOf(true) }
-
-    val windowSizeClass = calculateWindowSizeClass(context as Activity)
-    val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.data?.data != null) scope.launch {
@@ -157,6 +151,11 @@ fun MapsListScreen(
         if (isMultiSelecting) mapsListViewModel.selectedMaps.clear()
         else onBackClick?.invoke()
     }
+
+    ListViewOptionsSheet(
+        sheetState = mapsListViewModel.listViewOptionsSheetState,
+        listViewOptionsPreference = mapsListViewModel.prefs.mapsListOptions
+    )
 
     AppScaffold(
         topBar = { scrollBehavior ->
@@ -339,9 +338,7 @@ fun MapsListScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 10.dp),
-                        maxLineSpan = getMaxLineSpan(
-                            if (isCompact) 2 else Int.MAX_VALUE
-                        )
+                        maxLineSpan = gridMaxLineSpanPref.value
                     ) { maxLineSpan: Int ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Header(segment, page, mapsToShow, Modifier.padding(horizontal = 2.dp))
@@ -428,9 +425,10 @@ private fun Footer() {
 @Composable
 private fun Search(
     searchQuery: String,
-    onSearchQueryChange: (String) -> Unit
+    onSearchQueryChange: (String) -> Unit,
+    mapsListViewModel: MapsListViewModel = koinViewModel()
 ) {
-    val mapsListViewModel = koinViewModel<MapsListViewModel>()
+    val scope = rememberCoroutineScope()
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
@@ -454,23 +452,17 @@ private fun Search(
                     )
                 },
                 trailingIcon = {
-                    var sortingOptionsShown by rememberSaveable { mutableStateOf(false) }
                     IconButton(
-                        onClick = { sortingOptionsShown = true },
+                        onClick = { scope.launch {
+                            mapsListViewModel.listViewOptionsSheetState.show()
+                        } },
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.list_sorting)
+                            contentDescription = stringResource(R.string.list_options)
                         )
                     }
-                    ListViewOptionsDropdown(
-                        expanded = sortingOptionsShown,
-                        onDismissRequest = { sortingOptionsShown = false },
-                        sortingPref = mapsListViewModel.prefs.mapsListSorting,
-                        sortingReversedPref = mapsListViewModel.prefs.mapsListSortingReversed,
-                        stylePref = mapsListViewModel.prefs.mapsListStyle
-                    )
                 },
                 placeholder = {
                     Text(stringResource(R.string.mapsList_search))

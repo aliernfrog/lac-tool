@@ -37,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,7 +60,6 @@ import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonInfo
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
-import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
 import com.aliernfrog.lactool.ui.component.VerticalSegmentor
@@ -68,7 +68,9 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.form.ExpandableRow
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
+import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -78,8 +80,10 @@ fun MapsMaterialsScreen(
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val listStyle = ListStyle.entries[mapsEditViewModel.prefs.mapsMaterialsListStyle.value]
-    var listOptionsExpanded by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val listStylePref = mapsEditViewModel.prefs.mapsMaterialsListOptions.styleGroup.getCurrent()
+    val gridMaxLineSpanPref = mapsEditViewModel.prefs.mapsListOptions.gridMaxLineSpanGroup.getCurrent()
+    val listStyle = ListStyle.entries[listStylePref.value]
 
     LaunchedEffect(Unit) {
         if (!mapsEditViewModel.materialsLoaded)
@@ -92,6 +96,18 @@ fun MapsMaterialsScreen(
             onNavigateBackRequest()
     }
 
+    ListViewOptionsSheet(
+        sheetState = mapsEditViewModel.materialsListOptionsSheetState,
+        sorting = null,
+        onSortingChange = null,
+        sortingReversed = null,
+        onSortingReversedChange = null,
+        style = listStyle,
+        onStyleChange = { listStylePref.value = it.ordinal },
+        gridMaxLineSpan = gridMaxLineSpanPref.value,
+        onGridMaxLineSpanChange = { gridMaxLineSpanPref.value = it }
+    )
+
     AppScaffold(
         topBar = { scrollBehavior ->
             AppTopBar(
@@ -102,20 +118,15 @@ fun MapsMaterialsScreen(
                     Box {
                         IconButton(
                             shapes = IconButtonDefaults.shapes(),
-                            onClick = { listOptionsExpanded = true }
+                            onClick = { scope.launch {
+                                mapsEditViewModel.materialsListOptionsSheetState.show()
+                            } }
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Sort,
                                 contentDescription = stringResource(R.string.list_options)
                             )
                         }
-                        ListViewOptionsDropdown(
-                            expanded = listOptionsExpanded,
-                            onDismissRequest = { listOptionsExpanded = false },
-                            sortingPref = null,
-                            sortingReversedPref = null,
-                            stylePref = mapsEditViewModel.prefs.mapsMaterialsListStyle
-                        )
                     }
                 }
             )
@@ -213,7 +224,8 @@ fun MapsMaterialsScreen(
                         ListStyle.GRID -> LazyAdaptiveVerticalGrid(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(horizontal = 10.dp)
+                                .padding(horizontal = 10.dp),
+                            maxLineSpan = gridMaxLineSpanPref.value
                         ) { maxLineSpan: Int ->
                             item(span = { GridItemSpan(maxLineSpan) }) {
                                 Suggestions(
