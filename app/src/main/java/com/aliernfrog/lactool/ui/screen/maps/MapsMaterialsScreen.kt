@@ -82,7 +82,7 @@ fun MapsMaterialsScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val listStylePref = mapsEditViewModel.prefs.mapsMaterialsListOptions.styleGroup.getCurrent()
-    val gridMaxLineSpanPref = mapsEditViewModel.prefs.mapsListOptions.gridMaxLineSpanGroup.getCurrent()
+    val gridMaxLineSpanPref = mapsEditViewModel.prefs.mapsMaterialsListOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
 
     LaunchedEffect(Unit) {
