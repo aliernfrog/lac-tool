@@ -4,6 +4,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,12 +59,14 @@ import com.aliernfrog.lactool.ui.component.FloatingActionButton
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
-import com.aliernfrog.lactool.ui.component.ListViewOptionsDropdown
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SettingsButton
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.util.LazyGridScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.component.util.LazyListScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
+import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
+import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import kotlinx.coroutines.launch
@@ -77,7 +80,9 @@ fun WallpapersScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val listStyle = ListStyle.entries[wallpapersViewModel.prefs.wallpapersListStyle.value]
+    val listStylePref = wallpapersViewModel.prefs.wallpapersListOptions.styleGroup.getCurrent()
+    val gridMaxLineSpanPref = wallpapersViewModel.prefs.wallpapersListOptions.gridMaxLineSpanGroup.getCurrent()
+    val listStyle = ListStyle.entries[listStylePref.value]
     var showFABLabel by remember { mutableStateOf(true) }
 
     val mediaPickerLauncher = rememberLauncherForActivityResult(
@@ -93,6 +98,11 @@ fun WallpapersScreen(
         wallpapersViewModel.getWallpapersFile(context)
         wallpapersViewModel.fetchImportedWallpapers()
     }
+
+    ListViewOptionsSheet(
+        sheetState = wallpapersViewModel.listViewOptionsSheetState,
+        listViewOptionsPreference = wallpapersViewModel.prefs.wallpapersListOptions
+    )
 
     AppScaffold(
         topBar = { scrollBehavior ->
@@ -176,12 +186,12 @@ fun WallpapersScreen(
                         )
                     }
 
-                    itemsIndexed(wallpapersViewModel.wallpapersToShow) { index, wallpaper ->
+                    itemsIndexed(wallpapersViewModel.otherWallpapersToShow) { index, wallpaper ->
                         WallpaperButton(
                             wallpaper = wallpaper,
                             modifier = Modifier
                                 .padding(horizontal = 12.dp)
-                                .verticalSegmentedShape(index, totalSize = wallpapersViewModel.wallpapersToShow.size)
+                                .verticalSegmentedShape(index, totalSize = wallpapersViewModel.otherWallpapersToShow.size)
                         )
                     }
 
@@ -193,7 +203,8 @@ fun WallpapersScreen(
                     state = lazyGridState,
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    maxLineSpan = gridMaxLineSpanPref.value
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ListHeader(
@@ -201,7 +212,7 @@ fun WallpapersScreen(
                         )
                     }
 
-                    items(wallpapersViewModel.wallpapersToShow) {
+                    items(wallpapersViewModel.otherWallpapersToShow) {
                         WallpaperButton(
                             wallpaper = it,
                             contentScale = ContentScale.Crop,
@@ -222,16 +233,16 @@ fun WallpapersScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun Header(
     modifier: Modifier,
     wallpapersViewModel: WallpapersViewModel = koinViewModel(),
     wallpaperButton: @Composable (wallpaper: FileWrapper) -> Unit
 ) {
-    val hasAtLeastOneWallpaper = wallpapersViewModel.wallpapersToShow.isNotEmpty()
+    val scope = rememberCoroutineScope()
+    val hasAtLeastOneWallpaper = wallpapersViewModel.otherWallpapersToShow.isNotEmpty()
             || wallpapersViewModel.activeWallpaper != null
-    var listOptionsExpanded by remember { mutableStateOf(false) }
 
     Column(modifier) {
         FadeVisibility(hasAtLeastOneWallpaper) {
@@ -248,7 +259,9 @@ private fun Header(
                 )
                 Box {
                     IconButton(
-                        onClick = { listOptionsExpanded = true },
+                        onClick = { scope.launch {
+                            wallpapersViewModel.listViewOptionsSheetState.show()
+                        } },
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
@@ -256,13 +269,6 @@ private fun Header(
                             contentDescription = stringResource(R.string.list_options)
                         )
                     }
-                    ListViewOptionsDropdown(
-                        expanded = listOptionsExpanded,
-                        onDismissRequest = { listOptionsExpanded = false },
-                        sortingPref = wallpapersViewModel.prefs.wallpapersListSorting,
-                        sortingReversedPref = wallpapersViewModel.prefs.wallpapersListSortingReversed,
-                        stylePref = wallpapersViewModel.prefs.wallpapersListStyle
-                    )
                 }
             }
         }
@@ -272,8 +278,16 @@ private fun Header(
             visible = !hasAtLeastOneWallpaper,
             modifier = Modifier.fillMaxWidth()
         )
-        wallpapersViewModel.activeWallpaper?.let {
-            wallpaperButton(it)
+        AnimatedContent(
+            targetState = wallpapersViewModel.activeWallpaper,
+            modifier = Modifier.clip(AppComponentShape)
+        ) { activeWallpaper ->
+            if (activeWallpaper != null) wallpaperButton(activeWallpaper)
+        }
+        AnimatedVisibility(wallpapersViewModel.otherWallpapersToShow.isNotEmpty()) {
+            ExpressiveSection(
+                title = stringResource(R.string.wallpapers_list_other)
+            ) {}
         }
     }
 }

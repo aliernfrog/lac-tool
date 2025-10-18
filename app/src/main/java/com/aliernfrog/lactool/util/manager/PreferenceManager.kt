@@ -2,8 +2,6 @@ package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
 import android.os.Environment
-import com.aliernfrog.lactool.enum.ListSorting
-import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.ui.theme.Theme
@@ -34,22 +32,16 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val storageAccessType = intPreference("storageAccessType", StorageAccessType.SAF.ordinal, includeInDebugInfo = true)
 
     // Maps list
-    val mapsListSorting = intPreference("mapsListSorting", ListSorting.ALPHABETICAL.ordinal)
-    val mapsListSortingReversed = booleanPreference("mapsListSortingReversed", false)
-    val mapsListStyle = intPreference("mapsListStyle", ListStyle.LIST.ordinal)
+    val mapsListOptions = listViewOptionsPreference("mapsList")
 
     // Maps materials list
-    val mapsMaterialsListStyle = intPreference("mapsMaterialsListStyle", ListStyle.GRID.ordinal)
+    val mapsMaterialsListOptions = listViewOptionsPreference("mapsMaterialsList")
 
     // Wallpapers list
-    val wallpapersListSorting = intPreference("wallpapersListSorting", ListSorting.DATE.ordinal)
-    val wallpapersListSortingReversed = booleanPreference("wallpapersListSortingReversed", false)
-    val wallpapersListStyle = intPreference("wallpapersListStyle", ListStyle.GRID.ordinal)
+    val wallpapersListOptions = listViewOptionsPreference("wallpapersList")
 
     // Screenshots list
-    val screenshotsListSorting = intPreference("screenshotsListSorting", ListSorting.DATE.ordinal)
-    val screenshotsListSortingReversed = booleanPreference("screenshotsListSortingReversed", false)
-    val screenshotsListStyle = intPreference("screenshotsListStyle", ListStyle.GRID.ordinal)
+    val screenshotsListOptions = listViewOptionsPreference("screenshotsList")
 
     // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true, experimental = true, includeInDebugInfo = false)

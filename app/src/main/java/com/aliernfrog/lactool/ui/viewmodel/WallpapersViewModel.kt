@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
@@ -71,6 +72,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
 import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -79,9 +81,11 @@ class WallpapersViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     private val progressState: ProgressState,
-    private val contextUtils: ContextUtils
+    private val contextUtils: ContextUtils,
+    context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
+    val listViewOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
     private val wallpapersDir : String get() = prefs.lacWallpapersDir.value
@@ -92,10 +96,10 @@ class WallpapersViewModel(
     private var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
 
-    val wallpapersToShow: List<FileWrapper>
+    val otherWallpapersToShow: List<FileWrapper>
         get() {
-            val sorting = ListSorting.entries[prefs.wallpapersListSorting.value]
-            val reversed = prefs.wallpapersListSortingReversed.value
+            val sorting = ListSorting.entries[prefs.wallpapersListOptions.sorting.value]
+            val reversed = prefs.wallpapersListOptions.sortingReversed.value
             return importedWallpapers.sortedWith(sorting.comparator).let {
                 if (reversed) it.reversed() else it
             }
