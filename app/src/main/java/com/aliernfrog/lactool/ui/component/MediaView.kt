@@ -90,7 +90,7 @@ fun MediaView(
     val scope = rememberCoroutineScope()
     val zoomState = rememberZoomState()
     val isZoomedIn = zoomState.scale > 1f
-    val isIMEShown = insetsViewModel.imePadding > 0.dp
+    val isImeVisible = insetsViewModel.isImeVisible
     val bottomSheetState = rememberStandardBottomSheetState(
         skipHiddenState = false
     )
@@ -126,8 +126,8 @@ fun MediaView(
     }
 
     // Expand sheet to add IME padding, if IME is shown
-    LaunchedEffect(isIMEShown) {
-        if (isIMEShown) bottomSheetState.expand()
+    LaunchedEffect(isImeVisible) {
+        if (isImeVisible) bottomSheetState.expand()
     }
 
     BottomSheetScaffold(

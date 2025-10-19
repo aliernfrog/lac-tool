@@ -35,6 +35,7 @@ import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.supportsPerAppLanguagePreferences
 import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
+import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
@@ -67,10 +68,15 @@ class MainViewModel(
     val navigationBackStack = mutableStateListOf<Any>(
         NavigationConstant.INITIAL_DESTINATION
     )
+    var currentMainDestination by mutableStateOf(NavigationConstant.INITIAL_MAIN_DESTINATION)
+    val isAtMainDestination: Boolean
+        get() = navigationBackStack.last() == MainDestinationGroup
 
     private val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
     private val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
+
+    @Suppress("KotlinConstantConditions")
     val applicationVersionLabel = "$applicationVersionName (${
         BuildConfig.GIT_COMMIT.ifBlank { applicationVersionCode.toString() }
     }${

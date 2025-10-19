@@ -5,7 +5,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -34,7 +33,7 @@ fun FloatingActionButton(
 ) {
     if (text == null) FloatingActionButton(
         onClick = onClick,
-        modifier = modifier.systemBarsPadding(),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         containerColor = containerColor,
         contentColor = contentColor
@@ -42,7 +41,7 @@ fun FloatingActionButton(
         Icon(imageVector = icon, contentDescription = null, tint = contentColor)
     } else SmallExtendedFloatingActionButton(
         onClick = onClick,
-        modifier = modifier.systemBarsPadding(),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         containerColor = containerColor,
         contentColor = contentColor

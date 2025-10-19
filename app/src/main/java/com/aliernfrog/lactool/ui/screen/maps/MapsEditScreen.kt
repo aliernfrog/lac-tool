@@ -87,7 +87,8 @@ fun MapsEditScreen(
             FloatingActionButton(
                 icon = Icons.Default.Save,
                 text = stringResource(R.string.mapsEdit_save),
-                showText = showFABLabel
+                showText = showFABLabel,
+                modifier = Modifier.navigationBarsPadding()
             ) {
                 scope.launch {
                     mapsEditViewModel.saveAndFinishEditing(

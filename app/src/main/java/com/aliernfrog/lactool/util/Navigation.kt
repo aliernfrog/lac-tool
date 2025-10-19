@@ -12,8 +12,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
 
 object NavigationConstant {
-    val INITIAL_DESTINATION = MainDestination.MAPS
+    val INITIAL_DESTINATION = MainDestinationGroup
+    val INITIAL_MAIN_DESTINATION = MainDestination.MAPS
 }
+
+object MainDestinationGroup
 
 enum class MainDestination(
     @StringRes val label: Int,
