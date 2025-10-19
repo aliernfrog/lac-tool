@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +28,6 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,18 +40,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.util.Destination
-import com.aliernfrog.lactool.util.extension.set
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.util.MainDestination
+import com.aliernfrog.lactool.util.NavigationBarType
+import com.aliernfrog.lactool.util.extension.clearAndAdd
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun BaseScaffold(
-    navController: NavController,
+    mainViewModel: MainViewModel = koinViewModel(),
     content: @Composable (
         paddingValues: PaddingValues
     ) -> Unit
@@ -63,48 +60,42 @@ fun BaseScaffold(
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
 
-    val destinations = remember { Destination.entries.toList() }
-    val mainDestinations = remember { destinations.filter { it.showInNavigationBar } }
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-    val currentDestination = destinations.find { it.route == currentRoute }
+    val mainDestinations = remember { MainDestination.entries }
+    val currentNavEntry = mainViewModel.navigationBackStack.lastOrNull()
+    val currentMainDestination = mainDestinations.find { it == currentNavEntry }
 
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
-    val showNavigationRail: Boolean? = if (mainDestinations.size <= 1) null
-    else currentDestination?.showNavigationBar != false && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
+    val navigationBarType = if (mainDestinations.size <= 1 || currentMainDestination == null) NavigationBarType.HIDDEN
+    else if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) NavigationBarType.BOTTOM_BAR
+    else NavigationBarType.SIDE_RAIL
     var sideBarWidth by remember { mutableStateOf(0.dp) }
 
-    fun isDestinationSelected(destination: Destination): Boolean {
-        return destination.route == currentDestination?.route
+    fun isDestinationSelected(destination: MainDestination): Boolean {
+        return destination == currentMainDestination
     }
 
-    fun changeDestination(destination: Destination) {
-        if (!isDestinationSelected(destination) && currentDestination?.showNavigationBar != false)
-            navController.set(destination)
-    }
-
-    fun toDp(pxs: Int): Dp {
-        with(density) {
-            return pxs.toDp()
-        }
+    fun changeDestination(destination: MainDestination) {
+        if (!isDestinationSelected(destination) && currentMainDestination != null)
+            mainViewModel.navigationBackStack.clearAndAdd(destination)
     }
 
     Scaffold(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(
-                start = if (showNavigationRail == true) sideBarWidth else 0.dp
+                start = if (navigationBarType == NavigationBarType.SIDE_RAIL) sideBarWidth else 0.dp
             ),
         bottomBar = {
-            if (showNavigationRail == false) BottomBar(
+            BottomBar(
+                visible = navigationBarType == NavigationBarType.BOTTOM_BAR,
                 destinations = mainDestinations,
-                currentDestination = currentDestination,
                 isDestinationSelected = ::isDestinationSelected,
                 onNavigateRequest = { changeDestination(it) }
             )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
-        val paddingValues = if (showNavigationRail == true || currentDestination?.showNavigationBar != false) it
+        val paddingValues = if (navigationBarType == NavigationBarType.BOTTOM_BAR) it
         else PaddingValues(
             start = it.calculateStartPadding(layoutDirection),
             top = it.calculateTopPadding(),
@@ -114,29 +105,28 @@ fun BaseScaffold(
         content(paddingValues)
     }
 
-    if (showNavigationRail == true) SideBarRail(
+    SideBarRail(
+        visible = navigationBarType == NavigationBarType.SIDE_RAIL,
         destinations = mainDestinations,
-        currentDestination = currentDestination,
         isDestinationSelected = ::isDestinationSelected,
-        onWidthChange = { sideBarWidth = toDp(it) },
+        onWidthChange = {
+            with(density) {
+                sideBarWidth = it.toDp()
+            }
+        },
         onNavigateRequest = { changeDestination(it) }
     )
-
-    LaunchedEffect(currentDestination) {
-        if (currentDestination?.hasNotification?.value == true)
-            currentDestination.hasNotification.value = false
-    }
 }
 
 @Composable
 private fun BottomBar(
-    destinations: List<Destination>,
-    currentDestination: Destination?,
-    isDestinationSelected: (Destination) -> Boolean,
-    onNavigateRequest: (Destination) -> Unit
+    visible: Boolean,
+    destinations: List<MainDestination>,
+    isDestinationSelected: (MainDestination) -> Boolean,
+    onNavigateRequest: (MainDestination) -> Unit
 ) {
     AnimatedVisibility(
-        visible = currentDestination?.showNavigationBar != false,
+        visible = visible,
         enter = slideInVertically(animationSpec = tween(durationMillis = 150), initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(animationSpec = tween(durationMillis = 150), targetOffsetY = { it }) + fadeOut()
     ) {
@@ -155,7 +145,7 @@ private fun BottomBar(
                         )
                     },
                     label = {
-                        Text(stringResource(it.labelId))
+                        Text(stringResource(it.label))
                     }
                 )
             }
@@ -165,14 +155,14 @@ private fun BottomBar(
 
 @Composable
 private fun SideBarRail(
-    destinations: List<Destination>,
-    currentDestination: Destination?,
-    isDestinationSelected: (Destination) -> Boolean,
+    visible: Boolean,
+    destinations: List<MainDestination>,
+    isDestinationSelected: (MainDestination) -> Boolean,
     onWidthChange: (Int) -> Unit,
-    onNavigateRequest: (Destination) -> Unit
+    onNavigateRequest: (MainDestination) -> Unit
 ) {
     AnimatedVisibility(
-        visible = currentDestination?.showNavigationBar != false,
+        visible = visible,
         enter = slideInHorizontally(animationSpec = tween(durationMillis = 150), initialOffsetX = { -it }) + fadeIn(),
         exit = slideOutHorizontally(animationSpec = tween(durationMillis = 150), targetOffsetX = { -it }) + fadeOut()
     ) {
@@ -195,7 +185,7 @@ private fun SideBarRail(
                         )
                     },
                     label = {
-                        Text(stringResource(it.labelId))
+                        Text(stringResource(it.label))
                     }
                 )
             }
@@ -205,22 +195,13 @@ private fun SideBarRail(
 
 @Composable
 private fun NavigationItemIcon(
-    destination: Destination,
+    destination: MainDestination,
     selected: Boolean
 ) {
-    @Composable fun ItemIcon() {
-        Icon(
-            imageVector = if (selected) destination.vectorFilled!! else destination.vectorOutlined!!,
-            contentDescription = null
-        )
-    }
-
-    if (destination.hasNotification.value) BadgedBox(
-        badge = { Badge() }
-    ) {
-        ItemIcon()
-    }
-    else ItemIcon()
+    Icon(
+        imageVector = if (selected) destination.vectorFilled else destination.vectorOutlined,
+        contentDescription = null
+    )
 }
 
 @Composable

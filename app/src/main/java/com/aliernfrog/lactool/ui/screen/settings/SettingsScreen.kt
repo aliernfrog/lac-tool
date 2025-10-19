@@ -2,7 +2,6 @@ package com.aliernfrog.lactool.ui.screen.settings
 
 import android.os.Build
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -37,9 +36,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.ui.component.AppScaffold
@@ -52,49 +48,15 @@ import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.expressive.toRowFriendlyColor
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
-import com.aliernfrog.lactool.util.extension.popBackStackSafe
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-
-@Composable
-fun SettingsScreen(
-    onNavigateBackRequest: () -> Unit
-) {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = SettingsPage.ROOT.id,
-        enterTransition = {
-            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) + fadeIn()
-        },
-        exitTransition = {
-            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start) + fadeOut()
-        },
-        popEnterTransition = {
-            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End) + fadeIn()
-        },
-        popExitTransition = {
-            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) + fadeOut()
-        }
-    ) {
-        SettingsPage.entries.forEach { page ->
-            composable(page.id) {
-                page.content (
-                    { navController.popBackStackSafe(onNoBackStack = onNavigateBackRequest) },
-                    { navController.navigate(it.id) }
-                )
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsRootPage(
     mainViewModel: MainViewModel = koinViewModel(),
     onNavigateBackRequest: () -> Unit,
-    onNavigateRequest: (SettingsPage) -> Unit
+    onNavigateRequest: (SettingsDestination) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -123,9 +85,9 @@ private fun SettingsRootPage(
 
             SettingsCategory.entries
                 .forEach { category ->
-                    val pages = SettingsPage.entries
+                    val pages = SettingsDestination.entries
                         .filter {
-                            it.category == category && !(it == SettingsPage.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled.value)
+                            it.category == category && !(it == SettingsDestination.EXPERIMENTAL && !mainViewModel.prefs.experimentalOptionsEnabled.value)
                         }
                     if (pages.isNotEmpty()) ExpressiveSection(
                         title = stringResource(category.title)
@@ -133,7 +95,7 @@ private fun SettingsRootPage(
                         val buttons: List<@Composable () -> Unit> = pages.map { page -> {
                             ExpressiveButtonRow(
                                 title = stringResource(page.title),
-                                description = if (page == SettingsPage.ABOUT) mainViewModel.applicationVersionLabel else stringResource(page.description),
+                                description = if (page == SettingsDestination.ABOUT) mainViewModel.applicationVersionLabel else stringResource(page.description),
                                 icon = {
                                     ExpressiveRowIcon(
                                         painter = rememberVectorPainter(page.icon),
@@ -206,8 +168,7 @@ private fun UpdateNotification(
 }
 
 @Suppress("unused")
-enum class SettingsPage(
-    val id: String,
+enum class SettingsDestination(
     @StringRes val title: Int,
     @StringRes val description: Int,
     val icon: ImageVector,
@@ -215,11 +176,10 @@ enum class SettingsPage(
     val category: SettingsCategory?,
     val content: @Composable (
         onNavigateBackRequest: () -> Unit,
-        onNavigateRequest: (SettingsPage) -> Unit
+        onNavigateRequest: (SettingsDestination) -> Unit
     ) -> Unit
 ) {
     ROOT(
-        id = "root",
         title = R.string.settings,
         description = R.string.settings,
         icon = Icons.Outlined.Settings,
@@ -233,7 +193,6 @@ enum class SettingsPage(
     ),
 
     MAPS(
-        id = "maps",
         title = R.string.settings_maps,
         description = R.string.settings_maps_description,
         icon = Icons.Rounded.PinDrop,
@@ -245,7 +204,6 @@ enum class SettingsPage(
     ),
 
     STORAGE(
-        id = "files",
         title = R.string.settings_storage,
         description = R.string.settings_storage_description,
         icon = Icons.Rounded.FolderOpen,
@@ -259,7 +217,6 @@ enum class SettingsPage(
     ),
 
     APPEARANCE(
-        id = "appearance",
         title = R.string.settings_appearance,
         description = R.string.settings_appearance_description,
         icon = Icons.Rounded.Palette,
@@ -271,7 +228,6 @@ enum class SettingsPage(
     ),
 
     LANGUAGE(
-        id = "language",
         title = R.string.settings_language,
         description = R.string.settings_language_description,
         icon = Icons.Rounded.Translate,
@@ -283,7 +239,6 @@ enum class SettingsPage(
     ),
 
     EXPERIMENTAL(
-        id = "experimental",
         title = R.string.settings_experimental,
         description = R.string.settings_experimental_description,
         icon = Icons.Rounded.Science,
@@ -295,7 +250,6 @@ enum class SettingsPage(
     ),
 
     ABOUT(
-        id = "about",
         title = R.string.settings_about,
         description = R.string.settings_about,
         icon = Icons.Rounded.Info,
@@ -312,7 +266,6 @@ enum class SettingsPage(
     ),
 
     LIBS(
-        id = "libs",
         title = R.string.settings_about_libs,
         description = R.string.settings_about_libs_description,
         icon = Icons.Rounded.Book,

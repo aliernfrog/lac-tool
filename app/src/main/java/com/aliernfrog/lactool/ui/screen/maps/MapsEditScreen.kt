@@ -41,8 +41,9 @@ import com.aliernfrog.lactool.ui.component.form.getExpandableRowDefaultExpandedC
 import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
-import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.getName
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import kotlinx.coroutines.Dispatchers
@@ -52,13 +53,19 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsEditScreen(
+    mainViewModel: MainViewModel = koinViewModel(),
     mapsEditViewModel: MapsEditViewModel = koinViewModel(),
-    onNavigateBackRequest: () -> Unit,
-    onNavigateRequest: (Destination) -> Unit
+    onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var showFABLabel by remember { mutableStateOf(true) }
+
+    BackHandler {
+        scope.launch {
+            mapsEditViewModel.onNavigationBack(onNavigateBackRequest)
+        }
+    }
 
     ScrollAccessibilityListener(
         scrollState = mapsEditViewModel.scrollState,
@@ -93,7 +100,9 @@ fun MapsEditScreen(
     ) {
         Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
             GeneralActions(
-                onNavigateRequest = onNavigateRequest
+                onNavigateRequest = {
+                    mainViewModel.navigationBackStack.add(it)
+                }
             )
             FadeVisibility(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
                 OptionsActions()
@@ -113,16 +122,13 @@ fun MapsEditScreen(
             }
         }
     )
-    BackHandler {
-        scope.launch { mapsEditViewModel.onNavigationBack(onNavigateBackRequest) }
-    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GeneralActions(
     mapsEditViewModel: MapsEditViewModel = koinViewModel(),
-    onNavigateRequest: (Destination) -> Unit
+    onNavigateRequest: (SubDestination) -> Unit
 ) {
     ExpressiveSection(title = stringResource(R.string.mapsEdit_general)) {
         VerticalSegmentor(
@@ -174,7 +180,7 @@ private fun GeneralActions(
             {
                 FadeVisibility(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
                     val onClick = {
-                        onNavigateRequest(Destination.MAPS_ROLES)
+                        onNavigateRequest(SubDestination.MAPS_ROLES)
                     }
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsRoles),
@@ -201,7 +207,7 @@ private fun GeneralActions(
             {
                 FadeVisibility(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
                     val onClick = {
-                        onNavigateRequest(Destination.MAPS_MATERIALS)
+                        onNavigateRequest(SubDestination.MAPS_MATERIALS)
                     }
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsMaterials),

@@ -4,10 +4,11 @@ kotlin-plugin = "2.2.0"
 
 android-desugar = "2.1.5"
 
-androidx-activity = "1.10.1"
+androidx-activity = "1.12.0-alpha02"
+androidx-appcompat = "1.7.1"
 androidx-ktx = "1.16.0"
 androidx-lifecycle = "2.9.0"
-androidx-navigation = "2.9.0"
+androidx-navigation3-core = "1.0.0-alpha03"
 androidx-splashscreen = "1.0.1"
 
 compose = "1.8.3"
@@ -28,10 +29,12 @@ zoomable = "2.8.1"
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-ktx" }
 androidx-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
-androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
+androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "androidx-navigation3-core" }
+androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "androidx-navigation3-core" }
 androidx-splashscreen = { group = "androidx.core", name= "core-splashscreen", version.ref = "androidx-splashscreen" }
 
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
