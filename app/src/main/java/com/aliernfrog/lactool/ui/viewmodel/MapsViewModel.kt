@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -63,6 +62,7 @@ import java.io.File
 import androidx.core.net.toUri
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import com.aliernfrog.lactool.util.MapsNavigationBackStack
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -95,7 +95,7 @@ class MapsViewModel(
         get() = progressState.currentProgress
         set(value) { progressState.currentProgress = value }
 
-    val mapsBackStack = mutableStateListOf<MapFile>()
+    val mapsBackStack = MapsNavigationBackStack()
 
     fun viewMapDetails(map: Any) {
         try {

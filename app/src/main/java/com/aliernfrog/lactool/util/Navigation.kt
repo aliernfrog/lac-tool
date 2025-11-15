@@ -12,9 +12,12 @@ import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.rounded.PinDrop
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 
 object NavigationConstant {
     val INITIAL_DESTINATION = MainDestinationGroup
@@ -59,6 +62,31 @@ enum class NavigationBarType {
     HIDDEN,
     BOTTOM_BAR,
     SIDE_RAIL
+}
+
+class MapsNavigationBackStack {
+    companion object {
+        object MapsList
+    }
+
+    private val _backStack = mutableStateListOf<Any>(MapsList)
+
+    val backStack: List<Any>
+        get() = _backStack
+
+    fun add(map: MapFile) {
+        _backStack.add(map)
+    }
+
+    fun removeLast() {
+        _backStack.removeLastIfMultiple()
+    }
+
+    fun removeIf(predicate: (MapFile) -> Boolean) {
+        _backStack.removeIf {
+            it is MapFile && predicate(it)
+        }
+    }
 }
 
 val slideTransitionMetadata = NavDisplay.transitionSpec {

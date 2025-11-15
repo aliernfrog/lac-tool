@@ -18,8 +18,7 @@ import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import com.aliernfrog.lactool.util.MainDestination
-import com.aliernfrog.lactool.util.extension.removeLastWideCompatibility
+import com.aliernfrog.lactool.util.MapsNavigationBackStack
 import com.aliernfrog.lactool.util.slideTransitionMetadata
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -60,9 +59,9 @@ fun MapsPermissionsScreen(
         onNavigateSettingsRequest = onNavigateSettingsRequest
     ) {
         NavDisplay(
-            backStack = listOf(MainDestination.MAPS).plus(mapsViewModel.mapsBackStack),
+            backStack = mapsViewModel.mapsBackStack.backStack,
             entryProvider = entryProvider {
-                entry(MainDestination.MAPS) {
+                entry(MapsNavigationBackStack.Companion.MapsList) {
                     MapsListScreen(
                         onNavigateSettingsRequest = onNavigateSettingsRequest,
                         onBackClick = null,
@@ -80,7 +79,7 @@ fun MapsPermissionsScreen(
                         map = it,
                         onNavigateSettingsRequest = onNavigateSettingsRequest,
                         onNavigateBackRequest = {
-                            mapsViewModel.mapsBackStack.removeLastWideCompatibility()
+                            mapsViewModel.mapsBackStack.removeLast()
                         }
                     )
                 }
