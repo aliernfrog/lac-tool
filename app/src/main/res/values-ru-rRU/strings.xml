@@ -43,7 +43,6 @@
     <string name="permissions_saf_allFiles_description">Разрешите LAC Tool получить доступ ко всем файлам, это может ускорить настройку</string>
     <string name="permissions_setupShizuku">Использовать Shizuku</string>
     <string name="permissions_setupShizuku_description">Вам нужно использовать Shizuku, чтобы разрешить LAC Tool получить доступ к папкам LAC.\nЭто нужно из-за того, что приложение Files на вашем устройстве не позволяет другим приложениям получать доступ к файлам внутри Android/data.\nВы можете изменить режим Shizuku в любое время в настройках.</string>
-    <string name="permissions_shizuku_introduction">Shizuku - это приложение, которое позволяет другим приложениям использовать разрешения shell, используя беспроводную отладку.\nРежим Shizuku можно отключить в разделе Настройки &gt; Storage &gt; Storage access type</string>
     <string name="permissions_shizuku_openShizuku">Открыть Shizuku</string>
     <string name="permissions_shizuku_installShizuku">Установить Shizuku</string>
     <string name="permissions_shizuku_install_title">Установите Shizuku, чтобы начать</string>

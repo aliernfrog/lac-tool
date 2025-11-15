@@ -39,7 +39,6 @@
     <string name="permissions_notRecommendedFolder_useAnyway">به هر حال از پوشه انتخاب شده استفاده کنید</string>
     <string name="permissions_setupShizuku">از Shizuku استفاده کنید</string>
     <string name="permissions_setupShizuku_description">باید از Shizuku استفاده کنید تا به ابزار LAC اجازه دهید به پوشه‌های LAC دسترسی پیدا کند\nبه این دلیل است که برنامه Files در دستگاه شما به برنامه‌ها اجازه دسترسی به فایل‌های داخل Android/داده را نمی‌دهد\nشما می‌توانید حالت Shizuku را در هر زمان از تنظیمات غیرفعال کنید.</string>
-    <string name="permissions_shizuku_introduction">Shizuku برنامه‌ای است که به برنامه‌ها اجازه می‌دهد با استفاده از اشکال‌زدایی بی‌سیم از مجوزهای پوسته استفاده کنند.\nابزار LAC همچنین می‌تواند از آن برای دسترسی به پوشه‌های LAC استفاده کند.</string>
     <string name="permissions_shizuku_openShizuku">بازکردن شیزکو</string>
     <string name="permissions_shizuku_install_title">برای شروع Shizuku را نصب کنید</string>
     <string name="permissions_shizuku_notRunning">شیزوکو در حال اجرا نیست</string>

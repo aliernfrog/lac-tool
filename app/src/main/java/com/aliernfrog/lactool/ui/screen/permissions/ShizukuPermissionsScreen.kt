@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.ShizukuStatus
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.component.CardWithActions
@@ -48,7 +49,9 @@ import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
+import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
 import com.aliernfrog.lactool.ui.theme.AppComponentShape
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
@@ -311,7 +314,8 @@ private fun ShizukuSetupGuide(
             .padding(12.dp)
             .verticalSegmentedShape()
     ) {
-        // TODO navigate to settings > storage after migration to navigation3
+        val mainViewModel = getKoinInstance<MainViewModel>()
+        mainViewModel.navigationBackStack.add(SettingsDestination.STORAGE)
     }
 
     Spacer(Modifier.navigationBarsPadding())
