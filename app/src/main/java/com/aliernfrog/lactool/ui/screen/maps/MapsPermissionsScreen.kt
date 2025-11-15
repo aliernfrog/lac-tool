@@ -1,6 +1,5 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.material3.Text
@@ -9,12 +8,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
+import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
+import com.aliernfrog.lactool.util.MainDestination
+import com.aliernfrog.lactool.util.extension.removeLastWideCompatibility
+import com.aliernfrog.lactool.util.slideTransitionMetadata
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -53,21 +59,33 @@ fun MapsPermissionsScreen(
         title = stringResource(R.string.maps),
         onNavigateSettingsRequest = onNavigateSettingsRequest
     ) {
-        AnimatedContent(mapsViewModel.mapListShown) { showMapList ->
-            if (showMapList) MapsListScreen(
-                onNavigateSettingsRequest = onNavigateSettingsRequest,
-                onBackClick = if (mapsViewModel.mapListBackButtonShown) {
-                    { mapsViewModel.mapListShown = false }
-                } else null,
-                onMapPick = {
-                    mapsViewModel.chooseMap(it)
-                    mapsViewModel.mapListShown = false
+        NavDisplay(
+            backStack = listOf(MainDestination.MAPS).plus(mapsViewModel.mapsBackStack),
+            entryProvider = entryProvider {
+                entry(MainDestination.MAPS) {
+                    MapsListScreen(
+                        onNavigateSettingsRequest = onNavigateSettingsRequest,
+                        onBackClick = null,
+                        onMapPick = {
+                            mapsViewModel.viewMapDetails(it)
+                            mapsViewModel.mapListShown = false
+                        }
+                    )
                 }
-            )
-            else MapsScreen(
-                onNavigateSettingsRequest = onNavigateSettingsRequest
-            )
-        }
+
+                entry<MapFile>(
+                    metadata = slideTransitionMetadata
+                ) {
+                    MapDetailsScreen(
+                        map = it,
+                        onNavigateSettingsRequest = onNavigateSettingsRequest,
+                        onNavigateBackRequest = {
+                            mapsViewModel.mapsBackStack.removeLastWideCompatibility()
+                        }
+                    )
+                }
+            }
+        )
     }
 
     mapsViewModel.customDialogTitleAndText?.let { (title, text) ->

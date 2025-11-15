@@ -23,6 +23,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // Maps options
     val showChosenMapThumbnail = booleanPreference("chosenMapThumbnail", true)
     val showMapThumbnailsInList = booleanPreference("showMapThumbnailsList", true)
+    val stackupMaps = booleanPreference("stackupMaps", false)
 
     // Directory options
     val lacMapsDir = stringPreference("mapsDir", "${externalStorageRoot}Android/data/com.MA.LAC/files/editor", experimental = true)

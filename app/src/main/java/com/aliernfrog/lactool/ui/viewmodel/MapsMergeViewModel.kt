@@ -62,7 +62,7 @@ class MapsMergeViewModel(
             isMerging = false
             mapMerger.clearMaps()
             // No need to update merger state here because it navigates back after finishing
-            mapsViewModel.chooseMap(mapsFile.findFile(newFileName))
+            mapsViewModel.viewMapDetails(mapsFile.findFile(newFileName)!!)
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
         }
         mainViewModel.navigationBackStack.removeLastIfMultiple()

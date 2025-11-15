@@ -113,7 +113,7 @@ class MapFile(
      * Renames the map.
      */
     fun rename(
-        newName: String = resolveMapNameInput()
+        newName: String
     ): MapActionResult {
         val outputName = fileName.replaceFirst(name, newName)
         if (file.parentFile?.findFile(outputName)?.exists() == true) return MapActionResult(
@@ -135,7 +135,7 @@ class MapFile(
      */
     fun duplicate(
         context: Context,
-        newName: String = mapsViewModel.resolveMapNameInput()
+        newName: String
     ): MapActionResult {
         val outputName = fileName.replaceFirst(name, newName)
         if (file.parentFile?.findFile(outputName)?.exists() == true) return MapActionResult(
@@ -159,7 +159,7 @@ class MapFile(
      */
     fun import(
         context: Context,
-        withName: String = resolveMapNameInput()
+        withName: String = this.name
     ): MapActionResult {
         if (importedState == MapImportedState.IMPORTED) return MapActionResult(successful = false)
         val newFileName = "$withName.txt"
@@ -179,7 +179,7 @@ class MapFile(
      */
     fun export(
         context: Context,
-        withName: String = resolveMapNameInput()
+        withName: String = this.name
     ): MapActionResult {
         if (importedState == MapImportedState.EXPORTED) return MapActionResult(successful = false)
         val newFileName = "$withName.txt"
@@ -232,14 +232,7 @@ class MapFile(
         thumbnailModel = null
     }
 
-    /**
-     * Returns the user-provided map name if this map is chosen.
-     */
-    fun resolveMapNameInput(): String {
-        return if (mapsViewModel.chosenMap?.path == path) mapsViewModel.resolveMapNameInput() else name
-    }
-
-    suspend fun runInIOThreadSafe(block: () -> Unit) {
+    suspend fun runInIOThreadSafe(block: suspend () -> Unit) {
         withContext(Dispatchers.IO) {
             try {
                 block()

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -128,16 +130,27 @@ fun GridMapItem(
     selected: Boolean?,
     showMapThumbnail: Boolean,
     modifier: Modifier = Modifier,
+    aspectRatio: Float? = 1f,
+    placeholderIcon: ImageVector = Icons.Outlined.PinDrop,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = contentColorFor(containerColor),
     onSelectedChange: (Boolean) -> Unit,
     onLongClick: () -> Unit,
     onClick: () -> Unit
 ) {
+    val density = LocalDensity.current
+    var width by remember { mutableStateOf(0.dp) }
+
     CompositionLocalProvider(LocalContentColor provides contentColor) {
         Box(
             modifier = modifier
-                .aspectRatio(1f)
+                .onSizeChanged {
+                    width = with(density) { it.width.toDp() }
+                }
+                .then(
+                    if (aspectRatio != null) Modifier.aspectRatio(aspectRatio)
+                    else Modifier
+                )
                 .background(containerColor)
                 .combinedClickableWithColor(
                     onClick = onClick,
@@ -146,11 +159,14 @@ fun GridMapItem(
                 )
         ) {
             Icon(
-                imageVector = Icons.Outlined.PinDrop,
+                imageVector = placeholderIcon,
                 contentDescription = null,
                 modifier = Modifier
-                    .aspectRatio(1f)
-                    .fillMaxWidth()
+                    .then(
+                        if (aspectRatio != null) Modifier.aspectRatio(aspectRatio)
+                        else Modifier
+                    )
+                    .fillMaxSize()
                     .padding(
                         top = 16.dp,
                         bottom = 40.dp,
@@ -196,7 +212,8 @@ fun GridMapItem(
                     )
                 )
                 ImageButtonInfo(
-                    text = map.readableSize
+                    text = if (width > 150.dp) "${map.readableSize} | ${map.readableLastModified}"
+                    else map.readableSize
                 )
             }
 
