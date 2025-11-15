@@ -317,6 +317,8 @@
     <string name="settings_language_system_notAvailable">{SYSTEM_LANGUAGE} is not available</string>
     <string name="settings_language_other">Other languages</string>
     <string name="settings_language_selected">Selected</string>
+    <string name="settings_language_progress_percent">{PERCENT}% translated</string>
+    <string name="settings_language_progress_base">Base language</string>
     <string name="settings_about">About</string>
     <string name="settings_about_changelog">Changelog</string>
     <string name="settings_about_update">Update</string>

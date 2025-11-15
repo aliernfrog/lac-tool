@@ -88,12 +88,12 @@ class MainViewModel(
         }
     })"
 
-    private val defaultLanguage = GeneralUtil.getLanguageFromCode("en-US")!!
-    val deviceLanguage = LocaleManagerCompat.getSystemLocales(context)[0]?.toLanguage() ?: defaultLanguage
+    val baseLanguage = GeneralUtil.getLanguageFromCode("en-US")!!
+    val deviceLanguage = LocaleManagerCompat.getSystemLocales(context)[0]?.toLanguage() ?: baseLanguage
 
     private var _appLanguage by mutableStateOf<Language?>(null)
     var appLanguage: Language?
-        get() = _appLanguage ?: deviceLanguage.getAvailableLanguage() ?: defaultLanguage
+        get() = _appLanguage ?: deviceLanguage.getAvailableLanguage() ?: baseLanguage
         set(language) {
             prefs.language.value = language?.fullCode ?: ""
             val localeListCompat = if (language == null) LocaleListCompat.getEmptyLocaleList()
