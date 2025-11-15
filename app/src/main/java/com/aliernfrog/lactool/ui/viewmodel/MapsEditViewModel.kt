@@ -36,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
@@ -58,7 +57,7 @@ import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
-import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -73,12 +72,8 @@ class MapsEditViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     private val progressState: ProgressState,
-    private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
-    private val navController: NavController
-        get() = mainViewModel.navController
-    
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -111,6 +106,8 @@ class MapsEditViewModel(
 
     @SuppressLint("Recycle")
     suspend fun openMap(map: MapFile, context: Context) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
+
         mapFile = map.file
         withContext(Dispatchers.IO) {
             val inputStream = mapFile?.inputStream(context)
@@ -131,7 +128,7 @@ class MapsEditViewModel(
             )
             inputStream.close()
         }
-        navController.navigate(Destination.MAPS_EDIT.route)
+        mainViewModel.navigationBackStack.add(SubDestination.MAPS_EDIT)
     }
 
     fun setServerName(serverName: String) {

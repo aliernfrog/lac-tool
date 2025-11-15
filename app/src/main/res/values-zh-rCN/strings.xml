@@ -43,7 +43,6 @@
     <string name="permissions_saf_allFiles_description">让 LAC Tool 访问所有文件，这可能更容易设置</string>
     <string name="permissions_setupShizuku">使用 Shizuku</string>
     <string name="permissions_setupShizuku_description">您需要使用 Shizuku 让 LAC Tool 访问 LAC 文件夹。\n这是因为您设备上的“文件”应用不允许应用访问 Android/data 内的文件。\n您可以随时从设置中切换 Shizuku 模式。</string>
-    <string name="permissions_shizuku_introduction">Shizuku 是一款允许其他应用通过无线调试使用 shell 权限的应用。\n您可以从“设置 &gt; 存储 &gt; 存储访问类型”中禁用 Shizuku 模式</string>
     <string name="permissions_shizuku_openShizuku">打开 Shizuku</string>
     <string name="permissions_shizuku_install_title">安装 Shizuku 开始使用</string>
     <string name="permissions_shizuku_notRunning">Shizuku 未运行</string>

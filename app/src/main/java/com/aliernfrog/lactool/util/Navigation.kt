@@ -1,82 +1,57 @@
 package com.aliernfrog.lactool.util
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PinDrop
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.PinDrop
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
 
 object NavigationConstant {
-    val INITIAL_DESTINATION = Destination.MAPS.route
+    val INITIAL_DESTINATION = MainDestinationGroup
+    val INITIAL_MAIN_DESTINATION = MainDestination.MAPS
 }
 
-enum class Destination(
-    val route: String,
-    val labelId: Int,
-    val vectorFilled: ImageVector? = null,
-    val vectorOutlined: ImageVector? = null,
-    val showInNavigationBar: Boolean = true,
-    val showNavigationBar: Boolean = showInNavigationBar,
-    val hasNotification: MutableState<Boolean> = mutableStateOf(false)
+object MainDestinationGroup
+
+enum class MainDestination(
+    @StringRes val label: Int,
+    val vectorFilled: ImageVector,
+    val vectorOutlined: ImageVector
 ) {
     MAPS(
-        route = "maps",
-        labelId = R.string.maps,
+        label = R.string.maps,
         vectorFilled = Icons.Rounded.PinDrop,
         vectorOutlined = Icons.Outlined.PinDrop
     ),
 
-    MAPS_EDIT(
-        route = "mapsEdit",
-        labelId = R.string.mapsEdit,
-        showInNavigationBar = false
-    ),
-
-    MAPS_ROLES(
-        route = "mapsRoles",
-        labelId = R.string.mapsRoles,
-        showInNavigationBar = false
-    ),
-
-    MAPS_MATERIALS(
-        route = "mapsMaterials",
-        labelId = R.string.mapsMaterials,
-        showInNavigationBar = false
-    ),
-
-    MAPS_MERGE(
-        route = "mapsMerge",
-        labelId = R.string.mapsMerge,
-        showInNavigationBar = false
-    ),
-
     WALLPAPERS(
-        route = "wallpapers",
-        labelId = R.string.wallpapers,
+        label = R.string.wallpapers,
         vectorFilled = Icons.Default.Photo,
         vectorOutlined = Icons.Outlined.Photo
     ),
 
     SCREENSHOTS(
-        route = "screenshots",
-        labelId = R.string.screenshots,
+        label = R.string.screenshots,
         vectorFilled = Icons.Default.PhotoCamera,
         vectorOutlined = Icons.Outlined.PhotoCamera
-    ),
-
-    SETTINGS(
-        route = "settings",
-        labelId = R.string.settings,
-        vectorFilled = Icons.Default.Settings,
-        vectorOutlined = Icons.Outlined.Settings,
-        showInNavigationBar = false
     )
+}
+
+// TODO pass data as NavEntry type instead of this
+enum class SubDestination {
+    MAPS_EDIT,
+    MAPS_ROLES,
+    MAPS_MATERIALS,
+    MAPS_MERGE
+}
+
+enum class NavigationBarType {
+    HIDDEN,
+    BOTTOM_BAR,
+    SIDE_RAIL
 }

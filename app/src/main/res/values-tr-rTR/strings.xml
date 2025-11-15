@@ -43,7 +43,6 @@
     <string name="permissions_saf_allFiles_description">LAC Tool\'un bütün dosyalara erişmesine izin verir, bunun kurulumu daha kolay olabilir</string>
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
     <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan açıp kapatabilirsiniz.</string>
-    <string name="permissions_shizuku_introduction">Shizuku, kablosuz hata ayıklamayı kullanarak diğer uygulamaların kabuk (shell) izinlerini kullanmasını sağlayan bir uygulamadır.\nShizuku modu Ayarlar &gt; Depolama &gt; Depolama erişimi tipi kısmından devre dışı bırakılabilir</string>
     <string name="permissions_shizuku_openShizuku">Shizuku\'yu aç</string>
     <string name="permissions_shizuku_installShizuku">Shizuku\'yu yükle</string>
     <string name="permissions_shizuku_install_title">Shizuku\'yu yükleyerek başlayın</string>

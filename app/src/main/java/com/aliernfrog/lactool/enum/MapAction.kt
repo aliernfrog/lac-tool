@@ -16,9 +16,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
+import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
-import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 
@@ -226,9 +228,10 @@ enum class MapAction(
         }
     ) {
         override suspend fun execute(context: Context, vararg maps: MapFile) {
+            val mainViewModel = getKoinInstance<MainViewModel>()
             val mapsMergeViewModel = maps.first().mapsMergeViewModel
             mapsMergeViewModel.addMaps(context, *maps)
-            mapsMergeViewModel.navController.navigate(Destination.MAPS_MERGE.route)
+            mainViewModel.navigationBackStack.add(SubDestination.MAPS_MERGE)
         }
     },
 

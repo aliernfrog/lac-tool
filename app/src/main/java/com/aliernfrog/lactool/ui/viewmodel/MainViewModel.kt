@@ -12,6 +12,7 @@ import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
@@ -19,7 +20,6 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -35,7 +35,8 @@ import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.supportsPerAppLanguagePreferences
 import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
-import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.MainDestinationGroup
+import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -62,13 +63,20 @@ class MainViewModel(
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
-
-    lateinit var navController: NavController
     val updateSheetState = createSheetStateWithDensity(skipPartiallyExpanded = false, Density(context))
+
+    val navigationBackStack = mutableStateListOf<Any>(
+        NavigationConstant.INITIAL_DESTINATION
+    )
+    var currentMainDestination by mutableStateOf(NavigationConstant.INITIAL_MAIN_DESTINATION)
+    val isAtMainDestination: Boolean
+        get() = navigationBackStack.last() == MainDestinationGroup
 
     private val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
     private val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
+
+    @Suppress("KotlinConstantConditions")
     val applicationVersionLabel = "$applicationVersionName (${
         BuildConfig.GIT_COMMIT.ifBlank { applicationVersionCode.toString() }
     }${
@@ -105,6 +113,8 @@ class MainViewModel(
 
     var updateAvailable by mutableStateOf(false)
         private set
+
+    var showUpdateNotification by mutableStateOf(updateAvailable)
 
     val debugInfo: String
         get() = arrayOf(
@@ -150,7 +160,7 @@ class MainViewModel(
                         updateSheetState.show()
                     } else {
                         showUpdateToast()
-                        Destination.SETTINGS.hasNotification.value = true
+                        showUpdateNotification = true
                     }
                 } else {
                     if (manuallyTriggered) withContext(Dispatchers.Main) {

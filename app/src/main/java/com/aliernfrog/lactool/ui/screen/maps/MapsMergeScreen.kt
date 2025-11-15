@@ -76,6 +76,7 @@ fun MapsMergeScreen(
                 FloatingActionButton(
                     icon = Icons.Default.AddLocationAlt,
                     text = stringResource(R.string.maps_merge_short),
+                    modifier = Modifier.navigationBarsPadding(),
                     onClick = { scope.launch {
                         mapsMergeViewModel.addMaps(context, *selectedMaps.toTypedArray())
                         mapsMergeViewModel.mapListShown = false
