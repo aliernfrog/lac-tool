@@ -114,6 +114,8 @@ class MainViewModel(
     var updateAvailable by mutableStateOf(false)
         private set
 
+    var showUpdateNotification by mutableStateOf(updateAvailable)
+
     val debugInfo: String
         get() = arrayOf(
             "LAC Tool $applicationVersionLabel",
@@ -158,7 +160,7 @@ class MainViewModel(
                         updateSheetState.show()
                     } else {
                         showUpdateToast()
-                        //TODO Destination.SETTINGS.hasNotification.value = true
+                        showUpdateNotification = true
                     }
                 } else {
                     if (manuallyTriggered) withContext(Dispatchers.Main) {
