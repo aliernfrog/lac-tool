@@ -286,6 +286,9 @@
     <string name="settings_maps_thumbnails_chosen_description">Know which map you are on</string>
     <string name="settings_maps_thumbnails_list">Show map thumbnails in map list</string>
     <string name="settings_maps_thumbnails_list_description">Easily identify the maps you have</string>
+    <string name="settings_maps_behavior">Behavior</string>
+    <string name="settings_maps_behavior_stackup">Keep previous maps open</string>
+    <string name="settings_maps_behavior_stackup_description">When enabled; exporting, importing or duplicating maps will keep previous maps in navigation stack, so you can return to them using the back button</string>
     <string name="settings_storage">Storage</string>
     <string name="settings_storage_description">Configure how LAC Tool interacts with the storage</string>
     <string name="settings_storage_storageAccessType">Storage access type</string>

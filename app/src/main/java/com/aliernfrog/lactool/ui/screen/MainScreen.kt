@@ -1,9 +1,5 @@
 package com.aliernfrog.lactool.ui.screen
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +21,7 @@ import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
+import com.aliernfrog.lactool.util.slideTransitionMetadata
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,26 +35,6 @@ fun MainScreen(
 
     val onNavigateBackRequest: () -> Unit = {
         mainViewModel.navigationBackStack.removeLastIfMultiple()
-    }
-
-    val slideTransitionMetadata = NavDisplay.transitionSpec {
-        slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.Start
-        ) + fadeIn() togetherWith slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.Start
-        ) + fadeOut()
-    } + NavDisplay.popTransitionSpec {
-        slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.End
-        ) togetherWith slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.End
-        )
-    } + NavDisplay.predictivePopTransitionSpec {
-        slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.End
-        ) togetherWith slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.End
-        )
     }
 
     NavDisplay(

@@ -228,7 +228,7 @@ class MainViewModel(
                     MapFile(FileWrapper(uri.cacheFile(context)!!))
                 }
                 if (cached.size <= 1) {
-                    mapsViewModel.chooseMap(cached.first())
+                    mapsViewModel.viewMapDetails(cached.first())
                     mapsViewModel.mapListShown = false
                 } else {
                     mapsViewModel.sharedMaps = cached

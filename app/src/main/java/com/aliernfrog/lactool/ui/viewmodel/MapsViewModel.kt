@@ -62,6 +62,8 @@ import java.io.File
 import androidx.core.net.toUri
 import com.aliernfrog.lactool.ui.component.ButtonIcon
 import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import com.aliernfrog.lactool.util.MapsNavigationBackStack
+import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +88,6 @@ class MapsViewModel(
     var exportedMaps by mutableStateOf(emptyList<MapFile>())
     var sharedMaps by mutableStateOf(emptyList<MapFile>())
     var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
-    var mapNameEdit by mutableStateOf("")
     var mapListShown by mutableStateOf(true)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
 
@@ -94,23 +95,23 @@ class MapsViewModel(
         get() = progressState.currentProgress
         set(value) { progressState.currentProgress = value }
 
-    val mapListBackButtonShown
-        get() = chosenMap != null
+    val mapsBackStack = MapsNavigationBackStack()
 
-    var chosenMap by mutableStateOf<MapFile?>(null)
-
-    fun chooseMap(map: Any?) {
+    fun viewMapDetails(map: Any) {
         try {
-            val mapToChoose = when (map) {
+            val mapFile = when (map) {
                 is MapFile -> map
                 is FileWrapper -> MapFile(map)
-                else -> if (map == null) null else MapFile(FileWrapper(map))
+                else -> MapFile(FileWrapper(map))
             }
-            if (mapToChoose != null) mapNameEdit = mapToChoose.name.replace("\n", "")
-            chosenMap = mapToChoose
-        } catch (e: Exception) {
+            mapsBackStack.add(mapFile)
+            if (!prefs.stackupMaps.value) mapsBackStack.removeIf {
+                it.path != mapFile.path
+            }
+        } catch (_: CancellationException) {}
+        catch (e: Exception) {
             topToastState.showErrorToast()
-            Log.e(TAG, "chooseMap: ", e)
+            Log.e(TAG, "viewMapDetails: ", e)
         }
     }
 
@@ -147,8 +148,10 @@ class MapsViewModel(
                     icon = Icons.Rounded.Delete
                 )
             }
-            chosenMap?.path?.let { path ->
-                if (maps.map { it.path }.contains(path)) chooseMap(null)
+            mapsBackStack.removeIf {
+                maps.any { map ->
+                    map.path == it.path
+                }
             }
         }
         mapsPendingDelete = null
@@ -178,7 +181,7 @@ class MapsViewModel(
                         map.runInIOThreadSafe {
                             val cachedFile = UriUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
-                            chooseMap(map)
+                            viewMapDetails(map)
                             openMapThumbnailViewer(map)
                             topToastState.showToast(
                                 text = R.string.maps_thumbnail_set_done,
@@ -266,7 +269,7 @@ class MapsViewModel(
                             activeProgress = Progress(context.getString(R.string.maps_thumbnail_deleting))
                             map.runInIOThreadSafe {
                                 map.deleteThumbnailFile()
-                                chooseMap(map)
+                                viewMapDetails(map)
                                 mainViewModel.dismissMediaView()
                                 showDeleteDialog = false
                                 topToastState.showToast(
@@ -282,10 +285,6 @@ class MapsViewModel(
         ))
     }
 
-    fun resolveMapNameInput(): String {
-        return mapNameEdit.ifBlank { chosenMap?.name ?: "" }.replace("\n", "")
-    }
-
     fun showActionFailedDialog(successes: List<Pair<String, MapActionResult>>, fails: List<Pair<String, MapActionResult>>) {
         customDialogTitleAndText = contextUtils.getString(R.string.maps_actionFailed)
             .replace("{SUCCESSES}", successes.size.toString())
@@ -298,12 +297,25 @@ class MapsViewModel(
      * Loads all imported and exported maps. [isLoadingMaps] will be true while this is in action.
      */
     suspend fun loadMaps(context: Context) {
-        isLoadingMaps = true
+        withContext(Dispatchers.Main) {
+            isLoadingMaps = true
+        }
+        checkAndUpdateMapsFiles(context)
+        val imported = fetchImportedMaps()
+        val exported = fetchExportedMaps()
+        withContext(Dispatchers.Main) {
+            importedMaps = imported
+            exportedMaps = exported
+            isLoadingMaps = false
+        }
+    }
+
+    /**
+     * Makes sure [mapsFile] and [exportedMapsFile] are initialized and are up to date.
+     */
+    fun checkAndUpdateMapsFiles(context: Context) {
         getMapsFile(context)
         getExportedMapsFile(context)
-        fetchImportedMaps()
-        fetchExportedMaps()
-        isLoadingMaps = false
     }
 
     fun getMapsFile(context: Context): FileWrapper {
@@ -360,25 +372,21 @@ class MapsViewModel(
         return exportedMapsFile
     }
 
-    private suspend fun fetchImportedMaps() {
-        withContext(Dispatchers.IO) {
-            importedMaps = mapsFile.listFiles()
-                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
-                .sortedBy { it.name.lowercase() }
-                .map {
-                    MapFile(it)
-                }
-        }
+    private fun fetchImportedMaps(): List<MapFile> {
+        return mapsFile.listFiles()
+            .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
+            .sortedBy { it.name.lowercase() }
+            .map {
+                MapFile(it)
+            }
     }
 
-    private suspend fun fetchExportedMaps() {
-        withContext(Dispatchers.IO) {
-            exportedMaps = exportedMapsFile.listFiles()
-                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
-                .sortedBy { it.name.lowercase() }
-                .map {
-                    MapFile(it)
-                }
-        }
+    private fun fetchExportedMaps(): List<MapFile> {
+        return exportedMapsFile.listFiles()
+            .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
+            .sortedBy { it.name.lowercase() }
+            .map {
+                MapFile(it)
+            }
     }
 }

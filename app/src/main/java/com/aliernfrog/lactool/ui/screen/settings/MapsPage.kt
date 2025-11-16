@@ -44,5 +44,20 @@ fun MapsPage(
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
         }
+
+        ExpressiveSection(stringResource(R.string.settings_maps_behavior)) {
+            VerticalSegmentor(
+                {
+                    ExpressiveSwitchRow(
+                        title = stringResource(R.string.settings_maps_behavior_stackup),
+                        description = stringResource(R.string.settings_maps_behavior_stackup_description),
+                        checked = settingsViewModel.prefs.stackupMaps.value
+                    ) {
+                        settingsViewModel.prefs.stackupMaps.value = it
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
     }
 }
