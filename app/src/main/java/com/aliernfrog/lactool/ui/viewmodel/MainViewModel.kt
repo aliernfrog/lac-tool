@@ -33,6 +33,7 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.impl.SAFFileCreator
 import com.aliernfrog.lactool.supportsPerAppLanguagePreferences
 import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
 import com.aliernfrog.lactool.util.MainDestinationGroup
@@ -63,6 +64,7 @@ class MainViewModel(
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
+    lateinit var safTxtFileCreator: SAFFileCreator
     val updateSheetState = createSheetStateWithDensity(skipPartiallyExpanded = false, Density(context))
 
     val navigationBackStack = mutableStateListOf<Any>(

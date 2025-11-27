@@ -5,7 +5,9 @@ import android.util.Log
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
+import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.MapImportedState
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
@@ -13,6 +15,7 @@ import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.state.TopToastState
+import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -191,6 +194,28 @@ class MapFile(
         return MapActionResult(
             successful = true,
             newFile = mapsViewModel.exportedMapsFile.findFile(newFileName)
+        )
+    }
+
+    suspend fun exportToCustomLocation(
+        context: Context,
+        withName: String
+    ): MapActionResult {
+        val uri = getKoinInstance<MainViewModel>().safTxtFileCreator.createFile(suggestedName = withName)
+        if (uri == null) return MapActionResult(
+            successful = false,
+            message = R.string.maps_exportCustomTarget_cancelled
+        )
+        file.inputStream(context).use { input ->
+            context.contentResolver.openOutputStream(uri)!!.use { output ->
+                input?.copyTo(output)
+            }
+        }
+        return MapActionResult(
+            successful = true,
+            newFile = DocumentFileCompat.fromSingleUri(context, uri)?.let {
+                FileWrapper(it)
+            }
         )
     }
 
