@@ -88,7 +88,6 @@ class MapsViewModel(
     var exportedMaps by mutableStateOf(emptyList<MapFile>())
     var sharedMaps by mutableStateOf(emptyList<MapFile>())
     var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
-    var mapListShown by mutableStateOf(true)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
 
     var activeProgress: Progress?
@@ -318,6 +317,10 @@ class MapsViewModel(
         getExportedMapsFile(context)
     }
 
+    /**
+     * Gets [DocumentFileCompat] to imported maps folder.
+     * Use this before accessing [mapsFile], otherwise the app will crash.
+     */
     fun getMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::mapsFile.isInitialized) false
         else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
@@ -345,6 +348,10 @@ class MapsViewModel(
         return mapsFile
     }
 
+    /**
+     * Gets [DocumentFileCompat] to exported maps folder.
+     * Use this before accessing [exportedMapsFile], otherwise the app will crash.
+     */
     private fun getExportedMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::exportedMapsFile.isInitialized) false
         else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false

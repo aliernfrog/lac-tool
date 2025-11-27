@@ -52,7 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.screen.maps.MapsPermissionsScreen
+import com.aliernfrog.lactool.ui.screen.maps.MapsScreen
 import com.aliernfrog.lactool.ui.screen.screenshots.ScreenshotsPermissionsScreen
 import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
 import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
@@ -138,7 +138,7 @@ fun MainDestinationContent(
             ) { destination ->
                 when (destination) {
                     MainDestination.MAPS -> {
-                        MapsPermissionsScreen(
+                        MapsScreen(
                             onNavigateSettingsRequest = ::onNavigateSettingsRequest
                         )
                     }

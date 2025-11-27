@@ -226,13 +226,14 @@ class MainViewModel(
 
             progressState.currentProgress = Progress(context.getString(R.string.info_pleaseWait))
             viewModelScope.launch(Dispatchers.IO) {
-                val cached = uris.map { uri ->
-                    MapFile(FileWrapper(uri.cacheFile(context)!!))
+                val cached = mutableListOf<MapFile>()
+                uris.forEach { uri ->
+                    val file = uri.cacheFile(context)
+                    if (file != null) cached.add(MapFile(FileWrapper(file)))
                 }
-                if (cached.size <= 1) {
+                if (cached.size == 1) {
                     mapsViewModel.viewMapDetails(cached.first())
-                    mapsViewModel.mapListShown = false
-                } else {
+                } else if (cached.size > 1) {
                     mapsViewModel.sharedMaps = cached
                     withContext(Dispatchers.Main) {
                         mapsListViewModel.availableSegments.indexOfFirst {
