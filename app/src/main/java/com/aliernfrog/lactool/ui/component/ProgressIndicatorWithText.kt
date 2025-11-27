@@ -21,7 +21,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.Progress
 
 @Composable
-fun HorizontalProgressIndicator(
+fun HorizontalProgressIndicatorWithText(
     progress: Progress?,
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,
@@ -44,7 +44,7 @@ fun HorizontalProgressIndicator(
 }
 
 @Composable
-fun VerticalProgressIndicator(
+fun VerticalProgressIndicatorWithText(
     progress: Progress?,
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,

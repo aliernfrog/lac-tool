@@ -61,7 +61,7 @@ import com.aliernfrog.lactool.ui.component.ImageButtonInfo
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
 import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
-import com.aliernfrog.lactool.ui.component.VerticalProgressIndicator
+import com.aliernfrog.lactool.ui.component.VerticalProgressIndicatorWithText
 import com.aliernfrog.lactool.ui.component.VerticalSegmentor
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
 import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
@@ -195,7 +195,7 @@ fun MapsMaterialsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    VerticalProgressIndicator(
+                    VerticalProgressIndicatorWithText(
                         progress = mapsEditViewModel.materialsLoadProgress
                     )
                 }
