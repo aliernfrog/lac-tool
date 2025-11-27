@@ -32,8 +32,10 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Deselect
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.outlined.SdCard
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.LocationOff
@@ -122,6 +124,7 @@ fun MapsListScreen(
     val listStyle = ListStyle.entries[listStylePref.value]
     val showMapThumbnails = mapsListViewModel.prefs.showMapThumbnailsInList.value
     var multiSelectionDropdownShown by remember { mutableStateOf(false) }
+    var areAllShownMapsSelected by remember { mutableStateOf(false) }
     var showFABLabel by remember { mutableStateOf(true) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -146,6 +149,14 @@ fun MapsListScreen(
         withContext(Dispatchers.IO) {
             mapsViewModel.loadMaps(context)
         }
+    }
+
+    if (isMultiSelecting) LaunchedEffect(
+        mapsListViewModel.pagerState.currentPage,
+        mapsListViewModel.selectedMaps.size
+    ) {
+        val shownMaps = mapsListViewModel.getCurrentlyShownMaps()
+        areAllShownMapsSelected = mapsListViewModel.selectedMaps.containsAll(shownMaps)
     }
 
     BackHandler(
@@ -173,27 +184,44 @@ fun MapsListScreen(
                         mapsListViewModel.selectedMaps.clear()
                     } } else onBackClick,
                     actions = {
-                        if (multiSelecting && showMultiSelectionOptions) Box {
+                        if (multiSelecting && showMultiSelectionOptions) {
                             IconButton(
                                 shapes = IconButtonDefaults.shapes(),
                                 onClick = {
-                                    multiSelectionDropdownShown = true
+                                    val shownMaps = mapsListViewModel.getCurrentlyShownMaps()
+                                    if (areAllShownMapsSelected) mapsListViewModel.selectedMaps.removeAll(shownMaps)
+                                    else mapsListViewModel.selectedMaps.addAll(
+                                        shownMaps.filter { !mapsListViewModel.selectedMaps.contains(it) }
+                                    )
                                 }
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = stringResource(R.string.action_more)
+                                    imageVector = if (areAllShownMapsSelected) Icons.Default.Deselect else Icons.Default.SelectAll,
+                                    contentDescription = stringResource(
+                                        if (areAllShownMapsSelected) R.string.action_select_deselectAll else R.string.action_select_selectAll
+                                    )
                                 )
                             }
-                            MultiSelectionDropdown(
-                                expanded = multiSelectionDropdownShown,
-                                maps = mapsListViewModel.selectedMaps,
-                                actions = mapsListViewModel.selectedMapsActions,
-                                onDismissRequest = { clearSelection ->
-                                    multiSelectionDropdownShown = false
-                                    if (clearSelection) mapsListViewModel.selectedMaps.clear()
+                            Box {
+                                IconButton(
+                                    shapes = IconButtonDefaults.shapes(),
+                                    onClick = { multiSelectionDropdownShown = true }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = stringResource(R.string.action_more)
+                                    )
                                 }
-                            )
+                                MultiSelectionDropdown(
+                                    expanded = multiSelectionDropdownShown,
+                                    maps = mapsListViewModel.selectedMaps,
+                                    actions = mapsListViewModel.selectedMapsActions,
+                                    onDismissRequest = { clearSelection ->
+                                        multiSelectionDropdownShown = false
+                                        if (clearSelection) mapsListViewModel.selectedMaps.clear()
+                                    }
+                                )
+                            }
                         } else {
                             Crossfade(mapsViewModel.isLoadingMaps) { showLoading ->
                                 if (showLoading) CircularProgressIndicator(

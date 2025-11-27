@@ -52,6 +52,11 @@ class MapsListViewModel(
         }
     }
 
+    fun getCurrentlyShownMaps(): List<MapFile> {
+        val currentSegment = availableSegments[pagerState.currentPage]
+        return getFilteredMaps(currentSegment)
+    }
+
     fun getFilteredMaps(segment: MapsListSegment) = segment.getMaps(mapsViewModel)
         .filter {
             it.name.contains(searchQuery, ignoreCase = true)

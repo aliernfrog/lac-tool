@@ -10,6 +10,8 @@
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="action_more">More</string>
+    <string name="action_select_selectAll">Select all</string>
+    <string name="action_select_deselectAll">Deselect all</string>
     <string name="intent_openMap">Open map</string>
     <string name="intent_downloadMap">Download map</string>
     <string name="warning_error">Something went wrong</string>
