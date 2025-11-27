@@ -118,6 +118,10 @@
     <string name="maps_exported_multiple">Exported {COUNT} maps</string>
     <string name="maps_exporting_single">Exporting {NAME} as {NEW_NAME}..</string>
     <string name="maps_exporting_multiple">Exporting {DONE}/{TOTAL} maps..</string>
+    <string name="maps_exportCustomTarget">Export to custom location</string>
+    <string name="maps_exportCustomTarget_exported">Exported {NAME} to custom location</string>
+    <string name="maps_exportCustomTarget_exporting">Exporting {NAME}..</string>
+    <string name="maps_exportCustomTarget_cancelled">Export cancelled</string>
     <string name="maps_share">Share this map</string>
     <string name="maps_share_short">Share</string>
     <string name="maps_edit">Edit this map</string>
