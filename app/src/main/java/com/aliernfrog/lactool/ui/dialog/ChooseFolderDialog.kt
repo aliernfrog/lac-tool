@@ -30,7 +30,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.folderPickerSupportsInitialUri
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

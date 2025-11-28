@@ -20,11 +20,11 @@ import com.aliernfrog.lactool.data.MapActionResult
 import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.MapActionArguments
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.pftool_shared.impl.Progress
 
 /**
  * Contains map actions.

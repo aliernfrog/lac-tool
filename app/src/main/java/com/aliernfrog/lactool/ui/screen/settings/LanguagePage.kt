@@ -51,20 +51,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.crowdinURL
-import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.languages
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppSmallTopBar
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
-import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.extension.copy
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
 import com.aliernfrog.lactool.util.extension.getNameIn
+import io.github.aliernfrog.pftool_shared.data.Language
+import io.github.aliernfrog.pftool_shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.pftool_shared.ui.theme.AppComponentShape
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

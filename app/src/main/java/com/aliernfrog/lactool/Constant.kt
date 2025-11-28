@@ -6,9 +6,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.ui.graphics.Color
 import com.aliernfrog.lactool.data.PrefEditItem
-import com.aliernfrog.lactool.data.Social
-import com.aliernfrog.lactool.impl.CreditData
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import io.github.aliernfrog.pftool_shared.data.Social
+import io.github.aliernfrog.pftool_shared.impl.CreditData
 
 const val TAG = "LACToolLogs"
 

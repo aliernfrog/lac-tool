@@ -37,17 +37,17 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.ReleaseInfo
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppSmallTopBar
 import com.aliernfrog.lactool.ui.component.AppTopBar
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
-import com.aliernfrog.lactool.ui.component.expressive.toRowFriendlyColor
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import io.github.aliernfrog.pftool_shared.data.ReleaseInfo
+import io.github.aliernfrog.pftool_shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.toRowFriendlyColor
+import io.github.aliernfrog.pftool_shared.ui.theme.AppComponentShape
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

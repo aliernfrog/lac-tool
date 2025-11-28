@@ -8,6 +8,8 @@ import javax.xml.parsers.DocumentBuilderFactory
 val localProperties = Properties()
 try {
     localProperties.load(FileInputStream(rootProject.file("local.properties")))
+} catch (_: java.io.FileNotFoundException) {
+    // ignore
 } catch (t: Throwable) {
     logger.warn("Failed to load local.properties: ", t)
 }
@@ -138,11 +140,9 @@ android.defaultConfig.buildConfigField("float[]", "TRANSLATION_PROGRESSES", "new
 }}")
 
 
-val laclibPath: String? = localProperties.getProperty("laclibPath")
-val useLocalLaclib = !laclibPath.isNullOrEmpty()
-
 // Utilities to get git environment information
 // Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
+var usingLocalLibraries = false
 fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
     ?: exec("git", "describe", "--tags", "--exact-match")
 fun getLatestCommit() = exec("git", "rev-parse", "--short", "HEAD")
@@ -150,13 +150,7 @@ fun hasLocalChanges(): Boolean {
     val branch = getCurrentBranch()
     val uncommittedChanges = exec("git", "status", "-s")?.isNotEmpty() ?: false
     val unpushedChanges = exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
-    return uncommittedChanges || unpushedChanges || useLocalLaclib
-}
-
-android.defaultConfig.run {
-    buildConfigField("String", "GIT_BRANCH", "\"${getCurrentBranch()}\"")
-    buildConfigField("String", "GIT_COMMIT", "\"${getLatestCommit()}\"")
-    buildConfigField("boolean", "GIT_LOCAL_CHANGES", "${hasLocalChanges()}")
+    return uncommittedChanges || unpushedChanges || usingLocalLibraries
 }
 
 fun exec(vararg command: String) = try {
@@ -199,15 +193,29 @@ dependencies {
     implementation(libs.toptoast)
     implementation(libs.zoomable)
 
-    implementation(
-        if (!useLocalLaclib) libs.laclib else {
-            println("Using local LACLib")
-            files(laclibPath)
-        }
-    )
+    listOf(
+        "laclibPath" to libs.laclib,
+        "pftoolSharedLibPath" to "TODO" // TODO
+    ).forEach { (name, defaultLib) ->
+        val localPath = localProperties.getProperty(name)
+        implementation(
+            if (localPath.isNullOrEmpty()) defaultLib
+            else {
+                usingLocalLibraries = true
+                println("Using local dependency: $name")
+                files(localPath)
+            }
+        )
+    }
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.tooling.preview)
 
     coreLibraryDesugaring(libs.android.desugar)
+}
+
+android.defaultConfig.run {
+    buildConfigField("String", "GIT_BRANCH", "\"${getCurrentBranch()}\"")
+    buildConfigField("String", "GIT_COMMIT", "\"${getLatestCommit()}\"")
+    buildConfigField("boolean", "GIT_LOCAL_CHANGES", "${hasLocalChanges()}")
 }

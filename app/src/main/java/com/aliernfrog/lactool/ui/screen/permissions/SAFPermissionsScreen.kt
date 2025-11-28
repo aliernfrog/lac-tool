@@ -41,10 +41,6 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.data.requiresAndroidData
 import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.ui.component.CardWithActions
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
-import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
@@ -53,6 +49,10 @@ import com.aliernfrog.lactool.util.extension.toPath
 import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import io.github.aliernfrog.pftool_shared.ui.component.CardWithActions
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

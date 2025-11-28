@@ -40,10 +40,10 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.util.LACHelperUtil
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
+import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
+import io.github.aliernfrog.pftool_shared.ui.component.form.DividerRow
+import io.github.aliernfrog.pftool_shared.ui.theme.AppComponentShape
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)

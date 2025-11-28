@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import io.github.aliernfrog.pftool_shared.ui.component.ErrorWithIcon
 
 data class MediaViewData(
     val model: Any?,

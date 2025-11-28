@@ -37,11 +37,11 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)

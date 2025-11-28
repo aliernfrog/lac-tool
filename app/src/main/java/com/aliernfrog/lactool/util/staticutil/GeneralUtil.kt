@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Build
 import com.aliernfrog.lactool.BuildConfig
-import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.di.appModules
 import com.aliernfrog.lactool.hasAndroidDataRestrictions
 import com.aliernfrog.lactool.ui.activity.MainActivity
@@ -15,6 +14,7 @@ import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import java.util.Locale
 import androidx.core.net.toUri
+import io.github.aliernfrog.pftool_shared.data.Language
 
 class GeneralUtil {
     companion object {

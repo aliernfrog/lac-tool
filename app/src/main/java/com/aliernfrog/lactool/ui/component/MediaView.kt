@@ -68,9 +68,11 @@ import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
-import com.aliernfrog.lactool.ui.component.form.DividerRow
 import com.aliernfrog.lactool.ui.viewmodel.InsetsViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import io.github.aliernfrog.pftool_shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
+import io.github.aliernfrog.pftool_shared.ui.component.form.DividerRow
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import kotlinx.coroutines.launch

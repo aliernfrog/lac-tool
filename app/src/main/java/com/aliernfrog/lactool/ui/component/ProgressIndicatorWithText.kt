@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.impl.Progress
+import io.github.aliernfrog.pftool_shared.impl.Progress
 
 @Composable
 fun HorizontalProgressIndicatorWithText(

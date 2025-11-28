@@ -1,9 +1,9 @@
 package com.aliernfrog.lactool.di
 
-import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
+import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

@@ -45,8 +45,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.ui.component.ImageButtonInfo
-import com.aliernfrog.lactool.util.extension.combinedClickableWithColor
+import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
+import io.github.aliernfrog.pftool_shared.ui.component.maps.MapHeader
+import io.github.aliernfrog.pftool_shared.util.extension.combinedClickableWithColor
 
 @Composable
 fun ListMapItem(

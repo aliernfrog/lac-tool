@@ -27,10 +27,10 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
-import com.aliernfrog.lactool.ui.component.FadeVisibility
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
-import com.aliernfrog.lactool.util.extension.horizontalFadingEdge
 import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
+import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
+import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.pftool_shared.util.extension.horizontalFadingEdge
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
