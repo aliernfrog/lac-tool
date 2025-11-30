@@ -73,6 +73,9 @@ You must keep the source code public if you are distributing your own version of
 </details>
 <details>
   <summary>Properties</summary>
+  
   Following can be set in `local.properties`:
-  - `laclibPath` -> Path to a local [LACLib](https://github.com/aliernfrog/laclib) jar (defaults to the one from JitPack)
+  
+  - `laclibPath` -> Path to a local [LACLib](https://github.com/aliernfrog/laclib) jar (optional)
+  - `pftoolSharedLibPath` -> Path to a local [pftool-shared](https://github.com/aliernfrog/pf-tool/tree/main/pftool-shared) aar (optional)
 </details>
