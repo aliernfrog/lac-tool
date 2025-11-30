@@ -15,12 +15,12 @@ import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
 import com.aliernfrog.lactool.util.slideTransitionMetadata
+import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
+import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
@@ -45,7 +44,6 @@ import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -58,11 +56,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
-import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
+import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
+import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -74,7 +73,6 @@ class MapsViewModel(
     val prefs: PreferenceManager
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
-    val scrollState = ScrollState(0)
 
     val mapsDir: String get() { return prefs.lacMapsDir.value }
     val exportedMapsDir: String get() { return prefs.exportedMapsDir.value }

@@ -49,7 +49,6 @@ import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -63,6 +62,7 @@ import io.github.aliernfrog.pftool_shared.ui.component.VerticalSegmentor
 import io.github.aliernfrog.pftool_shared.ui.component.createSheetStateWithDensity
 import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
 import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

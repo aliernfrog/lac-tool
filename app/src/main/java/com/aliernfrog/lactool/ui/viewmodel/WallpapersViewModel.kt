@@ -51,10 +51,8 @@ import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
 import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -69,11 +67,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
-import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import com.aliernfrog.lactool.util.extension.comparator
+import io.github.aliernfrog.pftool_shared.enum.ListSorting
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
 import io.github.aliernfrog.pftool_shared.ui.component.createSheetStateWithDensity
+import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
+import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,7 +101,7 @@ class WallpapersViewModel(
         get() {
             val sorting = ListSorting.entries[prefs.wallpapersListOptions.sorting.value]
             val reversed = prefs.wallpapersListOptions.sortingReversed.value
-            return importedWallpapers.sortedWith(sorting.comparator).let {
+            return importedWallpapers.sortedWith(sorting.comparator()).let {
                 if (reversed) it.reversed() else it
             }
         }

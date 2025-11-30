@@ -10,18 +10,18 @@ import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.ui.component.MainDestinationContent
-import com.aliernfrog.lactool.ui.dialog.ProgressDialog
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
 import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
-import com.aliernfrog.lactool.ui.sheet.UpdateSheet
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.lactool.util.slideTransitionMetadata
+import io.github.aliernfrog.pftool_shared.ui.dialog.ProgressDialog
+import io.github.aliernfrog.pftool_shared.ui.sheet.UpdateSheet
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

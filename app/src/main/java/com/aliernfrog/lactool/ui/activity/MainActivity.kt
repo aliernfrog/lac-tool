@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.aliernfrog.lactool.ui.component.util.InsetsObserver
 import com.aliernfrog.lactool.ui.component.MediaView
 import com.aliernfrog.lactool.ui.screen.MainScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
@@ -36,6 +35,7 @@ import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.toptoast.component.TopToastHost
 import io.github.aliernfrog.pftool_shared.impl.SAFFileCreator
+import io.github.aliernfrog.pftool_shared.ui.component.util.InsetsObserver
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : AppCompatActivity() {

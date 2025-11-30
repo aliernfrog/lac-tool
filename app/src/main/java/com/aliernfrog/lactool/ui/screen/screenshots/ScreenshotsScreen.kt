@@ -42,7 +42,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
@@ -52,6 +51,7 @@ import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo

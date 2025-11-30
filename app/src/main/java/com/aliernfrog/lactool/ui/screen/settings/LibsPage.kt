@@ -46,11 +46,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.component.AppModalBottomSheet
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppSmallTopBar
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.mikepenz.aboutlibraries.entity.Library
+import io.github.aliernfrog.pftool_shared.ui.component.AppModalBottomSheet
 import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
 import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
 import io.github.aliernfrog.pftool_shared.ui.component.form.DividerRow

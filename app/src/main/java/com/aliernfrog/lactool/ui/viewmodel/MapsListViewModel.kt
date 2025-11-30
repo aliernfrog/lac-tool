@@ -13,10 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.enum.MapAction
 import com.aliernfrog.lactool.enum.MapsListSegment
-import com.aliernfrog.lactool.enum.ListSorting
 import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.util.extension.comparator
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
+import io.github.aliernfrog.pftool_shared.enum.ListSorting
 import io.github.aliernfrog.pftool_shared.ui.component.createSheetStateWithDensity
 import kotlinx.coroutines.launch
 
@@ -62,7 +63,7 @@ class MapsListViewModel(
             it.name.contains(searchQuery, ignoreCase = true)
         }
         .sortedWith { m1, m2 ->
-            ListSorting.entries[prefs.mapsListOptions.sorting.value].comparator.compare(m1.file, m2.file)
+            ListSorting.entries[prefs.mapsListOptions.sorting.value].comparator().compare(m1.file, m2.file)
         }
         .let {
             if (prefs.mapsListOptions.sortingReversed.value) it.reversed() else it

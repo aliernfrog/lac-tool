@@ -51,15 +51,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.VerticalProgressIndicatorWithText
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
-import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
+import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
 import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibilityColumn
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
@@ -70,6 +69,7 @@ import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButt
 import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
 import io.github.aliernfrog.pftool_shared.ui.component.form.ExpandableRow
 import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
