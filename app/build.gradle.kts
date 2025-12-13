@@ -23,13 +23,13 @@ plugins {
 android {
     namespace = "com.aliernfrog.lactool"
     compileSdk = 36
-    buildToolsVersion = "35.0.1"
+    buildToolsVersion = "36.1.0"
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 21
-        targetSdk = 35
-        versionCode = 35100
+        targetSdk = 36
+        versionCode = 400000
         versionName = "3.5.1"
         vectorDrawables { useSupportLibrary = true }
     }

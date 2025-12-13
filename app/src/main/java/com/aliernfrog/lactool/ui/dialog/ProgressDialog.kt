@@ -65,6 +65,7 @@ fun ProgressDialog(
             )
             if (showDismissButton) TextButton(
                 onClick = ::dismissDialog,
+                shapes = ButtonDefaults.shapes(),
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error
                 ),
