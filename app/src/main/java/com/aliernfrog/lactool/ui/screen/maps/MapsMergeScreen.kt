@@ -2,39 +2,59 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddLocationAlt
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.rounded.AddLocationAlt
+import androidx.compose.material.icons.filled.ClearAll
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapToMerge
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
+import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.ErrorWithIcon
+import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.FloatingActionButton
-import com.aliernfrog.lactool.ui.component.form.FormSection
-import com.aliernfrog.lactool.ui.component.form.RoundedButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
+import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.theme.AppFABPadding
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
@@ -56,6 +76,7 @@ fun MapsMergeScreen(
                 FloatingActionButton(
                     icon = Icons.Default.AddLocationAlt,
                     text = stringResource(R.string.maps_merge_short),
+                    modifier = Modifier.navigationBarsPadding(),
                     onClick = { scope.launch {
                         mapsMergeViewModel.addMaps(context, *selectedMaps.toTypedArray())
                         mapsMergeViewModel.mapListShown = false
@@ -75,7 +96,7 @@ fun MapsMergeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MergeScreen(
     mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
@@ -83,6 +104,13 @@ private fun MergeScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    var showToolbarLabels by remember { mutableStateOf(true) }
+
+    ScrollAccessibilityListener(
+        scrollState = mapsMergeViewModel.scrollState,
+        onShowLabelsStateChange = { showToolbarLabels = it }
+    )
 
     AppScaffold(
         topBar = { scrollBehavior ->
@@ -94,30 +122,109 @@ private fun MergeScreen(
                 }
             )
         },
-        topAppBarState = mapsMergeViewModel.topAppBarState,
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = mapsMergeViewModel.hasEnoughMaps && !mapsMergeViewModel.mergeMapDialogShown,
-                modifier = Modifier.systemBarsPadding(),
-                enter = scaleIn() + fadeIn(),
-                exit = scaleOut() + fadeOut()
-            ) {
-                FloatingActionButton(
-                    icon = Icons.Default.Build,
-                    text = stringResource(R.string.mapsMerge_merge),
-                    onClick = { mapsMergeViewModel.mergeMapDialogShown = true }
-                )
-            }
-        }
+        topAppBarState = mapsMergeViewModel.topAppBarState
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
-            PickMapButton {
-                mapsMergeViewModel.mapListShown = true
+        Box {
+            Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
+                MapsList(
+                    maps = mapsMergeViewModel.mapMerger.mapsToMerge,
+                    onPickMapRequest = { mapsMergeViewModel.mapListShown = true }
+                )
+                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
             }
-            MapsList(
-                maps = mapsMergeViewModel.mapMerger.mapsToMerge
-            )
-            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
+
+            HorizontalFloatingToolbar(
+                expanded = true,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .systemBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            ) {
+                @Composable
+                fun ToolbarContent(showLabelsOverride: Boolean?) {
+                    @Composable
+                    fun ButtonContent(icon: ImageVector, label: String, isMain: Boolean = false) {
+                        Icon(
+                            icon, label
+                        )
+
+                        if (showLabelsOverride != false || isMain) {
+                            AnimatedVisibility(showToolbarLabels || showLabelsOverride == true) {
+                                Text(
+                                    text = label,
+                                    modifier = Modifier.padding(start = 6.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Crossfade(mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty()) { enabled ->
+                        TextButton(
+                            onClick = { mapsMergeViewModel.mapMerger.clearMaps() },
+                            shapes = ButtonDefaults.shapes(),
+                            enabled = enabled
+                        ) {
+                            ButtonContent(
+                                icon = Icons.Default.ClearAll,
+                                label = stringResource(R.string.mapsMerge_clearMaps)
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.width(4.dp))
+
+                    FilledTonalButton(
+                        onClick = { mapsMergeViewModel.mapListShown = true },
+                        shapes = ButtonDefaults.shapes()
+                    ) {
+                        ButtonContent(
+                            icon = Icons.Default.Add,
+                            label = stringResource(R.string.mapsMerge_addMap),
+                            isMain = true
+                        )
+                    }
+
+                    Spacer(Modifier.width(4.dp))
+
+                    Crossfade(mapsMergeViewModel.hasEnoughMaps) { enabled ->
+                        TextButton(
+                            onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
+                            shapes = ButtonDefaults.shapes(),
+                            enabled = enabled
+                        ) {
+                            ButtonContent(
+                                icon = Icons.Default.Save,
+                                label = stringResource(R.string.mapsMerge_merge)
+                            )
+                        }
+                    }
+                }
+
+                SubcomposeLayout { constraints ->
+                    val fullContentPlaceables = subcompose("fullContent") {
+                        ToolbarContent(showLabelsOverride = true)
+                    }.map { it.measure(constraints) }
+
+                    val fullWidth = fullContentPlaceables.sumOf { it.width }
+
+                    val placeables = (if (fullWidth <= constraints.maxWidth) subcompose("dynamic") {
+                        ToolbarContent(showLabelsOverride = null)
+                    } else subcompose("noLabels") {
+                        ToolbarContent(showLabelsOverride = false)
+                    }).map { it.measure(constraints) }
+
+                    val width = placeables.sumOf { it.width }
+                    val height = placeables.maxOfOrNull { it.height } ?: 0
+
+                    layout(width, height) {
+                        var xPos = 0
+                        placeables.forEach {
+                            it.placeRelative(xPos, 0)
+                            xPos += it.width
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -135,29 +242,60 @@ private fun MergeScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MapsList(
-    maps: List<MutableMapToMerge>
+    maps: List<MutableMapToMerge>,
+    onPickMapRequest: () -> Unit
 ) {
     val baseMap = maps.firstOrNull()
     val mapsToMerge = maps.toList().drop(1)
-    AnimatedVisibility(baseMap != null) {
-        MapButtonWithActions(
-            mapToMerge = baseMap ?: MutableMapToMerge(LACMapToMerge("-", "-")),
-            mapIndex = 0
+
+    FadeVisibility(maps.isEmpty()) {
+        ErrorWithIcon(
+            error = stringResource(R.string.mapsMerge_noMaps),
+            painter = rememberVectorPainter(Icons.Default.AddLocationAlt),
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            button = {
+                Button(
+                    onClick = onPickMapRequest,
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Add))
+                    Text(stringResource(R.string.mapsMerge_addMap))
+                }
+            }
         )
     }
-    AnimatedVisibility(mapsToMerge.isNotEmpty()) {
-        FormSection(
-            title = stringResource(R.string.mapsMerge_mapsToMerge),
-            topDivider = true,
-            bottomDivider = false
+
+    FadeVisibility(baseMap != null) {
+        ExpressiveSection(
+            title = stringResource(R.string.mapsMerge_base)
+        ) {
+            MapButtonWithActions(
+                mapToMerge = baseMap ?: MutableMapToMerge(LACMapToMerge("-", "-")),
+                mapIndex = 0,
+                modifier = Modifier
+                    .padding(start = 12.dp, end = 12.dp, top = 8.dp)
+                    .verticalSegmentedShape()
+            )
+        }
+    }
+
+    FadeVisibility(mapsToMerge.isNotEmpty()) {
+        ExpressiveSection(
+            title = stringResource(R.string.mapsMerge_mapsToMerge)
         ) {
             mapsToMerge.forEachIndexed { index, map ->
                 MapButtonWithActions(
                     mapToMerge = map,
                     mapIndex = index+1,
-                    containerColor = MaterialTheme.colorScheme.surface
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .verticalSegmentedShape(
+                            index = index,
+                            totalSize = mapsToMerge.size
+                        )
                 )
             }
         }
@@ -165,35 +303,24 @@ private fun MapsList(
 }
 
 @Composable
-private fun PickMapButton(
-    onClick: () -> Unit
-) {
-    RoundedButtonRow(
-        title = stringResource(R.string.mapsMerge_addMap),
-        painter = rememberVectorPainter(Icons.Rounded.AddLocationAlt),
-        containerColor = MaterialTheme.colorScheme.primary,
-        onClick = onClick
-    )
-}
-
-@Composable
 private fun MapButtonWithActions(
-    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
     mapToMerge: MutableMapToMerge,
     mapIndex: Int,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant
+    modifier: Modifier = Modifier,
+    mapsMergeViewModel: MapsMergeViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val isBase = mapIndex == 0
     val expanded = mapsMergeViewModel.optionsExpandedFor == mapIndex
+
     MapToMerge(
         mapToMerge = mapToMerge,
         isBaseMap = isBase,
         expanded = expanded || isBase,
-        containerColor = containerColor,
         onUpdateState = { mapsMergeViewModel.mapMerger.pushMapsState() },
         onMakeBase = { mapsMergeViewModel.makeMapBase(mapIndex, mapToMerge.mapName, context) },
         onRemove = { mapsMergeViewModel.removeMap(mapIndex, mapToMerge.mapName, context) },
+        modifier = modifier,
         onClickHeader = {
             if (!isBase) {
                 mapsMergeViewModel.optionsExpandedFor = if (expanded) 0

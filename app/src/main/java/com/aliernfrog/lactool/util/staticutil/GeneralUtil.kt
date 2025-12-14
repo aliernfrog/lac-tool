@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Build
+import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.data.Language
 import com.aliernfrog.lactool.di.appModules
 import com.aliernfrog.lactool.hasAndroidDataRestrictions
@@ -14,6 +14,7 @@ import com.aliernfrog.lactool.util.extension.toPath
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import java.util.Locale
+import androidx.core.net.toUri
 
 class GeneralUtil {
     companion object {
@@ -66,17 +67,26 @@ class GeneralUtil {
             val languageCode = split.getOrNull(0) ?: return null
             val countryCode = split.getOrNull(1)
             val locale = getLocale(languageCode, countryCode)
+            var translationProgress = 0f
+            try {
+                val index = BuildConfig.LANGUAGES.indexOf(code)
+                if (index != -1) {
+                    translationProgress = BuildConfig.TRANSLATION_PROGRESSES[index]
+                }
+            } catch (_: Exception) {}
             return Language(
                 languageCode = languageCode,
                 countryCode = countryCode,
                 fullCode = code,
-                localizedName = locale.getDisplayName(locale)
+                localizedName = locale.getDisplayName(locale),
+                translationProgress = translationProgress
             )
         }
 
         fun getLocale(language: String, country: String? = null): Locale {
-            return if (country != null) Locale(language, country)
-            else Locale(language)
+            val builder = Locale.Builder().setLanguage(language)
+            if (country != null) builder.setRegion(country)
+            return builder.build()
         }
 
         @Suppress("DEPRECATION")
@@ -99,7 +109,7 @@ class GeneralUtil {
         fun generateWallpaperImportUrl(fileName: String, wallpapersPath: String): String {
             var internalPath = wallpapersPath
             try {
-                internalPath = Uri.parse(wallpapersPath).toPath()
+                internalPath = wallpapersPath.toUri().toPath()
             } catch (_: Exception) {}
             return "file://$internalPath/$fileName"
         }

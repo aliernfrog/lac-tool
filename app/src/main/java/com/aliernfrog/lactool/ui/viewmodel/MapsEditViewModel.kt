@@ -1,9 +1,11 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
@@ -15,7 +17,6 @@ import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -23,16 +24,18 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
@@ -49,15 +52,19 @@ import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
+import com.aliernfrog.lactool.ui.component.VerticalSegmentor
+import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
-import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,18 +72,15 @@ class MapsEditViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     private val progressState: ProgressState,
-    private val mainViewModel: MainViewModel,
     context: Context
 ) : ViewModel() {
-    private val navController: NavController
-        get() = mainViewModel.navController
-    
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
     val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
     val rolesLazyListState = LazyListState()
+    val materialsListOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
 
-    val addRoleSheetState = SheetState(skipPartiallyExpanded = true, Density(context))
+    val addRoleSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
     var pendingRoleDelete by mutableStateOf<String?>(null)
@@ -102,6 +106,8 @@ class MapsEditViewModel(
 
     @SuppressLint("Recycle")
     suspend fun openMap(map: MapFile, context: Context) {
+        val mainViewModel = getKoinInstance<MainViewModel>()
+
         mapFile = map.file
         withContext(Dispatchers.IO) {
             val inputStream = mapFile?.inputStream(context)
@@ -122,7 +128,7 @@ class MapsEditViewModel(
             )
             inputStream.close()
         }
-        navController.navigate(Destination.MAPS_EDIT.route)
+        mainViewModel.navigationBackStack.add(SubDestination.MAPS_EDIT)
     }
 
     fun setServerName(serverName: String) {
@@ -204,39 +210,57 @@ class MapsEditViewModel(
                     contentColor = Color.Red
                 )
             },
-            options = {
+            optionsSheetContent = {
                 val context = LocalContext.current
-                val clipboardManager = LocalClipboardManager.current
+                val clipboard = LocalClipboard.current
+                val scope = rememberCoroutineScope()
+
                 val unused = material.usedBy.isEmpty()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                ButtonRow(
-                    title = stringResource(R.string.mapsMaterials_material_copyUrl),
-                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                ) {
-                    clipboardManager.setText(AnnotatedString(material.url))
-                    topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-                }
-                ButtonRow(
-                    title = stringResource(R.string.mapsMaterials_material_delete),
-                    description = if (unused) stringResource(R.string.mapsMaterials_unused)
-                    else stringResource(R.string.mapsMaterials_material_delete_description)
-                        .replace("%n", material.usedBy.size.toString()),
-                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                    contentColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                ) {
-                    showDeleteDialog = true
-                }
+                VerticalSegmentor(
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.mapsMaterials_material_copyUrl),
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
+                                )
+                            }
+                        ) { scope.launch {
+                            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
+                                null, material.url
+                            )))
+                            topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                        } }
+                    },
+                    {
+                        ExpressiveButtonRow(
+                            title = stringResource(R.string.mapsMaterials_material_delete),
+                            description = if (unused) stringResource(R.string.mapsMaterials_unused)
+                            else stringResource(R.string.mapsMaterials_material_delete_description)
+                                .replace("%n", material.usedBy.size.toString()),
+                            contentColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                            icon = {
+                                ExpressiveRowIcon(
+                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
+                                    containerColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                                )
+                            }
+                        ) {
+                            showDeleteDialog = true
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
 
-                if (showDeleteDialog) {
-                    DeleteConfirmationDialog(
-                        name = material.name,
-                        onDismissRequest = { showDeleteDialog = false }
-                    ) {
-                        deleteDownloadableMaterial(material, context)
-                        showDeleteDialog = false
-                        mainViewModel.dismissMediaView()
-                    }
+                if (showDeleteDialog) DeleteConfirmationDialog(
+                    name = material.name,
+                    onDismissRequest = { showDeleteDialog = false }
+                ) {
+                    deleteDownloadableMaterial(material, context)
+                    showDeleteDialog = false
+                    mainViewModel.dismissMediaView()
                 }
             }
         ))

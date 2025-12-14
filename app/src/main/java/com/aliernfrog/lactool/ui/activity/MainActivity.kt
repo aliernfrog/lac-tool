@@ -28,7 +28,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.aliernfrog.lactool.ui.component.InsetsObserver
+import com.aliernfrog.lactool.impl.SAFFileCreator
+import com.aliernfrog.lactool.ui.component.util.InsetsObserver
 import com.aliernfrog.lactool.ui.component.MediaView
 import com.aliernfrog.lactool.ui.screen.MainScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
@@ -38,9 +39,11 @@ import com.aliernfrog.toptoast.component.TopToastHost
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var safTxtFileCreator: SAFFileCreator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        safTxtFileCreator = SAFFileCreator(this, mimeType = "text/plain")
         installSplashScreen()
 
         setContent {
@@ -83,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         }
         LaunchedEffect(Unit) {
             mainViewModel.scope = scope
+            mainViewModel.safTxtFileCreator = safTxtFileCreator
             mainViewModel.topToastState.setComposeView(view)
             if (isAppInitialized) return@LaunchedEffect
             

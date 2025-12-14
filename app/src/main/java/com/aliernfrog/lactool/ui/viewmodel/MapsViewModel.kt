@@ -1,29 +1,39 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -37,7 +47,6 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.ContextUtils
@@ -50,6 +59,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import com.aliernfrog.lactool.util.MapsNavigationBackStack
+import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,31 +88,29 @@ class MapsViewModel(
     var exportedMaps by mutableStateOf(emptyList<MapFile>())
     var sharedMaps by mutableStateOf(emptyList<MapFile>())
     var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
-    var mapNameEdit by mutableStateOf("")
-    var mapListShown by mutableStateOf(true)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
 
     var activeProgress: Progress?
         get() = progressState.currentProgress
         set(value) { progressState.currentProgress = value }
 
-    val mapListBackButtonShown
-        get() = chosenMap != null
+    val mapsBackStack = MapsNavigationBackStack()
 
-    var chosenMap by mutableStateOf<MapFile?>(null)
-
-    fun chooseMap(map: Any?) {
+    fun viewMapDetails(map: Any) {
         try {
-            val mapToChoose = when (map) {
+            val mapFile = when (map) {
                 is MapFile -> map
                 is FileWrapper -> MapFile(map)
-                else -> if (map == null) null else MapFile(FileWrapper(map))
+                else -> MapFile(FileWrapper(map))
             }
-            if (mapToChoose != null) mapNameEdit = mapToChoose.name.replace("\n", "")
-            chosenMap = mapToChoose
-        } catch (e: Exception) {
+            mapsBackStack.add(mapFile)
+            if (!prefs.stackupMaps.value) mapsBackStack.removeIf {
+                it.path != mapFile.path
+            }
+        } catch (_: CancellationException) {}
+        catch (e: Exception) {
             topToastState.showErrorToast()
-            Log.e(TAG, "chooseMap: ", e)
+            Log.e(TAG, "viewMapDetails: ", e)
         }
     }
 
@@ -135,8 +147,10 @@ class MapsViewModel(
                     icon = Icons.Rounded.Delete
                 )
             }
-            chosenMap?.path?.let { path ->
-                if (maps.map { it.path }.contains(path)) chooseMap(null)
+            mapsBackStack.removeIf {
+                maps.any { map ->
+                    map.path == it.path
+                }
             }
         }
         mapsPendingDelete = null
@@ -144,6 +158,7 @@ class MapsViewModel(
         activeProgress = null
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openMapThumbnailViewer(map: MapFile) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
@@ -151,9 +166,10 @@ class MapsViewModel(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
+                var showBackupReminderDialog by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 val thumbnailPickerLauncher = rememberLauncherForActivityResult(
@@ -164,7 +180,7 @@ class MapsViewModel(
                         map.runInIOThreadSafe {
                             val cachedFile = UriUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
-                            chooseMap(map)
+                            viewMapDetails(map)
                             openMapThumbnailViewer(map)
                             topToastState.showToast(
                                 text = R.string.maps_thumbnail_set_done,
@@ -175,38 +191,74 @@ class MapsViewModel(
                     }
                 }
 
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_set),
-                    painter = rememberVectorPainter(Icons.Default.AddPhotoAlternate),
-                    description = if (hasThumbnail) stringResource(R.string.maps_thumbnail_set_overrides) else null
-                ) {
+                fun launchThumbnailPicker() {
                     thumbnailPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 }
 
-                if (!hasThumbnail) return@MediaViewData
-
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_share),
-                    painter = rememberVectorPainter(Icons.Default.Share)
+                if (hasThumbnail) IconButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.padding(end = 4.dp)
                 ) {
-                    scope.launch {
-                        activeProgress = Progress(context.getString(R.string.info_sharing))
-                        map.runInIOThreadSafe {
-                            FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.action_delete)
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        if (hasThumbnail) showBackupReminderDialog = true
+                        else launchThumbnailPicker()
+                    },
+                    shapes = ButtonDefaults.shapes()
+                ) {
+                    ButtonIcon(rememberVectorPainter(Icons.Default.AddPhotoAlternate))
+                    Text(stringResource(R.string.maps_thumbnail_set))
+                }
+
+                if (hasThumbnail) IconButton(
+                    onClick = {
+                        scope.launch {
+                            activeProgress = Progress(context.getString(R.string.info_sharing))
+                            map.runInIOThreadSafe {
+                                FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
+                            }
+                            activeProgress = null
                         }
-                        activeProgress = null
-                    }
+                    },
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier = Modifier.padding(start = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(R.string.action_share)
+                    )
                 }
 
-                ButtonRow(
-                    title = stringResource(R.string.maps_thumbnail_delete),
-                    painter = rememberVectorPainter(Icons.Default.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
-                ) {
-                    showDeleteDialog = true
-                }
+                if (showBackupReminderDialog) CustomMessageDialog(
+                    title = stringResource(R.string.info_reminder),
+                    text = stringResource(R.string.maps_thumbnail_set_overrides),
+                    dismissButtonText = stringResource(R.string.action_cancel),
+                    icon = Icons.Default.Warning,
+                    onDismissRequest = { showBackupReminderDialog = false },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showBackupReminderDialog = false
+                                launchThumbnailPicker()
+                            },
+                            shapes = ButtonDefaults.shapes()
+                        ) {
+                            Text(stringResource(R.string.action_ok))
+                        }
+                    }
+                )
 
                 if (showDeleteDialog) DeleteConfirmationDialog(
                     name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),
@@ -216,7 +268,7 @@ class MapsViewModel(
                             activeProgress = Progress(context.getString(R.string.maps_thumbnail_deleting))
                             map.runInIOThreadSafe {
                                 map.deleteThumbnailFile()
-                                chooseMap(map)
+                                viewMapDetails(map)
                                 mainViewModel.dismissMediaView()
                                 showDeleteDialog = false
                                 topToastState.showToast(
@@ -232,10 +284,6 @@ class MapsViewModel(
         ))
     }
 
-    fun resolveMapNameInput(): String {
-        return mapNameEdit.ifBlank { chosenMap?.name ?: "" }.replace("\n", "")
-    }
-
     fun showActionFailedDialog(successes: List<Pair<String, MapActionResult>>, fails: List<Pair<String, MapActionResult>>) {
         customDialogTitleAndText = contextUtils.getString(R.string.maps_actionFailed)
             .replace("{SUCCESSES}", successes.size.toString())
@@ -248,14 +296,31 @@ class MapsViewModel(
      * Loads all imported and exported maps. [isLoadingMaps] will be true while this is in action.
      */
     suspend fun loadMaps(context: Context) {
-        isLoadingMaps = true
-        getMapsFile(context)
-        getExportedMapsFile(context)
-        fetchImportedMaps()
-        fetchExportedMaps()
-        isLoadingMaps = false
+        withContext(Dispatchers.Main) {
+            isLoadingMaps = true
+        }
+        checkAndUpdateMapsFiles(context)
+        val imported = fetchImportedMaps()
+        val exported = fetchExportedMaps()
+        withContext(Dispatchers.Main) {
+            importedMaps = imported
+            exportedMaps = exported
+            isLoadingMaps = false
+        }
     }
 
+    /**
+     * Makes sure [mapsFile] and [exportedMapsFile] are initialized and are up to date.
+     */
+    fun checkAndUpdateMapsFiles(context: Context) {
+        getMapsFile(context)
+        getExportedMapsFile(context)
+    }
+
+    /**
+     * Gets [DocumentFileCompat] to imported maps folder.
+     * Use this before accessing [mapsFile], otherwise the app will crash.
+     */
     fun getMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::mapsFile.isInitialized) false
         else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
@@ -265,7 +330,7 @@ class MapsViewModel(
         lastKnownStorageAccessType = storageAccessType
         mapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(mapsDir)
+                val treeUri = mapsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -283,6 +348,10 @@ class MapsViewModel(
         return mapsFile
     }
 
+    /**
+     * Gets [DocumentFileCompat] to exported maps folder.
+     * Use this before accessing [exportedMapsFile], otherwise the app will crash.
+     */
     private fun getExportedMapsFile(context: Context): FileWrapper {
         val isUpToDate = if (!::exportedMapsFile.isInitialized) false
         else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
@@ -292,7 +361,7 @@ class MapsViewModel(
         lastKnownStorageAccessType = storageAccessType
         exportedMapsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(exportedMapsDir)
+                val treeUri = exportedMapsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -310,25 +379,21 @@ class MapsViewModel(
         return exportedMapsFile
     }
 
-    private suspend fun fetchImportedMaps() {
-        withContext(Dispatchers.IO) {
-            importedMaps = mapsFile.listFiles()
-                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
-                .sortedBy { it.name.lowercase() }
-                .map {
-                    MapFile(it)
-                }
-        }
+    private fun fetchImportedMaps(): List<MapFile> {
+        return mapsFile.listFiles()
+            .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
+            .sortedBy { it.name.lowercase() }
+            .map {
+                MapFile(it)
+            }
     }
 
-    private suspend fun fetchExportedMaps() {
-        withContext(Dispatchers.IO) {
-            exportedMaps = exportedMapsFile.listFiles()
-                .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
-                .sortedBy { it.name.lowercase() }
-                .map {
-                    MapFile(it)
-                }
-        }
+    private fun fetchExportedMaps(): List<MapFile> {
+        return exportedMapsFile.listFiles()
+            .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
+            .sortedBy { it.name.lowercase() }
+            .map {
+                MapFile(it)
+            }
     }
 }

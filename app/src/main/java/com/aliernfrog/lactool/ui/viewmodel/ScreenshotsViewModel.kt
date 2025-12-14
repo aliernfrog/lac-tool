@@ -1,22 +1,32 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
-import android.net.Uri
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.IosShare
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.MediaViewData
@@ -28,7 +38,6 @@ import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
 import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
@@ -40,6 +49,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.net.toUri
+import com.aliernfrog.lactool.ui.component.ButtonIcon
+import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,10 +59,12 @@ class ScreenshotsViewModel(
     val prefs: PreferenceManager,
     private val topToastState: TopToastState,
     private val progressState: ProgressState,
-    private val contextUtils: ContextUtils
+    private val contextUtils: ContextUtils,
+    context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val lazyListState = LazyListState()
+    val listViewOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
     
     private val screenshotsDir : String get() = prefs.lacScreenshotsDir.value
     private lateinit var screenshotsFile: FileWrapper
@@ -61,8 +75,8 @@ class ScreenshotsViewModel(
 
     val screenshotsToShow: List<FileWrapper>
         get() {
-            val sorting = ListSorting.entries[prefs.screenshotsListSorting.value]
-            val reversed = prefs.screenshotsListSortingReversed.value
+            val sorting = ListSorting.entries[prefs.screenshotsListOptions.sorting.value]
+            val reversed = prefs.screenshotsListOptions.sortingReversed.value
             return screenshots.sortedWith(sorting.comparator).let {
                 if (reversed) it.reversed() else it
             }
@@ -77,7 +91,7 @@ class ScreenshotsViewModel(
         lastKnownStorageAccessType = storageAccessType
         screenshotsFile = when (StorageAccessType.entries[storageAccessType]) {
             StorageAccessType.SAF -> {
-                val treeUri = Uri.parse(screenshotsDir)
+                val treeUri = screenshotsDir.toUri()
                 DocumentFileCompat.fromTreeUri(context, treeUri)!!
             }
             StorageAccessType.SHIZUKU -> {
@@ -125,28 +139,38 @@ class ScreenshotsViewModel(
         progressState.currentProgress = null
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openScreenshotOptions(screenshot: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         mainViewModel.showMediaView(MediaViewData(
             model = screenshot.painterModel,
             title = screenshot.name,
-            options = {
+            toolbarContent = {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
-                ButtonRow(
-                    title = stringResource(R.string.screenshots_share),
-                    painter = rememberVectorPainter(Icons.Rounded.IosShare)
+                TextButton(
+                    onClick = { showDeleteDialog = true },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    shapes = ButtonDefaults.shapes()
                 ) {
-                    scope.launch { shareScreenshot(screenshot, context) }
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Delete))
+                    Text(stringResource(R.string.action_delete))
                 }
-                ButtonRow(
-                    title = stringResource(R.string.screenshots_delete),
-                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                    contentColor = MaterialTheme.colorScheme.error
+
+                Spacer(Modifier.width(4.dp))
+
+                FilledTonalButton(
+                    onClick = {
+                        scope.launch { shareScreenshot(screenshot, context) }
+                    },
+                    shapes = ButtonDefaults.shapes()
                 ) {
-                    showDeleteDialog = true
+                    ButtonIcon(rememberVectorPainter(Icons.Default.Share))
+                    Text(stringResource(R.string.action_share))
                 }
 
                 if (showDeleteDialog) DeleteConfirmationDialog(

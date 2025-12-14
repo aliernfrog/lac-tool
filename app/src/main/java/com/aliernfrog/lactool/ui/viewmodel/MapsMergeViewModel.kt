@@ -12,13 +12,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapMergerState
-import com.aliernfrog.lactool.util.extension.popBackStackSafe
+import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Dispatchers
@@ -27,12 +27,8 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsMergeViewModel(
     private val topToastState: TopToastState,
-    private val mainViewModel: MainViewModel,
     private val mapsViewModel: MapsViewModel
 ) : ViewModel() {
-    val navController: NavController
-        get() = mainViewModel.navController
-    
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
 
@@ -48,7 +44,9 @@ class MapsMergeViewModel(
         context: Context,
         newMapName: String
     ) {
-        if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_noEnoughMaps)
+        val mainViewModel = getKoinInstance<MainViewModel>()
+
+        if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_notEnoughMaps)
         val mapsFile = mapsViewModel.getMapsFile(context)
         val newFileName = "$newMapName.txt"
         val output = mapsFile.findFile(newFileName)
@@ -57,17 +55,17 @@ class MapsMergeViewModel(
         withContext(Dispatchers.IO) {
             Thread.sleep(2000) // Can't live without seeing progress indicator
             val newMapContent = mapMerger.mergeMaps(
-                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_noEnoughMaps) }
+                onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_notEnoughMaps) }
             ) ?: return@withContext
             mapsFile.createFile(newFileName)!!.writeFile(newMapContent, context)
             mergeMapDialogShown = false
             isMerging = false
             mapMerger.clearMaps()
             // No need to update merger state here because it navigates back after finishing
-            mapsViewModel.chooseMap(mapsFile.findFile(newFileName))
+            mapsViewModel.viewMapDetails(mapsFile.findFile(newFileName)!!)
             topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
         }
-        navController.popBackStackSafe()
+        mainViewModel.navigationBackStack.removeLastIfMultiple()
     }
 
     suspend fun addMaps(

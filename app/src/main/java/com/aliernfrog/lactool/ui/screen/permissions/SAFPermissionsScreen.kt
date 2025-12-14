@@ -15,11 +15,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,16 +41,16 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.data.requiresAndroidData
 import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.enum.isCompatible
 import com.aliernfrog.lactool.ui.component.CardWithActions
-import com.aliernfrog.lactool.ui.component.form.ButtonRow
-import com.aliernfrog.lactool.ui.component.form.DividerRow
-import com.aliernfrog.lactool.ui.component.form.FormSection
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
+import com.aliernfrog.lactool.ui.component.expressive.ExpressiveSection
+import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
-import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 import com.aliernfrog.lactool.util.extension.toPath
+import com.aliernfrog.lactool.util.extension.takePersistablePermissions
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import org.koin.androidx.compose.koinViewModel
@@ -53,9 +60,11 @@ fun SAFPermissionsScreen(
     vararg permissionsData: PermissionData,
     onUpdateStateRequest: () -> Unit
 ) {
+    val mainViewModel = koinViewModel<MainViewModel>()
     val context = LocalContext.current
     val requiresAndroidData = permissionsData.any { it.requiresAndroidData }
     val needsToDowngradeFiles = requiresAndroidData && GeneralUtil.documentsUIRestrictsAndroidData(context)
+            && !mainViewModel.prefs.ignoreDocumentsUIRestrictions.value
 
     AnimatedContent(needsToDowngradeFiles) {
         if (it) DowngradeFiles()
@@ -65,6 +74,7 @@ fun SAFPermissionsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun DowngradeFiles(
     permissionsViewModel: PermissionsViewModel = koinViewModel()
@@ -76,21 +86,30 @@ private fun DowngradeFiles(
             .navigationBarsPadding()
     ) {
         CardWithActions(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier.padding(
+                vertical = 8.dp,
+                horizontal = 12.dp
+            ),
             title = stringResource(R.string.permissions_downgradeFilesApp),
             buttons = {
-                TextButton(
-                    onClick = {
-                        permissionsViewModel.showShizukuIntroDialog = true
-                        StorageAccessType.SHIZUKU.enable(permissionsViewModel.prefs)
+                Column {
+                    Button(
+                        shapes = ButtonDefaults.shapes(),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { permissionsViewModel.showFilesDowngradeDialog = true }
+                    ) {
+                        Text(stringResource(R.string.permissions_downgradeFilesApp_uninstall))
                     }
-                ) {
-                    Text(stringResource(R.string.permissions_downgradeFilesApp_cant))
-                }
-                Button(
-                    onClick = { permissionsViewModel.showFilesDowngradeDialog = true }
-                ) {
-                    Text(stringResource(R.string.permissions_downgradeFilesApp_uninstall))
+                    OutlinedButton(
+                        shapes = ButtonDefaults.shapes(),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            permissionsViewModel.showShizukuIntroDialog = true
+                            StorageAccessType.SHIZUKU.enable(permissionsViewModel.prefs)
+                        }
+                    ) {
+                        Text(stringResource(R.string.permissions_downgradeFilesApp_cant))
+                    }
                 }
             }
         ) {
@@ -99,6 +118,7 @@ private fun DowngradeFiles(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SAFPermissionsList(
     vararg permissionsData: PermissionData,
@@ -148,6 +168,15 @@ private fun SAFPermissionsList(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
+        item {
+            PermissionsScreenAction(
+                title = null,
+                description = stringResource(R.string.permissions_saf_foldersNeeded),
+                icon = Icons.Default.Folder,
+                button = null
+            )
+        }
+
         itemsIndexed(missingPermissions) { index, permissionData ->
             var introDialogShown by remember { mutableStateOf(false) }
             if (introDialogShown) ChooseFolderIntroDialog(
@@ -165,15 +194,22 @@ private fun SAFPermissionsList(
                 else openFolderPicker(permissionData)
             }
 
-            if (index != 0) DividerRow(Modifier.fillMaxWidth())
             ListItem(
+                colors = ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                ),
                 headlineContent = { Text(stringResource(permissionData.title)) },
                 supportingContent = {
                     Column(Modifier.fillMaxWidth()) {
                         permissionData.content()
 
                         permissionData.recommendedPathWarning?.let { warning ->
-                            Card(Modifier.padding(vertical = 8.dp)) {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ),
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            ) {
                                 Text(
                                     text = stringResource(warning),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -183,6 +219,7 @@ private fun SAFPermissionsList(
 
                         Button(
                             onClick = ::onClick,
+                            shapes = ButtonDefaults.shapes(),
                             modifier = Modifier
                                 .align(Alignment.End)
                                 .padding(top = 4.dp)
@@ -191,19 +228,23 @@ private fun SAFPermissionsList(
                         }
                     }
                 },
-                modifier = Modifier.clickable(onClick = ::onClick)
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .verticalSegmentedShape(index = index, totalSize = missingPermissions.size)
+                    .clickable(onClick = ::onClick)
             )
         }
 
         if (StorageAccessType.ALL_FILES.isCompatible()) item {
-            FormSection(
-                title = stringResource(R.string.permissions_other),
-                topDivider = true,
-                bottomDivider = false
+            ExpressiveSection(
+                title = stringResource(R.string.permissions_other)
             ) {
-                ButtonRow(
+                ExpressiveButtonRow(
                     title = stringResource(R.string.permissions_saf_allFiles),
-                    description = stringResource(R.string.permissions_saf_allFiles_description)
+                    description = stringResource(R.string.permissions_saf_allFiles_description),
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .verticalSegmentedShape()
                 ) {
                     StorageAccessType.ALL_FILES.enable(permissionsViewModel.prefs)
                 }

@@ -1,5 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.w3c.dom.Element
+import org.w3c.dom.Node
 import java.io.FileInputStream
 import java.util.Properties
+import javax.xml.parsers.DocumentBuilderFactory
 
 val localProperties = Properties()
 try {
@@ -18,14 +22,15 @@ plugins {
 
 android {
     namespace = "com.aliernfrog.lactool"
-    compileSdk = 35
+    compileSdk = 36
+    buildToolsVersion = "36.1.0"
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 21
-        targetSdk = 35
-        versionCode = 35100
-        versionName = "3.5.1"
+        targetSdk = 36
+        versionCode = 400000
+        versionName = "4.0.0"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -53,9 +58,12 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+            optIn.add("kotlin.RequiresOptIn")
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        }
     }
 
     buildFeatures {
@@ -71,22 +79,64 @@ android {
     }
 }
 
+val languages = mutableListOf<String>()
+val translationProgresses = mutableListOf<Float>()
+val resDirPath = "src/main/res"
+val baseStrings = "$resDirPath/values/strings.xml"
+var translatableStringsCount = 0
+
+// Get translatable strings count from base strings.xml
+val documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+val baseStringsDoc = documentBuilder.parse(project.file(baseStrings))
+baseStringsDoc.documentElement.normalize()
+val baseStringsNodeList = baseStringsDoc.getElementsByTagName("string")
+for (i in 0 until baseStringsNodeList.length) {
+    val node = baseStringsNodeList.item(i)
+    if (node.nodeType == Node.ELEMENT_NODE) {
+        val element = node as Element
+        val translatable = element.getAttribute("translatable")
+        if (translatable.isNullOrEmpty() || !translatable.equals("false", ignoreCase = true)) {
+            translatableStringsCount++
+        }
+    }
+}
+
 // Get available languages and save it in "LANGUAGES" field of BuildConfig.
 // https://stackoverflow.com/a/36047987
-val languages = mutableListOf<String>()
-fileTree("src/main/res").visit {
+fileTree(resDirPath).visit {
     if (file.path.endsWith("strings.xml")) languages.add(
         file.parentFile.name.let {
-            if (it == "values") "en-US"
-            else file.parentFile.name
+            val localeName = if (it == "values") "en-US" else file.parentFile.name
                 .removePrefix("values-")
-                .replace("-r","-") // "zh-rCN" -> "zh-CN"
+                .replace("-r", "-") // "zh-rCN" -> "zh-CN"
+
+            var translatedStringsCount = 0
+            try {
+                val doc = documentBuilder.parse(file)
+                doc.documentElement.normalize()
+                val nodeList = doc.getElementsByTagName("string")
+                for (i in 0 until nodeList.length) {
+                    val node = nodeList.item(i)
+                    if (node.nodeType == Node.ELEMENT_NODE) {
+                        translatedStringsCount++
+                    }
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to resolve translated strings count for locale $localeName", e)
+            }
+
+            translationProgresses.add(translatedStringsCount.toFloat() / translatableStringsCount.toFloat())
+            localeName
         }
     )
 }
 android.defaultConfig.buildConfigField("String[]", "LANGUAGES", "new String[]{${
     languages.joinToString(",") { "\"$it\"" }
 }}")
+android.defaultConfig.buildConfigField("float[]", "TRANSLATION_PROGRESSES", "new float[]{${
+    translationProgresses.joinToString(",") { "${it}f" }
+}}")
+
 
 val laclibPath: String? = localProperties.getProperty("laclibPath")
 val useLocalLaclib = !laclibPath.isNullOrEmpty()
@@ -124,10 +174,12 @@ fun exec(vararg command: String) = try {
 
 dependencies {
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.lifecycle.compose)
     implementation(libs.androidx.lifecycle.ktx)
-    implementation(libs.androidx.navigation)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.splashscreen)
 
     implementation(libs.compose.ui)

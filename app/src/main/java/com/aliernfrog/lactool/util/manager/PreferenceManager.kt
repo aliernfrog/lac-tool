@@ -2,8 +2,6 @@ package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
 import android.os.Environment
-import com.aliernfrog.lactool.enum.ListSorting
-import com.aliernfrog.lactool.enum.ListStyle
 import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.externalStorageRoot
 import com.aliernfrog.lactool.ui.theme.Theme
@@ -25,6 +23,7 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     // Maps options
     val showChosenMapThumbnail = booleanPreference("chosenMapThumbnail", true)
     val showMapThumbnailsInList = booleanPreference("showMapThumbnailsList", true)
+    val stackupMaps = booleanPreference("stackupMaps", false)
 
     // Directory options
     val lacMapsDir = stringPreference("mapsDir", "${externalStorageRoot}Android/data/com.MA.LAC/files/editor", experimental = true)
@@ -34,22 +33,16 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
     val storageAccessType = intPreference("storageAccessType", StorageAccessType.SAF.ordinal, includeInDebugInfo = true)
 
     // Maps list
-    val mapsListSorting = intPreference("mapsListSorting", ListSorting.ALPHABETICAL.ordinal)
-    val mapsListSortingReversed = booleanPreference("mapsListSortingReversed", false)
-    val mapsListStyle = intPreference("mapsListStyle", ListStyle.LIST.ordinal)
+    val mapsListOptions = listViewOptionsPreference("mapsList")
 
     // Maps materials list
-    val mapsMaterialsListStyle = intPreference("mapsMaterialsListStyle", ListStyle.GRID.ordinal)
+    val mapsMaterialsListOptions = listViewOptionsPreference("mapsMaterialsList")
 
     // Wallpapers list
-    val wallpapersListSorting = intPreference("wallpapersListSorting", ListSorting.DATE.ordinal)
-    val wallpapersListSortingReversed = booleanPreference("wallpapersListSortingReversed", false)
-    val wallpapersListStyle = intPreference("wallpapersListStyle", ListStyle.GRID.ordinal)
+    val wallpapersListOptions = listViewOptionsPreference("wallpapersList")
 
     // Screenshots list
-    val screenshotsListSorting = intPreference("screenshotsListSorting", ListSorting.DATE.ordinal)
-    val screenshotsListSortingReversed = booleanPreference("screenshotsListSortingReversed", false)
-    val screenshotsListStyle = intPreference("screenshotsListStyle", ListStyle.GRID.ordinal)
+    val screenshotsListOptions = listViewOptionsPreference("screenshotsList")
 
     // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true, experimental = true, includeInDebugInfo = false)
@@ -57,6 +50,8 @@ class PreferenceManager(context: Context) : BasePreferenceManager(
 
     // Experimental (developer) options
     val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
+    val ignoreDocumentsUIRestrictions = booleanPreference("ignoreDocumentsUiRestrictions", false, experimental = true, includeInDebugInfo = false)
+    val forceStorageAccessTypeCompatibility = booleanPreference("forceStorageAccessTypeCompatibility", false, experimental = true, includeInDebugInfo = false)
     val debug = booleanPreference("debug", false, experimental = true, includeInDebugInfo = false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
     val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", GeneralUtil.getAppVersionCode(context), experimental = true, includeInDebugInfo = false)

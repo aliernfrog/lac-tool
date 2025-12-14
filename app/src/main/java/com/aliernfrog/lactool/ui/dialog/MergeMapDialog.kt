@@ -10,6 +10,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.aliernfrog.lactool.R
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MergeMapDialog(
     isMerging: Boolean,
@@ -49,6 +51,7 @@ fun MergeMapDialog(
                 Button(
                     onClick = { if (!isMerging) onConfirm(mapName) },
                     enabled = enabled,
+                    shapes = ButtonDefaults.shapes(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
@@ -78,6 +81,7 @@ fun MergeMapDialog(
                 exit = fadeOut()
             ) {
                 TextButton(
+                    shapes = ButtonDefaults.shapes(),
                     onClick = { if (canDismiss) onDismissRequest() }
                 ) {
                     Text(stringResource(R.string.action_cancel))

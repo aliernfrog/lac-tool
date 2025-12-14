@@ -17,18 +17,19 @@
 
   ---
   
-  <img alt="LAC Tool screenshot" src="images/maps.jpg" width="200px"/>
+  <img alt="LAC Tool screenshot (dark)" src="images/maps.jpg" width="150px"/>
+  <img alt="LAC Tool screenshot (light)" src="images/maps_light.jpg" width="150px" style="margin-left: 16px;"/>
   
 </div>
 
 ## 💡 Features
-- LAC map management
-- LAC map role & option management
-- LAC map merging
-- LAC in game cellphone wallpaper management
-- Import LAC in game cellphone wallpapers without internet connection
-- LAC in game screenshot management
-- Multiple language support (translate on [Crowdin](https://crowdin.com/project/lac-tool))
+- 📥 Import, export and share maps
+- 🏷️ Edit roles, options and filter objects of maps
+- 🔀 Merge multiple maps into one
+- 📱 Set custom wallpaper for the in-game cellphone
+- 📷 View screenshots taken using the in-game cellphone
+- 🎨 Material You Expressive design
+- 🌐 Multiple language support (translate on [Crowdin](https://crowdin.com/project/lac-tool))
 
 ## 🌍 Translations
 You can help translate LAC Tool on [Crowdin](https://crowdin.com/project/lac-tool).

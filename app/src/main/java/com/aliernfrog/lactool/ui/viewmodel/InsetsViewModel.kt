@@ -18,4 +18,7 @@ class InsetsViewModel : ViewModel() {
     var bottomPadding
         get() = if (imePadding == 0.dp) internalBottomPadding else 0.dp
         set(value) { internalBottomPadding = value }
+
+    val isImeVisible: Boolean
+        get() = imePadding > 0.dp
 }

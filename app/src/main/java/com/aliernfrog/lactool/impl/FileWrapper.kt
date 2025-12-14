@@ -110,7 +110,7 @@ class FileWrapper(
     fun findFile(name: String): FileWrapper? {
         return when (file) {
             is File -> File(file.absolutePath+"/"+name)
-            is DocumentFileCompat -> file.findFile(name)
+            is DocumentFileCompat -> file.findFile(name, ignoreCase = true)
             is ServiceFile -> shizukuViewModel.fileService!!.getFile(file.path+"/"+name)
             else -> throw invalidFileClassException
         }?.let { FileWrapper(it) }

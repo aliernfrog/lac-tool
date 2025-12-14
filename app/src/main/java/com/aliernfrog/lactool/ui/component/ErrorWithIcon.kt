@@ -22,25 +22,28 @@ fun ErrorWithIcon(
     painter: Painter,
     modifier: Modifier = Modifier,
     visible: Boolean = true,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    button: (@Composable () -> Unit)? = null
 ) {
     FadeVisibility(visible) {
         Column(
-            modifier = modifier.padding(8.dp).alpha(0.7f),
+            modifier = modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier.size(50.dp),
+                modifier = Modifier.size(50.dp).alpha(0.7f),
                 tint = contentColor
             )
             Text(
                 text = error,
                 textAlign = TextAlign.Center,
-                color = contentColor
+                color = contentColor,
+                modifier = Modifier.alpha(0.7f)
             )
+            button?.invoke()
         }
     }
 }

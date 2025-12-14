@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -53,13 +55,13 @@ fun AppScaffold(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppTopBar(
     title: String,
     scrollBehavior: TopAppBarScrollBehavior,
     actions: @Composable RowScope.() -> Unit = {},
-    colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     navigationIcon: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack,
     onNavigationClick: (() -> Unit)? = null
 ) {
@@ -76,13 +78,16 @@ fun AppTopBar(
         colors = colors,
         navigationIcon = navigationIcon,
         onNavigationClick = onNavigationClick
-    ) else LargeTopAppBar(
+    ) else LargeFlexibleTopAppBar(
         title = { Text(title) },
         scrollBehavior = scrollBehavior,
         colors = colors,
         navigationIcon = {
             onNavigationClick?.let {
-                IconButton(onClick = it) {
+                IconButton(
+                    shapes = IconButtonDefaults.shapes(),
+                    onClick = it
+                ) {
                     Icon(
                         imageVector = navigationIcon,
                         contentDescription = stringResource(R.string.action_back)
@@ -94,7 +99,7 @@ fun AppTopBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppSmallTopBar(
     title: String,
@@ -110,7 +115,10 @@ fun AppSmallTopBar(
         colors = colors,
         navigationIcon = {
             onNavigationClick?.let {
-                IconButton(onClick = it) {
+                IconButton(
+                    shapes = IconButtonDefaults.shapes(),
+                    onClick = it
+                ) {
                     Icon(
                         imageVector = navigationIcon,
                         contentDescription = stringResource(R.string.action_back)

@@ -11,8 +11,8 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Density
@@ -20,7 +20,6 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -34,8 +33,11 @@ import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.Progress
 import com.aliernfrog.lactool.impl.ProgressState
+import com.aliernfrog.lactool.impl.SAFFileCreator
 import com.aliernfrog.lactool.supportsPerAppLanguagePreferences
-import com.aliernfrog.lactool.util.Destination
+import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
+import com.aliernfrog.lactool.util.MainDestinationGroup
+import com.aliernfrog.lactool.util.NavigationConstant
 import com.aliernfrog.lactool.util.extension.cacheFile
 import com.aliernfrog.lactool.util.extension.getAvailableLanguage
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -62,13 +64,21 @@ class MainViewModel(
     context: Context
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
+    lateinit var safTxtFileCreator: SAFFileCreator
+    val updateSheetState = createSheetStateWithDensity(skipPartiallyExpanded = false, Density(context))
 
-    lateinit var navController: NavController
-    val updateSheetState = SheetState(skipPartiallyExpanded = false, Density(context))
+    val navigationBackStack = mutableStateListOf<Any>(
+        NavigationConstant.INITIAL_DESTINATION
+    )
+    var currentMainDestination by mutableStateOf(NavigationConstant.INITIAL_MAIN_DESTINATION)
+    val isAtMainDestination: Boolean
+        get() = navigationBackStack.last() == MainDestinationGroup
 
     private val applicationVersionName = "v${GeneralUtil.getAppVersionName(context)}"
     private val applicationVersionCode = GeneralUtil.getAppVersionCode(context)
     private val applicationIsPreRelease = applicationVersionName.contains("-alpha")
+
+    @Suppress("KotlinConstantConditions")
     val applicationVersionLabel = "$applicationVersionName (${
         BuildConfig.GIT_COMMIT.ifBlank { applicationVersionCode.toString() }
     }${
@@ -80,12 +90,12 @@ class MainViewModel(
         }
     })"
 
-    private val defaultLanguage = GeneralUtil.getLanguageFromCode("en-US")!!
-    val deviceLanguage = LocaleManagerCompat.getSystemLocales(context)[0]?.toLanguage() ?: defaultLanguage
+    val baseLanguage = GeneralUtil.getLanguageFromCode("en-US")!!
+    val deviceLanguage = LocaleManagerCompat.getSystemLocales(context)[0]?.toLanguage() ?: baseLanguage
 
     private var _appLanguage by mutableStateOf<Language?>(null)
     var appLanguage: Language?
-        get() = _appLanguage ?: deviceLanguage.getAvailableLanguage() ?: defaultLanguage
+        get() = _appLanguage ?: deviceLanguage.getAvailableLanguage() ?: baseLanguage
         set(language) {
             prefs.language.value = language?.fullCode ?: ""
             val localeListCompat = if (language == null) LocaleListCompat.getEmptyLocaleList()
@@ -105,6 +115,8 @@ class MainViewModel(
 
     var updateAvailable by mutableStateOf(false)
         private set
+
+    var showUpdateNotification by mutableStateOf(updateAvailable)
 
     val debugInfo: String
         get() = arrayOf(
@@ -150,7 +162,7 @@ class MainViewModel(
                         updateSheetState.show()
                     } else {
                         showUpdateToast()
-                        Destination.SETTINGS.hasNotification.value = true
+                        showUpdateNotification = true
                     }
                 } else {
                     if (manuallyTriggered) withContext(Dispatchers.Main) {
@@ -214,13 +226,14 @@ class MainViewModel(
 
             progressState.currentProgress = Progress(context.getString(R.string.info_pleaseWait))
             viewModelScope.launch(Dispatchers.IO) {
-                val cached = uris.map { uri ->
-                    MapFile(FileWrapper(uri.cacheFile(context)!!))
+                val cached = mutableListOf<MapFile>()
+                uris.forEach { uri ->
+                    val file = uri.cacheFile(context)
+                    if (file != null) cached.add(MapFile(FileWrapper(file)))
                 }
-                if (cached.size <= 1) {
-                    mapsViewModel.chooseMap(cached.first())
-                    mapsViewModel.mapListShown = false
-                } else {
+                if (cached.size == 1) {
+                    mapsViewModel.viewMapDetails(cached.first())
+                } else if (cached.size > 1) {
                     mapsViewModel.sharedMaps = cached
                     withContext(Dispatchers.Main) {
                         mapsListViewModel.availableSegments.indexOfFirst {

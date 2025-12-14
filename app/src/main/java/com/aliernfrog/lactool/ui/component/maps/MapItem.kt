@@ -1,13 +1,16 @@
 package com.aliernfrog.lactool.ui.component.maps
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PinDrop
@@ -26,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -41,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.component.ImageButtonInfo
-import com.aliernfrog.lactool.ui.theme.AppComponentShape
 import com.aliernfrog.lactool.util.extension.combinedClickableWithColor
 
 @Composable
@@ -49,6 +53,7 @@ fun ListMapItem(
     map: MapFile,
     selected: Boolean?,
     showMapThumbnail: Boolean,
+    modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = contentColorFor(containerColor),
     onSelectedChange: (Boolean) -> Unit,
@@ -64,10 +69,8 @@ fun ListMapItem(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clip(AppComponentShape)
             .background(containerColor)
             .combinedClickableWithColor(
                 color = contentColor,
@@ -87,30 +90,33 @@ fun ListMapItem(
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.background(Brush.horizontalGradient(
-                invertIfRTL(
-                    listOf(containerColor, Color.Transparent)
-                )
-            ))
+            modifier = Modifier
+                .background(Brush.horizontalGradient(
+                    invertIfRTL(
+                        listOf(containerColor, Color.Transparent)
+                    )
+                ))
         ) {
             MapHeader(
                 title = map.name,
                 description = map.details,
                 painter = rememberVectorPainter(Icons.Outlined.PinDrop),
+                textShadowColor = containerColor,
                 modifier = Modifier
+                    .heightIn(56.dp)
                     .onSizeChanged {
                         density.run {
                             headerHeight = it.height.toDp()
                         }
                     }
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .padding(horizontal = 18.dp, vertical = 8.dp)
                     .weight(1f)
             )
-            selected?.let { isSelected ->
-                Checkbox(
+            AnimatedContent(selected != null) {
+                if (it) Checkbox(
                     modifier = Modifier.padding(horizontal = 12.dp),
-                    checked = isSelected,
+                    checked = selected == true,
                     onCheckedChange = onSelectedChange
                 )
             }
@@ -123,18 +129,28 @@ fun GridMapItem(
     map: MapFile,
     selected: Boolean?,
     showMapThumbnail: Boolean,
+    modifier: Modifier = Modifier,
+    aspectRatio: Float? = 1f,
+    placeholderIcon: ImageVector = Icons.Outlined.PinDrop,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = contentColorFor(containerColor),
     onSelectedChange: (Boolean) -> Unit,
     onLongClick: () -> Unit,
     onClick: () -> Unit
 ) {
+    val density = LocalDensity.current
+    var width by remember { mutableStateOf(0.dp) }
+
     CompositionLocalProvider(LocalContentColor provides contentColor) {
         Box(
-            modifier = Modifier
-                .aspectRatio(1f)
-                .padding(8.dp)
-                .clip(AppComponentShape)
+            modifier = modifier
+                .onSizeChanged {
+                    width = with(density) { it.width.toDp() }
+                }
+                .then(
+                    if (aspectRatio != null) Modifier.aspectRatio(aspectRatio)
+                    else Modifier
+                )
                 .background(containerColor)
                 .combinedClickableWithColor(
                     onClick = onClick,
@@ -143,11 +159,14 @@ fun GridMapItem(
                 )
         ) {
             Icon(
-                imageVector = Icons.Outlined.PinDrop,
+                imageVector = placeholderIcon,
                 contentDescription = null,
                 modifier = Modifier
-                    .aspectRatio(1f)
-                    .fillMaxWidth()
+                    .then(
+                        if (aspectRatio != null) Modifier.aspectRatio(aspectRatio)
+                        else Modifier
+                    )
+                    .fillMaxSize()
                     .padding(
                         top = 16.dp,
                         bottom = 40.dp,
@@ -171,7 +190,6 @@ fun GridMapItem(
                     .fillMaxWidth()
                     .background(Brush.verticalGradient(listOf(
                         Color.Transparent,
-                        containerColor,
                         containerColor
                     )))
                     .padding(
@@ -185,19 +203,28 @@ fun GridMapItem(
                     text = map.name,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2,
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        shadow = Shadow(
+                            color = containerColor,
+                            offset = Offset(5f, 4f),
+                            blurRadius = 25f
+                        )
+                    )
                 )
                 ImageButtonInfo(
-                    text = map.readableSize
+                    text = if (width > 150.dp) "${map.readableSize} | ${map.readableLastModified}"
+                    else map.readableSize
                 )
             }
 
-            selected?.let { isSelected ->
-                Checkbox(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp),
-                    checked = isSelected,
+            AnimatedContent(
+                targetState = selected != null,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+            ) {
+                if (it) Checkbox(
+                    checked = selected == true,
                     onCheckedChange = onSelectedChange
                 )
             }

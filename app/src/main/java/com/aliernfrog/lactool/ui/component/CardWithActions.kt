@@ -2,8 +2,10 @@ package com.aliernfrog.lactool.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,8 +25,8 @@ fun CardWithActions(
     title: String?,
     modifier: Modifier = Modifier,
     painter: Painter? = null,
-    buttons: @Composable () -> Unit,
-    content: @Composable () -> Unit
+    buttons: @Composable RowScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
         shape = AppComponentShape,
@@ -57,10 +59,9 @@ fun CardWithActions(
             Row(
                 modifier = Modifier.align(Alignment.End),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-            ) {
-                buttons()
-            }
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                content = buttons
+            )
         }
     }
 }
