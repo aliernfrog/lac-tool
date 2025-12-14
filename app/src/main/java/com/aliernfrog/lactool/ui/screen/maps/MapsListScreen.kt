@@ -419,7 +419,7 @@ private fun Header(
             mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(300))
         } }
         if (mapsToShow.isEmpty()) {
-            if (mapsViewModel.isLoadingMaps) if (mapsViewModel.isLoadingMaps) Box(Modifier.fillMaxSize()) {
+            if (mapsViewModel.isLoadingMaps) Box(Modifier.fillMaxSize()) {
                 ContainedLoadingIndicator(
                     modifier = Modifier
                         .align(Alignment.Center)
