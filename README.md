@@ -17,7 +17,8 @@
 
   ---
   
-  <img alt="LAC Tool screenshot" src="images/maps.jpg" width="200px"/>
+  <img alt="LAC Tool screenshot (dark)" src="images/maps.jpg" width="150px"/>
+  <img alt="LAC Tool screenshot (light)" src="images/maps_light.jpg" width="150px" style="margin-left: 16px;"/>
   
 </div>
 
