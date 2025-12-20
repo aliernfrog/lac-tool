@@ -11,10 +11,13 @@
     <string name="action_share">Поделиться</string>
     <string name="action_delete">Удалить</string>
     <string name="action_more">Ещё</string>
+    <string name="action_select_selectAll">Выбрать всё</string>
     <string name="intent_openMap">Открыть карту</string>
     <string name="intent_downloadMap">Загрузить карту</string>
     <string name="warning_error">Что-то пошло не так</string>
     <string name="warning_pickFile_failed">Не удалось выбрать файл</string>
+    <string name="info">Информация</string>
+    <string name="info_reminder">Напоминание</string>
     <string name="info_copiedToClipboard">Скопировано в буфер обмена</string>
     <string name="info_pleaseWait">Пожалуйста, подождите..</string>
     <string name="info_sharing">Отправка..</string>
@@ -39,6 +42,7 @@
     <string name="permissions_notRecommendedFolder_advanced_show">Показать дополнительные параметры</string>
     <string name="permissions_notRecommendedFolder_advanced_hide">Скрыть дополнительные параметры</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Всё равно использовать выбранную папку</string>
+    <string name="permissions_saf_foldersNeeded">Для продолжения необходимо выбрать следующие папки</string>
     <string name="permissions_saf_allFiles">Доступ ко всем файлам</string>
     <string name="permissions_saf_allFiles_description">Разрешите LAC Tool получить доступ ко всем файлам, это может ускорить настройку</string>
     <string name="permissions_setupShizuku">Использовать Shizuku</string>
@@ -57,6 +61,8 @@
     <string name="permissions_shizuku_waitingService">Ожидается файловый сервис..</string>
     <string name="permissions_shizuku_waitingService_timedOut">Слишком долго? Попробуйте перезапустить LAC Tool</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Перезапустить</string>
+    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Установить рекомендованную версию</string>
+    <string name="permissions_shizuku_problematicVersion_allVersions">Все версии</string>
     <string name="permissions_allFiles_title">Хранилище</string>
     <string name="permissions_allFiles_description">Для доступа LAC Tool к данным LAC необходимы разрешения на доступ к хранилищу</string>
     <string name="permissions_allFiles_grant">Предоставить разрешение</string>
@@ -141,6 +147,7 @@
     <string name="mapsList_noSharedMaps">Вы ещё не отправили ни одной карты в LAC tool</string>
     <string name="mapsList_searchNoMatches">Ничего не найдено</string>
     <string name="mapsEdit">Редактировать карту</string>
+    <string name="mapsEdit_save">Сохранить</string>
     <string name="mapsEdit_general">Общее</string>
     <string name="mapsEdit_serverName">Имя сервера</string>
     <string name="mapsEdit_mapType">Тип карты</string>
@@ -159,6 +166,7 @@
     <string name="mapsEdit_filterObjects_description">Фильтруйте объекты по имени и по желанию удаляйте их</string>
     <string name="mapsEdit_filterObjects_query">Ключевое слово</string>
     <string name="mapsEdit_filterObjects_caseSensitive">Соблюдать регистр</string>
+    <string name="mapsEdit_filterObjects_filter_exact">Точное совпадение</string>
     <string name="mapsEdit_filterObjects_matches">%n совпадений</string>
     <string name="mapsEdit_filterObjects_removeMatches">Удалите совпавшие объекты</string>
     <string name="mapsEdit_filterObjects_removedMatches">Удалено %n совпадающих объектов</string>
@@ -239,6 +247,7 @@
     <string name="screenshots_deleting">Удаление снимка..</string>
     <string name="screenshots_deleted">Снимок удалён</string>
     <string name="settings">Настройки</string>
+    <string name="settings_category_app">Приложение</string>
     <string name="settings_updateNotification_updateAvailable">Обновление доступно: {VERSION}</string>
     <string name="settings_updateNotification_description">Нажмите для просмотра подробностей и действий</string>
     <string name="settings_appearance">Внешний вид</string>
@@ -273,6 +282,7 @@
     <string name="settings_storage_folders_recommendedFolder">Рекомендуемая папка</string>
     <string name="settings_storage_folders_choose">Выбрать папку</string>
     <string name="settings_storage_folders_openRecommended">Открыть рекомендуемую папку</string>
+    <string name="settings_storage_folders_openCurrent">Открыть текущую папку</string>
     <string name="settings_storage_folders_openAndroidData">Открыть папку Android/data</string>
     <string name="settings_storage_folders_restoreDefault">Восстановить по умолчанию</string>
     <string name="settings_storage_folders_maps">Папка для карт</string>
@@ -286,10 +296,15 @@
     <string name="settings_language_help_description">Вы можете внести свой вклад в перевод приложения на Crowdin, нажав на эту кнопку</string>
     <string name="settings_language_system">Использовать язык системы</string>
     <string name="settings_language_system_notAvailable">{SYSTEM_LANGUAGE} не доступен</string>
+    <string name="settings_language_other">Другие языки</string>
     <string name="settings_language_selected">Выбран</string>
+    <string name="settings_language_progress_percent">{PERCENT}% переведено</string>
+    <string name="settings_language_progress_base">Основной язык</string>
     <string name="settings_about">О программе</string>
     <string name="settings_about_changelog">Список изменений</string>
     <string name="settings_about_update">Обновления</string>
+    <string name="settings_about_updates">Обновления</string>
+    <string name="settings_about_updates_autoCheckUpdates">Проверять наличие обновлений автоматически</string>
     <string name="settings_about_credits">Авторы</string>
     <string name="settings_about_libs">Библиотеки</string>
     <string name="settings_about_libs_description">Библиотеки, использованные при создании LAC Tool</string>

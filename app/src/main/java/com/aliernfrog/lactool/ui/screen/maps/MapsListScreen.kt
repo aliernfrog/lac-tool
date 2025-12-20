@@ -42,6 +42,7 @@ import androidx.compose.material.icons.rounded.LocationOff
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +50,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SearchBar
@@ -419,11 +419,12 @@ private fun Header(
             mapsListViewModel.pagerState.animateScrollToPage(it, animationSpec = tween(300))
         } }
         if (mapsToShow.isEmpty()) {
-            if (mapsViewModel.isLoadingMaps) Column(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LoadingIndicator()
+            if (mapsViewModel.isLoadingMaps) Box(Modifier.fillMaxSize()) {
+                ContainedLoadingIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(vertical = 24.dp)
+                )
             }
             else AnimatedContent(mapsListViewModel.searchQuery.isNotEmpty()) { searching ->
                 ErrorWithIcon(

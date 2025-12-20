@@ -79,6 +79,7 @@ private fun MapsScreenSafePermissions(
         entryProvider = entryProvider {
             entry(MapsNavigationBackStack.Companion.MapsList) {
                 MapsListScreen(
+                    title = stringResource(R.string.maps),
                     onNavigateSettingsRequest = onNavigateSettingsRequest,
                     onBackClick = null,
                     onMapPick = {

@@ -1,6 +1,6 @@
 [versions]
-android-plugin = "8.11.1"
-kotlin-plugin = "2.2.0"
+android-plugin = "8.13.2"
+kotlin-plugin = "2.2.21"
 
 android-desugar = "2.1.5"
 
@@ -20,11 +20,11 @@ coil = "3.3.0"
 dfc = "1.2"
 koin = "4.1.1"
 laclib = "1.2.1"
-markdown = "0.5.7"
+markdown = "0.5.8"
 pftool-shared = "dbcb6367ab"
 shizuku = "13.1.5"
 toptoast = "2.1.0"
-zoomable = "2.8.1"
+zoomable = "2.9.0"
 
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }
