@@ -1,10 +1,10 @@
 package com.aliernfrog.lactool.util.extension
 
-import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
 
 val DocumentFileCompat.nameWithoutExtension
-    get() = FileUtil.removeExtension(this.name)
+    get() = PFToolSharedUtil.removeExtension(this.name)
 
 val DocumentFileCompat.size: Long
     get() {

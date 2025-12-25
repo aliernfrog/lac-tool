@@ -32,11 +32,11 @@ import com.aliernfrog.laclib.util.LACLibUtil
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.ChipIcon
-import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
-import io.github.aliernfrog.pftool_shared.ui.component.form.ExpandableRow
-import io.github.aliernfrog.pftool_shared.ui.component.form.getExpandableRowDefaultExpandedContainerColor
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
+import io.github.aliernfrog.shared.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

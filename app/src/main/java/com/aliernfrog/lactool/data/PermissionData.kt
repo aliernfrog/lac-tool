@@ -3,7 +3,7 @@ package com.aliernfrog.lactool.data
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import com.aliernfrog.lactool.util.manager.base.BasePreferenceManager
+import io.github.aliernfrog.shared.util.manager.BasePreferenceManager
 
 data class PermissionData(
     @StringRes val title: Int,

@@ -42,12 +42,12 @@ import androidx.core.text.HtmlCompat
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.state.TopToastState
-import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
-import io.github.aliernfrog.pftool_shared.ui.component.VerticalSegmentor
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
-import io.github.aliernfrog.pftool_shared.ui.component.form.BaseExpandableRow
-import io.github.aliernfrog.pftool_shared.ui.component.form.ToggleExpandButton
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.shared.ui.component.form.BaseExpandableRow
+import io.github.aliernfrog.shared.ui.component.form.ToggleExpandButton
 import kotlinx.coroutines.launch
 
 @Composable

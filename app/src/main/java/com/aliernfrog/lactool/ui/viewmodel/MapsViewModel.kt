@@ -37,18 +37,13 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
-import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
-import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.extension.showErrorToast
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
@@ -57,11 +52,16 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.net.toUri
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
+import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
-import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
 import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
-import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.data.MediaOverlayData
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.impl.ContextUtils
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -160,7 +160,7 @@ class MapsViewModel(
     fun openMapThumbnailViewer(map: MapFile) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
-        mainViewModel.showMediaView(MediaViewData(
+        mainViewModel.showMediaOverlay(MediaOverlayData(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
@@ -176,7 +176,7 @@ class MapsViewModel(
                     if (uri != null) scope.launch {
                         activeProgress = Progress(context.getString(R.string.maps_thumbnail_setting))
                         map.runInIOThreadSafe {
-                            val cachedFile = UriUtil.cacheFile(uri, "maps", context)
+                            val cachedFile = PFToolSharedUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
                             viewMapDetails(map)
                             openMapThumbnailViewer(map)
@@ -267,7 +267,7 @@ class MapsViewModel(
                             map.runInIOThreadSafe {
                                 map.deleteThumbnailFile()
                                 viewMapDetails(map)
-                                mainViewModel.dismissMediaView()
+                                mainViewModel.dismissMediaOverlay()
                                 showDeleteDialog = false
                                 topToastState.showToast(
                                     text = R.string.maps_thumbnail_deleted,

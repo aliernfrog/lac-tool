@@ -18,7 +18,7 @@ import com.aliernfrog.lactool.util.extension.comparator
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import io.github.aliernfrog.pftool_shared.enum.ListSorting
-import io.github.aliernfrog.pftool_shared.ui.component.createSheetStateWithDensity
+import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -29,13 +29,9 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
-import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -48,11 +44,15 @@ import java.io.File
 import androidx.core.net.toUri
 import com.aliernfrog.lactool.util.extension.comparator
 import io.github.aliernfrog.pftool_shared.enum.ListSorting
+import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
-import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
-import io.github.aliernfrog.pftool_shared.ui.component.createSheetStateWithDensity
-import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
+import io.github.aliernfrog.shared.data.MediaOverlayData
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.impl.ContextUtils
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,7 +143,7 @@ class ScreenshotsViewModel(
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openScreenshotOptions(screenshot: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
-        mainViewModel.showMediaView(MediaViewData(
+        mainViewModel.showMediaOverlay(MediaOverlayData(
             model = screenshot.painterModel,
             title = screenshot.name,
             toolbarContent = {
@@ -180,7 +180,7 @@ class ScreenshotsViewModel(
                     onConfirmDelete = {
                         showDeleteDialog = false
                         scope.launch { deleteScreenshot(screenshot) }
-                        mainViewModel.dismissMediaView()
+                        mainViewModel.dismissMediaOverlay()
                     }
                 )
             }

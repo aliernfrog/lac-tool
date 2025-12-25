@@ -55,21 +55,21 @@ import com.aliernfrog.lactool.ui.component.AppScaffold
 import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
-import com.aliernfrog.lactool.ui.component.VerticalProgressIndicatorWithText
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
-import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
-import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibilityColumn
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
-import io.github.aliernfrog.pftool_shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
-import io.github.aliernfrog.pftool_shared.ui.component.VerticalSegmentor
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
-import io.github.aliernfrog.pftool_shared.ui.component.form.ExpandableRow
-import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.FadeVisibilityColumn
+import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
+import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -158,7 +158,7 @@ fun MapsMaterialsScreen(
                     else MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     if (minified) return@ImageButtonOverlay Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         if (failed) Icon(
                             imageVector = Icons.Default.Error,

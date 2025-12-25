@@ -1,14 +1,12 @@
 package com.aliernfrog.lactool
 
 import android.os.Build
-import android.os.Environment
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.ui.graphics.Color
-import com.aliernfrog.lactool.data.PrefEditItem
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import io.github.aliernfrog.pftool_shared.data.Social
-import io.github.aliernfrog.pftool_shared.impl.CreditData
+import io.github.aliernfrog.shared.data.Social
+import io.github.aliernfrog.shared.impl.CreditData
 
 const val TAG = "LACToolLogs"
 
@@ -16,10 +14,7 @@ const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 const val crowdinURL = "https://crowdin.com/project/lac-tool"
 
-val externalStorageRoot = Environment.getExternalStorageDirectory().toString()+"/"
 val supportsPerAppLanguagePreferences = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-val folderPickerSupportsInitialUri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-val hasAndroidDataRestrictions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
 object SettingsConstant {
     val socials = listOf(
@@ -40,25 +35,6 @@ object SettingsConstant {
             icon = Icons.Default.Translate,
             iconContainerColor = Color(0xFF263238),
             url = crowdinURL
-        )
-    )
-
-    val folders = listOf(
-        PrefEditItem(
-            preference = { it.lacMapsDir },
-            label = { R.string.settings_storage_folders_maps }
-        ),
-        PrefEditItem(
-            preference = { it.lacWallpapersDir },
-            label = { R.string.settings_storage_folders_wallpapers }
-        ),
-        PrefEditItem(
-            preference = { it.lacScreenshotsDir },
-            label = { R.string.settings_storage_folders_screenshots }
-        ),
-        PrefEditItem(
-            preference = { it.exportedMapsDir },
-            label = { R.string.settings_storage_folders_exportedMaps }
         )
     )
 

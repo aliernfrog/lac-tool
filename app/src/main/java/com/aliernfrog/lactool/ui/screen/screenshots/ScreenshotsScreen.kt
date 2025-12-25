@@ -48,16 +48,16 @@ import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
-import com.aliernfrog.lactool.util.staticutil.FileUtil
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
-import io.github.aliernfrog.pftool_shared.ui.component.ErrorWithIcon
-import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
-import io.github.aliernfrog.pftool_shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
-import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -103,7 +103,7 @@ fun ScreenshotsScreen(
         ) {
             var lastModified by remember { mutableStateOf("") }
             LaunchedEffect(screenshot.lastModified) {
-                lastModified = FileUtil.lastModifiedFromLong(screenshot.lastModified, context)
+                lastModified = PFToolSharedUtil.lastModifiedFromLong(screenshot.lastModified, context)
             }
 
             ImageButton(

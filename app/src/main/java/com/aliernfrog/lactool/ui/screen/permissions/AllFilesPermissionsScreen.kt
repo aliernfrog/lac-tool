@@ -21,12 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
+import com.aliernfrog.lactool.util.extension.enable
 import com.aliernfrog.toptoast.enum.TopToastColor
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
-import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -76,7 +77,7 @@ fun AllFilesPermissionsScreen(
                     .padding(horizontal = 12.dp)
                     .verticalSegmentedShape()
             ) {
-                StorageAccessType.SAF.enable(permissionsViewModel.prefs)
+                StorageAccessType.SAF.enable()
             }
         }
 

@@ -195,7 +195,8 @@ dependencies {
 
     listOf(
         "laclibPath" to libs.laclib,
-        "pftoolSharedLibPath" to libs.pftool.shared
+        "pftoolSharedBaseLibPath" to libs.pftool.shared.base,
+        "pftoolSharedExtraLibPath" to libs.pftool.shared.extra
     ).forEach { (name, defaultLib) ->
         val localPath = localProperties.getProperty(name)
         implementation(

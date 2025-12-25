@@ -15,12 +15,12 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapMergerState
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
+import io.github.aliernfrog.shared.di.getKoinInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

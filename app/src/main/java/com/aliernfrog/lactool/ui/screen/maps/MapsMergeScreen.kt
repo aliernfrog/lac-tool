@@ -51,13 +51,13 @@ import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
-import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
-import io.github.aliernfrog.pftool_shared.ui.component.ErrorWithIcon
-import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
-import io.github.aliernfrog.pftool_shared.ui.component.FloatingActionButton
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
-import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
-import io.github.aliernfrog.pftool_shared.ui.theme.AppFABPadding
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.FloatingActionButton
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

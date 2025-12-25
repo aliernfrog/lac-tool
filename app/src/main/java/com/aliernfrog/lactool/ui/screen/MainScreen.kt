@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entry
@@ -14,14 +15,14 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
-import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.lactool.util.slideTransitionMetadata
 import io.github.aliernfrog.pftool_shared.ui.dialog.ProgressDialog
-import io.github.aliernfrog.pftool_shared.ui.sheet.UpdateSheet
+import io.github.aliernfrog.shared.ui.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.sheet.UpdateSheet
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -94,8 +95,8 @@ fun MainScreen(
 
     UpdateSheet(
         sheetState = mainViewModel.updateSheetState,
-        latestVersionInfo = mainViewModel.latestVersionInfo,
-        updateAvailable = mainViewModel.updateAvailable,
+        latestVersionInfo = mainViewModel.latestVersionInfo.collectAsState().value,
+        updateAvailable = mainViewModel.updateAvailable.collectAsState().value,
         onCheckUpdatesRequest = { scope.launch {
             mainViewModel.checkUpdates(manuallyTriggered = true)
         } }

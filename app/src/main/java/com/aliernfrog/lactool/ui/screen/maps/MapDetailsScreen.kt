@@ -54,13 +54,13 @@ import com.aliernfrog.lactool.ui.component.AppSmallTopBar
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.component.maps.GridMapItem
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
-import io.github.aliernfrog.pftool_shared.ui.component.FadeVisibility
-import io.github.aliernfrog.pftool_shared.ui.component.VerticalSegmentor
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveRowIcon
-import io.github.aliernfrog.pftool_shared.ui.theme.AppComponentShape
-import io.github.aliernfrog.pftool_shared.util.extension.clickableWithColor
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.shared.ui.theme.AppComponentShape
+import io.github.aliernfrog.shared.util.extension.clickableWithColor
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

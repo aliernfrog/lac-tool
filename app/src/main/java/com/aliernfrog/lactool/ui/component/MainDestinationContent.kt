@@ -54,11 +54,11 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.screen.maps.MapsScreen
 import com.aliernfrog.lactool.ui.screen.screenshots.ScreenshotsPermissionsScreen
-import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
 import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestination
 import com.aliernfrog.lactool.util.NavigationBarType
+import com.aliernfrog.lactool.util.settingsRootDestination
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalLayoutApi::class)
@@ -85,7 +85,7 @@ fun MainDestinationContent(
     )
 
     fun onNavigateSettingsRequest() {
-        mainViewModel.navigationBackStack.add(SettingsDestination.ROOT)
+        mainViewModel.navigationBackStack.add(settingsRootDestination)
     }
 
     fun isDestinationSelected(destination: MainDestination): Boolean {

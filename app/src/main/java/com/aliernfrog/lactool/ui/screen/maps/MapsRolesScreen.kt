@@ -29,11 +29,11 @@ import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.extension.removeHtml
-import io.github.aliernfrog.pftool_shared.ui.component.ErrorWithIcon
-import io.github.aliernfrog.pftool_shared.ui.component.FloatingActionButton
-import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
-import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
-import io.github.aliernfrog.pftool_shared.ui.theme.AppFABPadding
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.shared.ui.component.FloatingActionButton
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
+import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

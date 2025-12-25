@@ -20,7 +20,7 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
 import com.aliernfrog.lactool.util.slideTransitionMetadata
 import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
-import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

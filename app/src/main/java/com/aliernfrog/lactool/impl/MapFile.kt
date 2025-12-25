@@ -5,17 +5,17 @@ import android.util.Log
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
-import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.enum.MapImportedState
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.extension.showErrorToast
-import com.aliernfrog.lactool.util.manager.ContextUtils
-import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.impl.ContextUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -104,7 +104,7 @@ class MapFile(
      * Readable last modified information of the map.
      */
     val readableLastModified = contextUtils.stringFunction { context ->
-        FileUtil.lastModifiedFromLong(this.lastModified, context)
+        PFToolSharedUtil.lastModifiedFromLong(this.lastModified, context)
     }
 
     /**

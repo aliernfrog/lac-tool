@@ -1,9 +1,9 @@
 package com.aliernfrog.lactool.data
 
 import android.os.Parcelable
-import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
-import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.di.getKoinInstance
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -17,7 +17,7 @@ data class ServiceFile(
 ): Parcelable
 
 val ServiceFile.nameWithoutExtension
-    get() = FileUtil.removeExtension(this.name)
+    get() = PFToolSharedUtil.removeExtension(this.name)
 
 fun ServiceFile.delete() {
     val shizukuViewModel = getKoinInstance<ShizukuViewModel>()

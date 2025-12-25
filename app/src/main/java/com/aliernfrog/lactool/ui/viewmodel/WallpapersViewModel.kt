@@ -47,18 +47,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.MediaViewData
 import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.mkdirs
-import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.util.extension.showErrorToast
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
@@ -69,12 +64,17 @@ import java.io.File
 import androidx.core.net.toUri
 import com.aliernfrog.lactool.util.extension.comparator
 import io.github.aliernfrog.pftool_shared.enum.ListSorting
+import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
-import io.github.aliernfrog.pftool_shared.ui.component.ButtonIcon
-import io.github.aliernfrog.pftool_shared.ui.component.createSheetStateWithDensity
 import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
-import io.github.aliernfrog.pftool_shared.ui.dialog.DeleteConfirmationDialog
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.data.MediaOverlayData
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.impl.ContextUtils
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,7 +110,7 @@ class WallpapersViewModel(
     suspend fun onWallpaperPick(uri: Uri, context: Context) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         withContext(Dispatchers.IO) {
-            val file = UriUtil.cacheFile(
+            val file = PFToolSharedUtil.cacheFile(
                 uri = uri,
                 parentName = "wallpapers",
                 context = context
@@ -119,7 +119,7 @@ class WallpapersViewModel(
                 topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
             }
-            mainViewModel.showMediaView(MediaViewData(
+            mainViewModel.showMediaOverlay(MediaOverlayData(
                 model = file.painterModel,
                 title = context.getString(R.string.wallpapers_chosen),
                 optionsSheetContent = {
@@ -170,7 +170,7 @@ class WallpapersViewModel(
                                     withName = importName.ifEmpty { originalName },
                                     context = context
                                 )
-                                mainViewModel.dismissMediaView()
+                                mainViewModel.dismissMediaOverlay()
                             } }
                         ) {
                             ButtonIcon(rememberVectorPainter(Icons.Default.Download))
@@ -269,7 +269,7 @@ class WallpapersViewModel(
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openWallpaperOptions(wallpaper: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
-        mainViewModel.showMediaView(MediaViewData(
+        mainViewModel.showMediaOverlay(MediaOverlayData(
             model = wallpaper.painterModel,
             title = wallpaper.name,
             toolbarContent = {
@@ -338,7 +338,7 @@ class WallpapersViewModel(
                     onConfirmDelete = {
                         showDeleteDialog = false
                         scope.launch { deleteImportedWallpaper(wallpaper) }
-                        mainViewModel.dismissMediaView()
+                        mainViewModel.dismissMediaOverlay()
                     }
                 )
             }

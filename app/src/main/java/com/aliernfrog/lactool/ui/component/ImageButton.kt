@@ -23,8 +23,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.aliernfrog.pftool_shared.ui.theme.AppComponentShape
-import io.github.aliernfrog.pftool_shared.util.extension.clickableWithColor
+import io.github.aliernfrog.shared.ui.theme.AppComponentShape
+import io.github.aliernfrog.shared.util.extension.clickableWithColor
 
 @Composable
 fun ImageButton(

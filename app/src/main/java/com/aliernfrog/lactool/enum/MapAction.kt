@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.data.MapActionResult
-import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.MapActionArguments
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
@@ -25,6 +24,7 @@ import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import io.github.aliernfrog.pftool_shared.impl.Progress
+import io.github.aliernfrog.shared.di.getKoinInstance
 
 /**
  * Contains map actions.

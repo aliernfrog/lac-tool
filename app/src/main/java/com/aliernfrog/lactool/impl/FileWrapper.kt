@@ -8,12 +8,12 @@ import com.aliernfrog.lactool.data.exists
 import com.aliernfrog.lactool.data.listFiles
 import com.aliernfrog.lactool.data.nameWithoutExtension
 import com.aliernfrog.lactool.data.renameTo
-import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
 import com.aliernfrog.lactool.util.extension.nameWithoutExtension
 import com.aliernfrog.lactool.util.extension.size
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.lazygeniouz.dfc.file.DocumentFileCompat
+import io.github.aliernfrog.shared.di.getKoinInstance
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream

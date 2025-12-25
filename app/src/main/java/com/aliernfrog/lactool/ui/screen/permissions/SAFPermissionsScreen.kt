@@ -40,19 +40,19 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.PermissionData
 import com.aliernfrog.lactool.data.requiresAndroidData
-import com.aliernfrog.lactool.enum.StorageAccessType
 import com.aliernfrog.lactool.ui.dialog.ChooseFolderIntroDialog
 import com.aliernfrog.lactool.ui.dialog.UnrecommendedFolderDialog
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
-import com.aliernfrog.lactool.util.extension.toPath
-import com.aliernfrog.lactool.util.extension.takePersistablePermissions
-import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import io.github.aliernfrog.pftool_shared.ui.component.CardWithActions
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.pftool_shared.ui.component.expressive.ExpressiveSection
-import io.github.aliernfrog.pftool_shared.ui.component.verticalSegmentedShape
+import com.aliernfrog.lactool.util.extension.enable
+import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
+import io.github.aliernfrog.pftool_shared.util.extension.takePersistablePermissions
+import io.github.aliernfrog.pftool_shared.util.extension.toPath
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.ui.component.CardWithActions
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -63,7 +63,7 @@ fun SAFPermissionsScreen(
     val mainViewModel = koinViewModel<MainViewModel>()
     val context = LocalContext.current
     val requiresAndroidData = permissionsData.any { it.requiresAndroidData }
-    val needsToDowngradeFiles = requiresAndroidData && GeneralUtil.documentsUIRestrictsAndroidData(context)
+    val needsToDowngradeFiles = requiresAndroidData && PFToolSharedUtil.documentsUIRestrictsAndroidData(context)
             && !mainViewModel.prefs.ignoreDocumentsUIRestrictions.value
 
     AnimatedContent(needsToDowngradeFiles) {
@@ -105,7 +105,7 @@ private fun DowngradeFiles(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             permissionsViewModel.showShizukuIntroDialog = true
-                            StorageAccessType.SHIZUKU.enable(permissionsViewModel.prefs)
+                            StorageAccessType.SHIZUKU.enable()
                         }
                     ) {
                         Text(stringResource(R.string.permissions_downgradeFilesApp_cant))
@@ -159,7 +159,7 @@ private fun SAFPermissionsList(
 
     fun openFolderPicker(permissionData: PermissionData) {
         val starterUri = permissionData.recommendedPath?.let {
-            FileUtil.getUriForPath(it)
+            PFToolSharedUtil.getUriForPath(it)
         }
         uriPermsLauncher.launch(starterUri)
         activePermissionData = permissionData
@@ -246,7 +246,7 @@ private fun SAFPermissionsList(
                         .padding(horizontal = 12.dp)
                         .verticalSegmentedShape()
                 ) {
-                    StorageAccessType.ALL_FILES.enable(permissionsViewModel.prefs)
+                    StorageAccessType.ALL_FILES.enable()
                 }
             }
         }

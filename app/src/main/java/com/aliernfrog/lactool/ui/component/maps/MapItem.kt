@@ -47,7 +47,7 @@ import coil3.compose.AsyncImage
 import com.aliernfrog.lactool.impl.MapFile
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
 import io.github.aliernfrog.pftool_shared.ui.component.maps.MapHeader
-import io.github.aliernfrog.pftool_shared.util.extension.combinedClickableWithColor
+import io.github.aliernfrog.shared.util.extension.combinedClickableWithColor
 
 @Composable
 fun ListMapItem(
