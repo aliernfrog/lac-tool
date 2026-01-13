@@ -49,23 +49,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.impl.FileWrapper
-import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.util.LazyGridScrollAccessibilityListener
-import com.aliernfrog.lactool.ui.component.util.LazyListScrollAccessibilityListener
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
+import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
+import io.github.aliernfrog.shared.ui.component.util.LazyGridScrollAccessibilityListener
+import io.github.aliernfrog.shared.ui.component.util.LazyListScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import io.github.aliernfrog.shared.ui.theme.AppComponentShape
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
@@ -95,8 +95,7 @@ fun WallpapersScreen(
     )
 
     LaunchedEffect(Unit) {
-        wallpapersViewModel.getWallpapersFile(context)
-        wallpapersViewModel.fetchImportedWallpapers()
+        wallpapersViewModel.fetchImportedWallpapers(context)
     }
 
     ListViewOptionsSheet(

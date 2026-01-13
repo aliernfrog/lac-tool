@@ -1,30 +1,22 @@
 package com.aliernfrog.lactool.ui.screen
 
-import android.os.Build
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.FolderOpen
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Palette
-import androidx.compose.material.icons.rounded.PinDrop
 import androidx.compose.material.icons.rounded.Science
-import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.SettingsConstant
+import com.aliernfrog.lactool.SettingsConstant.credits
+import com.aliernfrog.lactool.SettingsConstant.socials
 import com.aliernfrog.lactool.crowdinURL
-import com.aliernfrog.lactool.languages
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
+import com.aliernfrog.lactool.util.AppSettingsDestination
 import com.aliernfrog.lactool.util.extension.enable
-import com.aliernfrog.lactool.util.settingsLibsDestination
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.screen.settings.LanguagePage
@@ -36,182 +28,140 @@ import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
 import io.github.aliernfrog.shared.ui.settings.AboutPage
 import io.github.aliernfrog.shared.ui.settings.AppearancePage
 import io.github.aliernfrog.shared.ui.settings.ExperimentalPage
-import io.github.aliernfrog.shared.ui.settings.SettingsCategory
+import io.github.aliernfrog.shared.ui.settings.LibsPage
 import io.github.aliernfrog.shared.ui.settings.SettingsDestination
 import io.github.aliernfrog.shared.ui.settings.SettingsRootPage
-import kotlinx.coroutines.launch
+import io.github.aliernfrog.shared.util.sharedStringResource
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    mainViewModel: MainViewModel = koinViewModel(),
+    destination: SettingsDestination,
+    vm: SettingsViewModel = koinViewModel(),
+    onShowUpdateSheetRequest: () -> Unit,
     onNavigateBackRequest: () -> Unit,
     onNavigateRequest: (SettingsDestination) -> Unit
 ) {
     val context = LocalContext.current
+    val updateAvailable = vm.versionManager.updateAvailable.collectAsStateWithLifecycle().value
+    val latestVersionInfo = vm.versionManager.latestVersionInfo.collectAsStateWithLifecycle().value
 
-    val updateAvailable = mainViewModel.updateAvailable.collectAsState()
-    val latestVersionInfo = mainViewModel.latestVersionInfo.collectAsState()
-
-    val categories = rememberSaveable { listOf(
-        SettingsCategory(
-            title = context.getString(R.string.settings_category_game),
-            destinations = listOf(
-                SettingsDestination(
-                    title = context.getString(R.string.settings_maps),
-                    description = context.getString(R.string.settings_maps_description),
-                    icon = Icons.Rounded.PinDrop,
-                    iconContainerColor = Color.Green,
-                    content = { onNavigateBackRequest, _ ->
-                        MapsPage(
-                            showChosenMapThumbnailPref = mainViewModel.prefs.showChosenMapThumbnail,
-                            showMapThumbnailsInListPref = mainViewModel.prefs.showMapThumbnailsInList,
-                            stackupMapsPref = mainViewModel.prefs.stackupMaps,
-                            onNavigateBackRequest = onNavigateBackRequest
-                        )
-                    }
-                ),
-                SettingsDestination(
-                    title = context.getString(R.string.settings_storage),
-                    description = context.getString(R.string.settings_storage_description),
-                    icon = Icons.Rounded.FolderOpen,
-                    iconContainerColor = Color.Blue,
-                    content = { onNavigateBackRequest, _ ->
-                        StoragePage(
-                            storageAccessTypePref = mainViewModel.prefs.storageAccessType,
-                            folderPrefs = mapOf(
-                                context.getString(R.string.settings_storage_folders_maps) to mainViewModel.prefs.lacMapsDir,
-                                context.getString(R.string.settings_storage_folders_exportedMaps) to mainViewModel.prefs.exportedMapsDir
-                            ),
-                            onEnableStorageAccessTypeRequest = { it.enable() },
-                            onNavigateBackRequest = onNavigateBackRequest
-                        )
-                    }
-                )
+    when (destination) {
+        SettingsDestination.root -> {
+            SettingsRootPage(
+                categories = vm.categories,
+                updateAvailable = updateAvailable,
+                latestReleaseInfo = latestVersionInfo,
+                experimentalOptionsEnabled = vm.prefs.experimentalOptionsEnabled.value,
+                onShowUpdateSheetRequest = onShowUpdateSheetRequest,
+                onNavigateBackRequest = onNavigateBackRequest,
+                onNavigateRequest = onNavigateRequest
             )
-        ),
-        SettingsCategory(
-            title = context.getString(R.string.settings_category_app),
-            destinations = listOf(
-                SettingsDestination(
-                    title = context.getString(R.string.settings_appearance),
-                    description = context.getString(R.string.settings_appearance_description),
-                    icon = Icons.Rounded.Palette,
-                    iconContainerColor = Color.Yellow,
-                    content = { onNavigateBackRequest, _ ->
-                        AppearancePage(
-                            themePref = mainViewModel.prefs.theme,
-                            materialYouPref = mainViewModel.prefs.materialYou,
-                            pitchBlackPref = mainViewModel.prefs.pitchBlack,
-                            onNavigateBackRequest = onNavigateBackRequest
-                        )
-                    }
+        }
+
+        AppSettingsDestination.maps -> {
+            MapsPage(
+                showChosenMapThumbnailPref = vm.prefs.showChosenMapThumbnail,
+                showMapThumbnailsInListPref = vm.prefs.showMapThumbnailsInList,
+                stackupMapsPref = vm.prefs.stackupMaps,
+                onNavigateBackRequest = onNavigateBackRequest
+            )
+        }
+
+        AppSettingsDestination.storage -> {
+            StoragePage(
+                storageAccessTypePref = vm.prefs.storageAccessType,
+                folderPrefs = mapOf(
+                    context.getString(R.string.settings_storage_folders_maps) to vm.prefs.lacMapsDir,
+                    context.getString(R.string.settings_storage_folders_wallpapers) to vm.prefs.lacWallpapersDir,
+                    context.getString(R.string.settings_storage_folders_screenshots) to vm.prefs.lacScreenshotsDir,
+                    context.getString(R.string.settings_storage_folders_exportedMaps) to vm.prefs.exportedMapsDir
                 ),
-                SettingsDestination(
-                    title = context.getString(R.string.settings_language),
-                    description = context.getString(R.string.settings_language_description),
-                    icon = Icons.Rounded.Translate,
-                    iconContainerColor = Color.Magenta,
-                    shown = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N,
-                    content = { onNavigateBackRequest, _ ->
-                        LanguagePage(
-                            crowdinURL = crowdinURL,
-                            currentLanguagePref = mainViewModel.prefs.language,
-                            languages = languages,
-                            appLanguage = mainViewModel.appLanguage,
-                            deviceLanguage = mainViewModel.deviceLanguage,
-                            baseLanguage = mainViewModel.baseLanguage,
-                            onSetLanguageRequest = {
-                                mainViewModel.appLanguage = it
-                            },
-                            onNavigateBackRequest = onNavigateBackRequest
-                        )
-                    }
-                ),
-                SettingsDestination(
-                    title = context.getString(R.string.settings_experimental),
-                    description = context.getString(R.string.settings_experimental_description),
-                    icon = Icons.Rounded.Science,
-                    iconContainerColor = Color.Black,
-                    shown = mainViewModel.prefs.experimentalOptionsEnabled.value,
-                    content = { onNavigateBackRequest, _ ->
-                        val scope = rememberCoroutineScope()
-                        ExperimentalPage(
-                            experimentalPrefs = mainViewModel.prefs.experimentalPrefs,
-                            experimentalOptionsEnabledPref = mainViewModel.prefs.experimentalOptionsEnabled,
-                            onCheckUpdatesRequest = {
-                                scope.launch {
-                                    mainViewModel.checkUpdates(skipVersionCheck = true)
-                                }
-                            },
-                            onShowUpdateSheetRequest = {
-                                scope.launch {
-                                    mainViewModel.updateSheetState.show()
-                                }
-                            },
-                            onRestartAppRequest = {
-                                GeneralUtil.restartApp(context)
-                            },
-                            onNavigateBackRequest = onNavigateBackRequest
-                        ) {
-                            ExpressiveSection(title = "Progress") {
-                                VerticalSegmentor(
-                                    {
-                                        ExpressiveButtonRow(
-                                            title = "Set indeterminate progress"
-                                        ) {
-                                            mainViewModel.progressState.currentProgress =
-                                                Progress(description = context.getString(R.string.info_pleaseWait))
-                                        }
-                                    },
-                                    modifier = Modifier.padding(horizontal = 12.dp)
-                                )
+                onEnableStorageAccessTypeRequest = { it.enable() },
+                onNavigateBackRequest = onNavigateBackRequest
+            )
+        }
+
+        SettingsDestination.appearance -> {
+            AppearancePage(
+                themePref = vm.prefs.theme,
+                materialYouPref = vm.prefs.materialYou,
+                pitchBlackPref = vm.prefs.pitchBlack,
+                onNavigateBackRequest = onNavigateBackRequest
+            )
+        }
+
+        AppSettingsDestination.language -> {
+            LanguagePage(
+                crowdinURL = crowdinURL,
+                currentLanguagePref = vm.prefs.language,
+                languages = vm.localeManager.languages,
+                appLanguage = vm.localeManager.appLanguage,
+                deviceLanguage = vm.localeManager.deviceLanguage,
+                baseLanguage = vm.localeManager.baseLanguage,
+                onSetLanguageRequest = {
+                    vm.localeManager.appLanguage = it
+                },
+                onNavigateBackRequest = onNavigateBackRequest
+            )
+        }
+
+        SettingsDestination.experimental -> {
+            ExperimentalPage(
+                experimentalPrefs = vm.prefs.experimentalPrefs,
+                experimentalOptionsEnabledPref = vm.prefs.experimentalOptionsEnabled,
+                onCheckUpdatesRequest = { skipVersionCheck ->
+                    vm.versionManager.checkUpdates(skipVersionCheck)
+                },
+                onShowUpdateSheetRequest = onShowUpdateSheetRequest,
+                onRestartAppRequest = { GeneralUtil.restartApp(context, withModules = true) },
+                onNavigateBackRequest = onNavigateBackRequest
+            ) {
+                ExpressiveSection(title = "Progress") {
+                    VerticalSegmentor(
+                        {
+                            ExpressiveButtonRow(
+                                title = "Set indeterminate progress"
+                            ) {
+                                vm.progressState.currentProgress =
+                                    Progress(description = context.getString(R.string.info_pleaseWait))
                             }
-                        }
-                    }
-                ),
-                SettingsDestination(
-                    title = context.getString(R.string.settings_about),
-                    description = mainViewModel.applicationVersionLabel,
-                    icon = Icons.Rounded.Info,
-                    iconContainerColor = Color.Blue,
-                    content = { onNavigateBackRequest, onNavigateRequest ->
-                        val scope = rememberCoroutineScope()
-                        AboutPage(
-                            socials = SettingsConstant.socials,
-                            credits = SettingsConstant.credits,
-                            debugInfo = mainViewModel.debugInfo,
-                            autoCheckUpdatesPref = mainViewModel.prefs.autoCheckUpdates,
-                            experimentalOptionsEnabled = mainViewModel.prefs.experimentalOptionsEnabled.value,
-                            onExperimentalOptionsEnabled = {
-                                mainViewModel.prefs.experimentalOptionsEnabled.value = true
-                            },
-                            onShowUpdateSheetRequest = {
-                                scope.launch {
-                                    mainViewModel.updateSheetState.show()
-                                }
-                            },
-                            onNavigateLibsRequest = {
-                                onNavigateRequest(settingsLibsDestination)
-                            },
-                            onNavigateBackRequest = onNavigateBackRequest
-                        )
-                    }
-                )
-            )
-        )
-    ) }
+                        },
+                        modifier = Modifier.padding(horizontal = 12.dp)
+                    )
+                }
+            }
+        }
 
-    val rootPageScope = rememberCoroutineScope()
-    SettingsRootPage(
-        categories = categories,
-        updateAvailable = updateAvailable.value,
-        latestReleaseInfo = latestVersionInfo.value,
-        onShowUpdateSheetRequest = { rootPageScope.launch {
-            mainViewModel.updateSheetState.show()
-        } },
-        onNavigateBackRequest = onNavigateBackRequest,
-        onNavigateRequest = onNavigateRequest
-    )
+        SettingsDestination.about -> {
+            AboutPage(
+                socials = socials,
+                credits = credits,
+                debugInfo = vm.debugInfo,
+                autoCheckUpdatesPref = vm.prefs.autoCheckUpdates,
+                experimentalOptionsEnabled = vm.prefs.experimentalOptionsEnabled.value,
+                onExperimentalOptionsEnabled = {
+                    vm.prefs.experimentalOptionsEnabled.value = true
+                    vm.topToastState.showToast(
+                        text = "Experimental options enabled",
+                        icon = Icons.Rounded.Science
+                    )
+                },
+                onShowUpdateSheetRequest = onShowUpdateSheetRequest,
+                onNavigateLibsRequest = { onNavigateRequest(SettingsDestination.libs) },
+                onNavigateBackRequest = onNavigateBackRequest
+            )
+        }
+
+        SettingsDestination.libs -> {
+            LibsPage(
+                onNavigateBackRequest = onNavigateBackRequest
+            )
+        }
+
+        else -> {
+            Text("UNKNOWN DESTINATION: ${sharedStringResource(destination.title)}")
+        }
+    }
 }

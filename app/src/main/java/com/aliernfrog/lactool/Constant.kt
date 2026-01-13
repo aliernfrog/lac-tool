@@ -1,32 +1,26 @@
 package com.aliernfrog.lactool
 
-import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.ui.graphics.Color
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import io.github.aliernfrog.shared.data.Social
 import io.github.aliernfrog.shared.impl.CreditData
 
 const val TAG = "LACToolLogs"
-
-const val experimentalSettingsRequiredClicks = 10
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 const val crowdinURL = "https://crowdin.com/project/lac-tool"
-
-val supportsPerAppLanguagePreferences = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
 object SettingsConstant {
     val socials = listOf(
         Social(
             label = "LAC",
-            icon = R.drawable.discord,
+            icon = io.github.aliernfrog.shared.R.drawable.discord,
             iconContainerColor = Color(0xFF5865F2),
             url = "https://discord.gg/aQhGqHSc3W"
         ),
         Social(
             label = "LAC Tool",
-            icon = R.drawable.github,
+            icon = io.github.aliernfrog.shared.R.drawable.github,
             iconContainerColor = Color(0xFF104C35),
             url = githubRepoURL
         ),
@@ -74,8 +68,4 @@ object SettingsConstant {
             link = "https://github.com/ReVanced/revanced-manager"
         )
     )
-}
-
-val languages = BuildConfig.LANGUAGES.sorted().map { langCode ->
-    GeneralUtil.getLanguageFromCode(langCode)!!
 }

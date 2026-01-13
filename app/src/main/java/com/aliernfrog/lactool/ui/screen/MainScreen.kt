@@ -29,17 +29,17 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    mainViewModel: MainViewModel = koinViewModel()
+    vm: MainViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
-    val applyImePadding = !mainViewModel.isAtMainDestination
+    val applyImePadding = !vm.isAtMainDestination
 
     val onNavigateBackRequest: () -> Unit = {
-        mainViewModel.navigationBackStack.removeLastIfMultiple()
+        vm.navigationBackStack.removeLastIfMultiple()
     }
 
     NavDisplay(
-        backStack = mainViewModel.navigationBackStack,
+        backStack = vm.navigationBackStack,
         modifier = Modifier
             .fillMaxSize()
             .let {
@@ -81,30 +81,30 @@ fun MainScreen(
             entry<SettingsDestination>(
                 metadata = slideTransitionMetadata
             ) { destination ->
-                destination.content(
-                    /* onNavigateBackRequest = */ {
-                        onNavigateBackRequest()
-                    },
-                    /* onNavigateRequest */ {
-                        mainViewModel.navigationBackStack.add(it)
-                    }
+                SettingsScreen(
+                    destination = destination,
+                    onNavigateBackRequest = onNavigateBackRequest,
+                    onNavigateRequest = { vm.navigationBackStack.add(it) },
+                    onShowUpdateSheetRequest = { scope.launch {
+                        vm.updateSheetState.show()
+                    } }
                 )
             }
         }
     )
 
     UpdateSheet(
-        sheetState = mainViewModel.updateSheetState,
-        latestVersionInfo = mainViewModel.latestVersionInfo.collectAsState().value,
-        updateAvailable = mainViewModel.updateAvailable.collectAsState().value,
+        sheetState = vm.updateSheetState,
+        latestVersionInfo = vm.latestVersionInfo.collectAsState().value,
+        updateAvailable = vm.updateAvailable.collectAsState().value,
         onCheckUpdatesRequest = { scope.launch {
-            mainViewModel.checkUpdates(manuallyTriggered = true)
+            vm.checkUpdates(manuallyTriggered = true)
         } }
     )
 
-    mainViewModel.progressState.currentProgress?.let {
+    vm.progressState.currentProgress?.let {
         ProgressDialog(it) {
-            mainViewModel.progressState.currentProgress = null
+            vm.progressState.currentProgress = null
         }
     }
 }

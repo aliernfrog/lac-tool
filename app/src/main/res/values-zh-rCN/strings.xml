@@ -116,9 +116,9 @@
     <string name="mapsList_imported">您的地图</string>
     <string name="mapsList_exported">导出的地图</string>
     <string name="mapsList_shared">已分享</string>
-    <string name="mapsList_noImportedMaps">您还没有任何地图</string>
-    <string name="mapsList_noExportedMaps">您尚未导出任何地图</string>
-    <string name="mapsList_noSharedMaps">您尚未分享任何地图至 LAC Tool</string>
+    <string name="mapsList_imported_noMaps">您还没有任何地图</string>
+    <string name="mapsList_exported_noMaps">您尚未导出任何地图</string>
+    <string name="mapsList_shared_noMaps">您尚未分享任何地图至 LAC Tool</string>
     <string name="mapsList_searchNoMatches">未找到匹配的地图</string>
     <string name="mapsEdit">编辑地图</string>
     <string name="mapsEdit_general">通用</string>
@@ -279,10 +279,10 @@
     <string name="settings_experimental">实验性设置</string>
     <string name="settings_experimental_enabled">已启用实验性设置！</string>
     <string name="settings_experimental_description">不适合正常使用，误用可能会导致应用崩溃</string>
-    <string name="mediaView_guide">帮助</string>
-    <string name="mediaView_guide_toggleOverlay">点按查看完整图片，再次点按显示选项</string>
-    <string name="mediaView_guide_toggleZoom">快速双击可切换缩放</string>
-    <string name="mediaView_guide_zoom">捏合手指可放大或缩小，拖动手指可移动</string>
+    <string name="mediaOverlay_guide">帮助</string>
+    <string name="mediaOverlay_guide_toggleOverlay">点按查看完整图片，再次点按显示选项</string>
+    <string name="mediaOverlay_guide_toggleZoom">快速双击可切换缩放</string>
+    <string name="mediaOverlay_guide_zoom">捏合手指可放大或缩小，拖动手指可移动</string>
     <string name="updates_updateAvailable">LAC Tool 有可用的更新！点击了解更多详情</string>
     <string name="updates_noUpdates">无可用更新</string>
     <string name="updates_error">检查更新时出错</string>

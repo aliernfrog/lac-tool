@@ -1,8 +1,7 @@
-package com.aliernfrog.lactool.enum
+package com.aliernfrog.lactool.impl
 
 import android.content.Context
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.rounded.AddLocationAlt
@@ -14,70 +13,31 @@ import androidx.compose.material.icons.rounded.FileCopy
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.ui.graphics.vector.ImageVector
+import io.github.aliernfrog.pftool_shared.data.MapAction
+import io.github.aliernfrog.pftool_shared.enum.MapImportedState
+import io.github.aliernfrog.shared.util.SharedString
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
-import com.aliernfrog.lactool.data.MapActionResult
-import com.aliernfrog.lactool.impl.MapActionArguments
-import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.pftool_shared.data.MapActionResult
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.shared.di.getKoinInstance
 
-/**
- * Contains map actions.
- */
-@Suppress("unused")
-enum class MapAction(
-    /**
-     * Resource ID to use as a short label. This can be used for one or multiple maps.
-     */
-    @StringRes val shortLabel: Int,
-
-    /**
-     * Resource ID to use as a long label. This should be used for only one map.
-     */
-    @StringRes val longLabel: Int = shortLabel,
-
-    /**
-     * Resource ID to use as a description. This should be used for only one map.
-     */
-    @StringRes val description: Int? = null,
-
-    /**
-     * Icon of the action.
-     */
-    val icon: ImageVector,
-
-    /**
-     * Whether the action is available for multi-selection.
-     */
-    val availableForMultiSelection: Boolean = true,
-
-    /**
-     * Whether the action is destructive.
-     */
-    val destructive: Boolean = false,
-
-    /**
-     * Whether the action is available for [map].
-     */
-    val availableFor: (map: MapFile) -> Boolean
-) {
-    RENAME(
-        shortLabel = R.string.maps_rename,
+@Suppress("UNCHECKED_CAST")
+val mapActions = listOf(
+    MapAction(
+        id = MapAction.RENAME_ID,
+        shortLabel = SharedString.fromResId(R.string.maps_rename),
         icon = Icons.Rounded.Edit,
         availableForMultiSelection = false,
-        availableFor = {
-            it.importedState != MapImportedState.NONE
-        }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
-            val first = maps.first()
+        availableFor = { it.importedState != MapImportedState.NONE },
+        execute = { context, maps, args ->
+            val first = maps.first() as MapFile
             val newName = args.resolveMapName(fallback = first.name)
-            first.mapsViewModel.activeProgress = Progress(
+            first.vm.activeProgress = Progress(
                 description = context.getString(R.string.maps_renaming)
                     .replace("{NAME}", first.name)
                     .replace("{NEW_NAME}", newName)
@@ -88,7 +48,7 @@ enum class MapAction(
                     text = result.message ?: R.string.warning_error
                 )
                 result.newFile?.let {
-                    first.mapsViewModel.viewMapDetails(it)
+                    first.vm.viewMapDetails(it)
                 }
                 first.topToastState.showToast(
                     text = context.getString(result.message ?: R.string.maps_renamed)
@@ -96,21 +56,21 @@ enum class MapAction(
                     icon = Icons.Rounded.Edit
                 )
             }
-            first.mapsViewModel.activeProgress = null
-            first.mapsViewModel.loadMaps(context)
+            first.vm.activeProgress = null
+            first.vm.loadMaps(context)
         }
-    },
+    ),
 
-    DUPLICATE(
-        shortLabel = R.string.maps_duplicate,
+    MapAction(
+        id = MapAction.DUPLICATE_ID,
+        shortLabel = SharedString.fromResId(R.string.maps_duplicate),
         icon = Icons.Rounded.FileCopy,
         availableForMultiSelection = false,
-        availableFor = RENAME.availableFor
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
-            val first = maps.first()
+        availableFor = { it.importedState != MapImportedState.NONE },
+        execute = { context, maps, args ->
+            val first = maps.first() as MapFile
             val newName = args.resolveMapName(fallback = first.name)
-            first.mapsViewModel.activeProgress = Progress(
+            first.vm.activeProgress = Progress(
                 description = context.getString(R.string.maps_duplicating)
                     .replace("{NAME}", first.name)
                     .replace("{NEW_NAME}", newName)
@@ -121,7 +81,7 @@ enum class MapAction(
                     text = result.message ?: R.string.warning_error
                 )
                 result.newFile?.let {
-                    first.mapsViewModel.viewMapDetails(it)
+                    first.vm.viewMapDetails(it)
                 }
                 first.topToastState.showToast(
                     text = context.getString(result.message ?: R.string.maps_duplicated)
@@ -129,28 +89,27 @@ enum class MapAction(
                     icon = Icons.Rounded.FileCopy
                 )
             }
-            first.mapsViewModel.activeProgress = null
-            first.mapsViewModel.loadMaps(context)
+            first.vm.activeProgress = null
+            first.vm.loadMaps(context)
         }
-    },
+    ),
 
-    IMPORT(
-        shortLabel = R.string.maps_import_short,
-        longLabel = R.string.maps_import,
+    MapAction(
+        id = "import",
+        shortLabel = SharedString.fromResId(R.string.maps_import_short),
+        longLabel = SharedString.fromResId(R.string.maps_import),
         icon = Icons.Rounded.Download,
-        availableFor = {
-            it.importedState != MapImportedState.IMPORTED
-        }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
+        availableForMultiSelection = true,
+        availableFor = { it.importedState != MapImportedState.IMPORTED },
+        execute = { context, maps, args ->
             runIOAction(
-                *maps,
+                maps = maps as List<MapFile>,
                 context = context,
                 singleSuccessMessageId = R.string.maps_imported_single,
                 multipleSuccessMessageId = R.string.maps_imported_multiple,
                 singleProcessingMessageId = R.string.maps_importing_single,
                 multipleProcessingMessageId = R.string.maps_importing_multiple,
-                successIcon = icon,
+                successIcon = Icons.Rounded.Download,
                 newName = args.resolveMapName(fallback = maps.first().name)
             ) { map ->
                 map.import(
@@ -159,25 +118,24 @@ enum class MapAction(
                 )
             }
         }
-    },
+    ),
 
-    EXPORT(
-        shortLabel = R.string.maps_export_short,
-        longLabel = R.string.maps_export,
+    MapAction(
+        id = "export",
+        shortLabel = SharedString.fromResId(R.string.maps_export_short),
+        longLabel = SharedString.fromResId(R.string.maps_export),
         icon = Icons.Rounded.Upload,
-        availableFor = {
-            it.importedState == MapImportedState.IMPORTED
-        }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
+        availableForMultiSelection = true,
+        availableFor = { it.importedState == MapImportedState.IMPORTED },
+        execute = { context, maps, args ->
             runIOAction(
-                *maps,
+                maps = maps as List<MapFile>,
                 context = context,
                 singleSuccessMessageId = R.string.maps_exported_single,
                 multipleSuccessMessageId = R.string.maps_exported_multiple,
                 singleProcessingMessageId = R.string.maps_exporting_single,
                 multipleProcessingMessageId = R.string.maps_exporting_multiple,
-                successIcon = icon,
+                successIcon = Icons.Rounded.Upload,
                 newName = args.resolveMapName(fallback = maps.first().name)
             ) { map ->
                 map.export(
@@ -186,18 +144,18 @@ enum class MapAction(
                 )
             }
         }
-    },
+    ),
 
-    EXPORT_CUSTOM_TARGET(
-        shortLabel = R.string.maps_exportCustomTarget,
+    MapAction(
+        id = "exportCustomTarget",
+        shortLabel = SharedString.fromResId(R.string.maps_exportCustomTarget),
         icon = Icons.AutoMirrored.Filled.AddToHomeScreen,
         availableForMultiSelection = false,
-        availableFor = { true }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
-            val first = maps.first()
+        availableFor = { true },
+        execute = { context, maps, args ->
+            val first = maps.first() as MapFile
             val withName = args.resolveMapName(fallback = maps.first().name)
-            first.mapsViewModel.activeProgress = Progress(
+            first.vm.activeProgress = Progress(
                 description = context.getString(R.string.maps_exportCustomTarget_exporting)
                     .replace("{NAME}", first.name)
             )
@@ -209,45 +167,42 @@ enum class MapAction(
                     icon = Icons.AutoMirrored.Filled.AddToHomeScreen
                 )
                 else first.topToastState.showErrorToast(result.message ?: R.string.warning_error)
-                result.newFile?.let { first.mapsViewModel.viewMapDetails(it) }
+                result.newFile?.let { first.vm.viewMapDetails(it) }
             }
-            first.mapsViewModel.activeProgress = null
+            first.vm.activeProgress = null
         }
-    },
+    ),
 
-    SHARE(
-        shortLabel = R.string.maps_share_short,
-        longLabel = R.string.maps_share,
+    MapAction(
+        id = "share",
+        shortLabel = SharedString.fromResId(R.string.maps_share_short),
+        longLabel = SharedString.fromResId(R.string.maps_share),
         icon = Icons.Rounded.Share,
-        availableFor = {
-            true
-        }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
-            val first = maps.first()
+        availableForMultiSelection = true,
+        availableFor = { true },
+        execute = { context, maps, _ ->
+            val first = maps.first() as MapFile
             val files = maps.map { it.file }
-            first.mapsViewModel.activeProgress = Progress(
+            first.vm.activeProgress = Progress(
                 description = context.getString(R.string.info_sharing)
             )
             first.runInIOThreadSafe {
                 FileUtil.shareFiles(*files.toTypedArray(), context = context)
             }
-            first.mapsViewModel.activeProgress = null
+            first.vm.activeProgress = null
         }
-    },
+    ),
 
-    EDIT(
-        shortLabel = R.string.maps_edit,
-        description = R.string.maps_edit_description,
+    MapAction(
+        id = "edit",
+        shortLabel = SharedString.fromResId(R.string.maps_edit),
+        description = SharedString.fromResId(R.string.maps_edit_description),
         icon = Icons.Rounded.EditLocationAlt,
         availableForMultiSelection = false,
-        availableFor = {
-            true
-        }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
-            val first = maps.first()
-            first.mapsViewModel.activeProgress = Progress(
+        availableFor = { true },
+        execute = { context, maps, _ ->
+            val first = maps.first() as MapFile
+            first.vm.activeProgress = Progress(
                 context.getString(R.string.maps_edit_opening).replace("{NAME}", first.name)
             )
             try {
@@ -256,48 +211,43 @@ enum class MapAction(
                 first.topToastState.showErrorToast()
                 Log.e(TAG, "execute EDIT: ", e)
             }
-            first.mapsViewModel.activeProgress = null
+            first.vm.activeProgress = null
         }
-    },
+    ),
 
-    MERGE(
-        shortLabel = R.string.maps_merge_short,
-        longLabel = R.string.maps_merge,
+    MapAction(
+        id = "merge",
+        shortLabel = SharedString.fromResId(R.string.maps_merge_short),
+        longLabel = SharedString.fromResId(R.string.maps_merge),
         icon = Icons.Rounded.AddLocationAlt,
-        availableFor = {
-            true
-        }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
+        availableForMultiSelection = true,
+        availableFor = { true },
+        execute = { context, maps, _ ->
+            maps as List<MapFile>
             val mainViewModel = getKoinInstance<MainViewModel>()
             val mapsMergeViewModel = maps.first().mapsMergeViewModel
-            mapsMergeViewModel.addMaps(context, *maps)
+            mapsMergeViewModel.addMaps(context, *maps.toTypedArray())
             mainViewModel.navigationBackStack.add(SubDestination.MAPS_MERGE)
         }
-    },
+    ),
 
-    DELETE(
-        shortLabel = R.string.maps_delete_short,
-        longLabel = R.string.maps_delete,
+    MapAction(
+        id = "delete",
+        shortLabel = SharedString.fromResId(R.string.maps_delete_short),
+        longLabel = SharedString.fromResId(R.string.maps_delete),
         icon = Icons.Rounded.Delete,
         destructive = true,
-        availableFor = {
-            it.importedState != MapImportedState.NONE
+        availableForMultiSelection = true,
+        availableFor = { it.importedState != MapImportedState.NONE },
+        execute = { _, maps, _ ->
+            maps as List<MapFile>
+            maps.first().vm.mapsPendingDelete = maps.toList()
         }
-    ) {
-        override suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments) {
-            maps.first().mapsViewModel.mapsPendingDelete = maps.toList()
-        }
-    };
-
-    /**
-     * Executes the action for [maps].
-     */
-    abstract suspend fun execute(context: Context, vararg maps: MapFile, args: MapActionArguments = MapActionArguments())
-}
+    )
+)
 
 private suspend fun runIOAction(
-    vararg maps: MapFile,
+    maps: List<MapFile>,
     context: Context,
     singleSuccessMessageId: Int,
     multipleSuccessMessageId: Int,
@@ -325,12 +275,12 @@ private suspend fun runIOAction(
         )
     }
 
-    first.mapsViewModel.activeProgress = getProgress()
+    first.vm.activeProgress = getProgress()
     first.runInIOThreadSafe {
         val results = maps.map {
             val executionResult = result(it)
             passedProgress++
-            first.mapsViewModel.activeProgress = getProgress()
+            first.vm.activeProgress = getProgress()
             it.name to executionResult
         }
         if (isSingle) results.first().let { (mapName, result) ->
@@ -340,19 +290,19 @@ private suspend fun runIOAction(
             ) else first.topToastState.showErrorToast(
                 text = context.getString(result.message ?: R.string.warning_error)
             )
-            result.newFile?.let { first.mapsViewModel.viewMapDetails(it) }
+            result.newFile?.let { first.vm.viewMapDetails(it) }
         } else {
             val successes = results.filter { it.second.successful }
             val fails = results.filter { !it.second.successful }
             if (fails.isEmpty()) first.topToastState.showToast(
                 text = context.getString(multipleSuccessMessageId).replace("{COUNT}", successes.size.toString()),
                 icon = successIcon
-            ) else first.mapsViewModel.showActionFailedDialog(
+            ) else first.vm.showActionFailedDialog(
                 successes = successes,
                 fails = fails
             )
         }
     }
-    first.mapsViewModel.loadMaps(context)
-    first.mapsViewModel.activeProgress = null
+    first.vm.loadMaps(context)
+    first.vm.activeProgress = null
 }

@@ -2,10 +2,10 @@ package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
 import android.os.Environment
-import com.aliernfrog.lactool.ui.theme.Theme
 import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
 import io.github.aliernfrog.pftool_shared.util.externalStorageRoot
 import io.github.aliernfrog.pftool_shared.util.manager.base.PFToolBasePreferenceManager
+import io.github.aliernfrog.shared.ui.theme.Theme
 import io.github.aliernfrog.shared.util.extension.getAppVersionCode
 
 class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
@@ -46,7 +46,7 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
 
     // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true, experimental = true, includeInDebugInfo = false)
-    val showMediaViewGuide = booleanPreference("showMediaViewGuide", true, experimental = true, includeInDebugInfo = false)
+    val showMediaOverlayGuide = booleanPreference("showMediaOverlayGuide", true, experimental = true, includeInDebugInfo = false)
 
     // Experimental (developer) options
     val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)

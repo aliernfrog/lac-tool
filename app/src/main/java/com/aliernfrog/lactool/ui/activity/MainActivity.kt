@@ -30,12 +30,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.aliernfrog.lactool.ui.screen.MainScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
-import com.aliernfrog.lactool.ui.theme.Theme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.toptoast.component.TopToastHost
 import io.github.aliernfrog.pftool_shared.impl.SAFFileCreator
 import io.github.aliernfrog.shared.ui.component.MediaOverlay
 import io.github.aliernfrog.shared.ui.component.util.InsetsObserver
+import io.github.aliernfrog.shared.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 Crossfade(mainViewModel.mediaOverlayData) { data ->
                     if (data != null) MediaOverlay(
                         data = data,
-                        showMediaOverlayGuidePref = mainViewModel.prefs.showMediaViewGuide,
+                        showMediaOverlayGuidePref = mainViewModel.prefs.showMediaOverlayGuide,
                         onDismissRequest = { mainViewModel.dismissMediaOverlay() }
                     )
                 }

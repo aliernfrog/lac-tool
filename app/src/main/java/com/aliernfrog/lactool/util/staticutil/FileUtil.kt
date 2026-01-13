@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.impl.FileWrapper
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import java.io.BufferedWriter
 import java.io.File
 import java.io.OutputStream

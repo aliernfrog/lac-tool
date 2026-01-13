@@ -30,14 +30,16 @@ import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.component.*
-import com.aliernfrog.lactool.ui.component.util.ScrollAccessibilityListener
+import com.aliernfrog.lactool.ui.component.ChipIcon
+import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.getName
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
 import io.github.aliernfrog.shared.ui.component.RadioButtons
@@ -50,6 +52,7 @@ import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSwitchRow
 import io.github.aliernfrog.shared.ui.component.expressive.getTextFieldColors
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
 import io.github.aliernfrog.shared.ui.component.form.getExpandableRowDefaultExpandedContainerColor
+import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

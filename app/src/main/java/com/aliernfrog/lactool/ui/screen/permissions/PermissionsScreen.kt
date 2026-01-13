@@ -1,183 +1,40 @@
 package com.aliernfrog.lactool.ui.screen.permissions
 
-import android.content.Intent
-import android.provider.Settings
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.neverEqualPolicy
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
-import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.PermissionData
-import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.AppTopBar
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.viewmodel.PermissionsViewModel
-import com.aliernfrog.lactool.ui.viewmodel.ShizukuViewModel
-import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
-import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
-import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
-import org.koin.androidx.compose.koinViewModel
+import com.aliernfrog.lactool.util.AppSettingsDestination
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import io.github.aliernfrog.pftool_shared.data.PermissionData
+import io.github.aliernfrog.pftool_shared.ui.screen.permissions.PermissionsScreen
+import io.github.aliernfrog.shared.ui.settings.SettingsDestination
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionsScreen(
     vararg permissionsData: PermissionData,
     title: String,
-    permissionsViewModel: PermissionsViewModel = koinViewModel(),
-    shizukuViewModel: ShizukuViewModel = koinViewModel(),
-    onNavigateSettingsRequest: () -> Unit,
+    onNavigateRequest: (Any) -> Unit,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
 
-    fun hasPermissions(): Boolean {
-        return permissionsViewModel.hasPermissions(
-            *permissionsData,
-            isShizukuFileServiceRunning = shizukuViewModel.fileServiceRunning,
-            context = context
-        )
-    }
-
-    var permissionsGranted by remember { mutableStateOf(hasPermissions(), neverEqualPolicy()) }
-
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        permissionsGranted = hasPermissions()
-    }
-
-    AnimatedContent(
-        StorageAccessType.entries[permissionsViewModel.prefs.storageAccessType.value]
-    ) { method ->
-        AnimatedContent(permissionsGranted) { showContent ->
-            if (showContent) content()
-            else AppScaffold(
-                topBar = { AppTopBar(
-                    title = title,
-                    scrollBehavior = it,
-                    actions = {
-                        SettingsButton(onClick = onNavigateSettingsRequest)
-                    }
-                ) }
-            ) {
-                when (method) {
-                    StorageAccessType.SAF -> SAFPermissionsScreen(
-                        *permissionsData,
-                        onUpdateStateRequest = {
-                            permissionsGranted = hasPermissions()
-                        }
-                    )
-                    StorageAccessType.SHIZUKU -> ShizukuPermissionsScreen(
-                        onUpdateStateRequest = {
-                            permissionsGranted = hasPermissions()
-                        }
-                    )
-                    StorageAccessType.ALL_FILES -> AllFilesPermissionsScreen(
-                        onUpdateStateRequest = {
-                            permissionsGranted = hasPermissions()
-                        }
-                    )
-                }
+    PermissionsScreen(
+        permissionsData = permissionsData,
+        title = title,
+        onRestartAppRequest = {
+            GeneralUtil.restartApp(context, withModules = true)
+        },
+        onNavigateStorageSettingsRequest = {
+            onNavigateRequest(AppSettingsDestination.storage)
+        },
+        settingsButton = {
+            SettingsButton {
+                onNavigateRequest(SettingsDestination.root)
             }
-        }
-    }
-
-    if (permissionsViewModel.showShizukuIntroDialog) CustomMessageDialog(
-        title = stringResource(R.string.permissions_setupShizuku),
-        text = stringResource(R.string.permissions_setupShizuku_description),
-        onDismissRequest = { permissionsViewModel.showShizukuIntroDialog = false }
+        },
+        content = content
     )
-
-    if (permissionsViewModel.showFilesDowngradeDialog) CustomMessageDialog(
-        title = null,
-        text = stringResource(R.string.permissions_downgradeFilesApp_guide)
-            .replace("{CANT_UNINSTALL_TEXT}", stringResource(R.string.permissions_downgradeFilesApp_cant)),
-        onDismissRequest = { permissionsViewModel.showFilesDowngradeDialog = false },
-        confirmButton = {
-            Button(
-                shapes = ButtonDefaults.shapes(),
-                onClick = {
-                    val documentsUIPackage = PFToolSharedUtil.getDocumentsUIPackage(context) ?: return@Button
-                    permissionsViewModel.showFilesDowngradeDialog = false
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        data = "package:${documentsUIPackage.packageName}".toUri()
-                        context.startActivity(this)
-                    }
-                }
-            ) {
-                Text(stringResource(R.string.action_ok))
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun PermissionsScreenAction(
-    title: String?,
-    description: String?,
-    icon: ImageVector?,
-    button: (@Composable () -> Unit)?,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth().padding(12.dp)
-    ) {
-        icon?.let {
-            ExpressiveRowIcon(
-                painter = rememberVectorPainter(it),
-                iconSize = 40.dp
-            )
-        }
-
-        title?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.titleLargeEmphasized,
-                textAlign = TextAlign.Center
-            )
-        }
-
-        description?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.bodyLargeEmphasized
-            )
-        }
-
-        button?.let {
-            Box(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                it()
-            }
-        }
-    }
 }

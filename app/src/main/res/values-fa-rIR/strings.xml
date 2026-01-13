@@ -16,8 +16,8 @@
     <string name="warning_error">مشکلی پیش آمده است</string>
     <string name="warning_pickFile_failed">دریافت فایل انجام نشد</string>
     <string name="info_copiedToClipboard">کپی به کلیپ‌بورد</string>
-    <string name="info_pleaseWait">لطفا صبر کنید..</string>
-    <string name="info_sharing">درحال ارسال..</string>
+    <string name="info_pleaseWait">لطفا صبر کنید…</string>
+    <string name="info_sharing">درحال ارسال…</string>
     <string name="info_deleteQuestion">آیا مطمئنید که می‌خواهید {NAME} را حذف کنید؟\nاین کار قابل واگرد نیست!</string>
     <string name="info_shizuku_disconnected">از شیزوکو قطع شده است</string>
     <string name="info_useUnrecommendedAnyway_description">فقط در صورتی این کار را انجام دهید که مطمئن باشید داده های LAC شما در پوشه دیگری ذخیره شده است یا در حال آزمایش هستید</string>
@@ -50,7 +50,7 @@
     <string name="permissions_shizuku_permission">مجوز لازم است</string>
     <string name="permissions_shizuku_permission_description">ابزار LAC مجوز استفاده از Shizuku را ندارد</string>
     <string name="permissions_shizuku_permission_grant">اجازه بدهید</string>
-    <string name="permissions_shizuku_waitingService">درانتظار فایل سرویس..</string>
+    <string name="permissions_shizuku_waitingService">درانتظار فایل سرویس…</string>
     <string name="permissions_shizuku_waitingService_timedOut">خیلی طول کشید؟ ابزار LAC را ریستارت کنید</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">راه‌اندازی مجدد</string>
     <string name="permissions_shizuku_problematicVersion_downloadRecommended">دریافت نسخه پیشنهادی</string>
@@ -80,10 +80,10 @@
     <string name="maps_mapName_guide">از این فیلد متنی می توان برای تغییر نام و کپی نقشه یا تنظیم نام خروجی هنگام وارد کردن و صادرات استفاده کرد</string>
     <string name="maps_rename">تغییر نام</string>
     <string name="maps_renamed">تغییر نام به {NAME}</string>
-    <string name="maps_renaming">در حال تغییر نام {NAME} به {NEW_NAME}..</string>
+    <string name="maps_renaming">در حال تغییر نام {NAME} به {NEW_NAME}…</string>
     <string name="maps_duplicate">کپی کردن</string>
     <string name="maps_duplicated">تکراری به عنوان {NAME}</string>
-    <string name="maps_duplicating">در حال تکرار {NAME} به عنوان {NEW_NAME}..</string>
+    <string name="maps_duplicating">در حال تکرار {NAME} به عنوان {NEW_NAME}…</string>
     <string name="maps_thumbnail">تصاویر کوچک نقشه</string>
     <string name="maps_thumbnail_noThumbnail">تصویر کوچکی وجود ندارد</string>
     <string name="maps_import">این مپ را وارد کنید</string>
@@ -91,7 +91,7 @@
     <string name="maps_imported_single">وارد شده به عنوان {NAME}</string>
     <string name="maps_imported_multiple">{COUNT} مپ وارد شد</string>
     <string name="maps_importing_single">در حال وارد کردن {NAME} به عنوان {NEW_NAME}</string>
-    <string name="maps_importing_multiple">در حال وارد کردن {DONE}/{TOTAL} نقشه..</string>
+    <string name="maps_importing_multiple">در حال وارد کردن {DONE}/{TOTAL} نقشه…</string>
     <string name="maps_export">این مپ را صادر کنید</string>
     <string name="maps_export_short">صدور</string>
     <string name="maps_exported_single">صدور نام به عنوان {NAME}</string>
@@ -124,9 +124,9 @@
     <string name="mapsList_imported">مپ های شما</string>
     <string name="mapsList_exported">مپ صادر شد</string>
     <string name="mapsList_shared">ارسال شد</string>
-    <string name="mapsList_noImportedMaps">شما هیچ مپی ندارید</string>
-    <string name="mapsList_noExportedMaps">شما هیچ مپی صادر نکرده اید</string>
-    <string name="mapsList_noSharedMaps">شما هیچ نقشه ای را با ابزار LAC به اشتراک نگذاشته اید</string>
+    <string name="mapsList_imported_noMaps">شما هیچ مپی ندارید</string>
+    <string name="mapsList_exported_noMaps">شما هیچ مپی صادر نکرده اید</string>
+    <string name="mapsList_shared_noMaps">شما هیچ نقشه ای را با ابزار LAC به اشتراک نگذاشته اید</string>
     <string name="mapsList_searchNoMatches">هیچ مپ منطبقی پیدا نشد</string>
     <string name="mapsEdit">تغییر اطلاعات و تنظیمات مپ</string>
     <string name="mapsEdit_general">عمومی</string>

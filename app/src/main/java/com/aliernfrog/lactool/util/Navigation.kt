@@ -13,22 +13,17 @@ import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.rounded.FolderOpen
 import androidx.compose.material.icons.rounded.PinDrop
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.ui.screen.SettingsScreen
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
-import com.aliernfrog.lactool.util.extension.enable
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
-import io.github.aliernfrog.pftool_shared.ui.screen.settings.StoragePage
-import io.github.aliernfrog.shared.ui.settings.LibsPage
 import io.github.aliernfrog.shared.ui.settings.SettingsDestination
-import org.koin.androidx.compose.koinViewModel
+import io.github.aliernfrog.shared.ui.settings.category
+import io.github.aliernfrog.shared.util.SharedString
 
 object NavigationConstant {
     val INITIAL_DESTINATION = MainDestinationGroup
@@ -69,48 +64,6 @@ enum class SubDestination {
     MAPS_MERGE
 }
 
-// TODO handle settings destinations in a better way
-val settingsRootDestination = SettingsDestination(
-    title = "",
-    description = "",
-    icon = Icons.Rounded.Settings,
-    content = { onNavigateBackRequest, onNavigateRequest ->
-        SettingsScreen(
-            onNavigateRequest = onNavigateRequest,
-            onNavigateBackRequest = onNavigateBackRequest
-        )
-    }
-)
-
-val settingsLibsDestination = SettingsDestination(
-    title = "",
-    description = "",
-    icon = Icons.Rounded.Settings,
-    content = { onNavigateBackRequest, _ ->
-        LibsPage(onNavigateBackRequest = onNavigateBackRequest)
-    }
-)
-
-val settingsStorageDestination = SettingsDestination(
-    title = "",
-    description = "",
-    icon = Icons.Rounded.FolderOpen,
-    iconContainerColor = Color.Blue,
-    content = { onNavigateBackRequest, _ ->
-        val context = LocalContext.current
-        val mainViewModel = koinViewModel<MainViewModel>()
-        StoragePage(
-            storageAccessTypePref = mainViewModel.prefs.storageAccessType,
-            folderPrefs = mapOf(
-                context.getString(R.string.settings_storage_folders_maps) to mainViewModel.prefs.lacMapsDir,
-                context.getString(R.string.settings_storage_folders_exportedMaps) to mainViewModel.prefs.exportedMapsDir
-            ),
-            onEnableStorageAccessTypeRequest = { it.enable() },
-            onNavigateBackRequest = onNavigateBackRequest
-        )
-    }
-)
-
 enum class NavigationBarType {
     HIDDEN,
     BOTTOM_BAR,
@@ -141,6 +94,49 @@ class MapsNavigationBackStack {
         }
     }
 }
+
+class AppSettingsDestination {
+    companion object {
+        val maps = SettingsDestination(
+            title = SharedString.fromResId(R.string.settings_maps),
+            description = SharedString.fromResId(R.string.settings_maps_description),
+            icon = Icons.Rounded.PinDrop,
+            iconContainerColor = Color.Green
+        )
+
+        val storage = SettingsDestination(
+            title = SharedString.fromResId(R.string.settings_storage),
+            description = SharedString.fromResId(R.string.settings_storage_description),
+            icon = Icons.Rounded.FolderOpen,
+            iconContainerColor = Color.Blue
+        )
+
+        val language = SettingsDestination(
+            title = SharedString.fromResId(R.string.settings_language),
+            description = SharedString.fromResId(R.string.settings_language_description),
+            icon = Icons.Rounded.Translate,
+            iconContainerColor = Color.Magenta
+        )
+    }
+}
+
+val appSettingsCategories = listOf(
+    category(
+        title = SharedString.fromResId(R.string.settings_category_game)
+    ) {
+        +AppSettingsDestination.maps
+        +AppSettingsDestination.storage
+    },
+
+    category(
+        title = SharedString.fromResId(R.string.settings_category_app)
+    ) {
+        +SettingsDestination.appearance
+        +AppSettingsDestination.language
+        +SettingsDestination.experimental
+        +SettingsDestination.about
+    }
+)
 
 val slideTransitionMetadata = NavDisplay.transitionSpec {
     slideIntoContainer(

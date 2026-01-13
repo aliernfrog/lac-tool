@@ -28,25 +28,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.exists
-import com.aliernfrog.lactool.data.mkdirs
-import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import androidx.core.net.toUri
-import com.aliernfrog.lactool.util.extension.comparator
 import io.github.aliernfrog.pftool_shared.enum.ListSorting
-import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
+import io.github.aliernfrog.pftool_shared.repository.FileRepository
 import io.github.aliernfrog.shared.data.MediaOverlayData
 import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.ContextUtils
@@ -61,6 +56,7 @@ class ScreenshotsViewModel(
     private val topToastState: TopToastState,
     private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
+    private val fileRepository: FileRepository,
     context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -68,9 +64,6 @@ class ScreenshotsViewModel(
     val listViewOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
     
     private val screenshotsDir : String get() = prefs.lacScreenshotsDir.value
-    private lateinit var screenshotsFile: FileWrapper
-
-    private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
     private var screenshots by mutableStateOf(emptyList<FileWrapper>())
 
@@ -78,53 +71,30 @@ class ScreenshotsViewModel(
         get() {
             val sorting = ListSorting.entries[prefs.screenshotsListOptions.sorting.value]
             val reversed = prefs.screenshotsListOptions.sortingReversed.value
-            return screenshots.sortedWith(sorting.comparator()).let {
+            return screenshots.sortedWith(sorting.comparator).let {
                 if (reversed) it.reversed() else it
             }
         }
 
-    fun getScreenshotsFile(context: Context): FileWrapper {
-        val isUpToDate = if (!::screenshotsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
-        else screenshotsDir == screenshotsFile.path
-        if (isUpToDate) return screenshotsFile
-        val storageAccessType = prefs.storageAccessType.value
-        lastKnownStorageAccessType = storageAccessType
-        screenshotsFile = when (StorageAccessType.entries[storageAccessType]) {
-            StorageAccessType.SAF -> {
-                val treeUri = screenshotsDir.toUri()
-                DocumentFileCompat.fromTreeUri(context, treeUri)!!
-            }
-            StorageAccessType.SHIZUKU -> {
-                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
-                val file = shizukuViewModel.fileService!!.getFile(screenshotsDir)!!
-                if (!file.exists()) file.mkdirs()
-                shizukuViewModel.fileService!!.getFile(screenshotsDir)!!
-            }
-            StorageAccessType.ALL_FILES -> {
-                val file = File(screenshotsDir)
-                if (!file.isDirectory) file.mkdirs()
-                File(screenshotsDir)
-            }
-        }.let { FileWrapper(it) }
-        return screenshotsFile
+    private fun getScreenshotsFile(context: Context): FileWrapper? {
+        return fileRepository.getFile(screenshotsDir, context)
     }
 
-    suspend fun fetchScreenshots() {
-        withContext(Dispatchers.IO) {
-            screenshots = screenshotsFile.listFiles()
+    fun fetchScreenshots(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            screenshots = (getScreenshotsFile(context)?.listFiles() ?: emptyList())
                 .filter { it.isFile && it.name.lowercase().endsWith(".jpg") }
                 .sortedByDescending { it.lastModified }
         }
     }
 
-    private suspend fun deleteScreenshot(screenshot: FileWrapper) {
+    private suspend fun deleteScreenshot(screenshot: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.screenshots_deleting)
         )
         withContext(Dispatchers.IO) {
             screenshot.delete()
-            fetchScreenshots()
+            fetchScreenshots(context)
             topToastState.showToast(R.string.screenshots_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
         progressState.currentProgress = null
@@ -179,7 +149,7 @@ class ScreenshotsViewModel(
                     onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
                         showDeleteDialog = false
-                        scope.launch { deleteScreenshot(screenshot) }
+                        scope.launch { deleteScreenshot(screenshot, context) }
                         mainViewModel.dismissMediaOverlay()
                     }
                 )

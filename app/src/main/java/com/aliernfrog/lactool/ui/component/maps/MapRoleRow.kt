@@ -71,7 +71,7 @@ fun MapRoleRow(
         expanded = expanded == true,
         modifier = modifier,
         onClickHeader = onClick,
-        header = { containerColor, contentColor ->
+        header = { _, contentColor ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.heightIn(56.dp)
