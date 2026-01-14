@@ -50,7 +50,7 @@ fun LACToolTheme(
 
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
 
-        if (Build.VERSION.SDK_INT >= 23) Color.Transparent.toArgb().let {
+        Color.Transparent.toArgb().let {
             @Suppress("DEPRECATION")
             activity.window.statusBarColor = it
             @Suppress("DEPRECATION")

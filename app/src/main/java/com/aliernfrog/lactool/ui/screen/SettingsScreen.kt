@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Science
@@ -33,6 +34,7 @@ import io.github.aliernfrog.shared.ui.settings.SettingsDestination
 import io.github.aliernfrog.shared.ui.settings.SettingsRootPage
 import io.github.aliernfrog.shared.util.sharedStringResource
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,10 +75,10 @@ fun SettingsScreen(
             StoragePage(
                 storageAccessTypePref = vm.prefs.storageAccessType,
                 folderPrefs = mapOf(
-                    context.getString(R.string.settings_storage_folders_maps) to vm.prefs.lacMapsDir,
-                    context.getString(R.string.settings_storage_folders_wallpapers) to vm.prefs.lacWallpapersDir,
-                    context.getString(R.string.settings_storage_folders_screenshots) to vm.prefs.lacScreenshotsDir,
-                    context.getString(R.string.settings_storage_folders_exportedMaps) to vm.prefs.exportedMapsDir
+                    stringResource(R.string.settings_storage_folders_maps) to vm.prefs.lacMapsDir,
+                    stringResource(R.string.settings_storage_folders_wallpapers) to vm.prefs.lacWallpapersDir,
+                    stringResource(R.string.settings_storage_folders_screenshots) to vm.prefs.lacScreenshotsDir,
+                    stringResource(R.string.settings_storage_folders_exportedMaps) to vm.prefs.exportedMapsDir
                 ),
                 onEnableStorageAccessTypeRequest = { it.enable() },
                 onNavigateBackRequest = onNavigateBackRequest
@@ -124,6 +126,7 @@ fun SettingsScreen(
                             ExpressiveButtonRow(
                                 title = "Set indeterminate progress"
                             ) {
+                                @SuppressLint("LocalContextGetResourceValueCall")
                                 vm.progressState.currentProgress =
                                     Progress(description = context.getString(R.string.info_pleaseWait))
                             }
@@ -156,6 +159,7 @@ fun SettingsScreen(
 
         SettingsDestination.libs -> {
             LibsPage(
+                librariesJSONRes = R.raw.aboutlibraries,
                 onNavigateBackRequest = onNavigateBackRequest
             )
         }

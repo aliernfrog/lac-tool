@@ -4,24 +4,24 @@ kotlin-plugin = "2.3.0"
 
 android-desugar = "2.1.5"
 
-androidx-activity = "1.12.0-alpha02"
+androidx-activity = "1.12.2"
 androidx-appcompat = "1.7.1"
-androidx-ktx = "1.16.0"
-androidx-lifecycle = "2.9.0"
-androidx-navigation3-core = "1.0.0-alpha03"
-androidx-splashscreen = "1.0.1"
+androidx-ktx = "1.17.0"
+androidx-lifecycle = "2.10.0"
+androidx-navigation3-core = "1.0.0"
+androidx-splashscreen = "1.2.0"
 
-compose = "1.8.3"
+compose = "1.10.1"
 compose-material-icons = "1.7.8"
-compose-material3 = "1.4.0-alpha18"
+compose-material3 = "1.5.0-alpha12"
 
-aboutlibraries = "12.2.4"
+aboutlibraries = "13.2.1"
 coil = "3.3.0"
 dfc = "1.2"
 koin = "4.1.1"
 laclib = "1.2.1"
 markdown = "0.5.8"
-pftool-shared = "55c5a14d34"
+pftool-shared = "f6e0b92243"
 shizuku = "13.1.5"
 toptoast = "2.1.0"
 zoomable = "2.9.0"
@@ -46,7 +46,8 @@ compose-material-icons = { group = "androidx.compose.material", name = "material
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 compose-material3-window = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 
-aboutlibraries = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutlibraries" }
+aboutlibraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutlibraries" }
+aboutlibraries-compose-core = { group = "com.mikepenz", name = "aboutlibraries-compose-core", version.ref = "aboutlibraries" }
 coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 dfc = { group = "com.lazygeniouz", name = "dfc", version.ref = "dfc" }
@@ -66,4 +67,4 @@ android-library = { id = "com.android.library", version.ref = "android-plugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-plugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-plugin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-plugin" }
-aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
+aboutlibraries-android = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutlibraries" }

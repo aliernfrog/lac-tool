@@ -19,7 +19,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.aboutlibraries.android)
 }
 
 android {
@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 400000
         versionName = "4.0.0"
@@ -181,7 +181,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.window)
 
-    implementation(libs.aboutlibraries)
+    implementation(libs.aboutlibraries.core)
+    implementation(libs.aboutlibraries.compose.core)
     implementation(libs.coil)
     implementation(libs.coil.okhttp)
     implementation(libs.dfc)
