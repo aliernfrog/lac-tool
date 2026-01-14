@@ -29,6 +29,7 @@ fun MapsListScreen(
     @Suppress("UNCHECKED_CAST")
     MapsListScreen(
         title = title,
+        fileMimeType = "text/plain",
         mapsListSegments = vm.availableSegments,
         mapActions = mapActions,
         listViewOptions = vm.prefs.mapsListOptions,
