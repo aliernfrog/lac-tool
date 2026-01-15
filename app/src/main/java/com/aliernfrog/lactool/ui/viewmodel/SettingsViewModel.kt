@@ -1,40 +1,24 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
-import android.content.Context
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Build
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
-import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.experimentalSettingsRequiredClicks
+import com.aliernfrog.lactool.util.appSettingsCategories
 import com.aliernfrog.lactool.util.manager.PreferenceManager
-import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import com.mikepenz.aboutlibraries.Libs
-import com.mikepenz.aboutlibraries.util.withContext
+import io.github.aliernfrog.pftool_shared.impl.LocaleManager
+import io.github.aliernfrog.pftool_shared.impl.ProgressState
+import io.github.aliernfrog.shared.impl.VersionManager
 
+@OptIn(ExperimentalMaterial3Api::class)
 class SettingsViewModel(
+    val versionManager: VersionManager,
+    val localeManager: LocaleManager,
     val prefs: PreferenceManager,
+    val progressState: ProgressState,
     val topToastState: TopToastState,
-    context: Context
 ) : ViewModel() {
-    private var aboutClickCount by mutableIntStateOf(0)
+    val categories = appSettingsCategories
 
-    val libraries = Libs.Builder().withContext(context).build().libraries
-
-    fun onAboutClick() {
-        if (prefs.experimentalOptionsEnabled.value) return
-        aboutClickCount++
-        if (aboutClickCount == experimentalSettingsRequiredClicks) {
-            aboutClickCount = 0
-            prefs.experimentalOptionsEnabled.value = true
-            topToastState.showToast(
-                text = R.string.settings_experimental_enabled,
-                icon = Icons.Rounded.Build,
-                iconTintColor = TopToastColor.ON_SURFACE
-            )
-        }
-    }
+    val debugInfo: String
+        get() = versionManager.getDebugInfo(prefs.debugInfoPrefs)
 }

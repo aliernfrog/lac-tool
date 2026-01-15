@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
@@ -37,32 +36,26 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
-import com.aliernfrog.lactool.data.MapActionResult
-import com.aliernfrog.lactool.data.MediaViewData
-import com.aliernfrog.lactool.data.exists
-import com.aliernfrog.lactool.data.mkdirs
-import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.impl.Progress
-import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.state.TopToastState
-import com.lazygeniouz.dfc.file.DocumentFileCompat
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import androidx.core.net.toUri
-import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
+import io.github.aliernfrog.pftool_shared.data.MapActionResult
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
+import io.github.aliernfrog.pftool_shared.impl.Progress
+import io.github.aliernfrog.pftool_shared.impl.ProgressState
+import io.github.aliernfrog.pftool_shared.repository.MapRepository
+import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.data.MediaOverlayData
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.impl.ContextUtils
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -71,22 +64,14 @@ class MapsViewModel(
     val topToastState: TopToastState,
     private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
+    private val mapRepository: MapRepository,
     val prefs: PreferenceManager
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
-    val scrollState = ScrollState(0)
 
     val mapsDir: String get() { return prefs.lacMapsDir.value }
     val exportedMapsDir: String get() { return prefs.exportedMapsDir.value }
-    lateinit var mapsFile: FileWrapper
-    lateinit var exportedMapsFile: FileWrapper
 
-    private var lastKnownStorageAccessType = prefs.storageAccessType.value
-
-    var isLoadingMaps by mutableStateOf(true)
-    var importedMaps by mutableStateOf(emptyList<MapFile>())
-    var exportedMaps by mutableStateOf(emptyList<MapFile>())
-    var sharedMaps by mutableStateOf(emptyList<MapFile>())
     var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
 
@@ -162,7 +147,7 @@ class MapsViewModel(
     fun openMapThumbnailViewer(map: MapFile) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
-        mainViewModel.showMediaView(MediaViewData(
+        mainViewModel.showMediaOverlay(MediaOverlayData(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
@@ -178,7 +163,7 @@ class MapsViewModel(
                     if (uri != null) scope.launch {
                         activeProgress = Progress(context.getString(R.string.maps_thumbnail_setting))
                         map.runInIOThreadSafe {
-                            val cachedFile = UriUtil.cacheFile(uri, "maps", context)
+                            val cachedFile = PFToolSharedUtil.cacheFile(uri, "maps", context)
                             map.setThumbnailFile(context, FileWrapper(cachedFile!!))
                             viewMapDetails(map)
                             openMapThumbnailViewer(map)
@@ -269,7 +254,7 @@ class MapsViewModel(
                             map.runInIOThreadSafe {
                                 map.deleteThumbnailFile()
                                 viewMapDetails(map)
-                                mainViewModel.dismissMediaView()
+                                mainViewModel.dismissMediaOverlay()
                                 showDeleteDialog = false
                                 topToastState.showToast(
                                     text = R.string.maps_thumbnail_deleted,
@@ -292,108 +277,21 @@ class MapsViewModel(
         }
     }
 
-    /**
-     * Loads all imported and exported maps. [isLoadingMaps] will be true while this is in action.
-     */
-    suspend fun loadMaps(context: Context) {
-        withContext(Dispatchers.Main) {
-            isLoadingMaps = true
-        }
-        checkAndUpdateMapsFiles(context)
-        val imported = fetchImportedMaps()
-        val exported = fetchExportedMaps()
-        withContext(Dispatchers.Main) {
-            importedMaps = imported
-            exportedMaps = exported
-            isLoadingMaps = false
+    fun loadMaps(context: Context) {
+        viewModelScope.launch {
+            mapRepository.reloadMaps(context)
         }
     }
 
-    /**
-     * Makes sure [mapsFile] and [exportedMapsFile] are initialized and are up to date.
-     */
-    fun checkAndUpdateMapsFiles(context: Context) {
-        getMapsFile(context)
-        getExportedMapsFile(context)
+    fun getMapsFile(context: Context): FileWrapper? {
+        return mapRepository.getImportedMapsFile(context)
     }
 
-    /**
-     * Gets [DocumentFileCompat] to imported maps folder.
-     * Use this before accessing [mapsFile], otherwise the app will crash.
-     */
-    fun getMapsFile(context: Context): FileWrapper {
-        val isUpToDate = if (!::mapsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
-        else mapsDir == mapsFile.path
-        if (isUpToDate) return mapsFile
-        val storageAccessType = prefs.storageAccessType.value
-        lastKnownStorageAccessType = storageAccessType
-        mapsFile = when (StorageAccessType.entries[storageAccessType]) {
-            StorageAccessType.SAF -> {
-                val treeUri = mapsDir.toUri()
-                DocumentFileCompat.fromTreeUri(context, treeUri)!!
-            }
-            StorageAccessType.SHIZUKU -> {
-                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
-                val file = shizukuViewModel.fileService!!.getFile(mapsDir)!!
-                if (!file.exists()) file.mkdirs()
-                shizukuViewModel.fileService!!.getFile(mapsDir)!!
-            }
-            StorageAccessType.ALL_FILES -> {
-                val file = File(mapsDir)
-                if (!file.isDirectory) file.mkdirs()
-                File(mapsDir)
-            }
-        }.let { FileWrapper(it) }
-        return mapsFile
+    fun getExportedMapsFile(context: Context): FileWrapper? {
+        return mapRepository.getExportedMapsFile(context)
     }
 
-    /**
-     * Gets [DocumentFileCompat] to exported maps folder.
-     * Use this before accessing [exportedMapsFile], otherwise the app will crash.
-     */
-    private fun getExportedMapsFile(context: Context): FileWrapper {
-        val isUpToDate = if (!::exportedMapsFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
-        else exportedMapsDir == exportedMapsFile.path
-        if (isUpToDate) return exportedMapsFile
-        val storageAccessType = prefs.storageAccessType.value
-        lastKnownStorageAccessType = storageAccessType
-        exportedMapsFile = when (StorageAccessType.entries[storageAccessType]) {
-            StorageAccessType.SAF -> {
-                val treeUri = exportedMapsDir.toUri()
-                DocumentFileCompat.fromTreeUri(context, treeUri)!!
-            }
-            StorageAccessType.SHIZUKU -> {
-                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
-                val file = shizukuViewModel.fileService!!.getFile(exportedMapsDir)!!
-                if (!file.exists()) file.mkdirs()
-                shizukuViewModel.fileService!!.getFile(exportedMapsDir)!!
-            }
-            StorageAccessType.ALL_FILES -> {
-                val file = File(exportedMapsDir)
-                if (!file.isDirectory) file.mkdirs()
-                File(exportedMapsDir)
-            }
-        }.let { FileWrapper(it) }
-        return exportedMapsFile
-    }
-
-    private fun fetchImportedMaps(): List<MapFile> {
-        return mapsFile.listFiles()
-            .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
-            .sortedBy { it.name.lowercase() }
-            .map {
-                MapFile(it)
-            }
-    }
-
-    private fun fetchExportedMaps(): List<MapFile> {
-        return exportedMapsFile.listFiles()
-            .filter { it.isFile && it.name.lowercase().endsWith(".txt") }
-            .sortedBy { it.name.lowercase() }
-            .map {
-                MapFile(it)
-            }
+    fun setSharedMaps(maps: List<MapFile>) {
+        mapRepository.setSharedMaps(maps)
     }
 }

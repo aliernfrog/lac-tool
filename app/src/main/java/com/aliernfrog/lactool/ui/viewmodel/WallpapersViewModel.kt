@@ -46,34 +46,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.data.MediaViewData
-import com.aliernfrog.lactool.data.exists
-import com.aliernfrog.lactool.data.mkdirs
-import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.enum.ListSorting
-import com.aliernfrog.lactool.enum.StorageAccessType
-import com.aliernfrog.lactool.impl.FileWrapper
-import com.aliernfrog.lactool.impl.Progress
-import com.aliernfrog.lactool.impl.ProgressState
-import com.aliernfrog.lactool.ui.component.ButtonIcon
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.extension.showErrorToast
-import com.aliernfrog.lactool.util.manager.ContextUtils
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
-import com.aliernfrog.lactool.util.staticutil.UriUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import com.lazygeniouz.dfc.file.DocumentFileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import androidx.core.net.toUri
-import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
-import com.aliernfrog.lactool.ui.dialog.CustomMessageDialog
+import io.github.aliernfrog.pftool_shared.enum.ListSorting
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
+import io.github.aliernfrog.pftool_shared.impl.Progress
+import io.github.aliernfrog.pftool_shared.impl.ProgressState
+import io.github.aliernfrog.pftool_shared.repository.FileRepository
+import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.data.MediaOverlayData
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.impl.ContextUtils
+import io.github.aliernfrog.shared.ui.component.ButtonIcon
+import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,6 +78,7 @@ class WallpapersViewModel(
     val topToastState: TopToastState,
     private val progressState: ProgressState,
     private val contextUtils: ContextUtils,
+    private val fileRepository: FileRepository,
     context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
@@ -89,9 +86,6 @@ class WallpapersViewModel(
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
     private val wallpapersDir : String get() = prefs.lacWallpapersDir.value
-    private lateinit var wallpapersFile: FileWrapper
-
-    private var lastKnownStorageAccessType = prefs.storageAccessType.value
 
     private var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
@@ -109,7 +103,7 @@ class WallpapersViewModel(
     suspend fun onWallpaperPick(uri: Uri, context: Context) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         withContext(Dispatchers.IO) {
-            val file = UriUtil.cacheFile(
+            val file = PFToolSharedUtil.cacheFile(
                 uri = uri,
                 parentName = "wallpapers",
                 context = context
@@ -118,7 +112,7 @@ class WallpapersViewModel(
                 topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
                 return@withContext
             }
-            mainViewModel.showMediaView(MediaViewData(
+            mainViewModel.showMediaOverlay(MediaOverlayData(
                 model = file.painterModel,
                 title = context.getString(R.string.wallpapers_chosen),
                 optionsSheetContent = {
@@ -169,7 +163,7 @@ class WallpapersViewModel(
                                     withName = importName.ifEmpty { originalName },
                                     context = context
                                 )
-                                mainViewModel.dismissMediaView()
+                                mainViewModel.dismissMediaOverlay()
                             } }
                         ) {
                             ButtonIcon(rememberVectorPainter(Icons.Default.Download))
@@ -191,13 +185,14 @@ class WallpapersViewModel(
             contextUtils.getString(R.string.wallpapers_chosen_importing)
         )
         withContext(Dispatchers.IO) {
-            var outputFile = wallpapersFile.findFile(outputName)
+            val wallpapersFile = getWallpapersFile(context)
+            var outputFile = wallpapersFile?.findFile(outputName)
             if (outputFile?.exists() == true) return@withContext topToastState.showErrorToast(
                 text = R.string.wallpapers_alreadyExists
             )
-            outputFile = wallpapersFile.createFile(outputName) ?: return@withContext
+            outputFile = wallpapersFile?.createFile(outputName) ?: return@withContext
             outputFile.copyFrom(file, context)
-            fetchImportedWallpapers()
+            fetchImportedWallpapers(context)
             topToastState.showToast(R.string.wallpapers_chosen_imported, Icons.Rounded.Download)
         }
         progressState.currentProgress = null
@@ -213,51 +208,29 @@ class WallpapersViewModel(
         progressState.currentProgress = null
     }
 
-    private suspend fun deleteImportedWallpaper(wallpaper: FileWrapper) {
+    private suspend fun deleteImportedWallpaper(wallpaper: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_deleting)
         )
         withContext(Dispatchers.IO) {
             wallpaper.delete()
-            fetchImportedWallpapers()
+            fetchImportedWallpapers(context)
             topToastState.showToast(R.string.wallpapers_deleted, Icons.Rounded.Delete, TopToastColor.ERROR)
         }
         progressState.currentProgress = null
     }
 
-    fun getWallpapersFile(context: Context): FileWrapper {
-        val isUpToDate = if (!::wallpapersFile.isInitialized) false
-        else if (lastKnownStorageAccessType != prefs.storageAccessType.value) false
-        else wallpapersDir == wallpapersFile.path
-        if (isUpToDate) return wallpapersFile
-        val storageAccessType = prefs.storageAccessType.value
-        lastKnownStorageAccessType = storageAccessType
-        wallpapersFile = when (StorageAccessType.entries[storageAccessType]) {
-            StorageAccessType.SAF -> {
-                val treeUri = wallpapersDir.toUri()
-                DocumentFileCompat.fromTreeUri(context, treeUri)!!
-            }
-            StorageAccessType.SHIZUKU -> {
-                val shizukuViewModel = getKoinInstance<ShizukuViewModel>()
-                val file = shizukuViewModel.fileService!!.getFile(wallpapersDir)!!
-                if (!file.exists()) file.mkdirs()
-                shizukuViewModel.fileService!!.getFile(wallpapersDir)!!
-            }
-            StorageAccessType.ALL_FILES -> {
-                val file = File(wallpapersDir)
-                if (!file.isDirectory) file.mkdirs()
-                File(wallpapersDir)
-            }
-        }.let { FileWrapper(it) }
-        return wallpapersFile
+    private fun getWallpapersFile(context: Context): FileWrapper? {
+        return fileRepository.getFile(wallpapersDir, context)
     }
 
-    suspend fun fetchImportedWallpapers() {
-        withContext(Dispatchers.IO) {
-            activeWallpaper = wallpapersFile.findFile(activeWallpaperFileName)?.let {
+    fun fetchImportedWallpapers(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val wallpapersFile = getWallpapersFile(context)
+            activeWallpaper = getWallpapersFile(context)?.findFile(activeWallpaperFileName)?.let {
                 if (it.isFile) it else null
             }
-            importedWallpapers = wallpapersFile.listFiles()
+            importedWallpapers = (wallpapersFile?.listFiles() ?: emptyList())
                 .filter {
                     it.isFile && it.name.lowercase().endsWith(".jpg") && it.name.lowercase() != activeWallpaperFileName
                 }
@@ -268,7 +241,7 @@ class WallpapersViewModel(
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openWallpaperOptions(wallpaper: FileWrapper) {
         val mainViewModel = getKoinInstance<MainViewModel>()
-        mainViewModel.showMediaView(MediaViewData(
+        mainViewModel.showMediaOverlay(MediaOverlayData(
             model = wallpaper.painterModel,
             title = wallpaper.name,
             toolbarContent = {
@@ -336,8 +309,8 @@ class WallpapersViewModel(
                     onDismissRequest = { showDeleteDialog = false },
                     onConfirmDelete = {
                         showDeleteDialog = false
-                        scope.launch { deleteImportedWallpaper(wallpaper) }
-                        mainViewModel.dismissMediaView()
+                        scope.launch { deleteImportedWallpaper(wallpaper, context) }
+                        mainViewModel.dismissMediaOverlay()
                     }
                 )
             }

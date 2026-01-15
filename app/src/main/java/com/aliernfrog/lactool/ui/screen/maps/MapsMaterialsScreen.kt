@@ -51,25 +51,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.enum.ListStyle
-import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.AppTopBar
-import com.aliernfrog.lactool.ui.component.FadeVisibility
-import com.aliernfrog.lactool.ui.component.FadeVisibilityColumn
 import com.aliernfrog.lactool.ui.component.ImageButton
-import com.aliernfrog.lactool.ui.component.ImageButtonInfo
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
-import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
-import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
-import com.aliernfrog.lactool.ui.component.VerticalProgressIndicatorWithText
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.component.form.ExpandableRow
-import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
-import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
+import io.github.aliernfrog.pftool_shared.enum.ListStyle
+import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
+import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
+import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
+import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
+import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppTopBar
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.FadeVisibilityColumn
+import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
+import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -158,7 +158,7 @@ fun MapsMaterialsScreen(
                     else MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     if (minified) return@ImageButtonOverlay Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         if (failed) Icon(
                             imageVector = Icons.Default.Error,

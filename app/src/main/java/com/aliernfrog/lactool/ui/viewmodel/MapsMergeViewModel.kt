@@ -15,12 +15,13 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.di.getKoinInstance
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapMergerState
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
+import com.aliernfrog.lactool.util.extension.writeFile
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
+import io.github.aliernfrog.shared.di.getKoinInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -49,7 +50,7 @@ class MapsMergeViewModel(
         if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_notEnoughMaps)
         val mapsFile = mapsViewModel.getMapsFile(context)
         val newFileName = "$newMapName.txt"
-        val output = mapsFile.findFile(newFileName)
+        val output = mapsFile?.findFile(newFileName)
         if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)
         isMerging = true
         withContext(Dispatchers.IO) {
@@ -57,7 +58,7 @@ class MapsMergeViewModel(
             val newMapContent = mapMerger.mergeMaps(
                 onNoEnoughMaps = { cancelMerging(R.string.mapsMerge_notEnoughMaps) }
             ) ?: return@withContext
-            mapsFile.createFile(newFileName)!!.writeFile(newMapContent, context)
+            mapsFile?.createFile(newFileName)!!.writeFile(newMapContent, context)
             mergeMapDialogShown = false
             isMerging = false
             mapMerger.clearMaps()

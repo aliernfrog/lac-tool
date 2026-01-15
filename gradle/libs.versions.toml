@@ -1,6 +1,6 @@
 [versions]
 android-plugin = "8.13.2"
-kotlin-plugin = "2.2.21"
+kotlin-plugin = "2.3.0"
 
 android-desugar = "2.1.5"
 
@@ -21,6 +21,7 @@ dfc = "1.2"
 koin = "4.1.1"
 laclib = "1.2.1"
 markdown = "0.5.8"
+pftool-shared = "55c5a14d34"
 shizuku = "13.1.5"
 toptoast = "2.1.0"
 zoomable = "2.9.0"
@@ -52,6 +53,8 @@ dfc = { group = "com.lazygeniouz", name = "dfc", version.ref = "dfc" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 laclib = { group = "com.github.aliernfrog", name = "laclib", version.ref = "laclib" }
 markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "markdown" }
+pftool-shared-base = { group = "com.github.aliernfrog.pf-tool", name = "shared", version.ref = "pftool-shared" }
+pftool-shared-extra = { group = "com.github.aliernfrog.pf-tool", name = "pftool-shared", version.ref = "pftool-shared" }
 shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku" }
 shizuku-provider = { group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku" }
 toptoast = { group = "com.github.aliernfrog", name = "top-toast-compose", version.ref = "toptoast" }
