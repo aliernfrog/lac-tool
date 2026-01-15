@@ -15,7 +15,7 @@ val appModule = module {
         get<PreferenceManager>().let { prefs ->
             @Suppress("KotlinConstantConditions") VersionManager(
                 tag = TAG,
-                appName = "PF Tool",
+                appName = "LAC Tool",
                 updatesURLPref = prefs.updatesURL,
                 defaultInstallURL = "https://github.com/aliernfrog/lac-tool",
                 buildCommit = BuildConfig.GIT_COMMIT,

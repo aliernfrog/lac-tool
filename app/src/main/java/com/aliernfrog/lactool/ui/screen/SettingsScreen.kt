@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aliernfrog.lactool.R
@@ -73,10 +74,10 @@ fun SettingsScreen(
             StoragePage(
                 storageAccessTypePref = vm.prefs.storageAccessType,
                 folderPrefs = mapOf(
-                    context.getString(R.string.settings_storage_folders_maps) to vm.prefs.lacMapsDir,
-                    context.getString(R.string.settings_storage_folders_wallpapers) to vm.prefs.lacWallpapersDir,
-                    context.getString(R.string.settings_storage_folders_screenshots) to vm.prefs.lacScreenshotsDir,
-                    context.getString(R.string.settings_storage_folders_exportedMaps) to vm.prefs.exportedMapsDir
+                    stringResource(R.string.settings_storage_folders_maps) to vm.prefs.lacMapsDir,
+                    stringResource(R.string.settings_storage_folders_wallpapers) to vm.prefs.lacWallpapersDir,
+                    stringResource(R.string.settings_storage_folders_screenshots) to vm.prefs.lacScreenshotsDir,
+                    stringResource(R.string.settings_storage_folders_exportedMaps) to vm.prefs.exportedMapsDir
                 ),
                 onEnableStorageAccessTypeRequest = { it.enable() },
                 onNavigateBackRequest = onNavigateBackRequest
