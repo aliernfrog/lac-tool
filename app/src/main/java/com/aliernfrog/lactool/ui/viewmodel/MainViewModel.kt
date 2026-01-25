@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
@@ -34,7 +33,6 @@ import io.github.aliernfrog.shared.data.MediaOverlayData
 import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.UpdateCheckResult
 import io.github.aliernfrog.shared.impl.VersionManager
-import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,12 +43,10 @@ class MainViewModel(
     val prefs: PreferenceManager,
     val topToastState: TopToastState,
     val progressState: ProgressState,
-    val versionManager: VersionManager,
-    context: Context
+    val versionManager: VersionManager
 ) : ViewModel() {
     lateinit var scope: CoroutineScope
     lateinit var safTxtFileCreator: SAFFileCreator
-    val updateSheetState = createSheetStateWithDensity(skipPartiallyExpanded = false, Density(context))
 
     val navigationBackStack = mutableStateListOf<Any>(
         NavigationConstant.INITIAL_DESTINATION
@@ -110,7 +106,8 @@ class MainViewModel(
 
     fun showUpdateToast() {
         io.github.aliernfrog.shared.util.showUpdateToast {
-            scope.launch { updateSheetState.show() }
+            if (navigationBackStack.first() !is UpdateScreenDestination)
+                navigationBackStack.add(UpdateScreenDestination)
         }
     }
 

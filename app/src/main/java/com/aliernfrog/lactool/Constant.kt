@@ -9,7 +9,7 @@ import io.github.aliernfrog.shared.impl.CreditData
 const val TAG = "LACToolLogs"
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 const val crowdinURL = "https://crowdin.com/project/lac-tool"
-const val defaultReleasesURL = "https://raw.githubusercontent.com/aliernfrog/pf-tool/refs/heads/main/releases.json"
+const val defaultReleasesURL = "https://raw.githubusercontent.com/aliernfrog/lac-tool/refs/heads/main/releases.json"
 const val crashReportURL = "https://aliernfrog.vercel.app/crash-report"
 
 object SettingsConstant {
