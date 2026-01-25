@@ -2,6 +2,9 @@ package com.aliernfrog.lactool.impl
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
@@ -38,8 +41,10 @@ class MapFile(
     private val thumbnailFileName = "$name.jpg"
     private val thumbnailFile = if (importedState != MapImportedState.IMPORTED) null
     else file.parentFile?.findFile(thumbnailFileName)
-    override var thumbnailModel = if (importedState != MapImportedState.IMPORTED) null
-    else thumbnailFile?.painterModel
+    override var thumbnailModel by mutableStateOf(
+        if (importedState != MapImportedState.IMPORTED) null
+        else thumbnailFile?.painterModel
+    )
 
     /**
      * Files related to the map (thumbnail file, data folder).
