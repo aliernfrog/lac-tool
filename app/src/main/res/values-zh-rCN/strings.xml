@@ -286,9 +286,6 @@
     <string name="updates_updateAvailable">LAC Tool 有可用的更新！点击了解更多详情</string>
     <string name="updates_noUpdates">无可用更新</string>
     <string name="updates_error">检查更新时出错</string>
-    <string name="updates_stable">稳定版</string>
-    <string name="updates_preRelease">预发布版</string>
-    <string name="updates_openInGithub">在 GitHub 中查看</string>
     <string name="updates_update">更新</string>
     <string name="updates_checkUpdates">检查更新</string>
     <string name="updates_noChangelog">检查更新以查看更新日志</string>

@@ -1,0 +1,38 @@
+name: Generate releases JSON
+
+on:
+  workflow_run:
+    branches: ["main"]
+    workflows: ["Release"]
+    types:
+      - completed
+
+  workflow_dispatch:
+
+jobs:
+  generate_json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+    
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      
+      - name: Generate releases.json
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          node generate-releases-json.js
+      
+      - name: Push changes
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add releases.json
+          git commit -m "chore: Update releases.json [skip ci]"
+          git push

@@ -12,11 +12,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: zulu
-          java-version: 17
+          java-version: 21
           cache: gradle
 
       - name: Build with Gradle
@@ -28,7 +28,7 @@ jobs:
         run: mv app/build/outputs/apk_from_bundle/release/app-release-universal.apk lactool.apk
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: lactool
           path: lactool.apk

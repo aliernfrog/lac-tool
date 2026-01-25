@@ -13,11 +13,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: zulu
-          java-version: 17
+          java-version: 21
           cache: gradle
 
       - name: Build with Gradle
@@ -38,7 +38,7 @@ jobs:
           excludeTypes: build,chore,ci,docs,other,style
       
       - name: Create Release
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.20.0
         with:
           allowUpdates: true
           draft: false
@@ -49,27 +49,7 @@ jobs:
           artifacts: "lactool.apk"
       
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: lactool
           path: lactool.apk
-      
-      - name: Check if workflow supplied
-        id: check-workflow
-        run: |
-          if [ "$SECRET" == "" ]; then
-            echo "present=NO" >> $GITHUB_OUTPUT
-          else
-            echo "present=YES" >> $GITHUB_OUTPUT
-          fi
-        env:
-          SECRET: ${{ secrets.VERSION_DATA_WORKFLOW }}
-
-      - name: Trigger workflow
-        if: steps.check-workflow.outputs.present == 'YES'
-        uses: fjogeleit/http-request-action@v1.15.2
-        with:
-          url: ${{ secrets.VERSION_DATA_WORKFLOW }}
-          method: "POST"
-          customHeaders: '{ "Accept":"application/vnd.github+json", "Authorization":"Bearer ${{ secrets.VERSION_DATA_TOKEN }}" }'
-          data: '{ "ref":"main" }'

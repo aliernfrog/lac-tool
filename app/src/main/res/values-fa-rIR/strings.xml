@@ -282,9 +282,6 @@
     <string name="updates_updateAvailable">به روز رسانی ابزار LAC در دسترس است</string>
     <string name="updates_noUpdates">به روز رسانی در دسترس نیست</string>
     <string name="updates_error">هنگام بررسی به‌روزرسانی، مشکلی پیش آمد</string>
-    <string name="updates_stable">پایدار/پایه</string>
-    <string name="updates_preRelease">پیش از انتشار</string>
-    <string name="updates_openInGithub">مشاهده در گیت هاب</string>
     <string name="updates_update">به‌روزرسانی</string>
     <string name="updates_noChangelog">برای مشاهده تغییرات ثبت شده، به روز رسانی ها را بررسی کنید</string>
 </resources>

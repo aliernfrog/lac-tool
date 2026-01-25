@@ -9,6 +9,8 @@ import io.github.aliernfrog.shared.impl.CreditData
 const val TAG = "LACToolLogs"
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 const val crowdinURL = "https://crowdin.com/project/lac-tool"
+const val defaultReleasesURL = "https://raw.githubusercontent.com/aliernfrog/lac-tool/refs/heads/main/releases.json"
+const val crashReportURL = "https://aliernfrog.vercel.app/crash-report"
 
 object SettingsConstant {
     val socials = listOf(
@@ -29,6 +31,19 @@ object SettingsConstant {
             icon = Icons.Default.Translate,
             iconContainerColor = Color(0xFF263238),
             url = crowdinURL
+        )
+    )
+
+    val supportLinks = listOf(
+        Social(
+            label = R.string.settings_about_issues_discord,
+            icon = io.github.aliernfrog.shared.R.drawable.discord,
+            url = "https://discord.gg/SQXqBMs"
+        ),
+        Social(
+            label = R.string.settings_about_issues_githubIssues,
+            icon = io.github.aliernfrog.shared.R.drawable.github,
+            url = "$githubRepoURL/issues"
         )
     )
 

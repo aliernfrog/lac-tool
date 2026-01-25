@@ -8,7 +8,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
 import io.github.aliernfrog.pftool_shared.data.PermissionData
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

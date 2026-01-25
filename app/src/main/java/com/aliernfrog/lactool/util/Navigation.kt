@@ -4,6 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Photo
@@ -21,8 +23,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
-import io.github.aliernfrog.shared.ui.settings.category
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.category
 import io.github.aliernfrog.shared.util.SharedString
 
 object NavigationConstant {
@@ -63,6 +65,8 @@ enum class SubDestination {
     MAPS_MATERIALS,
     MAPS_MERGE
 }
+
+object UpdateScreenDestination
 
 enum class NavigationBarType {
     HIDDEN,
@@ -156,4 +160,24 @@ val slideTransitionMetadata = NavDisplay.transitionSpec {
     ) togetherWith slideOutOfContainer(
         AnimatedContentTransitionScope.SlideDirection.End
     )
+}
+
+val slideVerticalTransitionMetadata = NavDisplay.transitionSpec {
+    slideInVertically(
+        initialOffsetY = { it }
+    ) + fadeIn() togetherWith slideOutVertically(
+        targetOffsetY = { -it }
+    ) + fadeOut()
+} + NavDisplay.popTransitionSpec {
+    slideInVertically(
+        initialOffsetY = { -it }
+    ) + fadeIn() togetherWith slideOutVertically(
+        targetOffsetY = { -it }
+    ) + fadeOut()
+} + NavDisplay.predictivePopTransitionSpec {
+    slideInVertically(
+        initialOffsetY = { -it }
+    ) + fadeIn() togetherWith slideOutVertically(
+        targetOffsetY = { it }
+    ) + fadeOut()
 }
