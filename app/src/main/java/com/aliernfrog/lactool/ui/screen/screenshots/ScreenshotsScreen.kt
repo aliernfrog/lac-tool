@@ -22,9 +22,6 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.rounded.NoPhotography
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,6 +53,7 @@ import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
@@ -209,17 +207,13 @@ private fun Header(
                         .fillMaxWidth()
                 )
                 Box {
-                    IconButton(
+                    IconButtonWithTooltip(
+                        icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Sort),
+                        contentDescription = stringResource(R.string.list_options),
                         onClick = { scope.launch {
                             screenshotsViewModel.listViewOptionsSheetState.show()
-                        } },
-                        shapes = IconButtonDefaults.shapes()
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.list_options)
-                        )
-                    }
+                        } }
+                    )
                 }
             }
         }

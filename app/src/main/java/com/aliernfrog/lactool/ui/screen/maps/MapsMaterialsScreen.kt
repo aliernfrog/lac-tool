@@ -27,8 +27,6 @@ import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -64,6 +62,7 @@ import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FadeVisibilityColumn
+import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
@@ -116,17 +115,13 @@ fun MapsMaterialsScreen(
                 onNavigationClick = onNavigateBackRequest,
                 actions = {
                     Box {
-                        IconButton(
-                            shapes = IconButtonDefaults.shapes(),
+                        IconButtonWithTooltip(
+                            icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Sort),
+                            contentDescription = stringResource(R.string.list_options),
                             onClick = { scope.launch {
                                 mapsEditViewModel.materialsListOptionsSheetState.show()
                             } }
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Sort,
-                                contentDescription = stringResource(R.string.list_options)
-                            )
-                        }
+                        )
                     }
                 }
             )
