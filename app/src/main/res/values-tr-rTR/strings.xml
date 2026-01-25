@@ -361,9 +361,6 @@
     <string name="updates_updateAvailable">LAC Tool güncellemesi mevcut! Daha fazla detay için tıklayın</string>
     <string name="updates_noUpdates">Güncelleme yok</string>
     <string name="updates_error">Güncellemeleri denetlerken bir şeyler ters gitti</string>
-    <string name="updates_stable">Stabil</string>
-    <string name="updates_preRelease">Ön sürüm</string>
-    <string name="updates_openInGithub">GitHub\'da görüntüle</string>
     <string name="updates_update">Güncelle</string>
     <string name="updates_checkUpdates">Güncellemeleri denetle</string>
     <string name="updates_noChangelog">Değişiklik günlüğünü görmek için güncellemeleri denetleyin</string>

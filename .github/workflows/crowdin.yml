@@ -14,17 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: dev
           fetch-depth: 0
 
       - name: Crowdin sync
-        uses: crowdin/github-action@v2.0.0
+        uses: crowdin/github-action@v2
         with:
           create_pull_request: false
           localization_branch_name: "l10n"
-          commit_message: "feat(l10n): update translations"
+          commit_message: "feat(l10n): Update translations"
           upload_sources: true
           upload_translations: true
           download_translations: true
@@ -34,17 +34,17 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Checkout l10n branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         continue-on-error: true # so the workflow still "succeeds"
         id: l10n
         with:
           ref: l10n
           path: l10n
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: success()
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Clean untranslated files
         if: success()
@@ -54,5 +54,5 @@ jobs:
           git config user.name Crowdin Bot
           git config user.email support+bot@crowdin.com
           git add ./app/src/main/res
-          git commit -m "chore(l10n): clean untranslated files"
+          git commit -m "chore(l10n): Clean untranslated files"
           git push

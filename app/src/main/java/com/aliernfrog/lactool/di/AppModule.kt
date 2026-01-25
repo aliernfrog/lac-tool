@@ -16,7 +16,7 @@ val appModule = module {
             @Suppress("KotlinConstantConditions") VersionManager(
                 tag = TAG,
                 appName = "LAC Tool",
-                updatesURLPref = prefs.updatesURL,
+                releasesURLPref = prefs.releasesURL,
                 defaultInstallURL = "https://github.com/aliernfrog/lac-tool",
                 buildCommit = BuildConfig.GIT_COMMIT,
                 buildBranch = BuildConfig.GIT_BRANCH,

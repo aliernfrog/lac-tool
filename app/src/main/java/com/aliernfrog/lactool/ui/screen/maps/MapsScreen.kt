@@ -20,7 +20,7 @@ import com.aliernfrog.lactool.util.slideTransitionMetadata
 import io.github.aliernfrog.pftool_shared.data.PermissionData
 import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
 import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

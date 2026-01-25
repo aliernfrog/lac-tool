@@ -330,9 +330,6 @@
     <string name="updates_updateAvailable">Доступно обновление LAC Tool! Нажмите для подробностей</string>
     <string name="updates_noUpdates">Нет доступных обновлений</string>
     <string name="updates_error">Что-то пошло не так при проверке обновлений</string>
-    <string name="updates_stable">Стабильная</string>
-    <string name="updates_preRelease">Предварительная</string>
-    <string name="updates_openInGithub">Посмотреть на GitHub</string>
     <string name="updates_update">Обновления</string>
     <string name="updates_checkUpdates">Проверить обновления</string>
     <string name="updates_noChangelog">Проверьте обновления, чтобы просмотреть список изменений</string>

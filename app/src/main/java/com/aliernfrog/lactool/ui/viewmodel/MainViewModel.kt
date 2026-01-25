@@ -20,6 +20,7 @@ import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.NavigationConstant
+import com.aliernfrog.lactool.util.UpdateScreenDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -58,8 +59,10 @@ class MainViewModel(
     val isAtMainDestination: Boolean
         get() = navigationBackStack.last() == MainDestinationGroup
 
-    val latestVersionInfo = versionManager.latestVersionInfo
-    val updateAvailable = versionManager.updateAvailable
+    val availableUpdates = versionManager.availableUpdates
+    val currentVersionInfo = versionManager.currentVersionInfo
+    val isCompatibleWithLatestVersion = versionManager.isCompatibleWithLatestVersion
+    val isCheckingForUpdates = versionManager.isCheckingForUpdates
     var showUpdateNotification by mutableStateOf(false)
 
     var mediaOverlayData by mutableStateOf<MediaOverlayData?>(null)
@@ -69,16 +72,16 @@ class MainViewModel(
         prefs.lastKnownInstalledVersion.value = versionManager.currentVersionCode
     }
 
-    suspend fun checkUpdates(
+    fun checkUpdates(
         manuallyTriggered: Boolean = false,
         skipVersionCheck: Boolean = false
     ) {
-        withContext(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             val updateCheckResult = versionManager.checkUpdates(skipVersionCheck = skipVersionCheck)
             when (updateCheckResult) {
                 UpdateCheckResult.NoUpdates -> {
                     if (manuallyTriggered) withContext(Dispatchers.Main) {
-                        topToastState.showAndroidToast(
+                        topToastState.showToast(
                             text = R.string.updates_noUpdates,
                             icon = Icons.Rounded.Info,
                             iconTintColor = TopToastColor.ON_SURFACE
@@ -87,16 +90,17 @@ class MainViewModel(
                 }
                 UpdateCheckResult.Error -> {
                     if (manuallyTriggered) withContext(Dispatchers.Main) {
-                        topToastState.showAndroidToast(
+                        topToastState.showToast(
                             text = R.string.updates_error,
                             icon = Icons.Rounded.PriorityHigh,
                             iconTintColor = TopToastColor.ERROR
                         )
                     }
                 }
-                is UpdateCheckResult.UpdateAvailable -> {
+                is UpdateCheckResult.UpdatesAvailable -> {
                     withContext(Dispatchers.Main) {
-                        if (manuallyTriggered) updateSheetState.show()
+                        if (manuallyTriggered && navigationBackStack.first() !is UpdateScreenDestination)
+                            navigationBackStack.add(UpdateScreenDestination)
                         else showUpdateToast()
                     }
                 }
