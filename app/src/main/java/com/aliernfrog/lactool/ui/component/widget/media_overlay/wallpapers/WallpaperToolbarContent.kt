@@ -85,7 +85,7 @@ fun WallpaperToolbarContent(
 
     IconButtonWithTooltip(
         icon = rememberVectorPainter(Icons.Default.Share),
-        contentDescription = stringResource(R.string.action_share)
+        contentDescription = stringResource(R.string.action_share),
         onClick = { scope.launch {
             vm.shareImportedWallpaper(wallpaper, context)
         } }
