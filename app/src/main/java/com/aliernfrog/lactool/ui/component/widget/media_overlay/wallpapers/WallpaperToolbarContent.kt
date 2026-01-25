@@ -11,8 +11,6 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -85,17 +83,13 @@ fun WallpaperToolbarContent(
 
     Spacer(Modifier.width(4.dp))
 
-    IconButton(
+    IconButtonWithTooltip(
+        icon = rememberVectorPainter(Icons.Default.Share),
+        contentDescription = stringResource(R.string.action_share)
         onClick = { scope.launch {
             vm.shareImportedWallpaper(wallpaper, context)
-        } },
-        shapes = IconButtonDefaults.shapes()
-    ) {
-        Icon(
-            imageVector = Icons.Default.Share,
-            contentDescription = stringResource(R.string.action_share)
-        )
-    }
+        } }
+    )
 
     if (showHelpDialog) CustomMessageDialog(
         title = stringResource(R.string.wallpapers_copied_title),
