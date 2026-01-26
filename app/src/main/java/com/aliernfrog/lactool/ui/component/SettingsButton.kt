@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import io.github.aliernfrog.shared.ui.component.PlainTextTooltipContainer
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -32,19 +33,23 @@ fun SettingsButton(
         )
     }
 
-    IconButton(
-        shapes = IconButtonDefaults.shapes(),
-        modifier = modifier,
-        onClick = {
-            onClick()
-            mainViewModel.showUpdateNotification = false
-        }
+    PlainTextTooltipContainer(
+        tooltipText = stringResource(R.string.settings),
+        modifier = modifier
     ) {
-        if (hasNotification) BadgedBox(
-            badge = { Badge() }
+        IconButton(
+            shapes = IconButtonDefaults.shapes(),
+            onClick = {
+                onClick()
+                mainViewModel.showUpdateNotification = false
+            }
         ) {
-            SettingsIcon()
+            if (hasNotification) BadgedBox(
+                badge = { Badge() }
+            ) {
+                SettingsIcon()
+            }
+            else SettingsIcon()
         }
-        else SettingsIcon()
     }
 }

@@ -22,9 +22,6 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.rounded.NoPhotography
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,44 +39,44 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.enum.ListStyle
-import com.aliernfrog.lactool.impl.FileWrapper
-import com.aliernfrog.lactool.ui.component.AppScaffold
-import com.aliernfrog.lactool.ui.component.AppTopBar
-import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.FadeVisibility
 import com.aliernfrog.lactool.ui.component.ImageButton
-import com.aliernfrog.lactool.ui.component.ImageButtonInfo
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
-import com.aliernfrog.lactool.ui.component.LazyAdaptiveVerticalGrid
-import com.aliernfrog.lactool.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import com.aliernfrog.lactool.ui.component.SettingsButton
-import com.aliernfrog.lactool.ui.component.verticalSegmentedShape
-import com.aliernfrog.lactool.ui.sheet.ListViewOptionsSheet
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
-import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.pftool_shared.enum.ListStyle
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
+import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
+import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
+import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
+import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
+import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppTopBar
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
+import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
+import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenshotsScreen(
-    screenshotsViewModel: ScreenshotsViewModel = koinViewModel(),
+    vm: ScreenshotsViewModel = koinViewModel(),
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val listStylePref = screenshotsViewModel.prefs.screenshotsListOptions.styleGroup.getCurrent()
-    val gridMaxLineSpanPref = screenshotsViewModel.prefs.screenshotsListOptions.gridMaxLineSpanGroup.getCurrent()
+    val listStylePref = vm.prefs.screenshotsListOptions.styleGroup.getCurrent()
+    val gridMaxLineSpanPref = vm.prefs.screenshotsListOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
     
     LaunchedEffect(Unit) {
-        screenshotsViewModel.getScreenshotsFile(context)
-        screenshotsViewModel.fetchScreenshots()
+        vm.fetchScreenshots(context)
     }
 
     ListViewOptionsSheet(
-        sheetState = screenshotsViewModel.listViewOptionsSheetState,
-        listViewOptionsPreference = screenshotsViewModel.prefs.screenshotsListOptions
+        sheetState = vm.listViewOptionsSheetState,
+        listViewOptionsPreference = vm.prefs.screenshotsListOptions
     )
     
     AppScaffold(
@@ -92,7 +89,7 @@ fun ScreenshotsScreen(
                 }
             )
         },
-        topAppBarState = screenshotsViewModel.topAppBarState
+        topAppBarState = vm.topAppBarState
     ) {
         @Composable
         fun ScreenshotButton(
@@ -103,14 +100,14 @@ fun ScreenshotsScreen(
         ) {
             var lastModified by remember { mutableStateOf("") }
             LaunchedEffect(screenshot.lastModified) {
-                lastModified = FileUtil.lastModifiedFromLong(screenshot.lastModified, context)
+                lastModified = PFToolSharedUtil.lastModifiedFromLong(screenshot.lastModified, context)
             }
 
             ImageButton(
                 model = screenshot.painterModel,
                 contentScale = contentScale,
                 onClick = {
-                    screenshotsViewModel.openScreenshotOptions(screenshot)
+                    vm.openScreenshotOptions(screenshot)
                 },
                 modifier = modifier
             ) {
@@ -129,7 +126,7 @@ fun ScreenshotsScreen(
             when (style) {
                 ListStyle.LIST -> LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    state = screenshotsViewModel.lazyListState
+                    state = vm.lazyListState
                 ) {
                     item {
                         Header(
@@ -137,12 +134,12 @@ fun ScreenshotsScreen(
                         )
                     }
 
-                    itemsIndexed(screenshotsViewModel.screenshotsToShow) { index, screenshot ->
+                    itemsIndexed(vm.screenshotsToShow) { index, screenshot ->
                         ScreenshotButton(
                             screenshot = screenshot,
                             modifier = Modifier
                                 .padding(horizontal = 12.dp)
-                                .verticalSegmentedShape(index, totalSize = screenshotsViewModel.screenshotsToShow.size)
+                                .verticalSegmentedShape(index, totalSize = vm.screenshotsToShow.size)
                         )
                     }
 
@@ -162,7 +159,7 @@ fun ScreenshotsScreen(
                         )
                     }
 
-                    items(screenshotsViewModel.screenshotsToShow) {
+                    items(vm.screenshotsToShow) {
                         ScreenshotButton(
                             screenshot = it,
                             contentScale = ContentScale.Crop,
@@ -210,17 +207,13 @@ private fun Header(
                         .fillMaxWidth()
                 )
                 Box {
-                    IconButton(
+                    IconButtonWithTooltip(
+                        icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Sort),
+                        contentDescription = stringResource(R.string.list_options),
                         onClick = { scope.launch {
                             screenshotsViewModel.listViewOptionsSheetState.show()
-                        } },
-                        shapes = IconButtonDefaults.shapes()
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.list_options)
-                        )
-                    }
+                        } }
+                    )
                 }
             }
         }

@@ -3,11 +3,14 @@ import org.w3c.dom.Element
 import org.w3c.dom.Node
 import java.io.FileInputStream
 import java.util.Properties
+import java.util.zip.ZipFile
 import javax.xml.parsers.DocumentBuilderFactory
 
 val localProperties = Properties()
 try {
     localProperties.load(FileInputStream(rootProject.file("local.properties")))
+} catch (_: java.io.FileNotFoundException) {
+    // ignore
 } catch (t: Throwable) {
     logger.warn("Failed to load local.properties: ", t)
 }
@@ -16,7 +19,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.aboutlibraries)
 }
 
@@ -29,8 +31,8 @@ android {
         applicationId = "com.aliernfrog.lactool"
         minSdk = 21
         targetSdk = 36
-        versionCode = 400000
-        versionName = "4.0.0"
+        versionCode = 401000
+        versionName = "4.1.0"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -67,7 +69,6 @@ android {
     }
 
     buildFeatures {
-        aidl = true
         buildConfig = true
         compose = true
     }
@@ -138,11 +139,9 @@ android.defaultConfig.buildConfigField("float[]", "TRANSLATION_PROGRESSES", "new
 }}")
 
 
-val laclibPath: String? = localProperties.getProperty("laclibPath")
-val useLocalLaclib = !laclibPath.isNullOrEmpty()
-
 // Utilities to get git environment information
 // Source: https://github.com/vendetta-mod/VendettaManager/blob/main/app/build.gradle.kts
+var usingLocalLibraries = false
 fun getCurrentBranch() = exec("git", "symbolic-ref", "--short", "HEAD")
     ?: exec("git", "describe", "--tags", "--exact-match")
 fun getLatestCommit() = exec("git", "rev-parse", "--short", "HEAD")
@@ -150,13 +149,7 @@ fun hasLocalChanges(): Boolean {
     val branch = getCurrentBranch()
     val uncommittedChanges = exec("git", "status", "-s")?.isNotEmpty() ?: false
     val unpushedChanges = exec("git", "log", "origin/$branch..HEAD")?.isNotBlank() ?: false
-    return uncommittedChanges || unpushedChanges || useLocalLaclib
-}
-
-android.defaultConfig.run {
-    buildConfigField("String", "GIT_BRANCH", "\"${getCurrentBranch()}\"")
-    buildConfigField("String", "GIT_COMMIT", "\"${getLatestCommit()}\"")
-    buildConfigField("boolean", "GIT_LOCAL_CHANGES", "${hasLocalChanges()}")
+    return uncommittedChanges || unpushedChanges || usingLocalLibraries
 }
 
 fun exec(vararg command: String) = try {
@@ -199,15 +192,101 @@ dependencies {
     implementation(libs.toptoast)
     implementation(libs.zoomable)
 
-    implementation(
-        if (!useLocalLaclib) libs.laclib else {
-            println("Using local LACLib")
-            files(laclibPath)
-        }
-    )
+    listOf(
+        "laclibPath" to libs.laclib,
+        "pftoolSharedBaseLibPath" to libs.pftool.shared.base,
+        "pftoolSharedExtraLibPath" to libs.pftool.shared.extra
+    ).forEach { (name, defaultLib) ->
+        val localPath = localProperties.getProperty(name)
+        implementation(
+            if (localPath.isNullOrEmpty()) defaultLib
+            else {
+                usingLocalLibraries = true
+                println("Using local dependency: $name")
+                files(localPath)
+            }
+        )
+    }
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.tooling.preview)
 
     coreLibraryDesugaring(libs.android.desugar)
+}
+
+android.defaultConfig.run {
+    buildConfigField("String", "GIT_BRANCH", "\"${getCurrentBranch()}\"")
+    buildConfigField("String", "GIT_COMMIT", "\"${getLatestCommit()}\"")
+    buildConfigField("boolean", "GIT_LOCAL_CHANGES", "${hasLocalChanges()}")
+}
+
+val sharedStringLibs = listOf(
+    "pftool-shared" to "pftoolSharedExtraLibPath",
+    "shared" to "pftoolSharedBaseLibPath"
+)
+tasks.register("checkSharedStrings") {
+    group = "verification"
+    outputs.upToDateWhen { false }
+
+    doLast {
+        val stringsFile = project.projectDir.resolve("src/main/res/values/strings.xml")
+        val stringsContent = stringsFile.readText()
+        val missingKeys = mutableListOf<Pair<String, String>>()
+
+        val aars = mutableListOf<Pair<String, File>>()
+
+        configurations.all {
+            if (!isCanBeResolved || aars.size >= sharedStringLibs.size) return@all
+            try {
+                sharedStringLibs.forEach { (libName, libPathLocalProp) ->
+                    val localPath = localProperties.getProperty(libPathLocalProp)
+                    val aar = if (localPath.isNullOrEmpty()) resolvedConfiguration.resolvedArtifacts.find { artifact ->
+                        artifact.moduleVersion.id.let {
+                            it.group == "com.github.aliernfrog.pf-tool" && it.name == libName
+                        }
+                    }?.file else File(localPath)
+                    aar?.let { aars.add(libName to it) }
+                }
+            } catch (_: Exception) {}
+        }
+
+        if (aars.isEmpty()) throw GradleException("Failed to find shared libraries in the project")
+
+        aars.forEach { (libName, aar) ->
+            val zipFile = ZipFile(aar)
+            val entry = "res/raw/shared_strings.txt".let {
+                zipFile.getEntry(it)
+                    ?: throw GradleException("Could not find '$it' inside '${aar.name}'")
+            }
+            val stringKeys = zipFile.getInputStream(entry).bufferedReader().readLines()
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
+            zipFile.close()
+
+            if (stringKeys.isEmpty()) {
+                logger.warn("No string keys found in $libName:shared_strings.txt, skipping shared string check")
+                return@forEach
+            }
+
+            val missingKeysForLib = stringKeys.filter { key ->
+                !stringsContent.contains("<string name=\"$key\"")
+            }.map { key -> libName to key }
+
+            missingKeys.addAll(missingKeysForLib)
+
+            if (missingKeysForLib.isNotEmpty()) project.logger.warn("Strings required by $libName are missing: ${missingKeysForLib.joinToString(", ")}")
+            else project.logger.lifecycle("All required strings for $libName are present in ${stringsFile.path}")
+        }
+
+        if (missingKeys.isNotEmpty())
+            throw GradleException("Strings required by shared libraries are missing: ${
+                missingKeys.joinToString("\n") { (lib, key) -> "$lib -> $key" }
+            }")
+
+        project.logger.lifecycle("All required strings are present in ${stringsFile.path}")
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn(tasks.named("checkSharedStrings"))
 }

@@ -2,56 +2,15 @@ package com.aliernfrog.lactool.util.staticutil
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Environment
-import android.provider.DocumentsContract
-import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.impl.FileWrapper
-import com.aliernfrog.lactool.util.extension.toPath
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import java.io.BufferedWriter
 import java.io.File
 import java.io.OutputStream
 
 class FileUtil {
     companion object {
-        fun removeExtension(path: String): String {
-            val extensionIndex = path.lastIndexOf(".")
-            if (extensionIndex == -1) return path
-            return path.substring(0, extensionIndex)
-        }
-
-        fun getFilePath(path: String): String {
-            return if (path.startsWith("/")) path
-            else Uri.parse(path).toPath()
-        }
-
-        fun getUriForPath(path: String): Uri {
-            return DocumentsContract.buildDocumentUri(
-                "com.android.externalstorage.documents",
-                "primary:"+path.removePrefix("${Environment.getExternalStorageDirectory()}/")
-            )
-        }
-
-        fun getTreeUriForPath(path: String): Uri {
-            return DocumentsContract.buildTreeDocumentUri(
-                "com.android.externalstorage.documents",
-                "primary:"+path.removePrefix("${Environment.getExternalStorageDirectory()}/")
-            )
-        }
-
-        fun lastModifiedFromLong(lastModified: Long?, context: Context): String {
-            val lastModifiedTime = lastModified ?: System.currentTimeMillis()
-            return DateUtils.getRelativeDateTimeString(
-                /* c = */ context,
-                /* time = */ lastModifiedTime,
-                /* minResolution = */ DateUtils.SECOND_IN_MILLIS,
-                /* transitionResolution = */ DateUtils.DAY_IN_MILLIS,
-                /* flags = */ 0
-            ).toString()
-        }
-
         fun copyDirectory(source: File, target: File) {
             if (!target.isDirectory) target.mkdirs()
             source.listFiles()!!.forEach { file ->

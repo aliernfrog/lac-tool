@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.screen.maps.MapsScreen
 import com.aliernfrog.lactool.ui.screen.screenshots.ScreenshotsPermissionsScreen
-import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
 import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestination
@@ -64,15 +63,15 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun MainDestinationContent(
-    mainViewModel: MainViewModel = koinViewModel()
+    vm: MainViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
 
     val mainDestinations = remember { MainDestination.entries }
-    val currentMainDestination = mainViewModel.currentMainDestination
-    val isAtMainDestination = mainViewModel.isAtMainDestination
+    val currentMainDestination = vm.currentMainDestination
+    val isAtMainDestination = vm.isAtMainDestination
 
     val windowSizeClass = calculateWindowSizeClass(context as Activity)
     val navigationBarType = if (mainDestinations.size <= 1) NavigationBarType.HIDDEN
@@ -84,8 +83,8 @@ fun MainDestinationContent(
         if (navigationBarType == NavigationBarType.SIDE_RAIL) sideBarWidth else 0.dp
     )
 
-    fun onNavigateSettingsRequest() {
-        mainViewModel.navigationBackStack.add(SettingsDestination.ROOT)
+    fun onNavigateRequest(entry: Any) {
+        vm.navigationBackStack.add(entry)
     }
 
     fun isDestinationSelected(destination: MainDestination): Boolean {
@@ -94,7 +93,7 @@ fun MainDestinationContent(
 
     fun changeDestination(destination: MainDestination) {
         if (!isDestinationSelected(destination) && isAtMainDestination)
-            mainViewModel.currentMainDestination = destination
+            vm.currentMainDestination = destination
     }
 
     Box {
@@ -139,17 +138,17 @@ fun MainDestinationContent(
                 when (destination) {
                     MainDestination.MAPS -> {
                         MapsScreen(
-                            onNavigateSettingsRequest = ::onNavigateSettingsRequest
+                            onNavigateRequest = ::onNavigateRequest
                         )
                     }
                     MainDestination.WALLPAPERS -> {
                         WallpapersPermissionsScreen(
-                            onNavigateSettingsRequest = ::onNavigateSettingsRequest
+                            onNavigateRequest = ::onNavigateRequest
                         )
                     }
                     MainDestination.SCREENSHOTS -> {
                         ScreenshotsPermissionsScreen(
-                            onNavigateSettingsRequest = ::onNavigateSettingsRequest
+                            onNavigateRequest = ::onNavigateRequest
                         )
                     }
                 }

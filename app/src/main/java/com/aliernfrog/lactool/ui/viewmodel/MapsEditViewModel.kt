@@ -44,25 +44,26 @@ import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
-import com.aliernfrog.lactool.data.MediaViewData
-import com.aliernfrog.lactool.di.getKoinInstance
-import com.aliernfrog.lactool.impl.FileWrapper
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.impl.Progress
-import com.aliernfrog.lactool.impl.ProgressState
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
-import com.aliernfrog.lactool.ui.component.ErrorWithIcon
-import com.aliernfrog.lactool.ui.component.VerticalSegmentor
-import com.aliernfrog.lactool.ui.component.createSheetStateWithDensity
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveButtonRow
-import com.aliernfrog.lactool.ui.component.expressive.ExpressiveRowIcon
-import com.aliernfrog.lactool.ui.dialog.DeleteConfirmationDialog
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.extension.writeFile
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
+import io.github.aliernfrog.pftool_shared.impl.FileWrapper
+import io.github.aliernfrog.pftool_shared.impl.Progress
+import io.github.aliernfrog.pftool_shared.impl.ProgressState
+import io.github.aliernfrog.shared.data.MediaOverlayData
+import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
+import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
+import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -199,7 +200,7 @@ class MapsEditViewModel(
     fun openDownloadableMaterialOptions(material: LACMapDownloadableMaterial) {
         val mainViewModel = getKoinInstance<MainViewModel>()
         val failed = failedMaterials.contains(material)
-        mainViewModel.showMediaView(MediaViewData(
+        mainViewModel.showMediaOverlay(MediaOverlayData(
             model = material.url,
             title = material.name,
             zoomEnabled = !failed,
@@ -260,7 +261,7 @@ class MapsEditViewModel(
                 ) {
                     deleteDownloadableMaterial(material, context)
                     showDeleteDialog = false
-                    mainViewModel.dismissMediaView()
+                    mainViewModel.dismissMediaOverlay()
                 }
             }
         ))

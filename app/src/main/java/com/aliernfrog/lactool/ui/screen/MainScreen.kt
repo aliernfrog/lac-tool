@@ -4,41 +4,46 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.ui.component.MainDestinationContent
-import com.aliernfrog.lactool.ui.dialog.ProgressDialog
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMaterialsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
-import com.aliernfrog.lactool.ui.screen.settings.SettingsDestination
-import com.aliernfrog.lactool.ui.sheet.UpdateSheet
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.SubDestination
+import com.aliernfrog.lactool.util.UpdateScreenDestination
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.lactool.util.slideTransitionMetadata
-import kotlinx.coroutines.launch
+import com.aliernfrog.lactool.util.slideVerticalTransitionMetadata
+import io.github.aliernfrog.pftool_shared.ui.dialog.ProgressDialog
+import io.github.aliernfrog.shared.ui.screen.UpdatesScreen
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    mainViewModel: MainViewModel = koinViewModel()
+    vm: MainViewModel = koinViewModel()
 ) {
-    val scope = rememberCoroutineScope()
-    val applyImePadding = !mainViewModel.isAtMainDestination
+    val applyImePadding = !vm.isAtMainDestination
+
+    val availableUpdates = vm.availableUpdates.collectAsStateWithLifecycle().value
+    val currentVersionInfo = vm.currentVersionInfo.collectAsStateWithLifecycle().value
+    val isCompatibleWithLatestVersion = vm.isCompatibleWithLatestVersion.collectAsStateWithLifecycle().value
+    val isCheckingForUpdates = vm.isCheckingForUpdates.collectAsStateWithLifecycle().value
 
     val onNavigateBackRequest: () -> Unit = {
-        mainViewModel.navigationBackStack.removeLastIfMultiple()
+        vm.navigationBackStack.removeLastIfMultiple()
     }
 
     NavDisplay(
-        backStack = mainViewModel.navigationBackStack,
+        backStack = vm.navigationBackStack,
         modifier = Modifier
             .fillMaxSize()
             .let {
@@ -80,30 +85,39 @@ fun MainScreen(
             entry<SettingsDestination>(
                 metadata = slideTransitionMetadata
             ) { destination ->
-                destination.content(
-                    /* onNavigateBackRequest = */ {
-                        onNavigateBackRequest()
+                SettingsScreen(
+                    destination = destination,
+                    onNavigateBackRequest = onNavigateBackRequest,
+                    onNavigateRequest = { vm.navigationBackStack.add(it) },
+                    onCheckUpdatesRequest = { skipVersionCheck ->
+                        vm.checkUpdates(skipVersionCheck = skipVersionCheck)
                     },
-                    /* onNavigateRequest */ {
-                        mainViewModel.navigationBackStack.add(it)
+                    onNavigateUpdatesScreenRequest = {
+                        vm.navigationBackStack.add(UpdateScreenDestination)
                     }
+                )
+            }
+
+            entry<UpdateScreenDestination>(
+                metadata = slideVerticalTransitionMetadata
+            ) {
+                UpdatesScreen(
+                    availableUpdates = availableUpdates,
+                    currentVersionInfo = currentVersionInfo,
+                    isCheckingForUpdates = isCheckingForUpdates,
+                    isCompatibleWithLatestVersion = isCompatibleWithLatestVersion,
+                    onCheckUpdatesRequest = {
+                        vm.checkUpdates(manuallyTriggered = true)
+                    },
+                    onNavigateBackRequest = onNavigateBackRequest
                 )
             }
         }
     )
 
-    UpdateSheet(
-        sheetState = mainViewModel.updateSheetState,
-        latestVersionInfo = mainViewModel.latestVersionInfo,
-        updateAvailable = mainViewModel.updateAvailable,
-        onCheckUpdatesRequest = { scope.launch {
-            mainViewModel.checkUpdates(manuallyTriggered = true)
-        } }
-    )
-
-    mainViewModel.progressState.currentProgress?.let {
+    vm.progressState.currentProgress?.let {
         ProgressDialog(it) {
-            mainViewModel.progressState.currentProgress = null
+            vm.progressState.currentProgress = null
         }
     }
 }
