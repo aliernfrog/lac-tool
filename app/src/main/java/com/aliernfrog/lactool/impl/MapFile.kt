@@ -39,7 +39,7 @@ class MapFile(
     else MapImportedState.NONE
 
     private val thumbnailFileName = "$name.jpg"
-    private val thumbnailFile = if (importedState != MapImportedState.IMPORTED) null
+    private var thumbnailFile = if (importedState != MapImportedState.IMPORTED) null
     else file.parentFile?.findFile(thumbnailFileName)
     override var thumbnailModel by mutableStateOf(
         if (importedState != MapImportedState.IMPORTED) null
@@ -173,18 +173,19 @@ class MapFile(
         context: Context,
         file: FileWrapper
     ) {
-        val thumbnailFile = getThumbnailFile().let { found ->
+        getThumbnailFile().let { found ->
             if (found?.exists() == true) found else this.file.parentFile!!.createFile(thumbnailFileName)
-        }
-        thumbnailFile!!.copyFrom(file, context)
-        thumbnailModel = getThumbnailFile()?.painterModel
+        }!!.copyFrom(file, context)
+        thumbnailFile = this.file.parentFile!!.findFile(thumbnailFileName)
+        thumbnailModel = thumbnailFile?.painterModel
     }
 
     /**
      * Deletes thumbnail file of the map.
      */
     fun deleteThumbnailFile() {
-        getThumbnailFile()!!.delete()
+        thumbnailFile?.delete()
+        thumbnailFile = null
         thumbnailModel = null
     }
 
