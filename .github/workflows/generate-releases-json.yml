@@ -3,7 +3,7 @@ name: Generate releases JSON
 on:
   workflow_run:
     branches: ["main"]
-    workflows: ["Release"]
+    workflows: ["Release", "Release alpha"]
     types:
       - completed
 
