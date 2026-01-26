@@ -122,10 +122,10 @@
     <string name="mapsList_count">{COUNT} نقشه ها</string>
     <string name="mapsList_storage">حافظه</string>
     <string name="mapsList_imported">مپ های شما</string>
-    <string name="mapsList_exported">مپ صادر شد</string>
-    <string name="mapsList_shared">ارسال شد</string>
     <string name="mapsList_imported_noMaps">شما هیچ مپی ندارید</string>
+    <string name="mapsList_exported">مپ صادر شد</string>
     <string name="mapsList_exported_noMaps">شما هیچ مپی صادر نکرده اید</string>
+    <string name="mapsList_shared">ارسال شد</string>
     <string name="mapsList_shared_noMaps">شما هیچ نقشه ای را با ابزار LAC به اشتراک نگذاشته اید</string>
     <string name="mapsList_searchNoMatches">هیچ مپ منطبقی پیدا نشد</string>
     <string name="mapsEdit">تغییر اطلاعات و تنظیمات مپ</string>
@@ -279,9 +279,10 @@
     <string name="settings_experimental">تنظیمات آزمایشی</string>
     <string name="settings_experimental_enabled">تنظیمات آزمایشی فعال شد!</string>
     <string name="settings_experimental_description">این تنظیمات برای استفاده معمولی در نظر گرفته نشده اند و ممکن است در صورت استفاده نادرست ابزار LAC را خراب کنند</string>
-    <string name="updates_updateAvailable">به روز رسانی ابزار LAC در دسترس است</string>
-    <string name="updates_noUpdates">به روز رسانی در دسترس نیست</string>
-    <string name="updates_error">هنگام بررسی به‌روزرسانی، مشکلی پیش آمد</string>
-    <string name="updates_update">به‌روزرسانی</string>
+    <string name="updates_changelog">تغییرات</string>
     <string name="updates_noChangelog">برای مشاهده تغییرات ثبت شده، به روز رسانی ها را بررسی کنید</string>
+    <string name="updates_noUpdates">به روز رسانی در دسترس نیست</string>
+    <string name="updates_update">به‌روزرسانی</string>
+    <string name="updates_updateAvailable">به روز رسانی ابزار LAC در دسترس است</string>
+    <string name="updates_error">هنگام بررسی به‌روزرسانی، مشکلی پیش آمد</string>
 </resources>
