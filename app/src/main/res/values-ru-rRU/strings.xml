@@ -140,10 +140,10 @@
     <string name="mapsList_count">{COUNT} карт</string>
     <string name="mapsList_storage">Хранилище</string>
     <string name="mapsList_imported">Ваши карты</string>
-    <string name="mapsList_exported">Экспортированные карты</string>
-    <string name="mapsList_shared">Отправленные</string>
     <string name="mapsList_imported_noMaps">У вас нет карт</string>
+    <string name="mapsList_exported">Экспортированные карты</string>
     <string name="mapsList_exported_noMaps">Вы ещё не экспортировали ни одной карты</string>
+    <string name="mapsList_shared">Отправленные</string>
     <string name="mapsList_shared_noMaps">Вы ещё не отправили ни одной карты в LAC tool</string>
     <string name="mapsList_searchNoMatches">Ничего не найдено</string>
     <string name="mapsEdit">Редактировать карту</string>
@@ -305,6 +305,8 @@
     <string name="settings_about_update">Обновления</string>
     <string name="settings_about_updates">Обновления</string>
     <string name="settings_about_updates_autoCheckUpdates">Проверять наличие обновлений автоматически</string>
+    <string name="settings_about_issues_copyDebugInfo">Скопировать отладочную информацию</string>
+    <string name="settings_about_issues_copyDebugInfo_copied">Отладочная информация скопирована</string>
     <string name="settings_about_credits">Авторы</string>
     <string name="settings_about_libs">Библиотеки</string>
     <string name="settings_about_libs_description">Библиотеки, использованные при создании LAC Tool</string>
@@ -327,10 +329,12 @@
     <string name="mediaOverlay_guide_toggleOverlay">Нажмите, чтобы просмотреть изображение полностью, нажмите ещё раз, чтобы отобразить параметры</string>
     <string name="mediaOverlay_guide_toggleZoom">Быстро нажмите дважды для переключения масштаба</string>
     <string name="mediaOverlay_guide_zoom">Используйте два пальца для увеличения и уменьшения масштаба, перетаскивайте палец для перемещения</string>
-    <string name="updates_updateAvailable">Доступно обновление LAC Tool! Нажмите для подробностей</string>
-    <string name="updates_noUpdates">Нет доступных обновлений</string>
-    <string name="updates_error">Что-то пошло не так при проверке обновлений</string>
-    <string name="updates_update">Обновления</string>
-    <string name="updates_checkUpdates">Проверить обновления</string>
+    <string name="updates">Обновления</string>
+    <string name="updates_changelog">Список изменений</string>
     <string name="updates_noChangelog">Проверьте обновления, чтобы просмотреть список изменений</string>
+    <string name="updates_checkUpdates">Проверить обновления</string>
+    <string name="updates_noUpdates">Нет доступных обновлений</string>
+    <string name="updates_update">Обновления</string>
+    <string name="updates_updateAvailable">Доступно обновление LAC Tool! Нажмите для подробностей</string>
+    <string name="updates_error">Что-то пошло не так при проверке обновлений</string>
 </resources>
