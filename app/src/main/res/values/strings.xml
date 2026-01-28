@@ -93,6 +93,7 @@
     <string name="maps_permissions_exported">Exported maps folder</string>
     <string name="maps_permissions_exported_description">You need to select the folder where you want to save your exported maps</string>
     <string name="maps_permissions_exported_recommendedPath_description">LAC Tool used this folder in older versions, choose this folder if you want to access maps you have exported before</string>
+    <string name="maps_failedToLoad_notADirectory">{NAME} is not a directory! Tap to review your storage configuration</string>
     <string name="maps_alreadyExists">A map with this name already exists, choose another name</string>
     <string name="maps_actionFailed">{SUCCESSES} succeeded, {FAILS} failed</string>
     <string name="maps_mapName">Map name</string>

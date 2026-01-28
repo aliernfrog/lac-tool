@@ -2,6 +2,8 @@ package com.aliernfrog.lactool.di
 
 import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.util.AppSettingsDestination
 import com.aliernfrog.lactool.util.extension.enable
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import io.github.aliernfrog.pftool_shared.di.getPFToolSharedModule
@@ -42,6 +44,10 @@ val appModules = listOf(
         },
         onSetStorageAccessType = {
             it.enable()
+        },
+        onNavigateStorageSettings = {
+            // TODO remove MainViewModel dependency
+            getKoinInstance<MainViewModel>().navigationBackStack.add(AppSettingsDestination.storage)
         }
     )
 )
