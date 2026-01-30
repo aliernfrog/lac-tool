@@ -95,6 +95,7 @@ class MainViewModel(
                 }
                 is UpdateCheckResult.UpdatesAvailable -> {
                     withContext(Dispatchers.Main) {
+                        showUpdateNotification = true
                         if (manuallyTriggered && navigationBackStack.first() !is UpdateScreenDestination)
                             navigationBackStack.add(UpdateScreenDestination)
                         else showUpdateToast()
