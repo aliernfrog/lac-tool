@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.ui.component.widget.media_overlay.maps.MapThumbnailToolbarContent
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
 import io.github.aliernfrog.pftool_shared.data.MapActionResult
+import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
@@ -126,14 +127,14 @@ class MapsViewModel(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
-            toolbarContent = {
+            toolbarContent = if (map.importedState == MapImportedState.IMPORTED) { {
                 MapThumbnailToolbarContent(
                     map = map,
                     onDismissMediaOverlayRequest = {
                         mainViewModel.dismissMediaOverlay()
                     }
                 )
-            }
+            } } else null
         ))
     }
 
