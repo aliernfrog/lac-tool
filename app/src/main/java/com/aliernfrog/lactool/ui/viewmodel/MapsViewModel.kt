@@ -61,10 +61,11 @@ class MapsViewModel(
                 is FileWrapper -> MapFile(map)
                 else -> MapFile(FileWrapper(map))
             }
-            mapsBackStack.add(mapFile)
-            if (!prefs.stackupMaps.value) mapsBackStack.removeIf {
-                it.path != mapFile.path
+            val stackupMaps = prefs.stackupMaps.value
+            mapsBackStack.removeIf {
+                !stackupMaps || it.path == mapFile.path
             }
+            mapsBackStack.add(mapFile)
         } catch (_: CancellationException) {}
         catch (e: Exception) {
             topToastState.showErrorToast()
