@@ -1,8 +1,19 @@
 const { existsSync, readFileSync, writeFileSync } = require("fs");
 
 const REPO = process.env.REPO ?? "aliernfrog/lac-tool";
-const EPOCH_VERSION = process.env.EPOCH_VERSION ?? "v4.0.0";
+const EPOCH_VERSION = process.env.EPOCH_VERSION ?? "v4.1.0";
 const RELEASES_JSON = "./releases.json";
+
+/**
+ * Due to an oversight in updates screen, following versions had a broken update flow
+ * which kept using the download URL and web URL of the already installed version.
+ * This makes the user keep installing the same version and not the update itself.
+ * 
+ * To workaround this, simply override the `downloadUrl` and `htmlUrl` of
+ * those releases with the latest version ones.
+ */
+const USE_LATEST_VERSION_LINKS_FOR = [ "v4.1.0" ];
+let latestRelease;
 
 const data = [];
 
@@ -11,7 +22,7 @@ async function main() {
   await generateMissingReleases();
   console.log("Finished generating versions data");
   writeFileSync(RELEASES_JSON, JSON.stringify(
-    data.sort((a,b) => b.createdAt - a.createdAt),
+    data.sort((a,b) => b.versionCode - a.versionCode),
     null,
     2
   ));
@@ -35,6 +46,8 @@ async function generateMissingReleases() {
   const releases = await (
     await fetch(`https://api.github.com/repos/${REPO}/releases`)
   ).json();
+  latestRelease = releases[0];
+  if (latestRelease) latestRelease.apk = latestRelease.assets.find(a => a.name.endsWith(".apk"));
   const startFrom = (data.length ? data[0].tag_name : null) ?? EPOCH_VERSION;
   const untilIndex = releases.findIndex(r => r.tag_name === startFrom);
   const missingReleases = releases.slice(0, untilIndex+1).filter(
@@ -59,6 +72,10 @@ async function generateReleaseInfo(release) {
     createdAt: Date.parse(release.created_at),
     htmlUrl: release.html_url,
     downloadUrl: apkFile.browser_download_url
+  }
+  if (USE_LATEST_VERSION_LINKS_FOR.includes(release.tag_name)) {
+    info.htmlUrl = latestRelease.html_url;
+    info.downloadUrl = latestRelease.apk.browser_download_url;
   }
   console.log(`Generated release info for ${release.tag_name}`);
   return info;
