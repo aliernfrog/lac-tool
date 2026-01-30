@@ -58,13 +58,14 @@ class MainActivity : AppCompatActivity() {
         val context = LocalContext.current
         val view = LocalView.current
         val scope = rememberCoroutineScope()
-        val darkTheme = isDarkThemeEnabled(mainViewModel.prefs.theme.value)
+        val useDarkTheme = shouldUseDarkTheme(mainViewModel.prefs.theme.value)
         var isAppInitialized by rememberSaveable { mutableStateOf(false) }
 
         @Composable
         fun AppTheme(content: @Composable () -> Unit) {
             LACToolTheme(
-                darkTheme = darkTheme,
+                darkTheme = useDarkTheme,
+                useLightSystemBars = !useDarkTheme && mainViewModel.mediaOverlayData == null,
                 dynamicColors = mainViewModel.prefs.materialYou.value,
                 pitchBlack = mainViewModel.prefs.pitchBlack.value,
                 content = content
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun isDarkThemeEnabled(theme: Int): Boolean {
+    private fun shouldUseDarkTheme(theme: Int): Boolean {
         return when(theme) {
             Theme.LIGHT.ordinal -> false
             Theme.DARK.ordinal -> true

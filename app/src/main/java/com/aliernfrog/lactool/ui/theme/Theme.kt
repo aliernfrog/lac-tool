@@ -27,6 +27,7 @@ val supportsMaterialYou = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 @Composable
 fun LACToolTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    useLightSystemBars: Boolean = !darkTheme,
     dynamicColors: Boolean = true,
     pitchBlack: Boolean = false,
     content: @Composable () -> Unit
@@ -61,8 +62,8 @@ fun LACToolTheme(
             activity.window.isNavigationBarContrastEnforced = false
         }
 
-        insetsController.isAppearanceLightStatusBars = !darkTheme
-        insetsController.isAppearanceLightNavigationBars = !darkTheme
+        insetsController.isAppearanceLightStatusBars = useLightSystemBars
+        insetsController.isAppearanceLightNavigationBars = useLightSystemBars
     }
 
     MaterialExpressiveTheme(
