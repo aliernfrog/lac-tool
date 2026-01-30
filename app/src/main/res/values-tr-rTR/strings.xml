@@ -94,7 +94,6 @@
     <string name="maps_permissions_exported">Dışa aktarılan haritalar klasörü</string>
     <string name="maps_permissions_exported_description">Dışa aktarılan haritaları saklamak istediğiniz klasörü seçmeniz gerekiyor</string>
     <string name="maps_permissions_exported_recommendedPath_description">LAC Tool eski sürümlerde bu klasörü kullandı, eğer daha önce dışa aktardığınız haritalara erişmek istiyorsanız bu klasörü seçin</string>
-    <string name="maps_failedToLoad_notADirectory">{NAME} bir klasör değil! Depolama yapılandırmanızı gözden geçirmek için buraya dokunun</string>
     <string name="maps_alreadyExists">Bu adda bir harita zaten var, başka bir ad seçin</string>
     <string name="maps_actionFailed">{SUCCESSES} başarılı, {FAILS} başarısız</string>
     <string name="maps_mapName">Harita adı</string>
