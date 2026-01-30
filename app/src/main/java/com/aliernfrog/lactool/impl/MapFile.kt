@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import coil3.imageLoader
+import coil3.memory.MemoryCache
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
@@ -178,6 +180,12 @@ class MapFile(
         }!!.copyFrom(file, context)
         thumbnailFile = this.file.parentFile!!.findFile(thumbnailFileName)
         thumbnailModel = thumbnailFile?.painterModel
+
+        thumbnailModel?.toString()?.let { key ->
+            val coilLoader = context.imageLoader
+            coilLoader.memoryCache?.remove(MemoryCache.Key(key))
+            coilLoader.diskCache?.remove(key)
+        }
     }
 
     /**
