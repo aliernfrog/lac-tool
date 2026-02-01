@@ -8,13 +8,12 @@ import com.aliernfrog.lactool.impl.mapActions
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import io.github.aliernfrog.pftool_shared.ui.screen.maps.MapDetailsScreen
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapDetailsScreen(
     map: MapFile,
-    vm: MapsViewModel = koinViewModel(),
+    vm: MapsViewModel,
     onNavigateSettingsRequest: () -> Unit,
     onNavigateBackRequest: (() -> Unit)?
 ) {

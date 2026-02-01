@@ -58,12 +58,11 @@ import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestination
 import com.aliernfrog.lactool.util.NavigationBarType
-import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun MainDestinationContent(
-    vm: MainViewModel = koinViewModel()
+    vm: MainViewModel
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current

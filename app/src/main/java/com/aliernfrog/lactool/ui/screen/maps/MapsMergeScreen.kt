@@ -61,16 +61,15 @@ import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapsMergeScreen(
-    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
+    vm: MapsMergeViewModel,
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    AnimatedContent(mapsMergeViewModel.mapListShown) { showMapList ->
+    AnimatedContent(vm.mapListShown) { showMapList ->
         if (showMapList) MapsListScreen(
             title = stringResource(R.string.mapsMerge_addMap),
             showMultiSelectionOptions = false,
@@ -80,19 +79,20 @@ fun MapsMergeScreen(
                     text = stringResource(R.string.maps_merge_short),
                     modifier = Modifier.navigationBarsPadding(),
                     onClick = { scope.launch {
-                        mapsMergeViewModel.addMaps(context, *selectedMaps.toTypedArray())
-                        mapsMergeViewModel.mapListShown = false
+                        vm.addMaps(context, *selectedMaps.toTypedArray())
+                        vm.mapListShown = false
                         clearSelection()
                     } }
                 )
             },
-            onBackClick = { mapsMergeViewModel.mapListShown = false },
+            onBackClick = { vm.mapListShown = false },
             onMapPick = { scope.launch {
-                mapsMergeViewModel.addMaps(context, it)
-                mapsMergeViewModel.mapListShown = false
+                vm.addMaps(context, it)
+                vm.mapListShown = false
             } }
         )
         else MergeScreen(
+            vm = vm,
             onNavigateBackRequest = onNavigateBackRequest
         )
     }
@@ -101,7 +101,7 @@ fun MapsMergeScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MergeScreen(
-    mapsMergeViewModel: MapsMergeViewModel = koinViewModel(),
+    vm: MapsMergeViewModel,
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -110,7 +110,7 @@ private fun MergeScreen(
     var showToolbarLabels by remember { mutableStateOf(true) }
 
     ScrollAccessibilityListener(
-        scrollState = mapsMergeViewModel.scrollState,
+        scrollState = vm.scrollState,
         onShowLabelsStateChange = { showToolbarLabels = it }
     )
 
@@ -124,13 +124,14 @@ private fun MergeScreen(
                 }
             )
         },
-        topAppBarState = mapsMergeViewModel.topAppBarState
+        topAppBarState = vm.topAppBarState
     ) {
         Box {
-            Column(Modifier.fillMaxSize().verticalScroll(mapsMergeViewModel.scrollState)) {
+            Column(Modifier.fillMaxSize().verticalScroll(vm.scrollState)) {
                 MapsList(
-                    maps = mapsMergeViewModel.mapMerger.mapsToMerge,
-                    onPickMapRequest = { mapsMergeViewModel.mapListShown = true }
+                    vm = vm,
+                    maps = vm.mapMerger.mapsToMerge,
+                    onPickMapRequest = { vm.mapListShown = true }
                 )
                 Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
             }
@@ -164,9 +165,9 @@ private fun MergeScreen(
                         }
                     }
 
-                    Crossfade(mapsMergeViewModel.mapMerger.mapsToMerge.isNotEmpty()) { enabled ->
+                    Crossfade(vm.mapMerger.mapsToMerge.isNotEmpty()) { enabled ->
                         TextButton(
-                            onClick = { mapsMergeViewModel.mapMerger.clearMaps() },
+                            onClick = { vm.mapMerger.clearMaps() },
                             shapes = ButtonDefaults.shapes(),
                             enabled = enabled
                         ) {
@@ -180,7 +181,7 @@ private fun MergeScreen(
                     Spacer(Modifier.width(4.dp))
 
                     FilledTonalButton(
-                        onClick = { mapsMergeViewModel.mapListShown = true },
+                        onClick = { vm.mapListShown = true },
                         shapes = ButtonDefaults.shapes()
                     ) {
                         ButtonContent(
@@ -192,9 +193,9 @@ private fun MergeScreen(
 
                     Spacer(Modifier.width(4.dp))
 
-                    Crossfade(mapsMergeViewModel.hasEnoughMaps) { enabled ->
+                    Crossfade(vm.hasEnoughMaps) { enabled ->
                         TextButton(
-                            onClick = { mapsMergeViewModel.mergeMapDialogShown = true },
+                            onClick = { vm.mergeMapDialogShown = true },
                             shapes = ButtonDefaults.shapes(),
                             enabled = enabled
                         ) {
@@ -234,12 +235,12 @@ private fun MergeScreen(
         }
     }
 
-    if (mapsMergeViewModel.mergeMapDialogShown) MergeMapDialog(
-        isMerging = mapsMergeViewModel.isMerging,
-        onDismissRequest = { mapsMergeViewModel.mergeMapDialogShown = false },
+    if (vm.mergeMapDialogShown) MergeMapDialog(
+        isMerging = vm.isMerging,
+        onDismissRequest = { vm.mergeMapDialogShown = false },
         onConfirm = { newMapName ->
             scope.launch {
-                mapsMergeViewModel.mergeMaps(
+                vm.mergeMaps(
                     context = context,
                     newMapName = newMapName
                 )
@@ -251,6 +252,7 @@ private fun MergeScreen(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MapsList(
+    vm: MapsMergeViewModel,
     maps: List<MutableMapToMerge>,
     onPickMapRequest: () -> Unit
 ) {
@@ -279,6 +281,7 @@ private fun MapsList(
             title = stringResource(R.string.mapsMerge_base)
         ) {
             MapButtonWithActions(
+                vm = vm,
                 mapToMerge = baseMap ?: MutableMapToMerge(LACMapToMerge("-", "-")),
                 mapIndex = 0,
                 modifier = Modifier
@@ -294,6 +297,7 @@ private fun MapsList(
         ) {
             mapsToMerge.forEachIndexed { index, map ->
                 MapButtonWithActions(
+                    vm = vm,
                     mapToMerge = map,
                     mapIndex = index+1,
                     modifier = Modifier
@@ -310,26 +314,26 @@ private fun MapsList(
 
 @Composable
 private fun MapButtonWithActions(
+    vm: MapsMergeViewModel,
     mapToMerge: MutableMapToMerge,
     mapIndex: Int,
-    modifier: Modifier = Modifier,
-    mapsMergeViewModel: MapsMergeViewModel = koinViewModel()
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val isBase = mapIndex == 0
-    val expanded = mapsMergeViewModel.optionsExpandedFor == mapIndex
+    val expanded = vm.optionsExpandedFor == mapIndex
 
     MapToMerge(
         mapToMerge = mapToMerge,
         isBaseMap = isBase,
         expanded = expanded || isBase,
-        onUpdateState = { mapsMergeViewModel.mapMerger.pushMapsState() },
-        onMakeBase = { mapsMergeViewModel.makeMapBase(mapIndex, mapToMerge.mapName, context) },
-        onRemove = { mapsMergeViewModel.removeMap(mapIndex, mapToMerge.mapName, context) },
+        onUpdateState = { vm.mapMerger.pushMapsState() },
+        onMakeBase = { vm.makeMapBase(mapIndex, mapToMerge.mapName, context) },
+        onRemove = { vm.removeMap(mapIndex, mapToMerge.mapName, context) },
         modifier = modifier,
         onClickHeader = {
             if (!isBase) {
-                mapsMergeViewModel.optionsExpandedFor = if (expanded) 0
+                vm.optionsExpandedFor = if (expanded) 0
                 else mapIndex
             }
         }

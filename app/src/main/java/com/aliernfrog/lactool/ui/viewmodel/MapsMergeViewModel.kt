@@ -12,23 +12,27 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aliernfrog.laclib.map.LACMapMerger
 import com.aliernfrog.laclib.util.MAP_MERGER_MIN_REQUIRED_MAPS
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.domain.MapsState
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapMergerState
-import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.lactool.util.extension.writeFile
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import io.github.aliernfrog.shared.di.getKoinInstance
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsMergeViewModel(
+    mapsToMerge: List<MapFile>,
+    private val onNavigateBackRequest: () -> Unit,
+    private val mapsState: MapsState,
     private val topToastState: TopToastState,
-    private val mapsViewModel: MapsViewModel
+    context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
@@ -41,14 +45,16 @@ class MapsMergeViewModel(
 
     val hasEnoughMaps get() = mapMerger.mapsToMerge.size >= MAP_MERGER_MIN_REQUIRED_MAPS
 
+    init {
+        addMaps(context, *mapsToMerge.toTypedArray())
+    }
+
     suspend fun mergeMaps(
         context: Context,
         newMapName: String
     ) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
-
         if (!hasEnoughMaps) return cancelMerging(R.string.mapsMerge_notEnoughMaps)
-        val mapsFile = mapsViewModel.getMapsFile(context)
+        val mapsFile = mapsState.getMapsFile(context)
         val newFileName = "$newMapName.txt"
         val output = mapsFile?.findFile(newFileName)
         if (output != null && output.exists()) return cancelMerging(R.string.maps_alreadyExists)
@@ -63,17 +69,22 @@ class MapsMergeViewModel(
             isMerging = false
             mapMerger.clearMaps()
             // No need to update merger state here because it navigates back after finishing
-            mapsViewModel.viewMapDetails(mapsFile.findFile(newFileName)!!)
-            topToastState.showToast(context.getString(R.string.mapsMerge_merged).replace("{MAP}", newMapName), icon = Icons.Rounded.Done)
+            mapsState.viewMapDetails(mapsFile.findFile(newFileName)!!)
+            topToastState.showToast(
+                text = context.getString(R.string.mapsMerge_merged)
+                    .replace("{MAP}", newMapName),
+                icon = Icons.Rounded.Done
+            )
         }
-        mainViewModel.navigationBackStack.removeLastIfMultiple()
+        onNavigateBackRequest()
     }
 
-    suspend fun addMaps(
+    fun addMaps(
         context: Context,
         vararg maps: MapFile
     ) {
-        withContext(Dispatchers.IO) {
+        // TODO indicate progress?
+        viewModelScope.launch(Dispatchers.IO) {
             maps.forEach { map ->
                 val inputStream =  map.file.inputStream(context)!!
                 val content = inputStream.bufferedReader().readText()

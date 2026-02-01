@@ -30,14 +30,17 @@ import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.ui.component.ChipIcon
+import com.aliernfrog.lactool.ui.component.AnimatedVisibilityShadowWorkaround
 import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.getName
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import io.github.aliernfrog.pftool_shared.impl.Progress
+import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
 import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
@@ -56,27 +59,23 @@ import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsEditScreen(
-    mainViewModel: MainViewModel = koinViewModel(),
-    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
-    onNavigateBackRequest: () -> Unit
+    vm: MapsEditViewModel,
+    onNavigateRequest: (Any) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var showFABLabel by remember { mutableStateOf(true) }
 
     BackHandler {
-        scope.launch {
-            mapsEditViewModel.onNavigationBack(onNavigateBackRequest)
-        }
+        vm.showSaveWarning()
     }
 
     ScrollAccessibilityListener(
-        scrollState = mapsEditViewModel.scrollState,
+        scrollState = vm.scrollState,
         onShowLabelsStateChange = { showFABLabel = it }
     )
 
@@ -86,48 +85,67 @@ fun MapsEditScreen(
                 title = stringResource(R.string.mapsEdit),
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = { scope.launch {
-                    mapsEditViewModel.onNavigationBack(onNavigateBackRequest)
+                    vm.showSaveWarning()
                 } }
             )
         },
-        topAppBarState = mapsEditViewModel.topAppBarState,
+        topAppBarState = vm.topAppBarState,
         floatingActionButton = {
-            FloatingActionButton(
-                icon = Icons.Default.Save,
-                text = stringResource(R.string.mapsEdit_save),
-                showText = showFABLabel,
+            AnimatedVisibilityShadowWorkaround(
+                visible = vm.mapEditor != null,
                 modifier = Modifier.navigationBarsPadding()
             ) {
-                scope.launch {
-                    mapsEditViewModel.saveAndFinishEditing(
-                        onNavigateBackRequest = onNavigateBackRequest,
-                        context = context
-                    )
+                FloatingActionButton(
+                    icon = Icons.Default.Save,
+                    text = stringResource(R.string.mapsEdit_save),
+                    showText = showFABLabel
+                ) {
+                    scope.launch {
+                        vm.saveAndFinishEditing(context)
+                    }
                 }
             }
         }
     ) {
-        Column(Modifier.fillMaxSize().verticalScroll(mapsEditViewModel.scrollState)) {
-            GeneralActions(
-                onNavigateRequest = {
-                    mainViewModel.navigationBackStack.add(it)
-                }
+        AnimatedContent(
+            targetState = vm.mapEditor,
+            modifier = Modifier.fillMaxSize()
+        ) { editor ->
+            if (editor == null) VerticalProgressIndicatorWithText(
+                progress = Progress(
+                    description = stringResource(R.string.mapsEdit_opening)
+                        .replace("{NAME}", vm.map.name)
+                )
             )
-            FadeVisibility(visible = !mapsEditViewModel.mapEditor?.mapOptions.isNullOrEmpty()) {
-                OptionsActions()
+            else Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(vm.scrollState)
+            ) {
+                GeneralActions(
+                    vm = vm,
+                    mapEditor = editor,
+                    onNavigateRequest = onNavigateRequest
+                )
+                FadeVisibility(
+                    visible = editor.mapOptions.isNotEmpty()
+                ) {
+                    OptionsActions(editor)
+                }
+                MiscActions(vm, editor)
+                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
             }
-            MiscActions()
-            Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
         }
+
     }
 
-    if (mapsEditViewModel.saveWarningShown) SaveWarningDialog(
-        onDismissRequest = { mapsEditViewModel.saveWarningShown = false },
-        onKeepEditing = { mapsEditViewModel.saveWarningShown = false },
+    if (vm.saveWarningShown) SaveWarningDialog(
+        onDismissRequest = { vm.saveWarningShown = false },
+        onKeepEditing = { vm.saveWarningShown = false },
         onDiscardChanges = {
             scope.launch {
-                mapsEditViewModel.finishEditingWithoutSaving(onNavigateBackRequest)
-                mapsEditViewModel.saveWarningShown = false
+                vm.finishEditingWithoutSaving()
+                vm.saveWarningShown = false
             }
         }
     )
@@ -136,17 +154,22 @@ fun MapsEditScreen(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GeneralActions(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
+    vm: MapsEditViewModel,
+    mapEditor: MapEditorState,
     onNavigateRequest: (SubDestination) -> Unit
 ) {
+    val context = LocalContext.current
+
     ExpressiveSection(title = stringResource(R.string.mapsEdit_general)) {
         VerticalSegmentor(
             {
-                FadeVisibility(visible = mapsEditViewModel.mapEditor?.serverName != null) {
+                FadeVisibility(
+                    visible = mapEditor.serverName != null
+                ) {
                     TextField(
-                        value = mapsEditViewModel.mapEditor?.serverName ?: "",
+                        value = mapEditor.serverName ?: "",
                         onValueChange = {
-                            mapsEditViewModel.setServerName(it)
+                            vm.setServerName(it)
                         },
                         label = {
                             Text(stringResource(R.string.mapsEdit_serverName))
@@ -164,37 +187,51 @@ private fun GeneralActions(
                 }
             },
             {
-                FadeVisibility(visible = mapsEditViewModel.mapEditor?.mapType != null) {
+                FadeVisibility(
+                    visible = mapEditor.mapType != null
+                ) {
                     ExpandableRow(
-                        expanded = mapsEditViewModel.mapTypesExpanded,
+                        expanded = vm.mapTypesExpanded,
                         title = stringResource(R.string.mapsEdit_mapType),
-                        minimizedHeaderTrailingButtonText = mapsEditViewModel.mapEditor?.mapType?.getName() ?: "",
+                        minimizedHeaderTrailingButtonText = mapEditor.mapType?.getName() ?: "",
                         icon = {
                             ExpressiveRowIcon(rememberVectorPainter(Icons.Rounded.Terrain))
                         },
                         onClickHeader = {
-                            mapsEditViewModel.mapTypesExpanded = !mapsEditViewModel.mapTypesExpanded
+                            vm.mapTypesExpanded = !vm.mapTypesExpanded
                         }
                     ) {
                         RadioButtons(
                             options = LACMapType.entries.map { it.getName() },
-                            selectedOptionIndex = (mapsEditViewModel.mapEditor?.mapType ?: LACMapType.WHITE_GRID).index,
+                            selectedOptionIndex = (mapEditor.mapType ?: LACMapType.WHITE_GRID).index,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            onSelect = { mapsEditViewModel.setMapType(LACMapType.entries[it]) },
+                            onSelect = { vm.setMapType(LACMapType.entries[it]) },
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
                         )
                     }
                 }
             },
             {
-                FadeVisibility(visible = mapsEditViewModel.mapEditor?.mapRoles != null) {
-                    val onClick = {
-                        onNavigateRequest(SubDestination.MAPS_ROLES)
+                FadeVisibility(
+                    visible = mapEditor.mapRoles != null
+                ) {
+                    val onClick: () -> Unit = {
+                        mapEditor.mapRoles?.let { roles ->
+                            onNavigateRequest(SubDestination.MapsEdit.Roles(
+                                roles = roles,
+                                onAddRoleRequest = { role ->
+                                    vm.addRole(role, context)
+                                },
+                                onDeleteRoleRequest = { role ->
+                                    vm.deleteRole(role, context)
+                                }
+                            ))
+                        }
                     }
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsRoles),
                         description = stringResource(R.string.mapsRoles_description)
-                            .replace("{COUNT}", (mapsEditViewModel.mapEditor?.mapRoles?.size ?: 0).toString()),
+                            .replace("{COUNT}", (mapEditor.mapRoles?.size ?: 0).toString()),
                         icon = {
                             ExpressiveRowIcon(rememberVectorPainter(Icons.Rounded.Shield))
                         },
@@ -214,14 +251,29 @@ private fun GeneralActions(
                 }
             },
             {
-                FadeVisibility(visible = mapsEditViewModel.mapEditor?.downloadableMaterials?.isNotEmpty() == true) {
+                FadeVisibility(
+                    visible = mapEditor.downloadableMaterials.isNotEmpty()
+                ) {
                     val onClick = {
-                        onNavigateRequest(SubDestination.MAPS_MATERIALS)
+                        onNavigateRequest(SubDestination.MapsEdit.Materials(
+                            materialsLoadProgress = vm.materialsLoadProgress,
+                            materials = mapEditor.downloadableMaterials,
+                            failedMaterials = vm.failedMaterials,
+                            unusedMaterials = mapEditor.downloadableMaterials.filter {
+                                it.usedBy.isEmpty()
+                            },
+                            onLoadMaterialsRequest = {
+                                vm.loadDownloadableMaterials(context)
+                            },
+                            onOpenMaterialOptionsRequest = {
+                                vm.openDownloadableMaterialOptions(it)
+                            }
+                        ))
                     }
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsMaterials),
                         description = stringResource(R.string.mapsMaterials_description)
-                            .replace("%n", (mapsEditViewModel.mapEditor?.downloadableMaterials?.size ?: 0).toString()),
+                            .replace("%n", mapEditor.downloadableMaterials.size.toString()),
                         icon = {
                             ExpressiveRowIcon(rememberVectorPainter(Icons.Rounded.Texture))
                         },
@@ -248,15 +300,15 @@ private fun GeneralActions(
 
 @Composable
 private fun OptionsActions(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel()
+    mapEditor: MapEditorState
 ) {
-    val optionsComponents: List<@Composable () -> Unit> = mapsEditViewModel.mapEditor?.mapOptions.orEmpty().map { option -> {
+    val optionsComponents: List<@Composable () -> Unit> = mapEditor.mapOptions.map { option -> {
         when (option.type) {
             LACMapOptionType.NUMBER -> TextField(
                 value = option.value,
                 onValueChange = {
                     option.value = it
-                    mapsEditViewModel.mapEditor?.pushMapOptionsState()
+                    mapEditor.pushMapOptionsState()
                 },
                 label = {
                     Text(option.label)
@@ -275,7 +327,7 @@ private fun OptionsActions(
                 checked = option.value == "true",
                 onCheckedChange = {
                     option.value = it.toString()
-                    mapsEditViewModel.mapEditor?.pushMapOptionsState()
+                    mapEditor.pushMapOptionsState()
                 }
             )
             LACMapOptionType.SWITCH -> ExpressiveSwitchRow(
@@ -283,7 +335,7 @@ private fun OptionsActions(
                 checked = option.value == "enabled",
                 onCheckedChange = {
                     option.value = if (it) "enabled" else "disabled"
-                    mapsEditViewModel.mapEditor?.pushMapOptionsState()
+                    mapEditor.pushMapOptionsState()
                 }
             )
         }
@@ -300,7 +352,8 @@ private fun OptionsActions(
 
 @Composable
 private fun MiscActions(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel()
+    vm: MapsEditViewModel,
+    mapEditor: MapEditorState
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -308,7 +361,7 @@ private fun MiscActions(
     val debugBadge: @Composable () -> Unit = {
         Text("DEBUG")
     }
-    val debugButtons: List<@Composable () -> Unit> = if (mapsEditViewModel.prefs.debug.value) listOf(
+    val debugButtons: List<@Composable () -> Unit> = if (vm.prefs.debug.value) listOf(
         {
             ExpressiveButtonRow(
                 title = "View getCurrentContent()",
@@ -317,8 +370,7 @@ private fun MiscActions(
             ) {
                 scope.launch(Dispatchers.IO) {
                     FileUtil.openTextAsFile(
-                        text = mapsEditViewModel.mapEditor?.editor?.getCurrentContent()
-                            ?: "content was null",
+                        text = mapEditor.editor.getCurrentContent(),
                         context = context
                     )
                 }
@@ -327,12 +379,12 @@ private fun MiscActions(
         {
             ExpressiveButtonRow(
                 title = "applyChanges() and view result",
+                description = "This will not save to file",
                 trailingComponent = debugBadge
             ) {
                 scope.launch(Dispatchers.IO) {
                     FileUtil.openTextAsFile(
-                        text = mapsEditViewModel.mapEditor?.editor?.applyChanges()
-                            ?: "content was null",
+                        text = mapEditor.editor.applyChanges(),
                         context = context
                     )
                 }
@@ -343,7 +395,9 @@ private fun MiscActions(
     ExpressiveSection(stringResource(R.string.mapsEdit_misc)) {
         VerticalSegmentor(
             {
-                FadeVisibility(visible = mapsEditViewModel.mapEditor?.replaceableObjects?.isEmpty() != true) {
+                FadeVisibility(
+                    visible = !mapEditor.replaceableObjects.isEmpty()
+                ) {
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
                         description = stringResource(R.string.mapsEdit_misc_replaceOldObjects_description),
@@ -353,14 +407,14 @@ private fun MiscActions(
                             )
                         }
                     ) {
-                        mapsEditViewModel.replaceOldObjects(context)
+                        vm.replaceOldObjects(context)
                     }
                 }
             },
             {
                 val expandedRowColor = getExpandableRowDefaultExpandedContainerColor(fraction = 0.1f)
                 ExpandableRow(
-                    expanded = mapsEditViewModel.objectFilterExpanded,
+                    expanded = vm.objectFilterExpanded,
                     title = stringResource(R.string.mapsEdit_filterObjects),
                     description = stringResource(R.string.mapsEdit_filterObjects_description),
                     icon = {
@@ -370,11 +424,14 @@ private fun MiscActions(
                     },
                     expandedContainerColor = expandedRowColor,
                     onClickHeader = {
-                        mapsEditViewModel.objectFilterExpanded = !mapsEditViewModel.objectFilterExpanded
+                        vm.objectFilterExpanded = !vm.objectFilterExpanded
                     }
                 ) {
                     Column(Modifier.padding(vertical = 8.dp)) {
-                        FilterObjects(containerColor = expandedRowColor)
+                        FilterObjects(
+                            vm = vm,
+                            containerColor = expandedRowColor
+                        )
                     }
                 }
             },
@@ -389,14 +446,14 @@ private fun MiscActions(
 @Composable
 private fun FilterObjects(
     containerColor: Color,
-    mapsEditViewModel: MapsEditViewModel = koinViewModel()
+    vm: MapsEditViewModel
 ) {
     val context = LocalContext.current
-    val matches = mapsEditViewModel.getObjectFilterMatches().size
+    val matches = vm.getObjectFilterMatches().size
     OutlinedTextField(
-        value = mapsEditViewModel.objectFilter.query,
+        value = vm.objectFilter.query,
         onValueChange = {
-            mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(query = it)
+            vm.objectFilter = vm.objectFilter.copy(query = it)
         },
         label = { Text(stringResource(R.string.mapsEdit_filterObjects_query)) },
         trailingIcon = {
@@ -417,24 +474,24 @@ private fun FilterObjects(
     ) {
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             FilterChip(
-                selected = mapsEditViewModel.objectFilter == suggestion,
-                onClick = { mapsEditViewModel.objectFilter = suggestion },
+                selected = vm.objectFilter == suggestion,
+                onClick = { vm.objectFilter = suggestion },
                 label = { Text(suggestion.filterName ?: "-") }
             )
         }
     }
 
     FilterChip(
-        selected = mapsEditViewModel.objectFilter.caseSensitive,
+        selected = vm.objectFilter.caseSensitive,
         onClick = {
-            mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(
-                caseSensitive = !mapsEditViewModel.objectFilter.caseSensitive
+            vm.objectFilter = vm.objectFilter.copy(
+                caseSensitive = !vm.objectFilter.caseSensitive
             )
         },
         label = {
             Text(stringResource(R.string.mapsEdit_filterObjects_caseSensitive))
         },
-        leadingIcon = if (mapsEditViewModel.objectFilter.caseSensitive) { {
+        leadingIcon = if (vm.objectFilter.caseSensitive) { {
             ChipIcon(
                 painter = rememberVectorPainter(Icons.Default.Check)
             )
@@ -448,9 +505,9 @@ private fun FilterObjects(
             stringResource(R.string.mapsEdit_filterObjects_filter_startsWith), // 0
             stringResource(R.string.mapsEdit_filterObjects_filter_exact) // 1
         ),
-        selectedIndex = if (mapsEditViewModel.objectFilter.exactMatch) 1 else 0,
+        selectedIndex = if (vm.objectFilter.exactMatch) 1 else 0,
         onSelect = {
-            mapsEditViewModel.objectFilter = mapsEditViewModel.objectFilter.copy(
+            vm.objectFilter = vm.objectFilter.copy(
                 exactMatch = it == 1
             )
         },
@@ -466,7 +523,7 @@ private fun FilterObjects(
 
     Crossfade(targetState = matches > 0) {
         Button(
-            onClick = { mapsEditViewModel.removeObjectFilterMatches(context) },
+            onClick = { vm.removeObjectFilterMatches(context) },
             shapes = ButtonDefaults.shapes(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error

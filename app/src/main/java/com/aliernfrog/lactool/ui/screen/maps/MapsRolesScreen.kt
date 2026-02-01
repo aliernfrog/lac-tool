@@ -15,18 +15,23 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
-import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.extension.removeHtml
+import com.aliernfrog.toptoast.state.TopToastState
 import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
@@ -35,18 +40,26 @@ import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsRolesScreen(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
+    topToastState: TopToastState,
+    roles: List<String>,
+    onAddRoleRequest: (String) -> Unit,
+    onDeleteRoleRequest: (String) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
-    val context = LocalContext.current
+    val addRoleSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val scope = rememberCoroutineScope()
 
-    val roles = mapsEditViewModel.mapEditor?.mapRoles ?: mutableListOf()
+    var expandedRoleIndex by rememberSaveable {
+        mutableStateOf<Int?>(null)
+    }
+
+    var pendingRoleDelete by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
 
     AppScaffold(
         topBar = { scrollBehavior ->
@@ -58,19 +71,18 @@ fun MapsRolesScreen(
                 }
             )
         },
-        topAppBarState = mapsEditViewModel.rolesTopAppBarState,
+        topAppBarState = rememberTopAppBarState(),
         floatingActionButton = {
             FloatingActionButton(
                 icon = Icons.Rounded.Add,
                 modifier = Modifier.navigationBarsPadding()
             ) {
-                scope.launch { mapsEditViewModel.addRoleSheetState.show() }
+                scope.launch { addRoleSheetState.show() }
             }
         }
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = mapsEditViewModel.rolesLazyListState
+            modifier = Modifier.fillMaxSize()
         ) {
             item {
                 Crossfade(
@@ -88,16 +100,16 @@ fun MapsRolesScreen(
                 }
             }
             itemsIndexed(roles) { index, it ->
-                val expanded = mapsEditViewModel.rolesExpandedRoleIndex == index
+                val expanded = expandedRoleIndex == index
                 MapRoleRow(
                     role = it,
                     expanded = expanded,
-                    topToastState = mapsEditViewModel.topToastState,
+                    topToastState = topToastState,
                     onRoleDelete = { role ->
-                        mapsEditViewModel.pendingRoleDelete = role
+                        pendingRoleDelete = role
                     },
                     onClick = {
-                        mapsEditViewModel.rolesExpandedRoleIndex = if (expanded) -1 else index
+                        expandedRoleIndex = if (expanded) -1 else index
                     },
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
@@ -113,19 +125,21 @@ fun MapsRolesScreen(
         }
     }
 
-    mapsEditViewModel.pendingRoleDelete?.let {
+    pendingRoleDelete?.let { role ->
         DeleteConfirmationDialog(
-            name = it.removeHtml(),
-            onDismissRequest = { mapsEditViewModel.pendingRoleDelete = null }
+            name = role.removeHtml(),
+            onDismissRequest = { pendingRoleDelete = null }
         ) {
-            mapsEditViewModel.rolesExpandedRoleIndex = -1
-            mapsEditViewModel.pendingRoleDelete = null
-            mapsEditViewModel.deleteRole(it, context)
+            expandedRoleIndex = null
+            pendingRoleDelete = null
+            onDeleteRoleRequest(role)
         }
     }
 
     AddRoleSheet(
-        state = mapsEditViewModel.addRoleSheetState,
-        onRoleAdd = { mapsEditViewModel.addRole(it, context) }
+        state = addRoleSheetState,
+        onRoleAdd = { role ->
+            onAddRoleRequest(role)
+        }
     )
 }

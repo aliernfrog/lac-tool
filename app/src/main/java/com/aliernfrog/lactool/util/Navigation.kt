@@ -20,9 +20,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.ui.NavDisplay
+import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
+import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 import io.github.aliernfrog.shared.ui.screen.settings.category
 import io.github.aliernfrog.shared.util.SharedString
@@ -58,12 +60,27 @@ enum class MainDestination(
     )
 }
 
-// TODO pass data as NavEntry type instead of this
-enum class SubDestination {
-    MAPS_EDIT,
-    MAPS_ROLES,
-    MAPS_MATERIALS,
-    MAPS_MERGE
+sealed class SubDestination {
+    sealed class MapsEdit : SubDestination() {
+        data class Root(val map: MapFile) : MapsEdit()
+
+        data class Roles(
+            val roles: List<String>,
+            val onAddRoleRequest: (String) -> Unit,
+            val onDeleteRoleRequest: (String) -> Unit
+        ) : MapsEdit()
+
+        data class Materials(
+            val materialsLoadProgress: Progress,
+            val materials: List<LACMapDownloadableMaterial>,
+            val failedMaterials: List<LACMapDownloadableMaterial>,
+            val unusedMaterials: List<LACMapDownloadableMaterial>,
+            val onLoadMaterialsRequest: () -> Unit,
+            val onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit
+        ) : MapsEdit()
+    }
+
+    data class MapsMerge(val maps: List<MapFile>) : SubDestination()
 }
 
 object UpdateScreenDestination

@@ -132,7 +132,6 @@
     <string name="maps_share_short">Share</string>
     <string name="maps_edit">Edit this map</string>
     <string name="maps_edit_description">Edit options and roles of this map</string>
-    <string name="maps_edit_opening">Opening {NAME}…</string>
     <string name="maps_edit_saving">Saving {NAME}…</string>
     <string name="maps_edit_saved">Saved changes to {NAME}</string>
     <string name="maps_merge">Merge this map</string>
@@ -159,6 +158,7 @@
     <string name="mapsList_shared_noMaps">You have not shared any maps to LAC Tool</string>
     <string name="mapsList_searchNoMatches">No matching maps found</string>
     <string name="mapsEdit">Edit map</string>
+    <string name="mapsEdit_opening">Opening {NAME}…</string>
     <string name="mapsEdit_save">Save</string>
     <string name="mapsEdit_general">General</string>
     <string name="mapsEdit_serverName">Server name</string>

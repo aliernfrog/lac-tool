@@ -31,14 +31,13 @@ import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import kotlin.text.ifEmpty
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ImportWallpaperSheetContent(
     file: FileWrapper,
-    vm: WallpapersViewModel = koinViewModel(),
+    vm: WallpapersViewModel,
     onDismissMediaOverlayRequest: () -> Unit
 ) {
     val context = LocalContext.current
