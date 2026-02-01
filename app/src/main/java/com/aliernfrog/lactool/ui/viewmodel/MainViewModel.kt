@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
@@ -62,14 +61,7 @@ class MainViewModel(
 
     init {
         prefs.lastKnownInstalledVersion.value = versionManager.currentVersionCode
-
         if (prefs.autoCheckUpdates.value) checkUpdates()
-
-        viewModelScope.launch {
-            snapshotFlow { progressState.currentProgress }.collect { progres ->
-                Log.d(TAG, "received currentProgress update: $progres")
-            }
-        }
     }
 
     fun checkUpdates(

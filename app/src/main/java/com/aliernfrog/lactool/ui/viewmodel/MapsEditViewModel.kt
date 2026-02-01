@@ -87,7 +87,7 @@ class MapsEditViewModel(
 
     private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     var materialsLoadProgress by mutableStateOf(Progress(
-        description = context.getString(R.string.mapsMaterials_loading),
+        description = materialsProgressText,
         totalProgress = 0,
         passedProgress = 0
     ))

@@ -1,7 +1,6 @@
 package com.aliernfrog.lactool.impl
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.rounded.AddLocationAlt
@@ -17,7 +16,6 @@ import io.github.aliernfrog.pftool_shared.data.MapAction
 import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.shared.util.SharedString
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.staticutil.FileUtil
@@ -200,7 +198,6 @@ val mapActions = listOf(
         availableFor = { true },
         execute = { _, maps, _ ->
             val first = maps.first() as MapFile
-            Log.d(TAG, first.name)
             first.appState.navigationBackStack.add(
                 SubDestination.MapsEdit.Root(map = first)
             )
@@ -216,7 +213,6 @@ val mapActions = listOf(
         availableFor = { true },
         execute = { _, maps, _ ->
             maps as List<MapFile>
-            Log.d(TAG, "MapAction/merge: List: $maps")
             maps.first().appState.navigationBackStack.add(
                 SubDestination.MapsMerge(maps = maps)
             )
