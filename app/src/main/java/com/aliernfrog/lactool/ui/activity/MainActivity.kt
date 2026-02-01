@@ -29,6 +29,7 @@ import com.aliernfrog.lactool.ui.screen.maps.MapsMergeScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsRolesScreen
 import com.aliernfrog.lactool.ui.theme.LACToolTheme
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
+import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.MainDestinationGroup
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.UpdateScreenDestination
@@ -95,32 +96,33 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun App(vm: MainViewModel) {
+        val context = LocalContext.current
+        val applyImePadding = !vm.isAtMainDestination
+
+        val availableUpdates = vm.availableUpdates.collectAsStateWithLifecycle().value
+        val currentVersionInfo = vm.currentVersionInfo.collectAsStateWithLifecycle().value
+        val isCompatibleWithLatestVersion = vm.isCompatibleWithLatestVersion.collectAsStateWithLifecycle().value
+        val isCheckingForUpdates = vm.isCheckingForUpdates.collectAsStateWithLifecycle().value
+
+        val onNavigateRequest: (Any) -> Unit = {
+            vm.navigationBackStack.add(it)
+        }
+
+        val onNavigateBackRequest: () -> Unit = {
+            vm.navigationBackStack.removeLastIfMultiple()
+        }
+
+        /**
+         * This is because the current version of navigation3 stores the ViewModel instance
+         * in memory unless a different key is used.
+         * This may be a bug fixed in later updates, we are currently on a outdated version
+         * which is the last version with minSdk 21 so:
+         * TODO: take a look at this when minSdk and navigation3 is bumped
+         */
+        fun getUniqueNavKey() = System.nanoTime().toString()
+
         InsetsObserver()
         AppContainer {
-            val applyImePadding = !vm.isAtMainDestination
-
-            val availableUpdates = vm.availableUpdates.collectAsStateWithLifecycle().value
-            val currentVersionInfo = vm.currentVersionInfo.collectAsStateWithLifecycle().value
-            val isCompatibleWithLatestVersion = vm.isCompatibleWithLatestVersion.collectAsStateWithLifecycle().value
-            val isCheckingForUpdates = vm.isCheckingForUpdates.collectAsStateWithLifecycle().value
-
-            val onNavigateRequest: (Any) -> Unit = {
-                vm.navigationBackStack.add(it)
-            }
-
-            val onNavigateBackRequest: () -> Unit = {
-                vm.navigationBackStack.removeLastIfMultiple()
-            }
-
-            /**
-             * This is because the current version of navigation3 stores the ViewModel instance
-             * in memory unless a different key is used.
-             * This may be a bug fixed in later updates, we are currently on a outdated version
-             * which is the last version with minSdk 21 so:
-             * TODO: take a look at this when minSdk and navigation3 is bumped
-             */
-            fun getUniqueNavKey() = System.nanoTime().toString()
-
             NavDisplay(
                 backStack = vm.navigationBackStack,
                 modifier = Modifier
@@ -137,12 +139,14 @@ class MainActivity : AppCompatActivity() {
                     entry<SubDestination.MapsEdit.Root>(
                         metadata = slideTransitionMetadata
                     ) { key ->
+                        val vmKey = rememberSaveable { getUniqueNavKey() }
                         MapsEditScreen(
                             vm = koinViewModel(
-                                key = rememberSaveable { getUniqueNavKey() }
+                                key = vmKey
                             ) {
                                 parametersOf(key.map, onNavigateBackRequest)
                             },
+                            vmKey = vmKey,
                             onNavigateRequest = onNavigateRequest
                         )
                     }
@@ -150,11 +154,18 @@ class MainActivity : AppCompatActivity() {
                     entry<SubDestination.MapsEdit.Roles>(
                         metadata = slideTransitionMetadata
                     ) { key ->
+                        val mapsEditViewModel = koinViewModel<MapsEditViewModel>(
+                            key = key.vmKey
+                        )
                         MapsRolesScreen(
                             topToastState = vm.topToastState,
-                            roles = key.roles,
-                            onAddRoleRequest = key.onAddRoleRequest,
-                            onDeleteRoleRequest = key.onDeleteRoleRequest,
+                            roles = mapsEditViewModel.mapEditor?.mapRoles ?: emptyList(),
+                            onAddRoleRequest = {
+                                mapsEditViewModel.addRole(it, context)
+                            },
+                            onDeleteRoleRequest = {
+                                mapsEditViewModel.deleteRole(it, context)
+                            },
                             onNavigateBackRequest = onNavigateBackRequest
                         )
                     }
@@ -162,14 +173,23 @@ class MainActivity : AppCompatActivity() {
                     entry<SubDestination.MapsEdit.Materials>(
                         metadata = slideTransitionMetadata
                     ) { key ->
+                        val mapsEditViewModel = koinViewModel<MapsEditViewModel>(
+                            key = key.vmKey
+                        )
                         MapsMaterialsScreen(
                             listOptions = vm.prefs.mapsMaterialsListOptions,
-                            materialsLoadProgress = key.materialsLoadProgress,
-                            materials = key.materials,
-                            failedMaterials = key.failedMaterials,
-                            unusedMaterials = key.unusedMaterials,
-                            onLoadMaterialsRequest = key.onLoadMaterialsRequest,
-                            onOpenMaterialOptionsRequest = key.onOpenMaterialOptionsRequest,
+                            materialsLoadProgress = mapsEditViewModel.materialsLoadProgress,
+                            materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: emptyList(),
+                            failedMaterials = mapsEditViewModel.failedMaterials,
+                            unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter {
+                                it.usedBy.isEmpty()
+                            } ?: emptyList(),
+                            onLoadMaterialsRequest = {
+                                mapsEditViewModel.loadDownloadableMaterials(context)
+                            },
+                            onOpenMaterialOptionsRequest = {
+                                mapsEditViewModel.openDownloadableMaterialOptions(it)
+                            },
                             onNavigateBackRequest = onNavigateBackRequest
                         )
                     }

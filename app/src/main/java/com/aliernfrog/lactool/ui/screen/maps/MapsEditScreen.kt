@@ -64,6 +64,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapsEditScreen(
     vm: MapsEditViewModel,
+    vmKey: String,
     onNavigateRequest: (Any) -> Unit
 ) {
     val context = LocalContext.current
@@ -124,6 +125,7 @@ fun MapsEditScreen(
             ) {
                 GeneralActions(
                     vm = vm,
+                    vmKey = vmKey,
                     mapEditor = editor,
                     onNavigateRequest = onNavigateRequest
                 )
@@ -155,11 +157,10 @@ fun MapsEditScreen(
 @Composable
 private fun GeneralActions(
     vm: MapsEditViewModel,
+    vmKey: String,
     mapEditor: MapEditorState,
     onNavigateRequest: (SubDestination) -> Unit
 ) {
-    val context = LocalContext.current
-
     ExpressiveSection(title = stringResource(R.string.mapsEdit_general)) {
         VerticalSegmentor(
             {
@@ -216,17 +217,9 @@ private fun GeneralActions(
                     visible = mapEditor.mapRoles != null
                 ) {
                     val onClick: () -> Unit = {
-                        mapEditor.mapRoles?.let { roles ->
-                            onNavigateRequest(SubDestination.MapsEdit.Roles(
-                                roles = roles,
-                                onAddRoleRequest = { role ->
-                                    vm.addRole(role, context)
-                                },
-                                onDeleteRoleRequest = { role ->
-                                    vm.deleteRole(role, context)
-                                }
-                            ))
-                        }
+                        onNavigateRequest(
+                            SubDestination.MapsEdit.Roles(vmKey = vmKey)
+                        )
                     }
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsRoles),
@@ -255,20 +248,9 @@ private fun GeneralActions(
                     visible = mapEditor.downloadableMaterials.isNotEmpty()
                 ) {
                     val onClick = {
-                        onNavigateRequest(SubDestination.MapsEdit.Materials(
-                            materialsLoadProgress = vm.materialsLoadProgress,
-                            materials = mapEditor.downloadableMaterials,
-                            failedMaterials = vm.failedMaterials,
-                            unusedMaterials = mapEditor.downloadableMaterials.filter {
-                                it.usedBy.isEmpty()
-                            },
-                            onLoadMaterialsRequest = {
-                                vm.loadDownloadableMaterials(context)
-                            },
-                            onOpenMaterialOptionsRequest = {
-                                vm.openDownloadableMaterialOptions(it)
-                            }
-                        ))
+                        onNavigateRequest(
+                            SubDestination.MapsEdit.Materials(vmKey = vmKey)
+                        )
                     }
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsMaterials),

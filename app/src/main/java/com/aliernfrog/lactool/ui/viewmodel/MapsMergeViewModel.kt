@@ -83,7 +83,6 @@ class MapsMergeViewModel(
         context: Context,
         vararg maps: MapFile
     ) {
-        // TODO indicate progress?
         viewModelScope.launch(Dispatchers.IO) {
             maps.forEach { map ->
                 val inputStream =  map.file.inputStream(context)!!
