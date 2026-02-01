@@ -2,6 +2,8 @@ package com.aliernfrog.lactool.di
 
 import com.aliernfrog.lactool.BuildConfig
 import com.aliernfrog.lactool.TAG
+import com.aliernfrog.lactool.domain.AppState
+import com.aliernfrog.lactool.domain.MapsState
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import io.github.aliernfrog.shared.impl.VersionManager
@@ -10,6 +12,8 @@ import org.koin.dsl.module
 
 val appModule = module {
     singleOf(::PreferenceManager)
+    singleOf(::AppState)
+    singleOf(::MapsState)
 
     single {
         get<PreferenceManager>().let { prefs ->

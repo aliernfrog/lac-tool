@@ -39,13 +39,12 @@ import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MapThumbnailToolbarContent(
     map: MapFile,
-    vm: MapsViewModel = koinViewModel(),
+    vm: MapsViewModel,
     onDismissMediaOverlayRequest: () -> Unit
 ) {
     val context = LocalContext.current

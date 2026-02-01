@@ -35,6 +35,7 @@ fun ScreenshotsPermissionsScreen(
         onNavigateRequest = onNavigateRequest
     ) {
         ScreenshotsScreen(
+            vm = vm,
             onNavigateSettingsRequest = {
                 onNavigateRequest(SettingsDestination.root)
             }

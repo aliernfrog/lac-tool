@@ -29,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -44,7 +45,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
@@ -52,12 +52,13 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
-import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
+import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
 import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
+import io.github.aliernfrog.pftool_shared.util.manager.base.PFToolBasePreferenceManager
 import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
@@ -70,33 +71,38 @@ import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MapsMaterialsScreen(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
+    listOptions: PFToolBasePreferenceManager.ListViewOptionsPreference,
+    materialsLoadProgress: Progress,
+    materials: List<LACMapDownloadableMaterial>,
+    failedMaterials: List<LACMapDownloadableMaterial>,
+    unusedMaterials: List<LACMapDownloadableMaterial>,
+    onLoadMaterialsRequest: () -> Unit,
+    onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
-    val context = LocalContext.current
+    val materialsListOptionsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    val listStylePref = mapsEditViewModel.prefs.mapsMaterialsListOptions.styleGroup.getCurrent()
-    val gridMaxLineSpanPref = mapsEditViewModel.prefs.mapsMaterialsListOptions.gridMaxLineSpanGroup.getCurrent()
+    val materialsLoaded = materialsLoadProgress.finished
+
+    val listStylePref = listOptions.styleGroup.getCurrent()
+    val gridMaxLineSpanPref = listOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
 
     LaunchedEffect(Unit) {
-        if (!mapsEditViewModel.materialsLoaded)
-            mapsEditViewModel.loadDownloadableMaterials(context)
+        if (!materialsLoaded) onLoadMaterialsRequest()
     }
 
-    LaunchedEffect(mapsEditViewModel.mapEditor?.downloadableMaterials?.size) {
+    LaunchedEffect(materials.size) {
         // Back out if materials list is empty, which means there's nothing much to do in this screen
-        if (mapsEditViewModel.mapEditor?.downloadableMaterials.isNullOrEmpty())
-            onNavigateBackRequest()
+        if (materials.isEmpty()) onNavigateBackRequest()
     }
 
     ListViewOptionsSheet(
-        sheetState = mapsEditViewModel.materialsListOptionsSheetState,
+        sheetState = materialsListOptionsSheetState,
         sorting = null,
         onSortingChange = null,
         sortingReversed = null,
@@ -119,7 +125,7 @@ fun MapsMaterialsScreen(
                             icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Sort),
                             contentDescription = stringResource(R.string.list_options),
                             onClick = { scope.launch {
-                                mapsEditViewModel.materialsListOptionsSheetState.show()
+                                materialsListOptionsSheetState.show()
                             } }
                         )
                     }
@@ -134,14 +140,14 @@ fun MapsMaterialsScreen(
             minified: Boolean = false,
             modifier: Modifier = Modifier
         ) {
-            val failed = mapsEditViewModel.failedMaterials.contains(material)
+            val failed = failedMaterials.contains(material)
             ImageButton(
                 model = material.url,
                 contentScale = contentScale,
                 containerColor = if (failed) MaterialTheme.colorScheme.error
                 else MaterialTheme.colorScheme.surfaceContainerHigh,
                 onClick = {
-                    mapsEditViewModel.openDownloadableMaterialOptions(material)
+                    onOpenMaterialOptionsRequest(material)
                 },
                 modifier = modifier
             ) {
@@ -180,7 +186,17 @@ fun MapsMaterialsScreen(
             }
         }
 
-        Crossfade(targetState = mapsEditViewModel.materialsLoaded) { loaded ->
+        @Composable
+        fun Suggestions(modifier: Modifier = Modifier) {
+            Suggestions(
+                unusedMaterials = unusedMaterials,
+                failedMaterials = failedMaterials,
+                modifier = modifier.padding(horizontal = 12.dp),
+                onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
+            )
+        }
+
+        Crossfade(targetState = materialsLoaded) { loaded ->
             if (!loaded) {
                 Column(
                     modifier = Modifier
@@ -191,11 +207,10 @@ fun MapsMaterialsScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     VerticalProgressIndicatorWithText(
-                        progress = mapsEditViewModel.materialsLoadProgress
+                        progress = materialsLoadProgress
                     )
                 }
             } else {
-                val materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: listOf()
                 AnimatedContent(targetState = listStyle) { style ->
                     when (style) {
                         ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
@@ -253,11 +268,12 @@ fun MapsMaterialsScreen(
 
 @Composable
 private fun Suggestions(
-    mapsEditViewModel: MapsEditViewModel = koinViewModel(),
-    modifier: Modifier
+    failedMaterials: List<LACMapDownloadableMaterial>,
+    unusedMaterials: List<LACMapDownloadableMaterial>,
+    modifier: Modifier,
+    onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit
 ) {
-    val unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter { it.usedBy.isEmpty() } ?: listOf()
-    val hasSuggestions = mapsEditViewModel.failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
+    val hasSuggestions = failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibilityColumn(
         visible = hasSuggestions,
         modifier = modifier
@@ -269,9 +285,9 @@ private fun Suggestions(
                     description = stringResource(R.string.mapsMaterials_failedMaterials_description),
                     painter = rememberVectorPainter(Icons.Default.Error),
                     accentColor = MaterialTheme.colorScheme.error,
-                    materials = mapsEditViewModel.failedMaterials,
+                    materials = failedMaterials,
                     onMaterialClick = {
-                        mapsEditViewModel.openDownloadableMaterialOptions(it)
+                        onOpenMaterialOptionsRequest(it)
                     }
                 )
             },
@@ -283,7 +299,7 @@ private fun Suggestions(
                     accentColor = MaterialTheme.colorScheme.secondary,
                     materials = unusedMaterials,
                     onMaterialClick = {
-                        mapsEditViewModel.openDownloadableMaterialOptions(it)
+                        onOpenMaterialOptionsRequest(it)
                     }
                 )
             },

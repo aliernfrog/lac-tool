@@ -1,7 +1,6 @@
 package com.aliernfrog.lactool.impl
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.rounded.AddLocationAlt
@@ -17,14 +16,11 @@ import io.github.aliernfrog.pftool_shared.data.MapAction
 import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.shared.util.SharedString
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.TAG
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import io.github.aliernfrog.pftool_shared.data.MapActionResult
 import io.github.aliernfrog.pftool_shared.impl.Progress
-import io.github.aliernfrog.shared.di.getKoinInstance
 
 @Suppress("UNCHECKED_CAST")
 val mapActions = listOf(
@@ -37,7 +33,7 @@ val mapActions = listOf(
         execute = { context, maps, args ->
             val first = maps.first() as MapFile
             val newName = args.resolveMapName(fallback = first.name)
-            first.vm.activeProgress = Progress(
+            first.progressState.currentProgress = Progress(
                 description = context.getString(R.string.maps_renaming)
                     .replace("{NAME}", first.name)
                     .replace("{NEW_NAME}", newName)
@@ -48,7 +44,7 @@ val mapActions = listOf(
                     text = result.message ?: R.string.warning_error
                 )
                 result.newFile?.let {
-                    first.vm.viewMapDetails(it)
+                    first.mapsState.viewMapDetails(it)
                 }
                 first.topToastState.showToast(
                     text = context.getString(result.message ?: R.string.maps_renamed)
@@ -56,8 +52,8 @@ val mapActions = listOf(
                     icon = Icons.Rounded.Edit
                 )
             }
-            first.vm.activeProgress = null
-            first.vm.loadMaps(context)
+            first.progressState.currentProgress = null
+            first.mapsState.loadMaps(context)
         }
     ),
 
@@ -70,7 +66,7 @@ val mapActions = listOf(
         execute = { context, maps, args ->
             val first = maps.first() as MapFile
             val newName = args.resolveMapName(fallback = first.name)
-            first.vm.activeProgress = Progress(
+            first.progressState.currentProgress = Progress(
                 description = context.getString(R.string.maps_duplicating)
                     .replace("{NAME}", first.name)
                     .replace("{NEW_NAME}", newName)
@@ -81,7 +77,7 @@ val mapActions = listOf(
                     text = result.message ?: R.string.warning_error
                 )
                 result.newFile?.let {
-                    first.vm.viewMapDetails(it)
+                    first.mapsState.viewMapDetails(it)
                 }
                 first.topToastState.showToast(
                     text = context.getString(result.message ?: R.string.maps_duplicated)
@@ -89,8 +85,8 @@ val mapActions = listOf(
                     icon = Icons.Rounded.FileCopy
                 )
             }
-            first.vm.activeProgress = null
-            first.vm.loadMaps(context)
+            first.progressState.currentProgress = null
+            first.mapsState.loadMaps(context)
         }
     ),
 
@@ -155,7 +151,7 @@ val mapActions = listOf(
         execute = { context, maps, args ->
             val first = maps.first() as MapFile
             val withName = args.resolveMapName(fallback = maps.first().name)
-            first.vm.activeProgress = Progress(
+            first.progressState.currentProgress = Progress(
                 description = context.getString(R.string.maps_exportCustomTarget_exporting)
                     .replace("{NAME}", first.name)
             )
@@ -167,9 +163,9 @@ val mapActions = listOf(
                     icon = Icons.AutoMirrored.Filled.AddToHomeScreen
                 )
                 else first.topToastState.showErrorToast(result.message ?: R.string.warning_error)
-                result.newFile?.let { first.vm.viewMapDetails(it) }
+                result.newFile?.let { first.mapsState.viewMapDetails(it) }
             }
-            first.vm.activeProgress = null
+            first.progressState.currentProgress = null
         }
     ),
 
@@ -183,13 +179,13 @@ val mapActions = listOf(
         execute = { context, maps, _ ->
             val first = maps.first() as MapFile
             val files = maps.map { it.file }
-            first.vm.activeProgress = Progress(
+            first.progressState.currentProgress = Progress(
                 description = context.getString(R.string.info_sharing)
             )
             first.runInIOThreadSafe {
                 FileUtil.shareFiles(*files.toTypedArray(), context = context)
             }
-            first.vm.activeProgress = null
+            first.progressState.currentProgress = null
         }
     ),
 
@@ -200,18 +196,11 @@ val mapActions = listOf(
         icon = Icons.Rounded.EditLocationAlt,
         availableForMultiSelection = false,
         availableFor = { true },
-        execute = { context, maps, _ ->
+        execute = { _, maps, _ ->
             val first = maps.first() as MapFile
-            first.vm.activeProgress = Progress(
-                context.getString(R.string.maps_edit_opening).replace("{NAME}", first.name)
+            first.appState.navigationBackStack.add(
+                SubDestination.MapsEdit.Root(map = first)
             )
-            try {
-                first.mapsEditViewModel.openMap(first, context)
-            } catch (e: Exception) {
-                first.topToastState.showErrorToast()
-                Log.e(TAG, "execute EDIT: ", e)
-            }
-            first.vm.activeProgress = null
         }
     ),
 
@@ -222,12 +211,11 @@ val mapActions = listOf(
         icon = Icons.Rounded.AddLocationAlt,
         availableForMultiSelection = true,
         availableFor = { true },
-        execute = { context, maps, _ ->
+        execute = { _, maps, _ ->
             maps as List<MapFile>
-            val mainViewModel = getKoinInstance<MainViewModel>()
-            val mapsMergeViewModel = maps.first().mapsMergeViewModel
-            mapsMergeViewModel.addMaps(context, *maps.toTypedArray())
-            mainViewModel.navigationBackStack.add(SubDestination.MAPS_MERGE)
+            maps.first().appState.navigationBackStack.add(
+                SubDestination.MapsMerge(maps = maps)
+            )
         }
     ),
 
@@ -241,7 +229,7 @@ val mapActions = listOf(
         availableFor = { it.importedState != MapImportedState.NONE },
         execute = { _, maps, _ ->
             maps as List<MapFile>
-            maps.first().vm.mapsPendingDelete = maps.toList()
+            maps.first().mapsState.mapsPendingDelete = maps
         }
     )
 )
@@ -275,34 +263,36 @@ private suspend fun runIOAction(
         )
     }
 
-    first.vm.activeProgress = getProgress()
+    var results: List<Pair<String, MapActionResult>> = emptyList()
+    first.progressState.currentProgress = getProgress()
     first.runInIOThreadSafe {
-        val results = maps.map {
+        results = maps.map {
             val executionResult = result(it)
             passedProgress++
-            first.vm.activeProgress = getProgress()
+            first.progressState.currentProgress = getProgress()
             it.name to executionResult
         }
-        if (isSingle) results.first().let { (mapName, result) ->
-            if (result.successful) first.topToastState.showToast(
-                text = context.getString(singleSuccessMessageId).replace("{NAME}", mapName),
-                icon = successIcon
-            ) else first.topToastState.showErrorToast(
-                text = context.getString(result.message ?: R.string.warning_error)
-            )
-            result.newFile?.let { first.vm.viewMapDetails(it) }
-        } else {
-            val successes = results.filter { it.second.successful }
-            val fails = results.filter { !it.second.successful }
-            if (fails.isEmpty()) first.topToastState.showToast(
-                text = context.getString(multipleSuccessMessageId).replace("{COUNT}", successes.size.toString()),
-                icon = successIcon
-            ) else first.vm.showActionFailedDialog(
-                successes = successes,
-                fails = fails
-            )
-        }
+        first.mapsState.loadMaps(context)
     }
-    first.vm.loadMaps(context)
-    first.vm.activeProgress = null
+
+    first.progressState.currentProgress = null
+    if (isSingle) results.first().let { (mapName, result) ->
+        if (result.successful) first.topToastState.showToast(
+            text = context.getString(singleSuccessMessageId).replace("{NAME}", mapName),
+            icon = successIcon
+        ) else first.topToastState.showErrorToast(
+            text = context.getString(result.message ?: R.string.warning_error)
+        )
+        result.newFile?.let { first.mapsState.viewMapDetails(it) }
+    } else {
+        val successes = results.filter { it.second.successful }
+        val fails = results.filter { !it.second.successful }
+        if (fails.isEmpty()) first.topToastState.showToast(
+            text = context.getString(multipleSuccessMessageId).replace("{COUNT}", successes.size.toString()),
+            icon = successIcon
+        ) else first.mapsState.showActionFailedDialog(
+            successes = successes,
+            fails = fails
+        )
+    }
 }

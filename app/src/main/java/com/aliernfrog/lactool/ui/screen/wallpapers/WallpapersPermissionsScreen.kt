@@ -35,6 +35,7 @@ fun WallpapersPermissionsScreen(
         onNavigateRequest = onNavigateRequest
     ) {
         WallpapersScreen(
+            vm = vm,
             onNavigateSettingsRequest = {
                 onNavigateRequest(SettingsDestination.root)
             }

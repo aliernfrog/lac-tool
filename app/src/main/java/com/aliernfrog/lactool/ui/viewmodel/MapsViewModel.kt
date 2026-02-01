@@ -7,9 +7,6 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.TopAppBarState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -19,41 +16,43 @@ import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
+import com.aliernfrog.lactool.domain.AppState
+import com.aliernfrog.lactool.domain.MapsState
 import com.aliernfrog.lactool.ui.component.widget.media_overlay.maps.MapThumbnailToolbarContent
-import com.aliernfrog.lactool.util.MapsNavigationBackStack
-import io.github.aliernfrog.pftool_shared.data.MapActionResult
 import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
-import io.github.aliernfrog.pftool_shared.repository.MapRepository
 import io.github.aliernfrog.shared.data.MediaOverlayData
-import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.ContextUtils
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
-    val topToastState: TopToastState,
+    private val appState: AppState,
+    private val mapsState: MapsState,
     private val progressState: ProgressState,
+    val topToastState: TopToastState,
     private val contextUtils: ContextUtils,
-    private val mapRepository: MapRepository,
     val prefs: PreferenceManager
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
 
-    val mapsDir: String get() { return prefs.lacMapsDir.value }
-    val exportedMapsDir: String get() { return prefs.exportedMapsDir.value }
+    var mapsPendingDelete
+        get() = mapsState.mapsPendingDelete
+        set(value) { mapsState.mapsPendingDelete = value }
 
-    var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
-    var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
+    var customDialogTitleAndText
+        get() = mapsState.customDialogTitleAndText
+        set(value) { mapsState.customDialogTitleAndText = value }
 
     var activeProgress: Progress?
         get() = progressState.currentProgress
         set(value) { progressState.currentProgress = value }
 
-    val mapsBackStack = MapsNavigationBackStack()
+    val mapsBackStack
+        get() = mapsState.mapsBackStack
 
     fun viewMapDetails(map: Any) {
         try {
@@ -120,47 +119,26 @@ class MapsViewModel(
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openMapThumbnailViewer(map: MapFile) {
-        // TODO remove MainViewModel dependency
-        val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
-        mainViewModel.showMediaOverlay(MediaOverlayData(
+        appState.mediaOverlayData = MediaOverlayData(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
             toolbarContent = if (map.importedState == MapImportedState.IMPORTED) { {
                 MapThumbnailToolbarContent(
                     map = map,
+                    vm = this@MapsViewModel,
                     onDismissMediaOverlayRequest = {
-                        mainViewModel.dismissMediaOverlay()
+                        appState.mediaOverlayData = null
                     }
                 )
             } } else null
-        ))
-    }
-
-    fun showActionFailedDialog(successes: List<Pair<String, MapActionResult>>, fails: List<Pair<String, MapActionResult>>) {
-        customDialogTitleAndText = contextUtils.getString(R.string.maps_actionFailed)
-            .replace("{SUCCESSES}", successes.size.toString())
-            .replace("{FAILS}", fails.size.toString()) to fails.joinToString("\n\n") {
-            "${it.first}: ${contextUtils.getString(it.second.message ?: R.string.warning_error)}"
-        }
+        )
     }
 
     fun loadMaps(context: Context) {
         viewModelScope.launch {
-            mapRepository.reloadMaps(context)
+            mapsState.loadMaps(context)
         }
-    }
-
-    fun getMapsFile(context: Context): FileWrapper? {
-        return mapRepository.getImportedMapsFile(context)
-    }
-
-    fun getExportedMapsFile(context: Context): FileWrapper? {
-        return mapRepository.getExportedMapsFile(context)
-    }
-
-    fun setSharedMaps(maps: List<MapFile>) {
-        mapRepository.setSharedMaps(maps)
     }
 }
