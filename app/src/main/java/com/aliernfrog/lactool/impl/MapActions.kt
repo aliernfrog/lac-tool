@@ -216,6 +216,7 @@ val mapActions = listOf(
         availableFor = { true },
         execute = { _, maps, _ ->
             maps as List<MapFile>
+            Log.d(TAG, "MapAction/merge: List: $maps")
             maps.first().appState.navigationBackStack.add(
                 SubDestination.MapsMerge(maps = maps)
             )
@@ -232,7 +233,7 @@ val mapActions = listOf(
         availableFor = { it.importedState != MapImportedState.NONE },
         execute = { _, maps, _ ->
             maps as List<MapFile>
-            maps.first().mapsState.mapsPendingDelete = maps.toList()
+            maps.first().mapsState.mapsPendingDelete = maps
         }
     )
 )
@@ -266,34 +267,36 @@ private suspend fun runIOAction(
         )
     }
 
+    var results: List<Pair<String, MapActionResult>> = emptyList()
     first.progressState.currentProgress = getProgress()
     first.runInIOThreadSafe {
-        val results = maps.map {
+        results = maps.map {
             val executionResult = result(it)
             passedProgress++
             first.progressState.currentProgress = getProgress()
             it.name to executionResult
         }
-        if (isSingle) results.first().let { (mapName, result) ->
-            if (result.successful) first.topToastState.showToast(
-                text = context.getString(singleSuccessMessageId).replace("{NAME}", mapName),
-                icon = successIcon
-            ) else first.topToastState.showErrorToast(
-                text = context.getString(result.message ?: R.string.warning_error)
-            )
-            result.newFile?.let { first.mapsState.viewMapDetails(it) }
-        } else {
-            val successes = results.filter { it.second.successful }
-            val fails = results.filter { !it.second.successful }
-            if (fails.isEmpty()) first.topToastState.showToast(
-                text = context.getString(multipleSuccessMessageId).replace("{COUNT}", successes.size.toString()),
-                icon = successIcon
-            ) else first.mapsState.showActionFailedDialog(
-                successes = successes,
-                fails = fails
-            )
-        }
+        first.mapsState.loadMaps(context)
     }
-    first.mapsState.loadMaps(context)
+
     first.progressState.currentProgress = null
+    if (isSingle) results.first().let { (mapName, result) ->
+        if (result.successful) first.topToastState.showToast(
+            text = context.getString(singleSuccessMessageId).replace("{NAME}", mapName),
+            icon = successIcon
+        ) else first.topToastState.showErrorToast(
+            text = context.getString(result.message ?: R.string.warning_error)
+        )
+        result.newFile?.let { first.mapsState.viewMapDetails(it) }
+    } else {
+        val successes = results.filter { it.second.successful }
+        val fails = results.filter { !it.second.successful }
+        if (fails.isEmpty()) first.topToastState.showToast(
+            text = context.getString(multipleSuccessMessageId).replace("{COUNT}", successes.size.toString()),
+            icon = successIcon
+        ) else first.mapsState.showActionFailedDialog(
+            successes = successes,
+            fails = fails
+        )
+    }
 }

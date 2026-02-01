@@ -7,9 +7,6 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.TopAppBarState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
@@ -42,8 +39,13 @@ class MapsViewModel(
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
 
-    var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
-    var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
+    var mapsPendingDelete
+        get() = mapsState.mapsPendingDelete
+        set(value) { mapsState.mapsPendingDelete = value }
+
+    var customDialogTitleAndText
+        get() = mapsState.customDialogTitleAndText
+        set(value) { mapsState.customDialogTitleAndText = value }
 
     var activeProgress: Progress?
         get() = progressState.currentProgress
