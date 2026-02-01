@@ -32,7 +32,6 @@ import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.ui.component.ChipIcon
-import com.aliernfrog.lactool.ui.component.AnimatedVisibilityShadowWorkaround
 import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
@@ -55,6 +54,7 @@ import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSwitchRow
 import io.github.aliernfrog.shared.ui.component.expressive.getTextFieldColors
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
 import io.github.aliernfrog.shared.ui.component.form.getExpandableRowDefaultExpandedContainerColor
+import io.github.aliernfrog.shared.ui.component.util.AnimatedVisibilityShadowWorkaround
 import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.Dispatchers
