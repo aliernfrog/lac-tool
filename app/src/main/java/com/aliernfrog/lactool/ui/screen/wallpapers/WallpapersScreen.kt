@@ -112,7 +112,7 @@ fun WallpapersScreen(
             FloatingActionButton(
                 icon = Icons.Default.Add,
                 text = stringResource(R.string.wallpapers_add),
-                showText = showFABLabel,
+                expanded = showFABLabel,
                 onClick = {
                     mediaPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

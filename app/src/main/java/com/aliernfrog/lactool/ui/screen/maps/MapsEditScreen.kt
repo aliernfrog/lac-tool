@@ -99,7 +99,7 @@ fun MapsEditScreen(
                 FloatingActionButton(
                     icon = Icons.Default.Save,
                     text = stringResource(R.string.mapsEdit_save),
-                    showText = showFABLabel
+                    expanded = showFABLabel
                 ) {
                     scope.launch {
                         vm.saveAndFinishEditing(context)
