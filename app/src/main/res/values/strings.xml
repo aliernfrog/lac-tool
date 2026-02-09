@@ -107,7 +107,8 @@
     <string name="maps_thumbnail">Map thumbnail</string>
     <string name="maps_thumbnail_noThumbnail">No thumbnail</string>
     <string name="maps_thumbnail_set">Pick thumbnail</string>
-    <string name="maps_thumbnail_set_overrides">This will override existing thumbnail, make sure to back it up</string>
+    <string name="maps_thumbnail_set_backupReminder_description">This will override existing thumbnail, make sure to back it up</string>
+    <string name="maps_thumbnail_set_backupReminder_doNotShowAgain">Do not show this reminder again</string>
     <string name="maps_thumbnail_set_done">Set map thumbnail</string>
     <string name="maps_thumbnail_setting">Setting map thumbnail…</string>
     <string name="maps_thumbnail_deleted">Deleted map thumbnail</string>

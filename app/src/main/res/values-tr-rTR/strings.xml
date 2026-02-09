@@ -107,7 +107,7 @@
     <string name="maps_thumbnail">Harita resmi</string>
     <string name="maps_thumbnail_noThumbnail">Resim yok</string>
     <string name="maps_thumbnail_set">Resim seç</string>
-    <string name="maps_thumbnail_set_overrides">Bu mevcut resmin üzerine yazacaktır, yedeklediğinizden emin olun</string>
+    <string name="maps_thumbnail_set_backupReminder_description">Bu mevcut resmin üzerine yazacaktır, yedeklediğinizden emin olun</string>
     <string name="maps_thumbnail_set_done">Harita resmi ayarlandı</string>
     <string name="maps_thumbnail_setting">Harita resmi ayarlanıyor…</string>
     <string name="maps_thumbnail_deleted">Harita resmi silindi</string>

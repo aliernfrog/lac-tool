@@ -98,7 +98,7 @@
     <string name="maps_thumbnail">Миниатюра карты</string>
     <string name="maps_thumbnail_noThumbnail">Нет миниатюры</string>
     <string name="maps_thumbnail_set">Выбрать миниатюру</string>
-    <string name="maps_thumbnail_set_overrides">Это действие удалит существующую миниатюру, не забудьте сделать резервную копию</string>
+    <string name="maps_thumbnail_set_backupReminder_description">Это действие удалит существующую миниатюру, не забудьте сделать резервную копию</string>
     <string name="maps_thumbnail_set_done">Миниатюра карты изменена</string>
     <string name="maps_thumbnail_setting">Установка миниатюры для карты…</string>
     <string name="maps_thumbnail_deleted">Миниатюра карты удалена</string>

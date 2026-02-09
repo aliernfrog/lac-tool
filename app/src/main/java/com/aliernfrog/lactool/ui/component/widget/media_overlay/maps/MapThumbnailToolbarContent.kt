@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -29,11 +28,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
+import com.aliernfrog.lactool.ui.dialog.BackupMapThumbnailDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
-import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
 import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
 import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
@@ -90,7 +89,7 @@ fun MapThumbnailToolbarContent(
 
     Button(
         onClick = {
-            if (hasThumbnail) showBackupReminderDialog = true
+            if (hasThumbnail && vm.prefs.showMapThumbnailBackupReminder.value) showBackupReminderDialog = true
             else launchThumbnailPicker()
         },
         shapes = ButtonDefaults.shapes()
@@ -114,22 +113,14 @@ fun MapThumbnailToolbarContent(
         modifier = Modifier.padding(start = 4.dp)
     )
 
-    if (showBackupReminderDialog) CustomMessageDialog(
-        title = stringResource(R.string.info_reminder),
-        text = stringResource(R.string.maps_thumbnail_set_overrides),
-        dismissButtonText = stringResource(R.string.action_cancel),
-        icon = Icons.Default.Warning,
-        onDismissRequest = { showBackupReminderDialog = false },
-        confirmButton = {
-            Button(
-                onClick = {
-                    showBackupReminderDialog = false
-                    launchThumbnailPicker()
-                },
-                shapes = ButtonDefaults.shapes()
-            ) {
-                Text(stringResource(R.string.action_ok))
-            }
+    if (showBackupReminderDialog) BackupMapThumbnailDialog(
+        onConfirm = { doNotShowAgain ->
+            vm.prefs.showMapThumbnailBackupReminder.value = !doNotShowAgain
+            showBackupReminderDialog = false
+            launchThumbnailPicker()
+        },
+        onDismissRequest = {
+            showBackupReminderDialog = false
         }
     )
 
