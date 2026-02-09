@@ -7,6 +7,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,7 +39,9 @@ import com.aliernfrog.lactool.util.UpdateScreenDestination
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import com.aliernfrog.lactool.util.slideTransitionMetadata
 import com.aliernfrog.lactool.util.slideVerticalTransitionMetadata
+import com.aliernfrog.toptoast.component.TopToast
 import com.aliernfrog.toptoast.component.TopToastHost
+import com.aliernfrog.toptoast.util.TopToastDefaults
 import io.github.aliernfrog.pftool_shared.impl.SAFFileCreator
 import io.github.aliernfrog.pftool_shared.ui.dialog.ProgressDialog
 import io.github.aliernfrog.shared.ui.component.MediaOverlay
@@ -66,6 +69,8 @@ class MainActivity : AppCompatActivity() {
             val context = LocalContext.current
             val view = LocalView.current
             val useDarkTheme = shouldUseDarkTheme(vm.prefs.theme.value)
+            val pitchBlack = vm.prefs.pitchBlack.value
+            val isUsingPitchBlackTheme = pitchBlack && useDarkTheme
             var isAppInitialized by rememberSaveable { mutableStateOf(false) }
 
             @Composable
@@ -74,13 +79,13 @@ class MainActivity : AppCompatActivity() {
                     darkTheme = useDarkTheme,
                     useLightSystemBars = !useDarkTheme && vm.mediaOverlayData == null,
                     dynamicColors = vm.prefs.materialYou.value,
-                    pitchBlack = vm.prefs.pitchBlack.value,
+                    pitchBlack = pitchBlack,
                     content = content
                 )
             }
 
             AppTheme {
-                App(vm)
+                App(vm, isUsingPitchBlackTheme = isUsingPitchBlackTheme)
             }
 
             LaunchedEffect(Unit) {
@@ -98,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun App(vm: MainViewModel) {
+    private fun App(vm: MainViewModel, isUsingPitchBlackTheme: Boolean) {
         val context = LocalContext.current
         val applyImePadding = !vm.isAtMainDestination
 
@@ -263,7 +268,14 @@ class MainActivity : AppCompatActivity() {
                     onDismissRequest = { vm.dismissMediaOverlay() }
                 )
             }
-            TopToastHost(vm.topToastState)
+
+            TopToastHost(vm.topToastState) { state ->
+                TopToast(
+                    state = state,
+                    containerColor = if (isUsingPitchBlackTheme) MaterialTheme.colorScheme.surfaceContainerHighest
+                    else TopToastDefaults.containerColor
+                )
+            }
         }
     }
 
