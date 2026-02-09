@@ -72,7 +72,7 @@ fun MapsMergeScreen(
     AnimatedContent(vm.mapListShown) { showMapList ->
         if (showMapList) MapsListScreen(
             title = stringResource(R.string.mapsMerge_addMap),
-            showMultiSelectionOptions = false,
+            showMultiSelectionActions = false,
             multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
                 FloatingActionButton(
                     icon = Icons.Default.AddLocationAlt,
@@ -261,8 +261,8 @@ private fun MapsList(
 
     FadeVisibility(maps.isEmpty()) {
         ErrorWithIcon(
-            error = stringResource(R.string.mapsMerge_noMaps),
-            painter = rememberVectorPainter(Icons.Default.AddLocationAlt),
+            description = stringResource(R.string.mapsMerge_noMaps),
+            icon = rememberVectorPainter(Icons.Default.AddLocationAlt),
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
             button = {
                 Button(

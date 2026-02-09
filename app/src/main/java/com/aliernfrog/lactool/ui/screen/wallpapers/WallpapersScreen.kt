@@ -263,8 +263,8 @@ private fun Header(
             }
         }
         ErrorWithIcon(
-            error = stringResource(R.string.wallpapers_noWallpapers),
-            painter = rememberVectorPainter(Icons.Rounded.HideImage),
+            description = stringResource(R.string.wallpapers_noWallpapers),
+            icon = rememberVectorPainter(Icons.Rounded.HideImage),
             visible = !hasAtLeastOneWallpaper,
             modifier = Modifier.fillMaxWidth()
         )

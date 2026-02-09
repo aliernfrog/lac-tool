@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
@@ -19,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.domain.MapsState
 import com.aliernfrog.lactool.ui.component.widget.media_overlay.maps.MapThumbnailToolbarContent
+import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
@@ -68,7 +68,7 @@ class MapsViewModel(
             mapsBackStack.add(mapFile)
         } catch (_: CancellationException) {}
         catch (e: Exception) {
-            topToastState.showErrorToast()
+            topToastState.showReportableErrorToast(e)
             Log.e(TAG, "viewMapDetails: ", e)
         }
     }

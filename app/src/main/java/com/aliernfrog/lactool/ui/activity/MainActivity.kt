@@ -21,6 +21,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.aliernfrog.lactool.SettingsConstant.supportLinks
+import com.aliernfrog.lactool.crashReportURL
 import com.aliernfrog.lactool.ui.component.MainDestinationContent
 import com.aliernfrog.lactool.ui.screen.SettingsScreen
 import com.aliernfrog.lactool.ui.screen.maps.MapsEditScreen
@@ -44,6 +46,7 @@ import io.github.aliernfrog.shared.ui.component.util.AppContainer
 import io.github.aliernfrog.shared.ui.component.util.InsetsObserver
 import io.github.aliernfrog.shared.ui.screen.UpdatesScreen
 import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.sheet.CrashDetailsSheet
 import io.github.aliernfrog.shared.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -238,6 +241,13 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
+            )
+
+            CrashDetailsSheet(
+                throwable = vm.lastCaughtException,
+                crashReportURL = crashReportURL,
+                debugInfo = vm.versionManager.getDebugInfo(),
+                supportLinks = supportLinks
             )
 
             vm.progressState.currentProgress?.let {

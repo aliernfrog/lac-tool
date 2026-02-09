@@ -21,6 +21,7 @@ val appModule = module {
                 tag = TAG,
                 appName = "LAC Tool",
                 releasesURLPref = prefs.releasesURL,
+                debugInfoPrefs = prefs.debugInfoPrefs,
                 defaultInstallURL = "https://github.com/aliernfrog/lac-tool",
                 buildCommit = BuildConfig.GIT_COMMIT,
                 buildBranch = BuildConfig.GIT_BRANCH,

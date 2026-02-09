@@ -190,8 +190,8 @@ private fun Header(
     val scope = rememberCoroutineScope()
     Column(modifier) {
         ErrorWithIcon(
-            error = stringResource(R.string.screenshots_noScreenshots),
-            painter = rememberVectorPainter(Icons.Rounded.NoPhotography),
+            description = stringResource(R.string.screenshots_noScreenshots),
+            icon = rememberVectorPainter(Icons.Rounded.NoPhotography),
             visible = vm.screenshotsToShow.isEmpty(),
             modifier = Modifier.fillMaxWidth()
         )

@@ -46,7 +46,7 @@ import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.util.extension.removeHtml
-import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import com.aliernfrog.lactool.util.extension.writeFile
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -118,7 +118,7 @@ class MapsEditViewModel(
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "MapsEditViewModel/init: Failed to open map" , e)
-                topToastState.showErrorToast()
+                topToastState.showReportableErrorToast(e)
             }
         }
     }
@@ -196,8 +196,8 @@ class MapsEditViewModel(
             zoomEnabled = !failed,
             errorContent = {
                 ErrorWithIcon(
-                    error = stringResource(R.string.mapsMaterials_failed),
-                    painter = rememberVectorPainter(Icons.Rounded.Error),
+                    description = stringResource(R.string.mapsMaterials_failed),
+                    icon = rememberVectorPainter(Icons.Rounded.Error),
                     contentColor = Color.Red
                 )
             },
@@ -293,7 +293,7 @@ class MapsEditViewModel(
                     icon = Icons.Rounded.Save
                 )
             } catch (e: Exception) {
-                topToastState.showErrorToast()
+                topToastState.showReportableErrorToast(e)
                 Log.e(TAG, "saveAndFinishEditing: ", e)
             }
         }

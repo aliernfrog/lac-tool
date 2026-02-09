@@ -93,8 +93,8 @@ fun MapsRolesScreen(
                         text = stringResource(R.string.mapsRoles_showingCount).replace("{COUNT}", roles.size.toString()),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
                     ) else ErrorWithIcon(
-                        error = stringResource(R.string.mapsRoles_noRoles),
-                        painter = rememberVectorPainter(Icons.Rounded.Style),
+                        description = stringResource(R.string.mapsRoles_noRoles),
+                        icon = rememberVectorPainter(Icons.Rounded.Style),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

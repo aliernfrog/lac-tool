@@ -18,7 +18,7 @@ import org.koin.androidx.compose.koinViewModel
 fun MapsListScreen(
     title: String = stringResource(R.string.mapsList_pickMap),
     vm: MapsListViewModel = koinViewModel(),
-    showMultiSelectionOptions: Boolean = true,
+    showMultiSelectionActions: Boolean = true,
     multiSelectFloatingActionButton: @Composable (
         selectedMaps: List<MapFile>, clearSelection: () -> Unit
     ) -> Unit = { _, _ -> },
@@ -34,7 +34,7 @@ fun MapsListScreen(
         mapActions = mapActions,
         listViewOptions = vm.prefs.mapsListOptions,
         showThumbnailsInList = vm.prefs.showMapThumbnailsInList.value,
-        showMultiSelectionOptions = showMultiSelectionOptions,
+        showMultiSelectionActions = showMultiSelectionActions,
         multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
             multiSelectFloatingActionButton(selectedMaps as List<MapFile>, clearSelection)
         },

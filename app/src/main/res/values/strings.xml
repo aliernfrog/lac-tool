@@ -19,6 +19,7 @@
     <string name="intent_downloadMap">Download map</string>
     <string name="warning">Warning</string>
     <string name="warning_error">Something went wrong</string>
+    <string name="warning_error_tapToReport">Something went wrong! Tap here to report the error and view details</string>
     <string name="warning_pickFile_failed">Failed to pick file</string>
     <string name="info">Info</string>
     <string name="info_reminder">Reminder</string>

@@ -9,7 +9,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.MapsNavigationBackStack
-import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.toptoast.state.TopToastState
 import io.github.aliernfrog.pftool_shared.data.MapActionResult
@@ -54,7 +54,7 @@ class MapsState(
             mapsBackStack.add(mapFile)
         } catch (_: CancellationException) {}
         catch (e: Exception) {
-            topToastState.showErrorToast()
+            topToastState.showReportableErrorToast(e)
             Log.e(TAG, "MapsState/viewMapDetails: ", e)
         }
     }
