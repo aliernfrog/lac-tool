@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.filled.ViewInAr
+import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
@@ -53,6 +55,7 @@ import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
@@ -62,6 +65,7 @@ import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
 import io.github.aliernfrog.pftool_shared.util.manager.base.PFToolBasePreferenceManager
 import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FadeVisibilityColumn
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
@@ -84,12 +88,14 @@ fun MapsMaterialsScreen(
     onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
+    val context = LocalContext.current
     val materialsListOptionsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
+    val isConnectedToInternet = remember { GeneralUtil.isConnectedToInternet(context) }
     val isMaterialsLoadingFinished = materialsLoadProgress.finished
     val failedMaterials = loadedMaterials.filter { (_, successfullyLoaded) ->
-        !successfullyLoaded
+        !successfullyLoaded && isConnectedToInternet
     }.map { it.first }
     val unusedMaterials = loadedMaterials.filter { (material, _) ->
         material.usedBy.isEmpty()
@@ -143,8 +149,26 @@ fun MapsMaterialsScreen(
         @Composable
         fun Header(modifier: Modifier = Modifier) {
             Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = modifier.padding(vertical = 8.dp)
             ) {
+                if (!isConnectedToInternet) ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    ErrorWithIcon(
+                        icon = rememberVectorPainter(Icons.Rounded.CloudOff),
+                        title = stringResource(R.string.mapsMaterials_noConnection),
+                        description = stringResource(R.string.mapsMaterials_noConnection_description),
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        iconContainerColor = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                    )
+                }
+
                 AnimatedVisibility(
                     visible = !isMaterialsLoadingFinished
                 ) {
@@ -152,7 +176,8 @@ fun MapsMaterialsScreen(
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         VerticalProgressIndicatorWithText(
                             progress = materialsLoadProgress,

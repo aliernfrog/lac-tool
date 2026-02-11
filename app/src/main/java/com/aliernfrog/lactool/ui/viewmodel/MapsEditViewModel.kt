@@ -8,6 +8,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
@@ -25,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
@@ -49,6 +49,7 @@ import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import com.aliernfrog.lactool.util.extension.writeFile
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import io.github.aliernfrog.pftool_shared.impl.Progress
@@ -198,10 +199,22 @@ class MapsEditViewModel(
             title = material.name,
             zoomEnabled = !failed,
             errorContent = {
+                val context = LocalContext.current
+                val connectedToInternet = remember {
+                    GeneralUtil.isConnectedToInternet(context)
+                }
+
                 ErrorWithIcon(
-                    description = stringResource(R.string.mapsMaterials_failed),
-                    icon = rememberVectorPainter(Icons.Rounded.Error),
-                    contentColor = Color.Red
+                    description = stringResource(
+                        if (connectedToInternet) R.string.mapsMaterials_failed
+                        else R.string.mapsMaterials_noConnection
+                    ),
+                    icon = rememberVectorPainter(
+                        if (connectedToInternet) Icons.Rounded.Error
+                        else Icons.Rounded.CloudOff
+                    ),
+                    contentColor = MaterialTheme.colorScheme.errorContainer,
+                    iconContainerColor = MaterialTheme.colorScheme.error
                 )
             },
             optionsSheetContent = {
