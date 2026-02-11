@@ -1,7 +1,7 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,21 +9,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.filled.ViewInAr
 import androidx.compose.material.icons.rounded.TipsAndUpdates
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -77,23 +78,29 @@ import kotlinx.coroutines.launch
 fun MapsMaterialsScreen(
     listOptions: PFToolBasePreferenceManager.ListViewOptionsPreference,
     materialsLoadProgress: Progress,
+    loadedMaterials: List<Pair<LACMapDownloadableMaterial, Boolean>>,
     materials: List<LACMapDownloadableMaterial>,
-    failedMaterials: List<LACMapDownloadableMaterial>,
-    unusedMaterials: List<LACMapDownloadableMaterial>,
     onLoadMaterialsRequest: () -> Unit,
     onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
     val materialsListOptionsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    val materialsLoaded = materialsLoadProgress.finished
+
+    val isMaterialsLoadingFinished = materialsLoadProgress.finished
+    val failedMaterials = loadedMaterials.filter { (_, successfullyLoaded) ->
+        !successfullyLoaded
+    }.map { it.first }
+    val unusedMaterials = loadedMaterials.filter { (material, _) ->
+        material.usedBy.isEmpty()
+    }.map { it.first }
 
     val listStylePref = listOptions.styleGroup.getCurrent()
     val gridMaxLineSpanPref = listOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
 
     LaunchedEffect(Unit) {
-        if (!materialsLoaded) onLoadMaterialsRequest()
+        if (!isMaterialsLoadingFinished) onLoadMaterialsRequest()
     }
 
     LaunchedEffect(materials.size) {
@@ -133,6 +140,37 @@ fun MapsMaterialsScreen(
             )
         }
     ) {
+        @Composable
+        fun Header(modifier: Modifier = Modifier) {
+            Column(
+                modifier = modifier.padding(vertical = 8.dp)
+            ) {
+                AnimatedVisibility(
+                    visible = !isMaterialsLoadingFinished
+                ) {
+                    ElevatedCard(
+                        colors = CardDefaults.elevatedCardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        VerticalProgressIndicatorWithText(
+                            progress = materialsLoadProgress,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
+                        )
+                    }
+                }
+
+                Suggestions(
+                    unusedMaterials = unusedMaterials,
+                    failedMaterials = failedMaterials,
+                    onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
+                )
+            }
+        }
+
         @Composable
         fun MaterialButton(
             material: LACMapDownloadableMaterial,
@@ -186,77 +224,55 @@ fun MapsMaterialsScreen(
             }
         }
 
-        @Composable
-        fun Suggestions(modifier: Modifier = Modifier) {
-            Suggestions(
-                unusedMaterials = unusedMaterials,
-                failedMaterials = failedMaterials,
-                modifier = modifier.padding(horizontal = 12.dp),
-                onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
-            )
-        }
+        AnimatedContent(targetState = listStyle) { style ->
+            when (style) {
+                ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
+                    item {
+                        Header(
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                    }
 
-        Crossfade(targetState = materialsLoaded) { loaded ->
-            if (!loaded) {
-                Column(
+                    itemsIndexed(loadedMaterials) { index, (material) ->
+                        MaterialButton(
+                            material = material,
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .verticalSegmentedShape(index, totalSize = loadedMaterials.size)
+                        )
+                    }
+
+                    item {
+                        Spacer(Modifier.navigationBarsPadding())
+                    }
+                }
+
+                ListStyle.GRID -> LazyAdaptiveVerticalGrid(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .navigationBarsPadding(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    VerticalProgressIndicatorWithText(
-                        progress = materialsLoadProgress
-                    )
-                }
-            } else {
-                AnimatedContent(targetState = listStyle) { style ->
-                    when (style) {
-                        ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
-                            item {
-                                Suggestions(
-                                    modifier = Modifier.padding(horizontal = 12.dp)
-                                )
-                            }
-                            itemsIndexed(materials) { index, material ->
-                                MaterialButton(
-                                    material = material,
-                                    modifier = Modifier
-                                        .padding(horizontal = 12.dp)
-                                        .verticalSegmentedShape(index, totalSize = materials.size)
-                                )
-                            }
-                            item {
-                                Spacer(Modifier.navigationBarsPadding())
-                            }
-                        }
-                        ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                        .padding(horizontal = 10.dp),
+                    maxLineSpan = gridMaxLineSpanPref.value
+                ) { maxLineSpan: Int ->
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Header(
+                            modifier = Modifier.padding(horizontal = 2.dp)
+                        )
+                    }
+
+                    items(loadedMaterials) { (material) ->
+                        MaterialButton(
+                            material = material,
+                            contentScale = ContentScale.Crop,
+                            minified = true,
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 10.dp),
-                            maxLineSpan = gridMaxLineSpanPref.value
-                        ) { maxLineSpan: Int ->
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Suggestions(
-                                    modifier = Modifier.padding(horizontal = 2.dp)
-                                )
-                            }
-                            items(materials) {
-                                MaterialButton(
-                                    material = it,
-                                    contentScale = ContentScale.Crop,
-                                    minified = true,
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .aspectRatio(1f)
-                                        .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
-                                )
-                            }
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Spacer(Modifier.navigationBarsPadding())
-                            }
-                        }
+                                .padding(2.dp)
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
+                        )
+                    }
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Spacer(Modifier.navigationBarsPadding())
                     }
                 }
             }
@@ -270,13 +286,11 @@ fun MapsMaterialsScreen(
 private fun Suggestions(
     failedMaterials: List<LACMapDownloadableMaterial>,
     unusedMaterials: List<LACMapDownloadableMaterial>,
-    modifier: Modifier,
     onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit
 ) {
     val hasSuggestions = failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibilityColumn(
-        visible = hasSuggestions,
-        modifier = modifier
+        visible = hasSuggestions
     ) {
         VerticalSegmentor(
             {

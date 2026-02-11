@@ -82,8 +82,7 @@ class MapsEditViewModel(
     var mapEditor by mutableStateOf<MapEditorState?>(null)
 
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
-    var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
-        private set
+    val loadedMaterials = mutableStateListOf<Pair<LACMapDownloadableMaterial, Boolean>>()
 
     private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     var materialsLoadProgress by mutableStateOf(Progress(
@@ -93,8 +92,7 @@ class MapsEditViewModel(
     ))
         private set
 
-    val materialsLoaded: Boolean
-        get() = materialsLoadProgress.float?.let { it >= 1f } ?: false
+    private var isLoadingMaterials = false
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -152,21 +150,24 @@ class MapsEditViewModel(
     }
 
     fun loadDownloadableMaterials(context: Context) = viewModelScope.launch {
-        if (materialsLoaded) return@launch
+        if (isLoadingMaterials || materialsLoadProgress.finished) return@launch
         val materials = mapEditor!!.downloadableMaterials
         val totalCount = materials.size
         var passedCount = 0
+        isLoadingMaterials = true
         materials.forEach { material ->
+            var success = true
             val request = ImageRequest.Builder(context)
                 .data(material.url)
                 .listener(
                     onError = { _, _ ->
-                        failedMaterials.add(material)
+                        success = false
                     }
                 )
                 .build()
             context.imageLoader.execute(request)
             passedCount++
+            loadedMaterials.add(material to success)
             materialsLoadProgress = Progress(
                 description = materialsProgressText
                     .replace("{DONE}", passedCount.toString())
@@ -179,7 +180,9 @@ class MapsEditViewModel(
 
     private fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor!!.removeDownloadableMaterial(material.url) ?: 0
-        failedMaterials.remove(material)
+        loadedMaterials.removeIf { (it, _) ->
+            it == material
+        }
         topToastState.showToast(
             text = context.getString(R.string.mapsMaterials_deleted)
                 .replace("{MATERIAL}", material.name)
@@ -189,7 +192,7 @@ class MapsEditViewModel(
     }
 
     fun openDownloadableMaterialOptions(material: LACMapDownloadableMaterial) {
-        val failed = failedMaterials.contains(material)
+        val failed = loadedMaterials.find { it.first == material }?.second != true
         appState.mediaOverlayData = MediaOverlayData(
             model = material.url,
             title = material.name,

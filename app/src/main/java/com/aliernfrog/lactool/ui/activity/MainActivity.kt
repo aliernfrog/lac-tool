@@ -187,11 +187,8 @@ class MainActivity : AppCompatActivity() {
                         MapsMaterialsScreen(
                             listOptions = vm.prefs.mapsMaterialsListOptions,
                             materialsLoadProgress = mapsEditViewModel.materialsLoadProgress,
+                            loadedMaterials = mapsEditViewModel.loadedMaterials,
                             materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: emptyList(),
-                            failedMaterials = mapsEditViewModel.failedMaterials,
-                            unusedMaterials = mapsEditViewModel.mapEditor?.downloadableMaterials?.filter {
-                                it.usedBy.isEmpty()
-                            } ?: emptyList(),
                             onLoadMaterialsRequest = {
                                 mapsEditViewModel.loadDownloadableMaterials(context)
                             },
