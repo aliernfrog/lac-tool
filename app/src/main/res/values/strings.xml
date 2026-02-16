@@ -221,13 +221,14 @@
     <string name="mapsMaterials_noConnection_description">The app is unable to validate materials as you are not connected to the internet</string>
     <string name="mapsMaterials_loading">Loading {DONE}/{TOTAL} materials…</string>
     <string name="mapsMaterials_failedMaterials">Invalid materials</string>
-    <string name="mapsMaterials_failedMaterials_description">%n materials failed to load. This might cause errors when loading the map in LAC, remove them to avoid errors</string>
+    <string name="mapsMaterials_failedMaterials_description">%n materials failed to load</string>
     <string name="mapsMaterials_unusedMaterials">Unused materials</string>
     <string name="mapsMaterials_unusedMaterials_description">%n materials are unused and can be removed</string>
     <string name="mapsMaterials_clickToViewMore">Click to view more</string>
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
+    <string name="mapsMaterials_local">Local file</string>
+    <string name="mapsMaterials_failed">Failed to load</string>
     <string name="mapsMaterials_unused">Unused, can safely be deleted</string>
-    <string name="mapsMaterials_failed">Failed to load, delete to avoid errors</string>
     <string name="mapsMaterials_material_copyUrl">Copy material URL</string>
     <string name="mapsMaterials_material_delete">Delete material</string>
     <string name="mapsMaterials_material_delete_description">Material will be removed from %n objects after deleted</string>

@@ -42,6 +42,7 @@ import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
+import com.aliernfrog.lactool.data.maps.MapMaterialData
 import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
@@ -83,7 +84,7 @@ class MapsEditViewModel(
     var mapEditor by mutableStateOf<MapEditorState?>(null)
 
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
-    val loadedMaterials = mutableStateListOf<Pair<LACMapDownloadableMaterial, Boolean>>()
+    val loadedMaterials = mutableStateListOf<MapMaterialData>()
 
     private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     var materialsLoadProgress by mutableStateOf(Progress(
@@ -158,17 +159,22 @@ class MapsEditViewModel(
         isLoadingMaterials = true
         materials.forEach { material ->
             var success = true
+            val isLocal = material.url.startsWith("file://", ignoreCase = true)
             val request = ImageRequest.Builder(context)
                 .data(material.url)
                 .listener(
                     onError = { _, _ ->
-                        success = false
+                        if (!isLocal) success = false
                     }
                 )
                 .build()
             context.imageLoader.execute(request)
             passedCount++
-            loadedMaterials.add(material to success)
+            loadedMaterials.add(MapMaterialData(
+                material = material,
+                local = isLocal,
+                loadSuccess = success
+            ))
             materialsLoadProgress = Progress(
                 description = materialsProgressText
                     .replace("{DONE}", passedCount.toString())
@@ -193,7 +199,7 @@ class MapsEditViewModel(
     }
 
     fun openDownloadableMaterialOptions(material: LACMapDownloadableMaterial) {
-        val failed = loadedMaterials.find { it.first == material }?.second != true
+        val failed = loadedMaterials.find { it.material == material }?.loadSuccess != true
         appState.mediaOverlayData = MediaOverlayData(
             model = material.url,
             title = material.name,

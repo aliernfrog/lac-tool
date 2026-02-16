@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.SdStorage
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.filled.ViewInAr
 import androidx.compose.material.icons.rounded.CloudOff
@@ -52,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.maps.MapMaterialData
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
@@ -82,7 +84,7 @@ import kotlinx.coroutines.launch
 fun MapsMaterialsScreen(
     listOptions: PFToolBasePreferenceManager.ListViewOptionsPreference,
     materialsLoadProgress: Progress,
-    loadedMaterials: List<Pair<LACMapDownloadableMaterial, Boolean>>,
+    loadedMaterials: List<MapMaterialData>,
     materials: List<LACMapDownloadableMaterial>,
     onLoadMaterialsRequest: () -> Unit,
     onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit,
@@ -94,12 +96,12 @@ fun MapsMaterialsScreen(
 
     val isConnectedToInternet = remember { GeneralUtil.isConnectedToInternet(context) }
     val isMaterialsLoadingFinished = materialsLoadProgress.finished
-    val failedMaterials = loadedMaterials.filter { (_, successfullyLoaded) ->
-        !successfullyLoaded && isConnectedToInternet
-    }.map { it.first }
-    val unusedMaterials = loadedMaterials.filter { (material, _) ->
-        material.usedBy.isEmpty()
-    }.map { it.first }
+    val failedMaterials = loadedMaterials.filter { materialData ->
+        !materialData.loadSuccess && isConnectedToInternet
+    }
+    val unusedMaterials = loadedMaterials.filter { materialData ->
+        materialData.material.usedBy.isEmpty()
+    }
 
     val listStylePref = listOptions.styleGroup.getCurrent()
     val gridMaxLineSpanPref = listOptions.gridMaxLineSpanGroup.getCurrent()
@@ -191,23 +193,26 @@ fun MapsMaterialsScreen(
                 Suggestions(
                     unusedMaterials = unusedMaterials,
                     failedMaterials = failedMaterials,
-                    onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
+                    onOpenMaterialOptionsRequest = {
+                        onOpenMaterialOptionsRequest(it.material)
+                    }
                 )
             }
         }
 
         @Composable
         fun MaterialButton(
-            material: LACMapDownloadableMaterial,
+            materialData: MapMaterialData,
             contentScale: ContentScale = ContentScale.FillWidth,
             minified: Boolean = false,
             modifier: Modifier = Modifier
         ) {
-            val failed = failedMaterials.contains(material)
+            val material = materialData.material
+            val failed = !materialData.loadSuccess
             ImageButton(
                 model = material.url,
                 contentScale = contentScale,
-                containerColor = if (failed) MaterialTheme.colorScheme.error
+                containerColor = if (!materialData.loadSuccess) MaterialTheme.colorScheme.error
                 else MaterialTheme.colorScheme.surfaceContainerHigh,
                 onClick = {
                     onOpenMaterialOptionsRequest(material)
@@ -224,6 +229,10 @@ fun MapsMaterialsScreen(
                     if (minified) return@ImageButtonOverlay Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        if (materialData.local) Icon(
+                            imageVector = Icons.Default.SdStorage,
+                            contentDescription = stringResource(R.string.mapsMaterials_local)
+                        )
                         if (failed) Icon(
                             imageVector = Icons.Default.Error,
                             contentDescription = stringResource(R.string.mapsMaterials_failed)
@@ -233,6 +242,15 @@ fun MapsMaterialsScreen(
                             contentDescription = stringResource(R.string.mapsMaterials_unused)
                         )
                     }
+
+                    if (materialData.local) ImageButtonInfo(
+                        text = stringResource(R.string.mapsMaterials_local),
+                        icon = rememberVectorPainter(Icons.Default.SdStorage)
+                    )
+                    if (failed) ImageButtonInfo(
+                        text = stringResource(R.string.mapsMaterials_failed),
+                        icon = rememberVectorPainter(Icons.Default.Error)
+                    )
                     if (material.usedBy.isNotEmpty()) ImageButtonInfo(
                         text = stringResource(R.string.mapsMaterials_usedCount)
                             .replace("%n", material.usedBy.size.toString()),
@@ -240,10 +258,6 @@ fun MapsMaterialsScreen(
                     ) else ImageButtonInfo(
                         text = stringResource(R.string.mapsMaterials_unused),
                         icon = rememberVectorPainter(Icons.Default.TipsAndUpdates)
-                    )
-                    if (failed) ImageButtonInfo(
-                        text = stringResource(R.string.mapsMaterials_failed),
-                        icon = rememberVectorPainter(Icons.Default.Error)
                     )
                 }
             }
@@ -258,9 +272,9 @@ fun MapsMaterialsScreen(
                         )
                     }
 
-                    itemsIndexed(loadedMaterials) { index, (material) ->
+                    itemsIndexed(loadedMaterials) { index, materialData ->
                         MaterialButton(
-                            material = material,
+                            materialData = materialData,
                             modifier = Modifier
                                 .padding(horizontal = 12.dp)
                                 .verticalSegmentedShape(index, totalSize = loadedMaterials.size)
@@ -284,9 +298,9 @@ fun MapsMaterialsScreen(
                         )
                     }
 
-                    items(loadedMaterials) { (material) ->
+                    items(loadedMaterials) { materialData ->
                         MaterialButton(
-                            material = material,
+                            materialData = materialData,
                             contentScale = ContentScale.Crop,
                             minified = true,
                             modifier = Modifier
@@ -309,9 +323,9 @@ fun MapsMaterialsScreen(
 
 @Composable
 private fun Suggestions(
-    failedMaterials: List<LACMapDownloadableMaterial>,
-    unusedMaterials: List<LACMapDownloadableMaterial>,
-    onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit
+    failedMaterials: List<MapMaterialData>,
+    unusedMaterials: List<MapMaterialData>,
+    onOpenMaterialOptionsRequest: (MapMaterialData) -> Unit
 ) {
     val hasSuggestions = failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibilityColumn(
@@ -325,9 +339,7 @@ private fun Suggestions(
                     painter = rememberVectorPainter(Icons.Default.Error),
                     accentColor = MaterialTheme.colorScheme.error,
                     materials = failedMaterials,
-                    onMaterialClick = {
-                        onOpenMaterialOptionsRequest(it)
-                    }
+                    onMaterialClick = onOpenMaterialOptionsRequest
                 )
             },
             {
@@ -337,9 +349,7 @@ private fun Suggestions(
                     painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
                     accentColor = MaterialTheme.colorScheme.secondary,
                     materials = unusedMaterials,
-                    onMaterialClick = {
-                        onOpenMaterialOptionsRequest(it)
-                    }
+                    onMaterialClick = onOpenMaterialOptionsRequest
                 )
             },
             dynamic = true,
@@ -354,8 +364,8 @@ private fun Suggestion(
     description: String,
     painter: Painter,
     accentColor: Color,
-    materials: List<LACMapDownloadableMaterial>,
-    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
+    materials: List<MapMaterialData>,
+    onMaterialClick: (MapMaterialData) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     CompositionLocalProvider(LocalContentColor provides accentColor) {
@@ -371,12 +381,12 @@ private fun Suggestion(
                 onClickHeader = { expanded = !expanded }
             ) {
                 Column {
-                    materials.forEach { material ->
+                    materials.forEach { materialData ->
                         ExpressiveButtonRow(
-                            title = material.name,
+                            title = materialData.material.name,
                             description = stringResource(R.string.mapsMaterials_clickToViewMore)
                         ) {
-                            onMaterialClick(material)
+                            onMaterialClick(materialData)
                         }
                     }
                 }
