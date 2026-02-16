@@ -208,7 +208,9 @@ fun MapsMaterialsScreen(
             modifier: Modifier = Modifier
         ) {
             val material = materialData.material
+            val local = materialData.local
             val failed = !materialData.loadSuccess
+            val unused = material.usedBy.isEmpty()
             ImageButton(
                 model = material.url,
                 contentScale = contentScale,
@@ -219,17 +221,17 @@ fun MapsMaterialsScreen(
                 },
                 modifier = modifier
             ) {
-                if (!minified || failed || material.usedBy.isEmpty()) ImageButtonOverlay(
+                if (!minified || local || failed || unused) ImageButtonOverlay(
                     title = if (minified) null else material.name,
                     modifier = Modifier.align(Alignment.BottomStart),
                     containerColor = if (failed) MaterialTheme.colorScheme.error
-                    else if (material.usedBy.isEmpty()) MaterialTheme.colorScheme.primary
+                    else if (unused) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     if (minified) return@ImageButtonOverlay Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        if (materialData.local) Icon(
+                        if (local) Icon(
                             imageVector = Icons.Default.SdStorage,
                             contentDescription = stringResource(R.string.mapsMaterials_local)
                         )
@@ -237,13 +239,13 @@ fun MapsMaterialsScreen(
                             imageVector = Icons.Default.Error,
                             contentDescription = stringResource(R.string.mapsMaterials_failed)
                         )
-                        if (material.usedBy.isEmpty()) Icon(
+                        if (unused) Icon(
                             imageVector = Icons.Default.TipsAndUpdates,
                             contentDescription = stringResource(R.string.mapsMaterials_unused)
                         )
                     }
 
-                    if (materialData.local) ImageButtonInfo(
+                    if (local) ImageButtonInfo(
                         text = stringResource(R.string.mapsMaterials_local),
                         icon = rememberVectorPainter(Icons.Default.SdStorage)
                     )
@@ -251,7 +253,7 @@ fun MapsMaterialsScreen(
                         text = stringResource(R.string.mapsMaterials_failed),
                         icon = rememberVectorPainter(Icons.Default.Error)
                     )
-                    if (material.usedBy.isNotEmpty()) ImageButtonInfo(
+                    if (!unused) ImageButtonInfo(
                         text = stringResource(R.string.mapsMaterials_usedCount)
                             .replace("%n", material.usedBy.size.toString()),
                         icon = rememberVectorPainter(Icons.Default.ViewInAr)
