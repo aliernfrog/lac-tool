@@ -165,25 +165,6 @@ fun MapsMaterialsScreen(
                     )
                 }
 
-                AnimatedVisibility(
-                    visible = !isMaterialsLoadingFinished
-                ) {
-                    ElevatedCard(
-                        colors = CardDefaults.elevatedCardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        VerticalProgressIndicatorWithText(
-                            progress = materialsLoadProgress,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 8.dp)
-                        )
-                    }
-                }
-
                 Suggestions(
                     unusedMaterials = unusedMaterials,
                     failedMaterials = failedMaterials,
@@ -257,56 +238,86 @@ fun MapsMaterialsScreen(
             }
         }
 
-        AnimatedContent(targetState = listStyle) { style ->
-            when (style) {
-                ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
-                    item {
-                        Header(
-                            modifier = Modifier.padding(horizontal = 12.dp)
-                        )
+        @Composable
+        fun Footer() {
+            Spacer(Modifier.navigationBarsPadding().padding(200.dp))
+        }
+
+        Box {
+            AnimatedContent(targetState = listStyle) { style ->
+                when (style) {
+                    ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
+                        item {
+                            Header(
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                        }
+
+                        itemsIndexed(loadedMaterials) { index, materialData ->
+                            MaterialButton(
+                                materialData = materialData,
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .verticalSegmentedShape(index, totalSize = loadedMaterials.size)
+                            )
+                        }
+
+                        item {
+                            Footer()
+                        }
                     }
 
-                    itemsIndexed(loadedMaterials) { index, materialData ->
-                        MaterialButton(
-                            materialData = materialData,
-                            modifier = Modifier
-                                .padding(horizontal = 12.dp)
-                                .verticalSegmentedShape(index, totalSize = loadedMaterials.size)
-                        )
-                    }
+                    ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 10.dp),
+                        maxLineSpan = gridMaxLineSpanPref.value
+                    ) { maxLineSpan: Int ->
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Header(
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
+                        }
 
-                    item {
-                        Spacer(Modifier.navigationBarsPadding())
+                        items(loadedMaterials) { materialData ->
+                            MaterialButton(
+                                materialData = materialData,
+                                contentScale = ContentScale.Crop,
+                                minified = true,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
+                            )
+                        }
+
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Footer()
+                        }
                     }
                 }
+            }
 
-                ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+            AnimatedVisibility(
+                visible = !isMaterialsLoadingFinished,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+            ) {
+                ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 10.dp),
-                    maxLineSpan = gridMaxLineSpanPref.value
-                ) { maxLineSpan: Int ->
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Header(
-                            modifier = Modifier.padding(horizontal = 2.dp)
-                        )
-                    }
-
-                    items(loadedMaterials) { materialData ->
-                        MaterialButton(
-                            materialData = materialData,
-                            contentScale = ContentScale.Crop,
-                            minified = true,
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .aspectRatio(1f)
-                                .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
-                        )
-                    }
-
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Spacer(Modifier.navigationBarsPadding())
-                    }
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    VerticalProgressIndicatorWithText(
+                        progress = materialsLoadProgress,
+                        indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                    )
                 }
             }
         }
