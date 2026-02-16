@@ -51,7 +51,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.data.maps.MapMaterialData
 import com.aliernfrog.lactool.ui.component.ImageButton
@@ -85,9 +84,8 @@ fun MapsMaterialsScreen(
     listOptions: PFToolBasePreferenceManager.ListViewOptionsPreference,
     materialsLoadProgress: Progress,
     loadedMaterials: List<MapMaterialData>,
-    materials: List<LACMapDownloadableMaterial>,
     onLoadMaterialsRequest: () -> Unit,
-    onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit,
+    onOpenMaterialOptionsRequest: (MapMaterialData) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -107,13 +105,9 @@ fun MapsMaterialsScreen(
     val gridMaxLineSpanPref = listOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isMaterialsLoadingFinished) {
         if (!isMaterialsLoadingFinished) onLoadMaterialsRequest()
-    }
-
-    LaunchedEffect(materials.size) {
-        // Back out if materials list is empty, which means there's nothing much to do in this screen
-        if (materials.isEmpty()) onNavigateBackRequest()
+        else if (loadedMaterials.isEmpty()) onNavigateBackRequest()
     }
 
     ListViewOptionsSheet(
@@ -193,9 +187,7 @@ fun MapsMaterialsScreen(
                 Suggestions(
                     unusedMaterials = unusedMaterials,
                     failedMaterials = failedMaterials,
-                    onOpenMaterialOptionsRequest = {
-                        onOpenMaterialOptionsRequest(it.material)
-                    }
+                    onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
                 )
             }
         }
@@ -216,10 +208,10 @@ fun MapsMaterialsScreen(
                 contentScale = contentScale,
                 containerColor = if (!materialData.loadSuccess) MaterialTheme.colorScheme.error
                 else MaterialTheme.colorScheme.surfaceContainerHigh,
+                modifier = modifier,
                 onClick = {
-                    onOpenMaterialOptionsRequest(material)
-                },
-                modifier = modifier
+                    onOpenMaterialOptionsRequest(materialData)
+                }
             ) {
                 if (!minified || local || failed || unused) ImageButtonOverlay(
                     title = if (minified) null else material.name,

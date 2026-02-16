@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.SdStorage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarState
@@ -198,8 +199,10 @@ class MapsEditViewModel(
         )
     }
 
-    fun openDownloadableMaterialOptions(material: LACMapDownloadableMaterial) {
-        val failed = loadedMaterials.find { it.material == material }?.loadSuccess != true
+    fun openDownloadableMaterialOptions(materialData: MapMaterialData) {
+        val material = materialData.material
+        val local = materialData.local
+        val failed = !materialData.loadSuccess
         appState.mediaOverlayData = MediaOverlayData(
             model = material.url,
             title = material.name,
@@ -212,15 +215,19 @@ class MapsEditViewModel(
 
                 ErrorWithIcon(
                     description = stringResource(
-                        if (connectedToInternet) R.string.mapsMaterials_failed
+                        if (local) R.string.mapsMaterials_local
+                        else if (connectedToInternet) R.string.mapsMaterials_failed
                         else R.string.mapsMaterials_noConnection
                     ),
                     icon = rememberVectorPainter(
-                        if (connectedToInternet) Icons.Rounded.Error
+                        if (local) Icons.Rounded.SdStorage
+                        else if (connectedToInternet) Icons.Rounded.Error
                         else Icons.Rounded.CloudOff
                     ),
-                    contentColor = MaterialTheme.colorScheme.errorContainer,
-                    iconContainerColor = MaterialTheme.colorScheme.error
+                    contentColor = if (local) MaterialTheme.colorScheme.primaryContainer
+                    else MaterialTheme.colorScheme.errorContainer,
+                    iconContainerColor = if (local) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.error
                 )
             },
             optionsSheetContent = {

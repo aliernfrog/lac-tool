@@ -188,7 +188,6 @@ class MainActivity : AppCompatActivity() {
                             listOptions = vm.prefs.mapsMaterialsListOptions,
                             materialsLoadProgress = mapsEditViewModel.materialsLoadProgress,
                             loadedMaterials = mapsEditViewModel.loadedMaterials,
-                            materials = mapsEditViewModel.mapEditor?.downloadableMaterials ?: emptyList(),
                             onLoadMaterialsRequest = {
                                 mapsEditViewModel.loadDownloadableMaterials(context)
                             },
