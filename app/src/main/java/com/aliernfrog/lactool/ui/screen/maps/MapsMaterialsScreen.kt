@@ -1,7 +1,7 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,21 +9,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.SdStorage
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.filled.ViewInAr
+import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.TipsAndUpdates
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -45,13 +48,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.data.maps.MapMaterialData
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
@@ -61,6 +66,7 @@ import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
 import io.github.aliernfrog.pftool_shared.util.manager.base.PFToolBasePreferenceManager
 import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
+import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FadeVisibilityColumn
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
@@ -77,28 +83,31 @@ import kotlinx.coroutines.launch
 fun MapsMaterialsScreen(
     listOptions: PFToolBasePreferenceManager.ListViewOptionsPreference,
     materialsLoadProgress: Progress,
-    materials: List<LACMapDownloadableMaterial>,
-    failedMaterials: List<LACMapDownloadableMaterial>,
-    unusedMaterials: List<LACMapDownloadableMaterial>,
+    loadedMaterials: List<MapMaterialData>,
     onLoadMaterialsRequest: () -> Unit,
-    onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit,
+    onOpenMaterialOptionsRequest: (MapMaterialData) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
+    val context = LocalContext.current
     val materialsListOptionsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    val materialsLoaded = materialsLoadProgress.finished
+
+    val isConnectedToInternet = remember { GeneralUtil.isConnectedToInternet(context) }
+    val isMaterialsLoadingFinished = materialsLoadProgress.finished
+    val failedMaterials = loadedMaterials.filter { materialData ->
+        !materialData.loadSuccess && isConnectedToInternet
+    }
+    val unusedMaterials = loadedMaterials.filter { materialData ->
+        materialData.material.usedBy.isEmpty()
+    }
 
     val listStylePref = listOptions.styleGroup.getCurrent()
     val gridMaxLineSpanPref = listOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
 
-    LaunchedEffect(Unit) {
-        if (!materialsLoaded) onLoadMaterialsRequest()
-    }
-
-    LaunchedEffect(materials.size) {
-        // Back out if materials list is empty, which means there's nothing much to do in this screen
-        if (materials.isEmpty()) onNavigateBackRequest()
+    LaunchedEffect(isMaterialsLoadingFinished) {
+        if (!isMaterialsLoadingFinished) onLoadMaterialsRequest()
+        else if (loadedMaterials.isEmpty()) onNavigateBackRequest()
     }
 
     ListViewOptionsSheet(
@@ -134,43 +143,90 @@ fun MapsMaterialsScreen(
         }
     ) {
         @Composable
+        fun Header(modifier: Modifier = Modifier) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = modifier.padding(vertical = 8.dp)
+            ) {
+                if (!isConnectedToInternet) ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    ErrorWithIcon(
+                        icon = rememberVectorPainter(Icons.Rounded.CloudOff),
+                        title = stringResource(R.string.mapsMaterials_noConnection),
+                        description = stringResource(R.string.mapsMaterials_noConnection_description),
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        iconContainerColor = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                    )
+                }
+
+                Suggestions(
+                    unusedMaterials = unusedMaterials,
+                    failedMaterials = failedMaterials,
+                    onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
+                )
+            }
+        }
+
+        @Composable
         fun MaterialButton(
-            material: LACMapDownloadableMaterial,
+            materialData: MapMaterialData,
             contentScale: ContentScale = ContentScale.FillWidth,
             minified: Boolean = false,
             modifier: Modifier = Modifier
         ) {
-            val failed = failedMaterials.contains(material)
+            val material = materialData.material
+            val local = materialData.local
+            val failed = !materialData.loadSuccess
+            val unused = material.usedBy.isEmpty()
             ImageButton(
                 model = material.url,
                 contentScale = contentScale,
-                containerColor = if (failed) MaterialTheme.colorScheme.error
+                containerColor = if (!materialData.loadSuccess) MaterialTheme.colorScheme.error
                 else MaterialTheme.colorScheme.surfaceContainerHigh,
+                modifier = modifier,
                 onClick = {
-                    onOpenMaterialOptionsRequest(material)
-                },
-                modifier = modifier
+                    onOpenMaterialOptionsRequest(materialData)
+                }
             ) {
-                if (!minified || failed || material.usedBy.isEmpty()) ImageButtonOverlay(
+                if (!minified || local || failed || unused) ImageButtonOverlay(
                     title = if (minified) null else material.name,
                     modifier = Modifier.align(Alignment.BottomStart),
                     containerColor = if (failed) MaterialTheme.colorScheme.error
-                    else if (material.usedBy.isEmpty()) MaterialTheme.colorScheme.primary
+                    else if (unused) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     if (minified) return@ImageButtonOverlay Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        if (local) Icon(
+                            imageVector = Icons.Default.SdStorage,
+                            contentDescription = stringResource(R.string.mapsMaterials_local)
+                        )
                         if (failed) Icon(
                             imageVector = Icons.Default.Error,
                             contentDescription = stringResource(R.string.mapsMaterials_failed)
                         )
-                        if (material.usedBy.isEmpty()) Icon(
+                        if (unused) Icon(
                             imageVector = Icons.Default.TipsAndUpdates,
                             contentDescription = stringResource(R.string.mapsMaterials_unused)
                         )
                     }
-                    if (material.usedBy.isNotEmpty()) ImageButtonInfo(
+
+                    if (local) ImageButtonInfo(
+                        text = stringResource(R.string.mapsMaterials_local),
+                        icon = rememberVectorPainter(Icons.Default.SdStorage)
+                    )
+                    if (failed) ImageButtonInfo(
+                        text = stringResource(R.string.mapsMaterials_failed),
+                        icon = rememberVectorPainter(Icons.Default.Error)
+                    )
+                    if (!unused) ImageButtonInfo(
                         text = stringResource(R.string.mapsMaterials_usedCount)
                             .replace("%n", material.usedBy.size.toString()),
                         icon = rememberVectorPainter(Icons.Default.ViewInAr)
@@ -178,86 +234,90 @@ fun MapsMaterialsScreen(
                         text = stringResource(R.string.mapsMaterials_unused),
                         icon = rememberVectorPainter(Icons.Default.TipsAndUpdates)
                     )
-                    if (failed) ImageButtonInfo(
-                        text = stringResource(R.string.mapsMaterials_failed),
-                        icon = rememberVectorPainter(Icons.Default.Error)
-                    )
                 }
             }
         }
 
         @Composable
-        fun Suggestions(modifier: Modifier = Modifier) {
-            Suggestions(
-                unusedMaterials = unusedMaterials,
-                failedMaterials = failedMaterials,
-                modifier = modifier.padding(horizontal = 12.dp),
-                onOpenMaterialOptionsRequest = onOpenMaterialOptionsRequest
-            )
+        fun Footer() {
+            Spacer(Modifier.navigationBarsPadding().padding(200.dp))
         }
 
-        Crossfade(targetState = materialsLoaded) { loaded ->
-            if (!loaded) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .navigationBarsPadding(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    VerticalProgressIndicatorWithText(
-                        progress = materialsLoadProgress
-                    )
-                }
-            } else {
-                AnimatedContent(targetState = listStyle) { style ->
-                    when (style) {
-                        ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
-                            item {
-                                Suggestions(
-                                    modifier = Modifier.padding(horizontal = 12.dp)
-                                )
-                            }
-                            itemsIndexed(materials) { index, material ->
-                                MaterialButton(
-                                    material = material,
-                                    modifier = Modifier
-                                        .padding(horizontal = 12.dp)
-                                        .verticalSegmentedShape(index, totalSize = materials.size)
-                                )
-                            }
-                            item {
-                                Spacer(Modifier.navigationBarsPadding())
-                            }
+        Box {
+            AnimatedContent(targetState = listStyle) { style ->
+                when (style) {
+                    ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {
+                        item {
+                            Header(
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
                         }
-                        ListStyle.GRID -> LazyAdaptiveVerticalGrid(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 10.dp),
-                            maxLineSpan = gridMaxLineSpanPref.value
-                        ) { maxLineSpan: Int ->
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Suggestions(
-                                    modifier = Modifier.padding(horizontal = 2.dp)
-                                )
-                            }
-                            items(materials) {
-                                MaterialButton(
-                                    material = it,
-                                    contentScale = ContentScale.Crop,
-                                    minified = true,
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .aspectRatio(1f)
-                                        .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
-                                )
-                            }
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Spacer(Modifier.navigationBarsPadding())
-                            }
+
+                        itemsIndexed(loadedMaterials) { index, materialData ->
+                            MaterialButton(
+                                materialData = materialData,
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .verticalSegmentedShape(index, totalSize = loadedMaterials.size)
+                            )
+                        }
+
+                        item {
+                            Footer()
                         }
                     }
+
+                    ListStyle.GRID -> LazyAdaptiveVerticalGrid(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 10.dp),
+                        maxLineSpan = gridMaxLineSpanPref.value
+                    ) { maxLineSpan: Int ->
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Header(
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
+                        }
+
+                        items(loadedMaterials) { materialData ->
+                            MaterialButton(
+                                materialData = materialData,
+                                contentScale = ContentScale.Crop,
+                                minified = true,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(SEGMENTOR_SMALL_ROUNDNESS))
+                            )
+                        }
+
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Footer()
+                        }
+                    }
+                }
+            }
+
+            AnimatedVisibility(
+                visible = !isMaterialsLoadingFinished,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+            ) {
+                ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    VerticalProgressIndicatorWithText(
+                        progress = materialsLoadProgress,
+                        indicatorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                    )
                 }
             }
         }
@@ -268,15 +328,13 @@ fun MapsMaterialsScreen(
 
 @Composable
 private fun Suggestions(
-    failedMaterials: List<LACMapDownloadableMaterial>,
-    unusedMaterials: List<LACMapDownloadableMaterial>,
-    modifier: Modifier,
-    onOpenMaterialOptionsRequest: (LACMapDownloadableMaterial) -> Unit
+    failedMaterials: List<MapMaterialData>,
+    unusedMaterials: List<MapMaterialData>,
+    onOpenMaterialOptionsRequest: (MapMaterialData) -> Unit
 ) {
     val hasSuggestions = failedMaterials.isNotEmpty() || unusedMaterials.isNotEmpty()
     FadeVisibilityColumn(
-        visible = hasSuggestions,
-        modifier = modifier
+        visible = hasSuggestions
     ) {
         VerticalSegmentor(
             {
@@ -286,9 +344,7 @@ private fun Suggestions(
                     painter = rememberVectorPainter(Icons.Default.Error),
                     accentColor = MaterialTheme.colorScheme.error,
                     materials = failedMaterials,
-                    onMaterialClick = {
-                        onOpenMaterialOptionsRequest(it)
-                    }
+                    onMaterialClick = onOpenMaterialOptionsRequest
                 )
             },
             {
@@ -298,9 +354,7 @@ private fun Suggestions(
                     painter = rememberVectorPainter(Icons.Rounded.TipsAndUpdates),
                     accentColor = MaterialTheme.colorScheme.secondary,
                     materials = unusedMaterials,
-                    onMaterialClick = {
-                        onOpenMaterialOptionsRequest(it)
-                    }
+                    onMaterialClick = onOpenMaterialOptionsRequest
                 )
             },
             dynamic = true,
@@ -315,8 +369,8 @@ private fun Suggestion(
     description: String,
     painter: Painter,
     accentColor: Color,
-    materials: List<LACMapDownloadableMaterial>,
-    onMaterialClick: (LACMapDownloadableMaterial) -> Unit
+    materials: List<MapMaterialData>,
+    onMaterialClick: (MapMaterialData) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     CompositionLocalProvider(LocalContentColor provides accentColor) {
@@ -332,12 +386,12 @@ private fun Suggestion(
                 onClickHeader = { expanded = !expanded }
             ) {
                 Column {
-                    materials.forEach { material ->
+                    materials.forEach { materialData ->
                         ExpressiveButtonRow(
-                            title = material.name,
+                            title = materialData.material.name,
                             description = stringResource(R.string.mapsMaterials_clickToViewMore)
                         ) {
-                            onMaterialClick(material)
+                            onMaterialClick(materialData)
                         }
                     }
                 }

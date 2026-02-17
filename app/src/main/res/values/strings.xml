@@ -15,12 +15,15 @@
     <string name="action_collapse">Collapse</string>
     <string name="action_select_selectAll">Select all</string>
     <string name="action_select_deselectAll">Deselect all</string>
+
     <string name="intent_openMap">Open map</string>
     <string name="intent_downloadMap">Download map</string>
+
     <string name="warning">Warning</string>
     <string name="warning_error">Something went wrong</string>
     <string name="warning_error_tapToReport">Something went wrong! Tap here to report the error and view details</string>
     <string name="warning_pickFile_failed">Failed to pick file</string>
+
     <string name="info">Info</string>
     <string name="info_reminder">Reminder</string>
     <string name="info_copiedToClipboard">Copied to clipboard</string>
@@ -29,6 +32,7 @@
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
     <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
     <string name="info_useUnrecommendedAnyway_description">Only do this if you are sure that your LAC data is stored in a different folder, or if you are experimenting</string>
+
     <string name="permissions_other">Other options</string>
     <string name="permissions_downgradeFilesApp">Files app updates</string>
     <string name="permissions_downgradeFilesApp_description">Files app on your device prevents LAC Tool from requesting access to LAC data. This may be resolvable by uninstalling updates of the Files app</string>
@@ -77,6 +81,7 @@
     <string name="permissions_allFiles_denied">Permission was denied</string>
     <string name="permissions_allFiles_saf">Access specific directories</string>
     <string name="permissions_allFiles_saf_description">Lets LAC Tool only access the directories it needs, this may be complicated to setup</string>
+
     <string name="list_options">Sorting and style</string>
     <string name="list_sorting">Sort</string>
     <string name="list_sorting_name">By name</string>
@@ -87,6 +92,7 @@
     <string name="list_style_list">List</string>
     <string name="list_style_grid">Grid</string>
     <string name="list_style_gridMaxLineSpan">Items per row</string>
+
     <string name="maps">Maps</string>
     <string name="maps_permissions">LAC maps folder</string>
     <string name="maps_permissions_description">You need to choose the folder where your LAC maps are stored</string>
@@ -144,6 +150,7 @@
     <string name="maps_deleted_multiple">Deleted {COUNT} maps</string>
     <string name="maps_deleting_single">Deleting {NAME}…</string>
     <string name="maps_deleting_multiple">Deleting {DONE}/{TOTAL} maps…</string>
+
     <string name="mapsList_multiSelection">{COUNT} maps selected</string>
     <string name="mapsList_pickMap">Pick a map</string>
     <string name="mapsList_pickMap_failed">Failed to pick map</string>
@@ -159,6 +166,7 @@
     <string name="mapsList_shared">Shared</string>
     <string name="mapsList_shared_noMaps">You have not shared any maps to LAC Tool</string>
     <string name="mapsList_searchNoMatches">No matching maps found</string>
+
     <string name="mapsEdit">Edit map</string>
     <string name="mapsEdit_opening">Opening {NAME}…</string>
     <string name="mapsEdit_save">Save</string>
@@ -189,6 +197,7 @@
     <string name="mapsEdit_saveWarning_description">You have unsaved changes, are you sure you want to quit?</string>
     <string name="mapsEdit_saveWarning_keepEditing">Keep editing</string>
     <string name="mapsEdit_saveWarning_discardChanges">Quit</string>
+
     <string name="mapsRoles">Edit roles</string>
     <string name="mapsRoles_description">Currently has {COUNT} roles</string>
     <string name="mapsRoles_showingCount">Showing {COUNT} roles</string>
@@ -205,23 +214,26 @@
     <string name="mapsRoles_addRole_preview">Role preview</string>
     <string name="mapsRoles_addRole_preview_hint">Give the role a name to preview</string>
     <string name="mapsRoles_illegalChars">Role can NOT contain: "{CHAR}"</string>
+
     <string name="mapsMaterials">Materials</string>
     <string name="mapsMaterials_description">Currently has %n materials</string>
-    <string name="mapsMaterials_noConnection">No connection</string>
-    <string name="mapsMaterials_noConnection_description">You are not connected to internet and valid materials might be marked as invalid.</string>
+    <string name="mapsMaterials_noConnection">No internet connection</string>
+    <string name="mapsMaterials_noConnection_description">Materials may not load as you are not connected to the internet</string>
     <string name="mapsMaterials_loading">Loading {DONE}/{TOTAL} materials…</string>
     <string name="mapsMaterials_failedMaterials">Invalid materials</string>
-    <string name="mapsMaterials_failedMaterials_description">%n materials failed to load. This might cause errors when loading the map in LAC, remove them to avoid errors</string>
+    <string name="mapsMaterials_failedMaterials_description">%n materials failed to load</string>
     <string name="mapsMaterials_unusedMaterials">Unused materials</string>
     <string name="mapsMaterials_unusedMaterials_description">%n materials are unused and can be removed</string>
     <string name="mapsMaterials_clickToViewMore">Click to view more</string>
     <string name="mapsMaterials_usedCount">Used by %n objects</string>
+    <string name="mapsMaterials_local">Local file</string>
+    <string name="mapsMaterials_failed">Failed to load</string>
     <string name="mapsMaterials_unused">Unused, can safely be deleted</string>
-    <string name="mapsMaterials_failed">Failed to load, delete to avoid errors</string>
     <string name="mapsMaterials_material_copyUrl">Copy material URL</string>
     <string name="mapsMaterials_material_delete">Delete material</string>
     <string name="mapsMaterials_material_delete_description">Material will be removed from %n objects after deleted</string>
     <string name="mapsMaterials_deleted">Deleted \"{MATERIAL}\" and removed it from {REPLACEDCOUNT} objects</string>
+
     <string name="mapsMerge">Merge maps</string>
     <string name="mapsMerge_addMap">Add maps</string>
     <string name="mapsMerge_clearMaps">Clear maps</string>
@@ -245,6 +257,7 @@
     <string name="mapsMerge_pickName">Pick name for new map</string>
     <string name="mapsMerge_notEnoughMaps">No maps to merge</string>
     <string name="mapsMerge_merged">Merged maps in {MAP} map</string>
+
     <string name="wallpapers">Wallpapers</string>
     <string name="wallpapers_permissions">LAC wallpapers folder</string>
     <string name="wallpapers_permissions_description">You need to choose the folder where your LAC wallpapers are stored</string>
@@ -266,6 +279,7 @@
     <string name="wallpapers_copied_description">You can paste the copied URL to the in-game cellphone settings to use this wallpaper</string>
     <string name="wallpapers_deleting">Deleting wallpaper…</string>
     <string name="wallpapers_deleted">Deleted the wallpaper</string>
+
     <string name="screenshots">Screenshots</string>
     <string name="screenshots_permissions">LAC screenshots folder</string>
     <string name="screenshots_permissions_description">You need to choose the folder where your LAC screenshots are stored</string>
@@ -274,6 +288,7 @@
     <string name="screenshots_clickHint">Click screenshots to view more actions</string>
     <string name="screenshots_deleting">Deleting screenshot…</string>
     <string name="screenshots_deleted">Deleted the screenshot</string>
+
     <string name="settings">Settings</string>
     <string name="settings_category_game">LAC</string>
     <string name="settings_category_app">App</string>
@@ -370,10 +385,12 @@
     <string name="settings_experimental">Experimental settings</string>
     <string name="settings_experimental_enabled">Experimental settings enabled!</string>
     <string name="settings_experimental_description">Not intended for normal usage, might break the app when misused</string>
+
     <string name="mediaOverlay_guide">Help</string>
     <string name="mediaOverlay_guide_toggleOverlay">Tap to view the image fully, tap again to show the options</string>
     <string name="mediaOverlay_guide_toggleZoom">Rapidly tap twice to toggle zoom</string>
     <string name="mediaOverlay_guide_zoom">Pinch fingers to zoom-in and zoom-out, drag fingers to move</string>
+
     <string name="updates">Updates</string>
     <string name="updates_changelog">Changelog</string>
     <string name="updates_noChangelog">Updates must be checked in order to fetch the changelog</string>
@@ -385,6 +402,7 @@
     <string name="updates_update">Update</string>
     <string name="updates_updateAvailable">LAC Tool update available! Click for more details</string>
     <string name="updates_error">Something went wrong while checking for updates</string>
+
     <string name="crashHandler_title">Oops!</string>
     <string name="crashHandler_description">LAC Tool encountered an unexpected error and crashed</string>
     <string name="crashHandler_report">Please click the button below to send crash report to LAC Tool developer, this requires no additional steps</string>

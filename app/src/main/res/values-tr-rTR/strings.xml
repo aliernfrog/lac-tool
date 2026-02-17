@@ -207,16 +207,13 @@
     <string name="mapsMaterials">Materyaller</string>
     <string name="mapsMaterials_description">Şu anda %n materyal var</string>
     <string name="mapsMaterials_noConnection">Bağlantı yok</string>
-    <string name="mapsMaterials_noConnection_description">İnternete bağlı değilsiniz, aslında geçerli olan materyaller geçersiz olarak işaretlenebilir.</string>
     <string name="mapsMaterials_loading">{DONE}/{TOTAL} materyal yükleniyor…</string>
     <string name="mapsMaterials_failedMaterials">Geçersiz materyaller</string>
-    <string name="mapsMaterials_failedMaterials_description">%n materyal yüklenmedi ve haritayı açarken hatalara sebep olabilir, bundan kaçınmak için bu materyalleri kaldırın</string>
     <string name="mapsMaterials_unusedMaterials">Kullanılmayan materyaller</string>
     <string name="mapsMaterials_unusedMaterials_description">%n materyal kullanılmıyor ve kaldırılabilir</string>
     <string name="mapsMaterials_clickToViewMore">Daha fazlasını görmek için tıklayın</string>
     <string name="mapsMaterials_usedCount">%n obje tarafından kullanılıyor</string>
     <string name="mapsMaterials_unused">Kullanılmıyor, güvenle silinebilir</string>
-    <string name="mapsMaterials_failed">Yüklenemedi, hataları önlemek için silin</string>
     <string name="mapsMaterials_material_copyUrl">Materyal URL\'sini kopyala</string>
     <string name="mapsMaterials_material_delete">Materyali sil</string>
     <string name="mapsMaterials_material_delete_description">Silindiğinde %n objeden kaldırılacak</string>

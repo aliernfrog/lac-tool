@@ -163,9 +163,7 @@
     <string name="mapsMaterials">材质</string>
     <string name="mapsMaterials_description">目前有 %n 个材质</string>
     <string name="mapsMaterials_noConnection">无网络连接</string>
-    <string name="mapsMaterials_noConnection_description">您未连接到互联网，有效的材料可能会被标记为无效。</string>
     <string name="mapsMaterials_failedMaterials">材料无效</string>
-    <string name="mapsMaterials_failedMaterials_description">%n 个材料加载失败。这可能会导致在 LAC 中加载地图时出错，请删除它们以避免错误</string>
     <string name="mapsMaterials_unusedMaterials">未使用的材料</string>
     <string name="mapsMaterials_unusedMaterials_description">%n 个材料未使用，可以删除</string>
     <string name="mapsMaterials_clickToViewMore">点击查看更多</string>
