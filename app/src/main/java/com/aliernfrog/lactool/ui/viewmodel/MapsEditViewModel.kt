@@ -1,15 +1,12 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CloudOff
-import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Error
@@ -24,15 +21,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.imageLoader
@@ -47,6 +39,7 @@ import com.aliernfrog.lactool.data.maps.MapMaterialData
 import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
+import com.aliernfrog.lactool.ui.component.widget.media_overlay.maps.MapMaterialSheetContent
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import com.aliernfrog.lactool.util.extension.writeFile
@@ -58,10 +51,6 @@ import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.shared.data.MediaOverlayData
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
-import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
-import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -71,7 +60,7 @@ class MapsEditViewModel(
     val map: MapFile,
     val onNavigateBackRequest: () -> Unit,
     val prefs: PreferenceManager,
-    private val appState: AppState,
+    val appState: AppState,
     private val progressState: ProgressState,
     val topToastState: TopToastState,
     context: Context
@@ -186,7 +175,7 @@ class MapsEditViewModel(
         }
     }
 
-    private fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
+    fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor!!.removeDownloadableMaterial(material.url) ?: 0
         loadedMaterials.removeIf { (it, _) ->
             it == material
@@ -231,57 +220,10 @@ class MapsEditViewModel(
                 )
             },
             optionsSheetContent = {
-                val context = LocalContext.current
-                val clipboard = LocalClipboard.current
-                val scope = rememberCoroutineScope()
-
-                val unused = material.usedBy.isEmpty()
-                var showDeleteDialog by remember { mutableStateOf(false) }
-
-                VerticalSegmentor(
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.mapsMaterials_material_copyUrl),
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                                )
-                            }
-                        ) { scope.launch {
-                            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
-                                null, material.url
-                            )))
-                            topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-                        } }
-                    },
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.mapsMaterials_material_delete),
-                            description = if (unused) stringResource(R.string.mapsMaterials_unused)
-                            else stringResource(R.string.mapsMaterials_material_delete_description)
-                                .replace("%n", material.usedBy.size.toString()),
-                            contentColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                                    containerColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                                )
-                            }
-                        ) {
-                            showDeleteDialog = true
-                        }
-                    },
-                    modifier = Modifier.padding(horizontal = 12.dp)
+                MapMaterialSheetContent(
+                    vm = this@MapsEditViewModel,
+                    materialData = materialData
                 )
-
-                if (showDeleteDialog) DeleteConfirmationDialog(
-                    name = material.name,
-                    onDismissRequest = { showDeleteDialog = false }
-                ) {
-                    deleteDownloadableMaterial(material, context)
-                    showDeleteDialog = false
-                    appState.mediaOverlayData = null
-                }
             }
         )
     }
