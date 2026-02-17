@@ -23,7 +23,7 @@ laclib = "1.2.2"
 markdown = "0.5.8"
 pftool-shared = "db728bf943"
 shizuku = "13.1.5"
-toptoast = "2.1.0"
+toptoast = "2.2.0-alpha02"
 zoomable = "2.9.0"
 
 [libraries]
