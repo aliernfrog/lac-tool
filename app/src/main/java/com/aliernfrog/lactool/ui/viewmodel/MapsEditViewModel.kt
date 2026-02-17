@@ -178,7 +178,7 @@ class MapsEditViewModel(
     fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
         val removedObjects = mapEditor!!.removeDownloadableMaterial(material.url) ?: 0
         loadedMaterials.removeIf {
-            it == material
+            it.material == material
         }
         topToastState.showToast(
             text = context.getString(R.string.mapsMaterials_deleted)
