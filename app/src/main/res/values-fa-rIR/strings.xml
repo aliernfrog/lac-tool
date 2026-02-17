@@ -103,8 +103,8 @@
     <string name="maps_edit">ادیت/ویرایش این مپ</string>
     <string name="maps_edit_description">ادیت کردن تنظیمات و رول های این مپ</string>
     <string name="mapsEdit_opening">باز کردن {NAME}</string>
-    <string name="maps_edit_saving">سیو کردن {NAME}</string>
-    <string name="maps_edit_saved">تغییرات در {NAME} ذخیره شد</string>
+    <string name="mapsEdit_saving">سیو کردن {NAME}</string>
+    <string name="mapsEdit_saved">تغییرات در {NAME} ذخیره شد</string>
     <string name="maps_merge">این مپ را ادغام کنید</string>
     <string name="maps_merge_short">ادغام</string>
     <string name="maps_delete">پاک کردن این مپ</string>

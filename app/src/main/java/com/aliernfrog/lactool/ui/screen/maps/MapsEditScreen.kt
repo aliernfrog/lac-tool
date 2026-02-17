@@ -286,24 +286,54 @@ private fun OptionsActions(
 ) {
     val optionsComponents: List<@Composable () -> Unit> = mapEditor.mapOptions.map { option -> {
         when (option.type) {
-            LACMapOptionType.NUMBER -> TextField(
-                value = option.value,
-                onValueChange = {
-                    option.value = it
-                    mapEditor.pushMapOptionsState()
-                },
-                label = {
-                    Text(option.label)
-                },
-                isError = option.value.toIntOrNull() == null,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    autoCorrectEnabled = null
-                ),
-                colors = getTextFieldColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
+            LACMapOptionType.NUMBER -> {
+                val isError = option.value.toIntOrNull() == null
+                TextField(
+                    value = option.value,
+                    onValueChange = {
+                        option.value = it
+                        mapEditor.pushMapOptionsState()
+                    },
+                    label = {
+                        Text(option.label)
+                    },
+                    supportingText = if (isError) { {
+                        Text(stringResource(R.string.mapsEdit_options_mustBeNumber))
+                    } } else null,
+                    isError = isError,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        autoCorrectEnabled = null
+                    ),
+                    colors = getTextFieldColors(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            LACMapOptionType.FLOAT -> {
+                val isError = option.value.toFloatOrNull() == null
+                TextField(
+                    value = option.value,
+                    onValueChange = {
+                        option.value = it
+                        mapEditor.pushMapOptionsState()
+                    },
+                    label = {
+                        Text(option.label)
+                    },
+                    supportingText = if (isError) { {
+                        Text(stringResource(R.string.mapsEdit_options_mustBeDecimal))
+                    } } else null,
+                    isError = isError,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Decimal,
+                        autoCorrectEnabled = null
+                    ),
+                    colors = getTextFieldColors(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             LACMapOptionType.BOOLEAN -> ExpressiveSwitchRow(
                 title = option.label,
                 checked = option.value == "true",

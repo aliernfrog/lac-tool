@@ -95,8 +95,8 @@
     <string name="maps_edit">编辑此地图</string>
     <string name="maps_edit_description">编辑此地图的选项和角色</string>
     <string name="mapsEdit_opening">正在打开 {NAME}</string>
-    <string name="maps_edit_saving">正在保存 {NAME}</string>
-    <string name="maps_edit_saved">已保存对 {NAME} 的更改</string>
+    <string name="mapsEdit_saving">正在保存 {NAME}</string>
+    <string name="mapsEdit_saved">已保存对 {NAME} 的更改</string>
     <string name="maps_merge">合并此地图</string>
     <string name="maps_merge_short">合并</string>
     <string name="maps_delete">删除此地图</string>

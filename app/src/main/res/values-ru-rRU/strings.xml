@@ -121,8 +121,8 @@
     <string name="maps_edit">Редактировать карту</string>
     <string name="maps_edit_description">Редактировать параметры и роли карты</string>
     <string name="mapsEdit_opening">Открытие {NAME}</string>
-    <string name="maps_edit_saving">Сохранение {NAME}</string>
-    <string name="maps_edit_saved">Изменения сохранены в {NAME}</string>
+    <string name="mapsEdit_saving">Сохранение {NAME}</string>
+    <string name="mapsEdit_saved">Изменения сохранены в {NAME}</string>
     <string name="maps_merge">Объединить карту</string>
     <string name="maps_merge_short">Объединить</string>
     <string name="maps_delete">Удалить карту</string>

@@ -31,6 +31,7 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
+import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
@@ -51,6 +52,7 @@ import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.shared.data.MediaOverlayData
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
+import io.github.aliernfrog.shared.util.extension.showErrorToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -253,14 +255,30 @@ class MapsEditViewModel(
     suspend fun saveAndFinishEditing(context: Context) {
         val mapName = map.file.nameWithoutExtension
         progressState.currentProgress = Progress(
-            context.getString(R.string.maps_edit_saving).replace("{NAME}", mapName)
+            context.getString(R.string.mapsEdit_saving).replace("{NAME}", mapName)
         )
+        mapEditor!!.mapOptions.forEach { option ->
+            val value = option.value
+            val nullable = when (option.type) {
+                LACMapOptionType.NUMBER -> value.toIntOrNull()
+                LACMapOptionType.FLOAT -> value.toFloatOrNull()
+                else -> true // Other options do not have text inputs
+            }
+            if (nullable == null) {
+                progressState.currentProgress = null
+                topToastState.showErrorToast(
+                    text = context.getString(R.string.mapsEdit_invalidOption)
+                        .replace("{NAME}", option.label)
+                )
+                return
+            }
+        }
         withContext(Dispatchers.IO) {
             try {
                 val newContent = mapEditor!!.editor.applyChanges()
                 map.file.writeFile(newContent, context)
                 topToastState.showToast(
-                    text = context.getString(R.string.maps_edit_saved).replace("{NAME}", mapName),
+                    text = context.getString(R.string.mapsEdit_saved).replace("{NAME}", mapName),
                     icon = Icons.Rounded.Save
                 )
             } catch (e: Exception) {

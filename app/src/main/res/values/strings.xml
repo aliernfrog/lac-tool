@@ -140,8 +140,6 @@
     <string name="maps_share_short">Share</string>
     <string name="maps_edit">Edit this map</string>
     <string name="maps_edit_description">Edit options and roles of this map</string>
-    <string name="maps_edit_saving">Saving {NAME}…</string>
-    <string name="maps_edit_saved">Saved changes to {NAME}</string>
     <string name="maps_merge">Merge this map</string>
     <string name="maps_merge_short">Merge</string>
     <string name="maps_delete">Delete this map</string>
@@ -180,6 +178,8 @@
     <string name="mapsEdit_mapType_4">Desert</string>
     <string name="mapsEdit_mapType_5">Water</string>
     <string name="mapsEdit_options">Options</string>
+    <string name="mapsEdit_options_mustBeNumber">Must be a whole number</string>
+    <string name="mapsEdit_options_mustBeDecimal">Must be a decimal number</string>
     <string name="mapsEdit_misc">Miscellaneous</string>
     <string name="mapsEdit_misc_replaceOldObjects">Replace old objects</string>
     <string name="mapsEdit_misc_replaceOldObjects_description">Replaces old objects which no longer exist, such as red sofa</string>
@@ -197,6 +197,9 @@
     <string name="mapsEdit_saveWarning_description">You have unsaved changes, are you sure you want to quit?</string>
     <string name="mapsEdit_saveWarning_keepEditing">Keep editing</string>
     <string name="mapsEdit_saveWarning_discardChanges">Quit</string>
+    <string name="mapsEdit_invalidOption">Invalid value passed to option \'{NAME}\'</string>
+    <string name="mapsEdit_saving">Saving {NAME}…</string>
+    <string name="mapsEdit_saved">Saved changes to {NAME}</string>
 
     <string name="mapsRoles">Edit roles</string>
     <string name="mapsRoles_description">Currently has {COUNT} roles</string>

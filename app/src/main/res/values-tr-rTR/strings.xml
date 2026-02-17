@@ -134,8 +134,8 @@
     <string name="maps_edit">Bu haritayı düzenle</string>
     <string name="maps_edit_description">Haritanın ayarlarını ve rollerini düzenleyin</string>
     <string name="mapsEdit_opening">{NAME} açılıyor…</string>
-    <string name="maps_edit_saving">{NAME} kaydediliyor…</string>
-    <string name="maps_edit_saved">{NAME} kaydedildi</string>
+    <string name="mapsEdit_saving">{NAME} kaydediliyor…</string>
+    <string name="mapsEdit_saved">{NAME} kaydedildi</string>
     <string name="maps_merge">Bu haritayı birleştir</string>
     <string name="maps_merge_short">Birleştir</string>
     <string name="maps_delete">Bu haritayı sil</string>
