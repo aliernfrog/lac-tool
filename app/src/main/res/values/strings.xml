@@ -218,7 +218,7 @@
     <string name="mapsMaterials">Materials</string>
     <string name="mapsMaterials_description">Currently has %n materials</string>
     <string name="mapsMaterials_noConnection">No internet connection</string>
-    <string name="mapsMaterials_noConnection_description">The app is unable to validate materials as you are not connected to the internet</string>
+    <string name="mapsMaterials_noConnection_description">Materials may not load as you are not connected to the internet</string>
     <string name="mapsMaterials_loading">Loading {DONE}/{TOTAL} materials…</string>
     <string name="mapsMaterials_failedMaterials">Invalid materials</string>
     <string name="mapsMaterials_failedMaterials_description">%n materials failed to load</string>
