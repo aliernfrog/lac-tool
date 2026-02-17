@@ -191,16 +191,13 @@
     <string name="mapsMaterials">Материалы</string>
     <string name="mapsMaterials_description">Сейчас используется %n материалов</string>
     <string name="mapsMaterials_noConnection">Нет соединения</string>
-    <string name="mapsMaterials_noConnection_description">Вы не подключены к Интернету, и действительные материалы могут быть помечены как недействительные.</string>
     <string name="mapsMaterials_loading">Загружено {DONE} из {TOTAL} материалов…</string>
     <string name="mapsMaterials_failedMaterials">Недействительные материалы</string>
-    <string name="mapsMaterials_failedMaterials_description">Не удалось загрузить %n материалов. Это может вызвать ошибки при загрузке карты в LAC, удалите их, чтобы избежать ошибок</string>
     <string name="mapsMaterials_unusedMaterials">Неиспользованные материалы</string>
     <string name="mapsMaterials_unusedMaterials_description">%n материалов не используются и могут быть удалены</string>
     <string name="mapsMaterials_clickToViewMore">Нажмите, чтобы посмотреть больше</string>
     <string name="mapsMaterials_usedCount">Используется для %n объектов</string>
     <string name="mapsMaterials_unused">Не используется, можно смело удалять</string>
-    <string name="mapsMaterials_failed">Не удалось загрузить, удалите, чтобы избежать ошибок</string>
     <string name="mapsMaterials_material_copyUrl">Скопировать URL-адрес материала</string>
     <string name="mapsMaterials_material_delete">Удалить материал</string>
     <string name="mapsMaterials_material_delete_description">Материал будет удален для %n объектов после удаления</string>

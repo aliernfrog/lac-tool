@@ -171,9 +171,7 @@
     <string name="mapsMaterials">مواد و منابع</string>
     <string name="mapsMaterials_description">در حال حاضر %n مواد دارد</string>
     <string name="mapsMaterials_noConnection">اتصال برقرار نیست</string>
-    <string name="mapsMaterials_noConnection_description">شما به اینترنت متصل نیستید و ممکن است مطالب معتبر به عنوان نامعتبر علامت‌گذاری شوند</string>
     <string name="mapsMaterials_failedMaterials">مواد نامعتبر</string>
-    <string name="mapsMaterials_failedMaterials_description">%n ماده بارگیری نشد. این ممکن است هنگام بارگیری نقشه در LAC باعث خطا شود، آنها را حذف کنید تا از خطا جلوگیری کنید</string>
     <string name="mapsMaterials_unusedMaterials">مواد استفاده نشده</string>
     <string name="mapsMaterials_unusedMaterials_description">%n ماده استفاده نشده است و قابل حذف است</string>
     <string name="mapsMaterials_clickToViewMore">برای مشاهده ادامه مطلب کلیک کنید</string>
