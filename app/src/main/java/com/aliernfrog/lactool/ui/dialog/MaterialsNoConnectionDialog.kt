@@ -29,6 +29,7 @@ fun MaterialsNoConnectionDialog() {
     var shown by remember {
         mutableStateOf(!GeneralUtil.isConnectedToInternet(context))
     }
+
     if (shown) AlertDialog(
         onDismissRequest = { shown = false },
         icon = {

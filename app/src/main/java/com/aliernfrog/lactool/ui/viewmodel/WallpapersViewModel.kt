@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.ui.component.widget.media_overlay.wallpapers.ImportWallpaperSheetContent
 import com.aliernfrog.lactool.ui.component.widget.media_overlay.wallpapers.WallpaperToolbarContent
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -33,7 +34,6 @@ import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.pftool_shared.repository.FileRepository
 import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
 import io.github.aliernfrog.shared.data.MediaOverlayData
-import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.ContextUtils
 import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
 
@@ -41,8 +41,9 @@ import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
 @OptIn(ExperimentalMaterial3Api::class)
 class WallpapersViewModel(
     val prefs: PreferenceManager,
-    val topToastState: TopToastState,
+    private val appState: AppState,
     private val progressState: ProgressState,
+    val topToastState: TopToastState,
     private val contextUtils: ContextUtils,
     private val fileRepository: FileRepository,
     context: Context
@@ -66,32 +67,29 @@ class WallpapersViewModel(
         }
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    suspend fun onWallpaperPick(uri: Uri, context: Context) {
-        // TODO remove MainViewModel dependency
-        val mainViewModel = getKoinInstance<MainViewModel>()
-        withContext(Dispatchers.IO) {
-            val file = PFToolSharedUtil.cacheFile(
-                uri = uri,
-                parentName = "wallpapers",
-                context = context
-            )?.let { FileWrapper(it) }
-            if (file == null) {
-                topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
-                return@withContext
-            }
-            mainViewModel.showMediaOverlay(MediaOverlayData(
-                model = file.painterModel,
-                title = context.getString(R.string.wallpapers_chosen),
-                optionsSheetContent = {
-                    ImportWallpaperSheetContent(
-                        file = file,
-                        onDismissMediaOverlayRequest = {
-                            mainViewModel.dismissMediaOverlay()
-                        }
-                    )
-                }
-            ))
+    fun onWallpaperPick(uri: Uri, context: Context) = viewModelScope.launch(Dispatchers.IO) {
+        val file = PFToolSharedUtil.cacheFile(
+            uri = uri,
+            parentName = "wallpapers",
+            context = context
+        )?.let { FileWrapper(it) }
+        if (file == null) {
+            topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
+            return@launch
         }
+        appState.mediaOverlayData = MediaOverlayData(
+            model = file.painterModel,
+            title = context.getString(R.string.wallpapers_chosen),
+            optionsSheetContent = {
+                ImportWallpaperSheetContent(
+                    file = file,
+                    vm = this@WallpapersViewModel,
+                    onDismissMediaOverlayRequest = {
+                        appState.mediaOverlayData = null
+                    }
+                )
+            }
+        )
     }
 
     suspend fun importWallpaper(
@@ -159,19 +157,18 @@ class WallpapersViewModel(
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openWallpaperOptions(wallpaper: FileWrapper) {
-        // TODO remove MainViewModel dependency
-        val mainViewModel = getKoinInstance<MainViewModel>()
-        mainViewModel.showMediaOverlay(MediaOverlayData(
+        appState.mediaOverlayData = MediaOverlayData(
             model = wallpaper.painterModel,
             title = wallpaper.name,
             toolbarContent = {
                 WallpaperToolbarContent(
                     wallpaper = wallpaper,
+                    vm = this@WallpapersViewModel,
                     onDismissMediaOverlayRequest = {
-                        mainViewModel.dismissMediaOverlay()
+                        appState.mediaOverlayData = null
                     }
                 )
             }
-        ))
+        )
     }
 }

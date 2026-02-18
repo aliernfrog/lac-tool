@@ -57,12 +57,11 @@ import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenshotsScreen(
-    vm: ScreenshotsViewModel = koinViewModel(),
+    vm: ScreenshotsViewModel,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -130,6 +129,7 @@ fun ScreenshotsScreen(
                 ) {
                     item {
                         Header(
+                            vm = vm,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                     }
@@ -155,6 +155,7 @@ fun ScreenshotsScreen(
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Header(
+                            vm = vm,
                             modifier = Modifier.padding(horizontal = 2.dp)
                         )
                     }
@@ -183,18 +184,18 @@ fun ScreenshotsScreen(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun Header(
-    screenshotsViewModel: ScreenshotsViewModel = koinViewModel(),
+    vm: ScreenshotsViewModel,
     modifier: Modifier
 ) {
     val scope = rememberCoroutineScope()
     Column(modifier) {
         ErrorWithIcon(
-            error = stringResource(R.string.screenshots_noScreenshots),
-            painter = rememberVectorPainter(Icons.Rounded.NoPhotography),
-            visible = screenshotsViewModel.screenshotsToShow.isEmpty(),
+            description = stringResource(R.string.screenshots_noScreenshots),
+            icon = rememberVectorPainter(Icons.Rounded.NoPhotography),
+            visible = vm.screenshotsToShow.isEmpty(),
             modifier = Modifier.fillMaxWidth()
         )
-        FadeVisibility(screenshotsViewModel.screenshotsToShow.isNotEmpty()) {
+        FadeVisibility(vm.screenshotsToShow.isNotEmpty()) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -211,7 +212,7 @@ private fun Header(
                         icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Sort),
                         contentDescription = stringResource(R.string.list_options),
                         onClick = { scope.launch {
-                            screenshotsViewModel.listViewOptionsSheetState.show()
+                            vm.listViewOptionsSheetState.show()
                         } }
                     )
                 }

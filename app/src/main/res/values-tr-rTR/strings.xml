@@ -20,6 +20,7 @@
     <string name="intent_downloadMap">Harita indir</string>
     <string name="warning">Uyarı</string>
     <string name="warning_error">Bir şeyler ters gitti</string>
+    <string name="warning_error_tapToReport">Bir şeyler ters gitti! Hatayı raporlamak ve detayları görmek için buraya dokunun</string>
     <string name="warning_pickFile_failed">Dosya seçilemedi</string>
     <string name="info">Bilgi</string>
     <string name="info_reminder">Hatırlatma</string>
@@ -107,7 +108,8 @@
     <string name="maps_thumbnail">Harita resmi</string>
     <string name="maps_thumbnail_noThumbnail">Resim yok</string>
     <string name="maps_thumbnail_set">Resim seç</string>
-    <string name="maps_thumbnail_set_overrides">Bu mevcut resmin üzerine yazacaktır, yedeklediğinizden emin olun</string>
+    <string name="maps_thumbnail_set_backupReminder_description">Bu mevcut resmin üzerine yazacaktır, yedeklediğinizden emin olun</string>
+    <string name="maps_thumbnail_set_backupReminder_doNotShowAgain">Bu hatırlatmayı bir daha gösterme</string>
     <string name="maps_thumbnail_set_done">Harita resmi ayarlandı</string>
     <string name="maps_thumbnail_setting">Harita resmi ayarlanıyor…</string>
     <string name="maps_thumbnail_deleted">Harita resmi silindi</string>
@@ -133,9 +135,6 @@
     <string name="maps_share_short">Paylaş</string>
     <string name="maps_edit">Bu haritayı düzenle</string>
     <string name="maps_edit_description">Haritanın ayarlarını ve rollerini düzenleyin</string>
-    <string name="maps_edit_opening">{NAME} açılıyor…</string>
-    <string name="maps_edit_saving">{NAME} kaydediliyor…</string>
-    <string name="maps_edit_saved">{NAME} kaydedildi</string>
     <string name="maps_merge">Bu haritayı birleştir</string>
     <string name="maps_merge_short">Birleştir</string>
     <string name="maps_delete">Bu haritayı sil</string>
@@ -160,6 +159,7 @@
     <string name="mapsList_shared_noMaps">LAC Tool ile herhangi bir harita paylaşmadınız</string>
     <string name="mapsList_searchNoMatches">Eşleşen harita bulunamadı</string>
     <string name="mapsEdit">Haritayı düzenle</string>
+    <string name="mapsEdit_opening">{NAME} açılıyor…</string>
     <string name="mapsEdit_save">Kaydet</string>
     <string name="mapsEdit_general">Genel</string>
     <string name="mapsEdit_serverName">Sunucu adı</string>
@@ -171,6 +171,8 @@
     <string name="mapsEdit_mapType_4">Çöl</string>
     <string name="mapsEdit_mapType_5">Su</string>
     <string name="mapsEdit_options">Ayarlar</string>
+    <string name="mapsEdit_options_mustBeNumber">Tam bir sayı olmalıdır</string>
+    <string name="mapsEdit_options_mustBeDecimal">Ondalık bir sayı olmalıdır</string>
     <string name="mapsEdit_misc">Çeşitli</string>
     <string name="mapsEdit_misc_replaceOldObjects">Eski objeleri değiştir</string>
     <string name="mapsEdit_misc_replaceOldObjects_description">Kırmızı kanepe (red sofa) gibi artık oyunda olmayan objeleri yenileriyle değiştirir</string>
@@ -188,6 +190,9 @@
     <string name="mapsEdit_saveWarning_description">Kaydedilmemiş değişikler var, çıkmak istediğinizden emin misiniz?</string>
     <string name="mapsEdit_saveWarning_keepEditing">Düzenlemeyi sürdür</string>
     <string name="mapsEdit_saveWarning_discardChanges">Çık</string>
+    <string name="mapsEdit_invalidOption">\'{NAME}\' seçeneğine geçersiz değer girildi</string>
+    <string name="mapsEdit_saving">{NAME} kaydediliyor…</string>
+    <string name="mapsEdit_saved">{NAME} kaydedildi</string>
     <string name="mapsRoles">Rolleri düzenle</string>
     <string name="mapsRoles_description">Şu anda {COUNT} rol var</string>
     <string name="mapsRoles_showingCount">{COUNT} rol gösteriliyor</string>
@@ -206,17 +211,18 @@
     <string name="mapsRoles_illegalChars">Rol adı \"{CHAR}\" içeremez</string>
     <string name="mapsMaterials">Materyaller</string>
     <string name="mapsMaterials_description">Şu anda %n materyal var</string>
-    <string name="mapsMaterials_noConnection">Bağlantı yok</string>
-    <string name="mapsMaterials_noConnection_description">İnternete bağlı değilsiniz, aslında geçerli olan materyaller geçersiz olarak işaretlenebilir.</string>
+    <string name="mapsMaterials_noConnection">İnternet bağlantısı yok</string>
+    <string name="mapsMaterials_noConnection_description">İnternete bağlı olmadığınız için materyaller yüklenmeyebilir</string>
     <string name="mapsMaterials_loading">{DONE}/{TOTAL} materyal yükleniyor…</string>
     <string name="mapsMaterials_failedMaterials">Geçersiz materyaller</string>
-    <string name="mapsMaterials_failedMaterials_description">%n materyal yüklenmedi ve haritayı açarken hatalara sebep olabilir, bundan kaçınmak için bu materyalleri kaldırın</string>
+    <string name="mapsMaterials_failedMaterials_description">%n materyal yüklenemedi</string>
     <string name="mapsMaterials_unusedMaterials">Kullanılmayan materyaller</string>
     <string name="mapsMaterials_unusedMaterials_description">%n materyal kullanılmıyor ve kaldırılabilir</string>
     <string name="mapsMaterials_clickToViewMore">Daha fazlasını görmek için tıklayın</string>
     <string name="mapsMaterials_usedCount">%n obje tarafından kullanılıyor</string>
+    <string name="mapsMaterials_local">Yerel dosya</string>
+    <string name="mapsMaterials_failed">Yüklenemedi</string>
     <string name="mapsMaterials_unused">Kullanılmıyor, güvenle silinebilir</string>
-    <string name="mapsMaterials_failed">Yüklenemedi, hataları önlemek için silin</string>
     <string name="mapsMaterials_material_copyUrl">Materyal URL\'sini kopyala</string>
     <string name="mapsMaterials_material_delete">Materyali sil</string>
     <string name="mapsMaterials_material_delete_description">Silindiğinde %n objeden kaldırılacak</string>

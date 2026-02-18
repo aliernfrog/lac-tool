@@ -58,12 +58,16 @@ enum class MainDestination(
     )
 }
 
-// TODO pass data as NavEntry type instead of this
-enum class SubDestination {
-    MAPS_EDIT,
-    MAPS_ROLES,
-    MAPS_MATERIALS,
-    MAPS_MERGE
+sealed class SubDestination {
+    sealed class MapsEdit : SubDestination() {
+        data class Root(val map: MapFile) : MapsEdit()
+
+        data class Roles(val vmKey: String) : MapsEdit()
+
+        data class Materials(val vmKey: String) : MapsEdit()
+    }
+
+    data class MapsMerge(val maps: List<MapFile>) : SubDestination()
 }
 
 object UpdateScreenDestination

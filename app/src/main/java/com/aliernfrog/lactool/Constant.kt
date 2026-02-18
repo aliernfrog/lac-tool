@@ -9,7 +9,22 @@ import io.github.aliernfrog.shared.impl.CreditData
 const val TAG = "LACToolLogs"
 const val githubRepoURL = "https://github.com/aliernfrog/lac-tool"
 const val crowdinURL = "https://crowdin.com/project/lac-tool"
+
+/**
+ * Link to a releases JSON file.
+ * Should return a JSON array of [io.github.aliernfrog.shared.data.ReleaseInfo].
+ *
+ * To automate generating such file, you can use the "/generate-releases-json.js"
+ * and "/.github/workflows/generate-releases-json.yml" files, which can be found in the source code of this project.
+ */
 const val defaultReleasesURL = "https://raw.githubusercontent.com/aliernfrog/lac-tool/refs/heads/main/releases.json"
+
+/**
+ * Link to a crash report handler API endpoint.
+ * Should listen for POST request with "app" and "details" strings in the JSON body.
+ *
+ * Example API source code: https://github.com/aliernfrog/proxy-api (forwards the report to a Discord webhook)
+ */
 const val crashReportURL = "https://aliernfrog.vercel.app/crash-report"
 
 object SettingsConstant {

@@ -47,6 +47,7 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
 
     // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true, experimental = true, includeInDebugInfo = false)
+    val showMapThumbnailBackupReminder = booleanPreference("showMapThumbnailBackupReminder", true, experimental = true, includeInDebugInfo = false)
     val showMediaOverlayGuide = booleanPreference("showMediaOverlayGuide", true, experimental = true, includeInDebugInfo = false)
 
     // Experimental (developer) options

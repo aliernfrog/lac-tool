@@ -1,152 +1,135 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.SdStorage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
+import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.map.LACMapEditor
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
+import com.aliernfrog.lactool.data.maps.MapMaterialData
+import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
-import com.aliernfrog.lactool.util.SubDestination
+import com.aliernfrog.lactool.ui.component.widget.media_overlay.maps.MapMaterialSheetContent
 import com.aliernfrog.lactool.util.extension.removeHtml
-import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import com.aliernfrog.lactool.util.extension.writeFile
 import com.aliernfrog.lactool.util.manager.PreferenceManager
+import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
-import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.shared.data.MediaOverlayData
-import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
-import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
-import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
-import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
+import io.github.aliernfrog.shared.util.extension.showErrorToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
+    val map: MapFile,
+    val onNavigateBackRequest: () -> Unit,
     val prefs: PreferenceManager,
-    val topToastState: TopToastState,
+    val appState: AppState,
     private val progressState: ProgressState,
+    val topToastState: TopToastState,
     context: Context
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val scrollState = ScrollState(0)
-    val rolesTopAppBarState = TopAppBarState(0F, 0F, 0F)
-    val rolesLazyListState = LazyListState()
-    val materialsListOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
-
-    val addRoleSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
     var mapTypesExpanded by mutableStateOf(false)
     var objectFilterExpanded by mutableStateOf(false)
-    var pendingRoleDelete by mutableStateOf<String?>(null)
     var saveWarningShown by mutableStateOf(false)
 
-    private var mapFile: FileWrapper? = null
-
     var mapEditor by mutableStateOf<MapEditorState?>(null)
+
     var objectFilter by mutableStateOf(LACMapObjectFilter(), neverEqualPolicy())
-    var rolesExpandedRoleIndex by mutableIntStateOf(-1)
-    var failedMaterials = mutableStateListOf<LACMapDownloadableMaterial>()
-        private set
+    val loadedMaterials = mutableStateListOf<MapMaterialData>()
+
+    private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
     var materialsLoadProgress by mutableStateOf(Progress(
-        description = "",
+        description = materialsProgressText,
         totalProgress = 0,
         passedProgress = 0
     ))
         private set
 
-    private val materialsProgressText = context.getString(R.string.mapsMaterials_loading)
-    val materialsLoaded: Boolean
-        get() = materialsLoadProgress.float?.let { it >= 1f } ?: false
+    private var isLoadingMaterials = false
 
-    @SuppressLint("Recycle")
-    suspend fun openMap(map: MapFile, context: Context) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
-
-        mapFile = map.file
-        withContext(Dispatchers.IO) {
-            val inputStream = mapFile?.inputStream(context)
-            val content = inputStream?.bufferedReader()?.readText() ?: return@withContext inputStream?.close()
-            mapEditor = MapEditorState(LACMapEditor(
-                content = content,
-                onDebugLog = {
-                    if (prefs.debug.value) Log.d(TAG, "[laclib] $it")
-                }
-            ))
-            val materialsCount = (mapEditor?.downloadableMaterials?.size ?: 0).toLong()
-            materialsLoadProgress = Progress(
-                description = materialsProgressText
-                    .replace("{DONE}", "0")
-                    .replace("{TOTAL}", materialsCount.toString()),
-                totalProgress = (mapEditor?.downloadableMaterials?.size ?: 0).toLong(),
-                passedProgress = 0
-            )
-            inputStream.close()
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val inputStream = map.file.inputStream(context)!!
+                val content = inputStream.bufferedReader().readText()
+                mapEditor = MapEditorState(LACMapEditor(
+                    content = content,
+                    onDebugLog = { msg ->
+                        if (prefs.debug.value) Log.d(TAG, "[laclib] $msg")
+                    }
+                ))
+                inputStream.close()
+                val materialsCount = mapEditor!!.downloadableMaterials.size
+                materialsLoadProgress = Progress(
+                    description = materialsProgressText
+                        .replace("{DONE}", "0")
+                        .replace("{TOTAL}", materialsCount.toString()),
+                    totalProgress = materialsCount.toLong(),
+                    passedProgress = 0
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "MapsEditViewModel/init: Failed to open map" , e)
+                topToastState.showReportableErrorToast(e)
+            }
         }
-        mainViewModel.navigationBackStack.add(SubDestination.MAPS_EDIT)
     }
 
     fun setServerName(serverName: String) {
-        mapEditor?.serverName = serverName
+        mapEditor!!.serverName = serverName
     }
 
     fun setMapType(mapType: LACMapType) {
-        mapEditor?.mapType = mapType
+        mapEditor!!.mapType = mapType
     }
 
     fun deleteRole(role: String, context: Context) {
-        mapEditor?.deleteRole(role)
+        mapEditor!!.deleteRole(role)
         topToastState.showToast(context.getString(R.string.mapsRoles_deletedRole).replace("{ROLE}", role.removeHtml()), Icons.Rounded.Delete)
     }
 
     fun addRole(role: String, context: Context) {
-        mapEditor?.addRole(
+        mapEditor!!.addRole(
             role = role,
             onIllegalChar = {
                 topToastState.showToast(
@@ -160,22 +143,30 @@ class MapsEditViewModel(
         }
     }
 
-    suspend fun loadDownloadableMaterials(context: Context) {
-        if (materialsLoaded) return
-        val materials = mapEditor?.downloadableMaterials ?: return
+    fun loadDownloadableMaterials(context: Context) = viewModelScope.launch {
+        if (isLoadingMaterials || materialsLoadProgress.finished) return@launch
+        val materials = mapEditor!!.downloadableMaterials
         val totalCount = materials.size
         var passedCount = 0
+        isLoadingMaterials = true
         materials.forEach { material ->
+            var success = true
+            val isLocal = material.url.startsWith("file://", ignoreCase = true)
             val request = ImageRequest.Builder(context)
                 .data(material.url)
                 .listener(
                     onError = { _, _ ->
-                        failedMaterials.add(material)
+                        if (!isLocal) success = false
                     }
                 )
                 .build()
             context.imageLoader.execute(request)
             passedCount++
+            loadedMaterials.add(MapMaterialData(
+                material = material,
+                local = isLocal,
+                loadSuccess = success
+            ))
             materialsLoadProgress = Progress(
                 description = materialsProgressText
                     .replace("{DONE}", passedCount.toString())
@@ -186,9 +177,11 @@ class MapsEditViewModel(
         }
     }
 
-    private fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
-        val removedObjects = mapEditor?.removeDownloadableMaterial(material.url) ?: 0
-        failedMaterials.remove(material)
+    fun deleteDownloadableMaterial(material: LACMapDownloadableMaterial, context: Context) {
+        val removedObjects = mapEditor!!.removeDownloadableMaterial(material.url) ?: 0
+        loadedMaterials.removeIf {
+            it.material == material
+        }
         topToastState.showToast(
             text = context.getString(R.string.mapsMaterials_deleted)
                 .replace("{MATERIAL}", material.name)
@@ -197,78 +190,48 @@ class MapsEditViewModel(
         )
     }
 
-    fun openDownloadableMaterialOptions(material: LACMapDownloadableMaterial) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
-        val failed = failedMaterials.contains(material)
-        mainViewModel.showMediaOverlay(MediaOverlayData(
+    fun openDownloadableMaterialOptions(materialData: MapMaterialData) {
+        val material = materialData.material
+        val local = materialData.local
+        val failed = !materialData.loadSuccess
+        appState.mediaOverlayData = MediaOverlayData(
             model = material.url,
             title = material.name,
             zoomEnabled = !failed,
             errorContent = {
+                val context = LocalContext.current
+                val connectedToInternet = remember {
+                    GeneralUtil.isConnectedToInternet(context)
+                }
+
                 ErrorWithIcon(
-                    error = stringResource(R.string.mapsMaterials_failed),
-                    painter = rememberVectorPainter(Icons.Rounded.Error),
-                    contentColor = Color.Red
+                    description = stringResource(
+                        if (local) R.string.mapsMaterials_local
+                        else if (connectedToInternet) R.string.mapsMaterials_failed
+                        else R.string.mapsMaterials_noConnection
+                    ),
+                    icon = rememberVectorPainter(
+                        if (local) Icons.Rounded.SdStorage
+                        else if (connectedToInternet) Icons.Rounded.Error
+                        else Icons.Rounded.CloudOff
+                    ),
+                    contentColor = if (local) MaterialTheme.colorScheme.primaryContainer
+                    else MaterialTheme.colorScheme.errorContainer,
+                    iconContainerColor = if (local) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.error
                 )
             },
             optionsSheetContent = {
-                val context = LocalContext.current
-                val clipboard = LocalClipboard.current
-                val scope = rememberCoroutineScope()
-
-                val unused = material.usedBy.isEmpty()
-                var showDeleteDialog by remember { mutableStateOf(false) }
-
-                VerticalSegmentor(
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.mapsMaterials_material_copyUrl),
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.ContentCopy)
-                                )
-                            }
-                        ) { scope.launch {
-                            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
-                                null, material.url
-                            )))
-                            topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
-                        } }
-                    },
-                    {
-                        ExpressiveButtonRow(
-                            title = stringResource(R.string.mapsMaterials_material_delete),
-                            description = if (unused) stringResource(R.string.mapsMaterials_unused)
-                            else stringResource(R.string.mapsMaterials_material_delete_description)
-                                .replace("%n", material.usedBy.size.toString()),
-                            contentColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                            icon = {
-                                ExpressiveRowIcon(
-                                    painter = rememberVectorPainter(Icons.Rounded.Delete),
-                                    containerColor = if (unused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                                )
-                            }
-                        ) {
-                            showDeleteDialog = true
-                        }
-                    },
-                    modifier = Modifier.padding(horizontal = 12.dp)
+                MapMaterialSheetContent(
+                    vm = this@MapsEditViewModel,
+                    materialData = materialData
                 )
-
-                if (showDeleteDialog) DeleteConfirmationDialog(
-                    name = material.name,
-                    onDismissRequest = { showDeleteDialog = false }
-                ) {
-                    deleteDownloadableMaterial(material, context)
-                    showDeleteDialog = false
-                    mainViewModel.dismissMediaOverlay()
-                }
             }
-        ))
+        )
     }
 
     fun replaceOldObjects(context: Context) {
-        val replacedObjects = mapEditor?.replaceOldObjects() ?: 0
+        val replacedObjects = mapEditor!!.replaceOldObjects()
         topToastState.showToast(
             text = context.getString(R.string.mapsEdit_replacedOldObjects).replace("%n", replacedObjects.toString()),
             icon = Icons.Rounded.Done
@@ -276,11 +239,11 @@ class MapsEditViewModel(
     }
 
     fun getObjectFilterMatches(): List<String> {
-        return mapEditor?.editor?.getObjectsMatchingFilter(objectFilter) ?: listOf()
+        return mapEditor!!.editor.getObjectsMatchingFilter(objectFilter)
     }
 
     fun removeObjectFilterMatches(context: Context) {
-        val removedObjects = mapEditor?.editor?.removeObjectsMatchingFilter(objectFilter)
+        val removedObjects = mapEditor!!.editor.removeObjectsMatchingFilter(objectFilter)
         objectFilter = LACMapObjectFilter()
         topToastState.showToast(
             text = context.getString(R.string.mapsEdit_filterObjects_removedMatches).replace("%n", removedObjects.toString()),
@@ -289,37 +252,49 @@ class MapsEditViewModel(
     }
 
     @SuppressLint("Recycle")
-    suspend fun saveAndFinishEditing(onNavigateBackRequest: () -> Unit, context: Context) {
-        val mapName = mapFile?.nameWithoutExtension
+    suspend fun saveAndFinishEditing(context: Context) {
+        val mapName = map.file.nameWithoutExtension
         progressState.currentProgress = Progress(
-            context.getString(R.string.maps_edit_saving).replace("{NAME}", mapName.toString())
+            context.getString(R.string.mapsEdit_saving).replace("{NAME}", mapName)
         )
-        try { withContext(Dispatchers.IO) {
-            val newContent = mapEditor?.editor?.applyChanges() ?: return@withContext
-            mapFile!!.writeFile(newContent, context)
-            topToastState.showToast(
-                text = context.getString(R.string.maps_edit_saved).replace("{NAME}", mapName.toString()),
-                icon = Icons.Rounded.Save
-            )
-        } } catch (e: Exception) {
-            topToastState.showErrorToast()
-            Log.e(TAG, "saveAndFinishEditing: ", e)
+        mapEditor!!.mapOptions.forEach { option ->
+            val value = option.value
+            val nullable = when (option.type) {
+                LACMapOptionType.NUMBER -> value.toIntOrNull()
+                LACMapOptionType.FLOAT -> value.toFloatOrNull()
+                else -> true // Other options do not have text inputs
+            }
+            if (nullable == null) {
+                progressState.currentProgress = null
+                topToastState.showErrorToast(
+                    text = context.getString(R.string.mapsEdit_invalidOption)
+                        .replace("{NAME}", option.label)
+                )
+                return
+            }
         }
-        finishEditingWithoutSaving(onNavigateBackRequest)
+        withContext(Dispatchers.IO) {
+            try {
+                val newContent = mapEditor!!.editor.applyChanges()
+                map.file.writeFile(newContent, context)
+                topToastState.showToast(
+                    text = context.getString(R.string.mapsEdit_saved).replace("{NAME}", mapName),
+                    icon = Icons.Rounded.Save
+                )
+            } catch (e: Exception) {
+                topToastState.showReportableErrorToast(e)
+                Log.e(TAG, "saveAndFinishEditing: ", e)
+            }
+        }
+        onNavigateBackRequest()
         progressState.currentProgress = null
     }
 
-    suspend fun finishEditingWithoutSaving(onNavigateBackRequest: () -> Unit) {
+    fun finishEditingWithoutSaving() {
         onNavigateBackRequest()
-        mapEditor = null
-        objectFilter = LACMapObjectFilter()
-        mapFile = null
-        failedMaterials.clear()
-        scrollState.scrollTo(0)
     }
 
-    suspend fun onNavigationBack(onNavigateBackRequest: () -> Unit) {
-        if (mapEditor == null) finishEditingWithoutSaving(onNavigateBackRequest)
-        else saveWarningShown = true
+    fun showSaveWarning() {
+        saveWarningShown = true
     }
 }

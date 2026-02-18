@@ -57,6 +57,7 @@ fun MapsScreen(
         onNavigateRequest = onNavigateRequest
     ) {
         MapsScreenSafePermissions(
+            vm = vm,
             onNavigateSettingsRequest = {
                 onNavigateRequest(SettingsDestination.root)
             }
@@ -66,7 +67,7 @@ fun MapsScreen(
 
 @Composable
 private fun MapsScreenSafePermissions(
-    vm: MapsViewModel = koinViewModel(),
+    vm: MapsViewModel,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -91,6 +92,7 @@ private fun MapsScreenSafePermissions(
             ) {
                 MapDetailsScreen(
                     map = it,
+                    vm = vm,
                     onNavigateSettingsRequest = onNavigateSettingsRequest,
                     onNavigateBackRequest = {
                         vm.mapsBackStack.removeLast()

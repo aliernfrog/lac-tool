@@ -102,9 +102,6 @@
     <string name="maps_share_short">همرسانی</string>
     <string name="maps_edit">ادیت/ویرایش این مپ</string>
     <string name="maps_edit_description">ادیت کردن تنظیمات و رول های این مپ</string>
-    <string name="maps_edit_opening">باز کردن {NAME}</string>
-    <string name="maps_edit_saving">سیو کردن {NAME}</string>
-    <string name="maps_edit_saved">تغییرات در {NAME} ذخیره شد</string>
     <string name="maps_merge">این مپ را ادغام کنید</string>
     <string name="maps_merge_short">ادغام</string>
     <string name="maps_delete">پاک کردن این مپ</string>
@@ -129,6 +126,7 @@
     <string name="mapsList_shared_noMaps">شما هیچ نقشه ای را با ابزار LAC به اشتراک نگذاشته اید</string>
     <string name="mapsList_searchNoMatches">هیچ مپ منطبقی پیدا نشد</string>
     <string name="mapsEdit">تغییر اطلاعات و تنظیمات مپ</string>
+    <string name="mapsEdit_opening">باز کردن {NAME}</string>
     <string name="mapsEdit_general">عمومی</string>
     <string name="mapsEdit_serverName">نام سرور</string>
     <string name="mapsEdit_mapType">نوع مپ</string>
@@ -154,6 +152,8 @@
     <string name="mapsEdit_saveWarning_description">شما تغییرات ذخیره نشده ای دارید، آیا مطمئن هستید که می خواهید خارج شوید</string>
     <string name="mapsEdit_saveWarning_keepEditing">ادامه دادن به ویرایش - ادیت</string>
     <string name="mapsEdit_saveWarning_discardChanges">خروج</string>
+    <string name="mapsEdit_saving">سیو کردن {NAME}</string>
+    <string name="mapsEdit_saved">تغییرات در {NAME} ذخیره شد</string>
     <string name="mapsRoles">ویرایش نقش - رول ها</string>
     <string name="mapsRoles_description">در حال حاضر دارای {COUNT} نقش است</string>
     <string name="mapsRoles_showingCount">نمایش {COUNT} نقش</string>
@@ -171,9 +171,7 @@
     <string name="mapsMaterials">مواد و منابع</string>
     <string name="mapsMaterials_description">در حال حاضر %n مواد دارد</string>
     <string name="mapsMaterials_noConnection">اتصال برقرار نیست</string>
-    <string name="mapsMaterials_noConnection_description">شما به اینترنت متصل نیستید و ممکن است مطالب معتبر به عنوان نامعتبر علامت‌گذاری شوند</string>
     <string name="mapsMaterials_failedMaterials">مواد نامعتبر</string>
-    <string name="mapsMaterials_failedMaterials_description">%n ماده بارگیری نشد. این ممکن است هنگام بارگیری نقشه در LAC باعث خطا شود، آنها را حذف کنید تا از خطا جلوگیری کنید</string>
     <string name="mapsMaterials_unusedMaterials">مواد استفاده نشده</string>
     <string name="mapsMaterials_unusedMaterials_description">%n ماده استفاده نشده است و قابل حذف است</string>
     <string name="mapsMaterials_clickToViewMore">برای مشاهده ادامه مطلب کلیک کنید</string>
