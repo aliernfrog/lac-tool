@@ -16,7 +16,7 @@
     "minSdk": 21,
     "body": "# Note\r\nThis release includes major refactors to improve state management and move shared code across my apps to reusable modules/libraries. Issues are expected, you can report them on [Issues](https://github.com/aliernfrog/lac-tool/issues) or on [Discord](https://aliernfrog.github.io/discord).\r\n\r\n### ✨ New Features\r\n- [`321ded5`](https://github.com/aliernfrog/lac-tool/commit/321ded5e7298afbeeb6792f0fba87ca53c975ffd) - Fix crash when merging maps on scoped storage, add crash handler, support links, better changelog viewer and improve update control system *(PR #136 by @aliernfrog)*\r\n- [`3dddac9`](https://github.com/aliernfrog/lac-tool/commit/3dddac9a287093ac4e488811e7309b0543b9b0f6) - Add tooltips to all icon buttons *(PR #137 by @aliernfrog)*\r\n- [`901e817`](https://github.com/aliernfrog/lac-tool/commit/901e817c5ffa8aaba5c86f00808dc9d18c4d95c5) - **l10n**: Update translations *(PR #135 by @aliernfrog)*\r\n\r\n### ♻️ Refactors\r\n- [`88cca66`](https://github.com/aliernfrog/lac-tool/commit/88cca66813375838c3331ce99f3e7413deaa0806) - Use shared module from `aliernfrog/pf-tool` to avoid duplicate code *(PR #131 by @aliernfrog)*",
     "createdAt": 1769444508000,
-    "htmlUrl": "https://github.com/aliernfrog/lac-tool/releases/tag/v4.1.0",
-    "downloadUrl": "https://github.com/aliernfrog/lac-tool/releases/download/v4.1.0/lactool.apk"
+    "htmlUrl": "https://github.com/aliernfrog/lac-tool/releases/tag/v4.2.0",
+    "downloadUrl": "https://github.com/aliernfrog/lac-tool/releases/download/v4.2.0/lactool.apk"
   }
 ]
