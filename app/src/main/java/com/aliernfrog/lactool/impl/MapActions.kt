@@ -14,7 +14,6 @@ import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.aliernfrog.pftool_shared.data.MapAction
 import io.github.aliernfrog.pftool_shared.enum.MapImportedState
-import io.github.aliernfrog.shared.util.SharedString
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.showErrorToast
@@ -26,7 +25,7 @@ import io.github.aliernfrog.pftool_shared.impl.Progress
 val mapActions = listOf(
     MapAction(
         id = MapAction.RENAME_ID,
-        shortLabel = SharedString.fromResId(R.string.maps_rename),
+        shortLabel = R.string.maps_rename,
         icon = Icons.Rounded.Edit,
         availableForMultiSelection = false,
         availableFor = { it.importedState != MapImportedState.NONE },
@@ -59,7 +58,7 @@ val mapActions = listOf(
 
     MapAction(
         id = MapAction.DUPLICATE_ID,
-        shortLabel = SharedString.fromResId(R.string.maps_duplicate),
+        shortLabel = R.string.maps_duplicate,
         icon = Icons.Rounded.FileCopy,
         availableForMultiSelection = false,
         availableFor = { it.importedState != MapImportedState.NONE },
@@ -92,8 +91,8 @@ val mapActions = listOf(
 
     MapAction(
         id = "import",
-        shortLabel = SharedString.fromResId(R.string.maps_import_short),
-        longLabel = SharedString.fromResId(R.string.maps_import),
+        shortLabel = R.string.maps_import_short,
+        longLabel = R.string.maps_import,
         icon = Icons.Rounded.Download,
         availableForMultiSelection = true,
         availableFor = { it.importedState != MapImportedState.IMPORTED },
@@ -118,8 +117,8 @@ val mapActions = listOf(
 
     MapAction(
         id = "export",
-        shortLabel = SharedString.fromResId(R.string.maps_export_short),
-        longLabel = SharedString.fromResId(R.string.maps_export),
+        shortLabel = R.string.maps_export_short,
+        longLabel = R.string.maps_export,
         icon = Icons.Rounded.Upload,
         availableForMultiSelection = true,
         availableFor = { it.importedState == MapImportedState.IMPORTED },
@@ -144,7 +143,7 @@ val mapActions = listOf(
 
     MapAction(
         id = "exportCustomTarget",
-        shortLabel = SharedString.fromResId(R.string.maps_exportCustomTarget),
+        shortLabel = R.string.maps_exportCustomTarget,
         icon = Icons.AutoMirrored.Filled.AddToHomeScreen,
         availableForMultiSelection = false,
         availableFor = { true },
@@ -171,8 +170,8 @@ val mapActions = listOf(
 
     MapAction(
         id = "share",
-        shortLabel = SharedString.fromResId(R.string.maps_share_short),
-        longLabel = SharedString.fromResId(R.string.maps_share),
+        shortLabel = R.string.maps_share_short,
+        longLabel = R.string.maps_share,
         icon = Icons.Rounded.Share,
         availableForMultiSelection = true,
         availableFor = { true },
@@ -191,8 +190,8 @@ val mapActions = listOf(
 
     MapAction(
         id = "edit",
-        shortLabel = SharedString.fromResId(R.string.maps_edit),
-        description = SharedString.fromResId(R.string.maps_edit_description),
+        shortLabel = R.string.maps_edit,
+        description = R.string.maps_edit_description,
         icon = Icons.Rounded.EditLocationAlt,
         availableForMultiSelection = false,
         availableFor = { true },
@@ -206,8 +205,8 @@ val mapActions = listOf(
 
     MapAction(
         id = "merge",
-        shortLabel = SharedString.fromResId(R.string.maps_merge_short),
-        longLabel = SharedString.fromResId(R.string.maps_merge),
+        shortLabel = R.string.maps_merge_short,
+        longLabel = R.string.maps_merge,
         icon = Icons.Rounded.AddLocationAlt,
         availableForMultiSelection = true,
         availableFor = { true },
@@ -221,8 +220,8 @@ val mapActions = listOf(
 
     MapAction(
         id = "delete",
-        shortLabel = SharedString.fromResId(R.string.maps_delete_short),
-        longLabel = SharedString.fromResId(R.string.maps_delete),
+        shortLabel = R.string.maps_delete_short,
+        longLabel = R.string.maps_delete,
         icon = Icons.Rounded.Delete,
         destructive = true,
         availableForMultiSelection = true,
