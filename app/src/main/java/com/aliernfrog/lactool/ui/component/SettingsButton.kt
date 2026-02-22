@@ -12,18 +12,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
-import org.koin.androidx.compose.koinViewModel
+import com.aliernfrog.lactool.domain.AppState
+import io.github.aliernfrog.shared.ui.component.PlainTextTooltipContainer
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsButton(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = koinViewModel(),
+    appState: AppState = koinInject(),
     onClick: () -> Unit
 ) {
-    val hasNotification = mainViewModel.showUpdateNotification
-
     @Composable
     fun SettingsIcon() {
         Icon(
@@ -32,19 +31,23 @@ fun SettingsButton(
         )
     }
 
-    IconButton(
-        shapes = IconButtonDefaults.shapes(),
-        modifier = modifier,
-        onClick = {
-            onClick()
-            mainViewModel.showUpdateNotification = false
-        }
+    PlainTextTooltipContainer(
+        tooltipText = stringResource(R.string.settings),
+        modifier = modifier
     ) {
-        if (hasNotification) BadgedBox(
-            badge = { Badge() }
+        IconButton(
+            shapes = IconButtonDefaults.shapes(),
+            onClick = {
+                onClick()
+                appState.showUpdateNotification = false
+            }
         ) {
-            SettingsIcon()
+            if (appState.showUpdateNotification) BadgedBox(
+                badge = { Badge() }
+            ) {
+                SettingsIcon()
+            }
+            else SettingsIcon()
         }
-        else SettingsIcon()
     }
 }

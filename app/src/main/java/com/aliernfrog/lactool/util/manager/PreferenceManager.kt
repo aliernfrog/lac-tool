@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.util.manager
 
 import android.content.Context
 import android.os.Environment
+import com.aliernfrog.lactool.defaultReleasesURL
 import io.github.aliernfrog.pftool_shared.enum.StorageAccessType
 import io.github.aliernfrog.pftool_shared.util.externalStorageRoot
 import io.github.aliernfrog.pftool_shared.util.manager.base.PFToolBasePreferenceManager
@@ -46,6 +47,7 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
 
     // Other options
     val showMapNameFieldGuide = booleanPreference("showMapNameFieldGuide", true, experimental = true, includeInDebugInfo = false)
+    val showMapThumbnailBackupReminder = booleanPreference("showMapThumbnailBackupReminder", true, experimental = true, includeInDebugInfo = false)
     val showMediaOverlayGuide = booleanPreference("showMediaOverlayGuide", true, experimental = true, includeInDebugInfo = false)
 
     // Experimental (developer) options
@@ -56,5 +58,5 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
     val debug = booleanPreference("debug", false, experimental = true, includeInDebugInfo = false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
     val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", context.getAppVersionCode(), experimental = true, includeInDebugInfo = false)
-    val updatesURL = stringPreference("updatesUrl", "https://aliernfrog.github.io/lactool/latest.json", experimental = true, includeInDebugInfo = false)
+    val releasesURL = stringPreference("releasesUrl", defaultReleasesURL, experimental = true, includeInDebugInfo = false)
 }

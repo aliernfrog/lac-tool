@@ -2,84 +2,57 @@ package com.aliernfrog.lactool.ui.viewmodel
 
 import android.content.Context
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
 import com.aliernfrog.lactool.impl.MapFile
-import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
-import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
-import com.aliernfrog.lactool.util.MapsNavigationBackStack
-import io.github.aliernfrog.pftool_shared.data.MapActionResult
+import com.aliernfrog.lactool.domain.AppState
+import com.aliernfrog.lactool.domain.MapsState
+import com.aliernfrog.lactool.ui.component.widget.media_overlay.maps.MapThumbnailToolbarContent
+import com.aliernfrog.lactool.util.extension.showReportableErrorToast
+import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
-import io.github.aliernfrog.pftool_shared.repository.MapRepository
-import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
-import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
 import io.github.aliernfrog.shared.data.MediaOverlayData
-import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.ContextUtils
-import io.github.aliernfrog.shared.ui.component.ButtonIcon
-import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
-    val topToastState: TopToastState,
+    private val appState: AppState,
+    private val mapsState: MapsState,
     private val progressState: ProgressState,
+    val topToastState: TopToastState,
     private val contextUtils: ContextUtils,
-    private val mapRepository: MapRepository,
     val prefs: PreferenceManager
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
 
-    val mapsDir: String get() { return prefs.lacMapsDir.value }
-    val exportedMapsDir: String get() { return prefs.exportedMapsDir.value }
+    var mapsPendingDelete
+        get() = mapsState.mapsPendingDelete
+        set(value) { mapsState.mapsPendingDelete = value }
 
-    var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
-    var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
+    var customDialogTitleAndText
+        get() = mapsState.customDialogTitleAndText
+        set(value) { mapsState.customDialogTitleAndText = value }
 
     var activeProgress: Progress?
         get() = progressState.currentProgress
         set(value) { progressState.currentProgress = value }
 
-    val mapsBackStack = MapsNavigationBackStack()
+    val mapsBackStack
+        get() = mapsState.mapsBackStack
 
     fun viewMapDetails(map: Any) {
         try {
@@ -88,13 +61,14 @@ class MapsViewModel(
                 is FileWrapper -> MapFile(map)
                 else -> MapFile(FileWrapper(map))
             }
-            mapsBackStack.add(mapFile)
-            if (!prefs.stackupMaps.value) mapsBackStack.removeIf {
-                it.path != mapFile.path
+            val stackupMaps = prefs.stackupMaps.value
+            mapsBackStack.removeIf {
+                !stackupMaps || it.path == mapFile.path
             }
+            mapsBackStack.add(mapFile)
         } catch (_: CancellationException) {}
         catch (e: Exception) {
-            topToastState.showErrorToast()
+            topToastState.showReportableErrorToast(e)
             Log.e(TAG, "viewMapDetails: ", e)
         }
     }
@@ -145,153 +119,26 @@ class MapsViewModel(
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openMapThumbnailViewer(map: MapFile) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
         val hasThumbnail = map.thumbnailModel != null
-        mainViewModel.showMediaOverlay(MediaOverlayData(
+        appState.mediaOverlayData = MediaOverlayData(
             model = map.thumbnailModel,
             title = if (hasThumbnail) map.name else contextUtils.getString(R.string.maps_thumbnail_noThumbnail),
             zoomEnabled = hasThumbnail,
-            toolbarContent = {
-                val context = LocalContext.current
-                val scope = rememberCoroutineScope()
-                var showBackupReminderDialog by remember { mutableStateOf(false) }
-                var showDeleteDialog by remember { mutableStateOf(false) }
-
-                val thumbnailPickerLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.PickVisualMedia()
-                ) { uri ->
-                    if (uri != null) scope.launch {
-                        activeProgress = Progress(context.getString(R.string.maps_thumbnail_setting))
-                        map.runInIOThreadSafe {
-                            val cachedFile = PFToolSharedUtil.cacheFile(uri, "maps", context)
-                            map.setThumbnailFile(context, FileWrapper(cachedFile!!))
-                            viewMapDetails(map)
-                            openMapThumbnailViewer(map)
-                            topToastState.showToast(
-                                text = R.string.maps_thumbnail_set_done,
-                                icon = Icons.Default.Check
-                            )
-                        }
-                        activeProgress = null
-                    }
-                }
-
-                fun launchThumbnailPicker() {
-                    thumbnailPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
-
-                if (hasThumbnail) IconButton(
-                    onClick = { showDeleteDialog = true },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
-                    shapes = IconButtonDefaults.shapes(),
-                    modifier = Modifier.padding(end = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.action_delete)
-                    )
-                }
-
-                Button(
-                    onClick = {
-                        if (hasThumbnail) showBackupReminderDialog = true
-                        else launchThumbnailPicker()
-                    },
-                    shapes = ButtonDefaults.shapes()
-                ) {
-                    ButtonIcon(rememberVectorPainter(Icons.Default.AddPhotoAlternate))
-                    Text(stringResource(R.string.maps_thumbnail_set))
-                }
-
-                if (hasThumbnail) IconButton(
-                    onClick = {
-                        scope.launch {
-                            activeProgress = Progress(context.getString(R.string.info_sharing))
-                            map.runInIOThreadSafe {
-                                FileUtil.shareFiles(map.getThumbnailFile()!!, context = context)
-                            }
-                            activeProgress = null
-                        }
-                    },
-                    shapes = IconButtonDefaults.shapes(),
-                    modifier = Modifier.padding(start = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = stringResource(R.string.action_share)
-                    )
-                }
-
-                if (showBackupReminderDialog) CustomMessageDialog(
-                    title = stringResource(R.string.info_reminder),
-                    text = stringResource(R.string.maps_thumbnail_set_overrides),
-                    dismissButtonText = stringResource(R.string.action_cancel),
-                    icon = Icons.Default.Warning,
-                    onDismissRequest = { showBackupReminderDialog = false },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                showBackupReminderDialog = false
-                                launchThumbnailPicker()
-                            },
-                            shapes = ButtonDefaults.shapes()
-                        ) {
-                            Text(stringResource(R.string.action_ok))
-                        }
+            toolbarContent = if (map.importedState == MapImportedState.IMPORTED) { {
+                MapThumbnailToolbarContent(
+                    map = map,
+                    vm = this@MapsViewModel,
+                    onDismissMediaOverlayRequest = {
+                        appState.mediaOverlayData = null
                     }
                 )
-
-                if (showDeleteDialog) DeleteConfirmationDialog(
-                    name = stringResource(R.string.maps_thumbnail_id).replace("{MAP}", map.name),
-                    onDismissRequest = { showDeleteDialog = false },
-                    onConfirmDelete = {
-                        scope.launch {
-                            activeProgress = Progress(context.getString(R.string.maps_thumbnail_deleting))
-                            map.runInIOThreadSafe {
-                                map.deleteThumbnailFile()
-                                viewMapDetails(map)
-                                mainViewModel.dismissMediaOverlay()
-                                showDeleteDialog = false
-                                topToastState.showToast(
-                                    text = R.string.maps_thumbnail_deleted,
-                                    icon = Icons.Default.Delete
-                                )
-                            }
-                            activeProgress = null
-                        }
-                    }
-                )
-            }
-        ))
-    }
-
-    fun showActionFailedDialog(successes: List<Pair<String, MapActionResult>>, fails: List<Pair<String, MapActionResult>>) {
-        customDialogTitleAndText = contextUtils.getString(R.string.maps_actionFailed)
-            .replace("{SUCCESSES}", successes.size.toString())
-            .replace("{FAILS}", fails.size.toString()) to fails.joinToString("\n\n") {
-            "${it.first}: ${contextUtils.getString(it.second.message ?: R.string.warning_error)}"
-        }
+            } } else null
+        )
     }
 
     fun loadMaps(context: Context) {
         viewModelScope.launch {
-            mapRepository.reloadMaps(context)
+            mapsState.loadMaps(context)
         }
-    }
-
-    fun getMapsFile(context: Context): FileWrapper? {
-        return mapRepository.getImportedMapsFile(context)
-    }
-
-    fun getExportedMapsFile(context: Context): FileWrapper? {
-        return mapRepository.getExportedMapsFile(context)
-    }
-
-    fun setSharedMaps(maps: List<MapFile>) {
-        mapRepository.setSharedMaps(maps)
     }
 }

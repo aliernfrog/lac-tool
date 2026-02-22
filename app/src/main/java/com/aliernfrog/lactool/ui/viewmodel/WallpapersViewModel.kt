@@ -1,57 +1,27 @@
 package com.aliernfrog.lactool.ui.viewmodel
 
-import android.content.ClipData
 import android.content.Context
 import android.net.Uri
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PriorityHigh
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.domain.AppState
+import com.aliernfrog.lactool.ui.component.widget.media_overlay.wallpapers.ImportWallpaperSheetContent
+import com.aliernfrog.lactool.ui.component.widget.media_overlay.wallpapers.WallpaperToolbarContent
 import com.aliernfrog.lactool.util.extension.showErrorToast
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
-import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
 import com.aliernfrog.toptoast.state.TopToastState
 import kotlinx.coroutines.Dispatchers
@@ -62,21 +32,18 @@ import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.pftool_shared.repository.FileRepository
-import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
 import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
 import io.github.aliernfrog.shared.data.MediaOverlayData
-import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.ContextUtils
-import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
-import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 @OptIn(ExperimentalMaterial3Api::class)
 class WallpapersViewModel(
     val prefs: PreferenceManager,
-    val topToastState: TopToastState,
+    private val appState: AppState,
     private val progressState: ProgressState,
+    val topToastState: TopToastState,
     private val contextUtils: ContextUtils,
     private val fileRepository: FileRepository,
     context: Context
@@ -85,7 +52,7 @@ class WallpapersViewModel(
     val listViewOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
 
     private val activeWallpaperFileName = "mywallpaper.jpg"
-    private val wallpapersDir : String get() = prefs.lacWallpapersDir.value
+    val wallpapersDir : String get() = prefs.lacWallpapersDir.value
 
     private var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
@@ -100,82 +67,32 @@ class WallpapersViewModel(
         }
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    suspend fun onWallpaperPick(uri: Uri, context: Context) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
-        withContext(Dispatchers.IO) {
-            val file = PFToolSharedUtil.cacheFile(
-                uri = uri,
-                parentName = "wallpapers",
-                context = context
-            )?.let { FileWrapper(it) }
-            if (file == null) {
-                topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
-                return@withContext
-            }
-            mainViewModel.showMediaOverlay(MediaOverlayData(
-                model = file.painterModel,
-                title = context.getString(R.string.wallpapers_chosen),
-                optionsSheetContent = {
-                    val scope = rememberCoroutineScope()
-                    val originalName = remember { file.nameWithoutExtension }
-                    var importName by remember { mutableStateOf(originalName) }
-
-                    OutlinedTextField(
-                        value = importName,
-                        onValueChange = { importName = it },
-                        label = {
-                            Text(stringResource(R.string.wallpapers_chosen_name))
-                        },
-                        placeholder = {
-                            Text(originalName)
-                        },
-                        trailingIcon = {
-                            Crossfade(importName != originalName) { enabled ->
-                                IconButton(
-                                    onClick = { importName = originalName },
-                                    shapes = IconButtonDefaults.shapes(),
-                                    enabled = enabled
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Restore,
-                                        contentDescription = stringResource(R.string.wallpapers_chosen_name_reset)
-                                    )
-                                }
-                            }
-                        },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                    )
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 12.dp, end = 12.dp, top = 8.dp)
-                    ) {
-                        Button(
-                            shapes = ButtonDefaults.shapes(),
-                            onClick = { scope.launch {
-                                importWallpaper(
-                                    file = file,
-                                    withName = importName.ifEmpty { originalName },
-                                    context = context
-                                )
-                                mainViewModel.dismissMediaOverlay()
-                            } }
-                        ) {
-                            ButtonIcon(rememberVectorPainter(Icons.Default.Download))
-                            Text(stringResource(R.string.wallpapers_chosen_import))
-                        }
-                    }
-                }
-            ))
+    fun onWallpaperPick(uri: Uri, context: Context) = viewModelScope.launch(Dispatchers.IO) {
+        val file = PFToolSharedUtil.cacheFile(
+            uri = uri,
+            parentName = "wallpapers",
+            context = context
+        )?.let { FileWrapper(it) }
+        if (file == null) {
+            topToastState.showToast(R.string.warning_pickFile_failed, Icons.Rounded.PriorityHigh, TopToastColor.ERROR)
+            return@launch
         }
+        appState.mediaOverlayData = MediaOverlayData(
+            model = file.painterModel,
+            title = context.getString(R.string.wallpapers_chosen),
+            optionsSheetContent = {
+                ImportWallpaperSheetContent(
+                    file = file,
+                    vm = this@WallpapersViewModel,
+                    onDismissMediaOverlayRequest = {
+                        appState.mediaOverlayData = null
+                    }
+                )
+            }
+        )
     }
 
-    private suspend fun importWallpaper(
+    suspend fun importWallpaper(
         file: FileWrapper,
         withName: String,
         context: Context
@@ -198,7 +115,7 @@ class WallpapersViewModel(
         progressState.currentProgress = null
     }
 
-    private suspend fun shareImportedWallpaper(wallpaper: FileWrapper, context: Context) {
+    suspend fun shareImportedWallpaper(wallpaper: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.info_sharing)
         )
@@ -208,7 +125,7 @@ class WallpapersViewModel(
         progressState.currentProgress = null
     }
 
-    private suspend fun deleteImportedWallpaper(wallpaper: FileWrapper, context: Context) {
+    suspend fun deleteImportedWallpaper(wallpaper: FileWrapper, context: Context) {
         progressState.currentProgress = Progress(
             contextUtils.getString(R.string.wallpapers_deleting)
         )
@@ -240,80 +157,18 @@ class WallpapersViewModel(
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openWallpaperOptions(wallpaper: FileWrapper) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
-        mainViewModel.showMediaOverlay(MediaOverlayData(
+        appState.mediaOverlayData = MediaOverlayData(
             model = wallpaper.painterModel,
             title = wallpaper.name,
             toolbarContent = {
-                val context = LocalContext.current
-                val clipboard = LocalClipboard.current
-                val scope = rememberCoroutineScope()
-                var showHelpDialog by remember { mutableStateOf(false) }
-                var showDeleteDialog by remember { mutableStateOf(false) }
-
-                IconButton(
-                    onClick = { showDeleteDialog = true },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
-                    shapes = IconButtonDefaults.shapes()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.action_delete)
-                    )
-                }
-
-                Spacer(Modifier.width(4.dp))
-
-                Button(
-                    onClick = {
-                        scope.launch {
-                            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
-                                null,
-                                GeneralUtil.generateWallpaperImportUrl(wallpaper.name, wallpapersDir)
-                            )))
-                            showHelpDialog = true
-                        }
-                    },
-                    shapes = ButtonDefaults.shapes()
-                ) {
-                    ButtonIcon(rememberVectorPainter(Icons.AutoMirrored.Filled.AddToHomeScreen))
-                    Text(stringResource(R.string.wallpapers_use))
-                }
-
-                Spacer(Modifier.width(4.dp))
-
-                IconButton(
-                    onClick = {
-                        scope.launch { shareImportedWallpaper(wallpaper, context) }
-                    },
-                    shapes = IconButtonDefaults.shapes()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = stringResource(R.string.action_share)
-                    )
-                }
-
-                if (showHelpDialog) CustomMessageDialog(
-                    title = stringResource(R.string.wallpapers_copied_title),
-                    text = stringResource(R.string.wallpapers_copied_description),
-                    dismissButtonText = stringResource(R.string.action_ok),
-                    icon = Icons.Default.ContentCopy,
-                    onDismissRequest = { showHelpDialog = false }
-                )
-
-                if (showDeleteDialog) DeleteConfirmationDialog(
-                    name = wallpaper.name,
-                    onDismissRequest = { showDeleteDialog = false },
-                    onConfirmDelete = {
-                        showDeleteDialog = false
-                        scope.launch { deleteImportedWallpaper(wallpaper, context) }
-                        mainViewModel.dismissMediaOverlay()
+                WallpaperToolbarContent(
+                    wallpaper = wallpaper,
+                    vm = this@WallpapersViewModel,
+                    onDismissMediaOverlayRequest = {
+                        appState.mediaOverlayData = null
                     }
                 )
             }
-        ))
+        )
     }
 }

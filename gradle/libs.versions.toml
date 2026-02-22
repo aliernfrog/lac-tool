@@ -1,30 +1,30 @@
 [versions]
-android-plugin = "8.13.2"
-kotlin-plugin = "2.3.0"
+android-plugin = "9.0.1"
+kotlin-plugin = "2.3.10"
 
 android-desugar = "2.1.5"
 
-androidx-activity = "1.12.2"
+androidx-activity = "1.12.4"
 androidx-appcompat = "1.7.1"
 androidx-ktx = "1.17.0"
 androidx-lifecycle = "2.10.0"
-androidx-navigation3-core = "1.0.0"
+androidx-navigation3-core = "1.0.1"
 androidx-splashscreen = "1.2.0"
 
-compose = "1.10.1"
+compose = "1.10.3"
 compose-material-icons = "1.7.8"
-compose-material3 = "1.5.0-alpha12"
+compose-material3 = "1.5.0-alpha14"
 
 aboutlibraries = "13.2.1"
 coil = "3.3.0"
-dfc = "1.2"
+dfc = "1.3"
 koin = "4.1.1"
-laclib = "1.2.1"
+laclib = "1.3.0"
 markdown = "0.5.8"
-pftool-shared = "f6e0b92243"
+pftool-shared = "c324992467"
 shizuku = "13.1.5"
-toptoast = "2.1.0"
-zoomable = "2.9.0"
+toptoast = "2.2.0-alpha03"
+zoomable = "2.11.1"
 
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }

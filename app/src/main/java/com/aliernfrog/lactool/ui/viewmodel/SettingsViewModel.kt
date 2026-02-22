@@ -20,5 +20,5 @@ class SettingsViewModel(
     val categories = appSettingsCategories
 
     val debugInfo: String
-        get() = versionManager.getDebugInfo(prefs.debugInfoPrefs)
+        get() = versionManager.getDebugInfo()
 }

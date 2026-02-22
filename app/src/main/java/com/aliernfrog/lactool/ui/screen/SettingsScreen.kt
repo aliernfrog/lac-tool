@@ -1,20 +1,19 @@
 package com.aliernfrog.lactool.ui.screen
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Science
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.SettingsConstant.credits
 import com.aliernfrog.lactool.SettingsConstant.socials
+import com.aliernfrog.lactool.SettingsConstant.supportLinks
 import com.aliernfrog.lactool.crowdinURL
+import com.aliernfrog.lactool.ui.component.widget.settings.ExperimentalOptions
 import com.aliernfrog.lactool.ui.viewmodel.SettingsViewModel
 import com.aliernfrog.lactool.util.AppSettingsDestination
 import com.aliernfrog.lactool.util.extension.enable
@@ -23,40 +22,35 @@ import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.screen.settings.LanguagePage
 import io.github.aliernfrog.pftool_shared.ui.screen.settings.MapsPage
 import io.github.aliernfrog.pftool_shared.ui.screen.settings.StoragePage
-import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
-import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
-import io.github.aliernfrog.shared.ui.settings.AboutPage
-import io.github.aliernfrog.shared.ui.settings.AppearancePage
-import io.github.aliernfrog.shared.ui.settings.ExperimentalPage
-import io.github.aliernfrog.shared.ui.settings.LibsPage
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
-import io.github.aliernfrog.shared.ui.settings.SettingsRootPage
-import io.github.aliernfrog.shared.util.sharedStringResource
+import io.github.aliernfrog.shared.ui.screen.settings.AboutPage
+import io.github.aliernfrog.shared.ui.screen.settings.AppearancePage
+import io.github.aliernfrog.shared.ui.screen.settings.ExperimentalPage
+import io.github.aliernfrog.shared.ui.screen.settings.LibsPage
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsRootPage
+import io.github.aliernfrog.shared.util.resolve
 import org.koin.androidx.compose.koinViewModel
-import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     destination: SettingsDestination,
     vm: SettingsViewModel = koinViewModel(),
-    onShowUpdateSheetRequest: () -> Unit,
+    onCheckUpdatesRequest: (skipVersionCheck: Boolean) -> Unit,
+    onNavigateUpdatesScreenRequest: () -> Unit,
     onNavigateBackRequest: () -> Unit,
     onNavigateRequest: (SettingsDestination) -> Unit
 ) {
     val context = LocalContext.current
-    val updateAvailable = vm.versionManager.updateAvailable.collectAsStateWithLifecycle().value
-    val latestVersionInfo = vm.versionManager.latestVersionInfo.collectAsStateWithLifecycle().value
+    val availableUpdates = vm.versionManager.availableUpdates.collectAsStateWithLifecycle().value
 
     when (destination) {
         SettingsDestination.root -> {
             SettingsRootPage(
                 categories = vm.categories,
-                updateAvailable = updateAvailable,
-                latestReleaseInfo = latestVersionInfo,
+                availableUpdates = availableUpdates,
                 experimentalOptionsEnabled = vm.prefs.experimentalOptionsEnabled.value,
-                onShowUpdateSheetRequest = onShowUpdateSheetRequest,
+                onShowUpdateSheetRequest = onNavigateUpdatesScreenRequest,
                 onNavigateBackRequest = onNavigateBackRequest,
                 onNavigateRequest = onNavigateRequest
             )
@@ -113,27 +107,17 @@ fun SettingsScreen(
             ExperimentalPage(
                 experimentalPrefs = vm.prefs.experimentalPrefs,
                 experimentalOptionsEnabledPref = vm.prefs.experimentalOptionsEnabled,
-                onCheckUpdatesRequest = { skipVersionCheck ->
-                    vm.versionManager.checkUpdates(skipVersionCheck)
-                },
-                onShowUpdateSheetRequest = onShowUpdateSheetRequest,
+                onCheckUpdatesRequest = onCheckUpdatesRequest,
+                onNavigateUpdatesScreenRequest = onNavigateUpdatesScreenRequest,
                 onRestartAppRequest = { GeneralUtil.restartApp(context, withModules = true) },
                 onNavigateBackRequest = onNavigateBackRequest
             ) {
-                ExpressiveSection(title = "Progress") {
-                    VerticalSegmentor(
-                        {
-                            ExpressiveButtonRow(
-                                title = "Set indeterminate progress"
-                            ) {
-                                @SuppressLint("LocalContextGetResourceValueCall")
-                                vm.progressState.currentProgress =
-                                    Progress(description = context.getString(R.string.info_pleaseWait))
-                            }
-                        },
-                        modifier = Modifier.padding(horizontal = 12.dp)
-                    )
-                }
+                ExperimentalOptions(
+                    onSetIndeterminateProgressRequest = {
+                        vm.progressState.currentProgress =
+                            Progress(description = context.getString(R.string.info_pleaseWait))
+                    }
+                )
             }
         }
 
@@ -141,6 +125,7 @@ fun SettingsScreen(
             AboutPage(
                 socials = socials,
                 credits = credits,
+                supportLinks = supportLinks,
                 debugInfo = vm.debugInfo,
                 autoCheckUpdatesPref = vm.prefs.autoCheckUpdates,
                 experimentalOptionsEnabled = vm.prefs.experimentalOptionsEnabled.value,
@@ -151,7 +136,7 @@ fun SettingsScreen(
                         icon = Icons.Rounded.Science
                     )
                 },
-                onShowUpdateSheetRequest = onShowUpdateSheetRequest,
+                onShowUpdateSheetRequest = onNavigateUpdatesScreenRequest,
                 onNavigateLibsRequest = { onNavigateRequest(SettingsDestination.libs) },
                 onNavigateBackRequest = onNavigateBackRequest
             )
@@ -159,13 +144,12 @@ fun SettingsScreen(
 
         SettingsDestination.libs -> {
             LibsPage(
-                librariesJSONRes = R.raw.aboutlibraries,
                 onNavigateBackRequest = onNavigateBackRequest
             )
         }
 
         else -> {
-            Text("UNKNOWN DESTINATION: ${sharedStringResource(destination.title)}")
+            Text("UNKNOWN DESTINATION: ${destination.title.resolve()}")
         }
     }
 }

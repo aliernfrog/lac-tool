@@ -22,9 +22,6 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.rounded.NoPhotography
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,15 +53,15 @@ import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
+import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenshotsScreen(
-    vm: ScreenshotsViewModel = koinViewModel(),
+    vm: ScreenshotsViewModel,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -132,6 +129,7 @@ fun ScreenshotsScreen(
                 ) {
                     item {
                         Header(
+                            vm = vm,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                     }
@@ -157,6 +155,7 @@ fun ScreenshotsScreen(
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Header(
+                            vm = vm,
                             modifier = Modifier.padding(horizontal = 2.dp)
                         )
                     }
@@ -185,18 +184,18 @@ fun ScreenshotsScreen(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun Header(
-    screenshotsViewModel: ScreenshotsViewModel = koinViewModel(),
+    vm: ScreenshotsViewModel,
     modifier: Modifier
 ) {
     val scope = rememberCoroutineScope()
     Column(modifier) {
         ErrorWithIcon(
-            error = stringResource(R.string.screenshots_noScreenshots),
-            painter = rememberVectorPainter(Icons.Rounded.NoPhotography),
-            visible = screenshotsViewModel.screenshotsToShow.isEmpty(),
+            description = stringResource(R.string.screenshots_noScreenshots),
+            icon = rememberVectorPainter(Icons.Rounded.NoPhotography),
+            visible = vm.screenshotsToShow.isEmpty(),
             modifier = Modifier.fillMaxWidth()
         )
-        FadeVisibility(screenshotsViewModel.screenshotsToShow.isNotEmpty()) {
+        FadeVisibility(vm.screenshotsToShow.isNotEmpty()) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -209,17 +208,13 @@ private fun Header(
                         .fillMaxWidth()
                 )
                 Box {
-                    IconButton(
+                    IconButtonWithTooltip(
+                        icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Sort),
+                        contentDescription = stringResource(R.string.list_options),
                         onClick = { scope.launch {
-                            screenshotsViewModel.listViewOptionsSheetState.show()
-                        } },
-                        shapes = IconButtonDefaults.shapes()
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.list_options)
-                        )
-                    }
+                            vm.listViewOptionsSheetState.show()
+                        } }
+                    )
                 }
             }
         }

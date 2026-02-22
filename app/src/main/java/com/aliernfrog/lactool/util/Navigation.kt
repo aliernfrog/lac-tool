@@ -4,6 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Photo
@@ -21,9 +23,9 @@ import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
-import io.github.aliernfrog.shared.ui.settings.category
-import io.github.aliernfrog.shared.util.SharedString
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.category
+import io.github.aliernfrog.shared.util.SharedStringResolvable
 
 object NavigationConstant {
     val INITIAL_DESTINATION = MainDestinationGroup
@@ -56,13 +58,19 @@ enum class MainDestination(
     )
 }
 
-// TODO pass data as NavEntry type instead of this
-enum class SubDestination {
-    MAPS_EDIT,
-    MAPS_ROLES,
-    MAPS_MATERIALS,
-    MAPS_MERGE
+sealed class SubDestination {
+    sealed class MapsEdit : SubDestination() {
+        data class Root(val map: MapFile) : MapsEdit()
+
+        data class Roles(val vmKey: String) : MapsEdit()
+
+        data class Materials(val vmKey: String) : MapsEdit()
+    }
+
+    data class MapsMerge(val maps: List<MapFile>) : SubDestination()
 }
+
+object UpdateScreenDestination
 
 enum class NavigationBarType {
     HIDDEN,
@@ -98,22 +106,22 @@ class MapsNavigationBackStack {
 class AppSettingsDestination {
     companion object {
         val maps = SettingsDestination(
-            title = SharedString.fromResId(R.string.settings_maps),
-            description = SharedString.fromResId(R.string.settings_maps_description),
+            title = SharedStringResolvable.Resource(R.string.settings_maps),
+            description = SharedStringResolvable.Resource(R.string.settings_maps_description),
             icon = Icons.Rounded.PinDrop,
             iconContainerColor = Color.Green
         )
 
         val storage = SettingsDestination(
-            title = SharedString.fromResId(R.string.settings_storage),
-            description = SharedString.fromResId(R.string.settings_storage_description),
+            title = SharedStringResolvable.Resource(R.string.settings_storage),
+            description = SharedStringResolvable.Resource(R.string.settings_storage_description),
             icon = Icons.Rounded.FolderOpen,
             iconContainerColor = Color.Blue
         )
 
         val language = SettingsDestination(
-            title = SharedString.fromResId(R.string.settings_language),
-            description = SharedString.fromResId(R.string.settings_language_description),
+            title = SharedStringResolvable.Resource(R.string.settings_language),
+            description = SharedStringResolvable.Resource(R.string.settings_language_description),
             icon = Icons.Rounded.Translate,
             iconContainerColor = Color.Magenta
         )
@@ -122,14 +130,14 @@ class AppSettingsDestination {
 
 val appSettingsCategories = listOf(
     category(
-        title = SharedString.fromResId(R.string.settings_category_game)
+        title = SharedStringResolvable.Resource(R.string.settings_category_game)
     ) {
         +AppSettingsDestination.maps
         +AppSettingsDestination.storage
     },
 
     category(
-        title = SharedString.fromResId(R.string.settings_category_app)
+        title = SharedStringResolvable.Resource(R.string.settings_category_app)
     ) {
         +SettingsDestination.appearance
         +AppSettingsDestination.language
@@ -156,4 +164,24 @@ val slideTransitionMetadata = NavDisplay.transitionSpec {
     ) togetherWith slideOutOfContainer(
         AnimatedContentTransitionScope.SlideDirection.End
     )
+}
+
+val slideVerticalTransitionMetadata = NavDisplay.transitionSpec {
+    slideInVertically(
+        initialOffsetY = { it }
+    ) + fadeIn() togetherWith slideOutVertically(
+        targetOffsetY = { -it }
+    ) + fadeOut()
+} + NavDisplay.popTransitionSpec {
+    slideInVertically(
+        initialOffsetY = { -it }
+    ) + fadeIn() togetherWith slideOutVertically(
+        targetOffsetY = { -it }
+    ) + fadeOut()
+} + NavDisplay.predictivePopTransitionSpec {
+    slideInVertically(
+        initialOffsetY = { -it }
+    ) + fadeIn() togetherWith slideOutVertically(
+        targetOffsetY = { it }
+    ) + fadeOut()
 }

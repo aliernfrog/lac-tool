@@ -2,20 +2,23 @@ package com.aliernfrog.lactool.impl
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import coil3.imageLoader
+import coil3.memory.MemoryCache
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.TAG
-import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
-import com.aliernfrog.lactool.ui.viewmodel.MapsViewModel
-import com.aliernfrog.lactool.util.extension.showErrorToast
+import com.aliernfrog.lactool.domain.AppState
+import com.aliernfrog.lactool.domain.MapsState
+import com.aliernfrog.lactool.util.extension.showReportableErrorToast
 import com.aliernfrog.toptoast.state.TopToastState
 import com.lazygeniouz.dfc.file.DocumentFileCompat
 import io.github.aliernfrog.pftool_shared.data.MapActionResult
 import io.github.aliernfrog.pftool_shared.enum.MapImportedState
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.impl.IMapFile
-import io.github.aliernfrog.shared.di.getKoinInstance
+import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.shared.impl.ContextUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,21 +28,24 @@ import org.koin.core.component.inject
 class MapFile(
     override val file: FileWrapper
 ): IMapFile, KoinComponent {
-    val vm by inject<MapsViewModel>()
-    val mapsEditViewModel by inject<MapsEditViewModel>() // TODO remove MapsEditViewModel dependency
-    val mapsMergeViewModel by inject<MapsMergeViewModel>()
+    val appState by inject<AppState>()
+    val mapsState by inject<MapsState>()
+    val progressState by inject<ProgressState>()
     val topToastState by inject<TopToastState>()
+    
     override val contextUtils by inject<ContextUtils>()
 
-    override val importedState = if (path.startsWith(vm.mapsDir)) MapImportedState.IMPORTED
-    else if (path.startsWith(vm.exportedMapsDir)) MapImportedState.EXPORTED
+    override val importedState = if (path.startsWith(mapsState.mapsDir)) MapImportedState.IMPORTED
+    else if (path.startsWith(mapsState.exportedMapsDir)) MapImportedState.EXPORTED
     else MapImportedState.NONE
 
     private val thumbnailFileName = "$name.jpg"
-    private val thumbnailFile = if (importedState != MapImportedState.IMPORTED) null
+    private var thumbnailFile = if (importedState != MapImportedState.IMPORTED) null
     else file.parentFile?.findFile(thumbnailFileName)
-    override var thumbnailModel = if (importedState != MapImportedState.IMPORTED) null
-    else thumbnailFile?.painterModel
+    override var thumbnailModel by mutableStateOf(
+        if (importedState != MapImportedState.IMPORTED) null
+        else thumbnailFile?.painterModel
+    )
 
     /**
      * Files related to the map (thumbnail file, data folder).
@@ -103,7 +109,7 @@ class MapFile(
         withName: String
     ): MapActionResult {
         if (importedState == MapImportedState.IMPORTED) return MapActionResult(successful = false)
-        val mapsFile = vm.getMapsFile(context)
+        val mapsFile = mapsState.getMapsFile(context)
         val newFileName = "$withName.txt"
         if (mapsFile?.findFile(newFileName)?.exists() == true) return MapActionResult(
             successful = false,
@@ -121,7 +127,7 @@ class MapFile(
         withName: String
     ): MapActionResult {
         if (importedState == MapImportedState.EXPORTED) return MapActionResult(successful = false)
-        val exportedMapsFile = vm.getExportedMapsFile(context)
+        val exportedMapsFile = mapsState.getExportedMapsFile(context)
         val newFileName = "$withName.txt"
         if (exportedMapsFile?.findFile(newFileName)?.exists() == true) return MapActionResult(
             successful = false,
@@ -138,7 +144,7 @@ class MapFile(
         context: Context,
         withName: String
     ): MapActionResult {
-        val uri = getKoinInstance<MainViewModel>().safTxtFileCreator.createFile(suggestedName = withName)
+        val uri = appState.safTxtFileCreator.createFile(suggestedName = withName)
             ?: return MapActionResult(
                 successful = false,
                 message = R.string.maps_exportCustomTarget_cancelled
@@ -168,18 +174,25 @@ class MapFile(
         context: Context,
         file: FileWrapper
     ) {
-        val thumbnailFile = getThumbnailFile().let { found ->
+        getThumbnailFile().let { found ->
             if (found?.exists() == true) found else this.file.parentFile!!.createFile(thumbnailFileName)
+        }!!.copyFrom(file, context)
+        thumbnailFile = this.file.parentFile!!.findFile(thumbnailFileName)
+        thumbnailModel = thumbnailFile?.painterModel
+
+        thumbnailModel?.toString()?.let { key ->
+            val coilLoader = context.imageLoader
+            coilLoader.memoryCache?.remove(MemoryCache.Key(key))
+            coilLoader.diskCache?.remove(key)
         }
-        thumbnailFile!!.copyFrom(file, context)
-        thumbnailModel = getThumbnailFile()?.painterModel
     }
 
     /**
      * Deletes thumbnail file of the map.
      */
     fun deleteThumbnailFile() {
-        getThumbnailFile()!!.delete()
+        thumbnailFile?.delete()
+        thumbnailFile = null
         thumbnailModel = null
     }
 
@@ -188,7 +201,7 @@ class MapFile(
             try {
                 block()
             } catch (e: Exception) {
-                topToastState.showErrorToast()
+                topToastState.showReportableErrorToast(e)
                 Log.e(TAG, this.toString(), e)
             }
         }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
@@ -19,7 +20,7 @@ import com.aliernfrog.lactool.util.slideTransitionMetadata
 import io.github.aliernfrog.pftool_shared.data.PermissionData
 import io.github.aliernfrog.pftool_shared.ui.dialog.CustomMessageDialog
 import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -56,6 +57,7 @@ fun MapsScreen(
         onNavigateRequest = onNavigateRequest
     ) {
         MapsScreenSafePermissions(
+            vm = vm,
             onNavigateSettingsRequest = {
                 onNavigateRequest(SettingsDestination.root)
             }
@@ -65,7 +67,7 @@ fun MapsScreen(
 
 @Composable
 private fun MapsScreenSafePermissions(
-    vm: MapsViewModel = koinViewModel(),
+    vm: MapsViewModel,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -90,6 +92,7 @@ private fun MapsScreenSafePermissions(
             ) {
                 MapDetailsScreen(
                     map = it,
+                    vm = vm,
                     onNavigateSettingsRequest = onNavigateSettingsRequest,
                     onNavigateBackRequest = {
                         vm.mapsBackStack.removeLast()

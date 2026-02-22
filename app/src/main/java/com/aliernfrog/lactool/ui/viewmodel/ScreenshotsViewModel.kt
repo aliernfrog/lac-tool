@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliernfrog.lactool.R
+import com.aliernfrog.lactool.domain.AppState
 import com.aliernfrog.lactool.util.manager.PreferenceManager
 import com.aliernfrog.lactool.util.staticutil.FileUtil
 import com.aliernfrog.toptoast.enum.TopToastColor
@@ -43,7 +44,6 @@ import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.impl.ProgressState
 import io.github.aliernfrog.pftool_shared.repository.FileRepository
 import io.github.aliernfrog.shared.data.MediaOverlayData
-import io.github.aliernfrog.shared.di.getKoinInstance
 import io.github.aliernfrog.shared.impl.ContextUtils
 import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.createSheetStateWithDensity
@@ -53,8 +53,9 @@ import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 @OptIn(ExperimentalMaterial3Api::class)
 class ScreenshotsViewModel(
     val prefs: PreferenceManager,
-    private val topToastState: TopToastState,
+    private val appState: AppState,
     private val progressState: ProgressState,
+    private val topToastState: TopToastState,
     private val contextUtils: ContextUtils,
     private val fileRepository: FileRepository,
     context: Context
@@ -112,8 +113,7 @@ class ScreenshotsViewModel(
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openScreenshotOptions(screenshot: FileWrapper) {
-        val mainViewModel = getKoinInstance<MainViewModel>()
-        mainViewModel.showMediaOverlay(MediaOverlayData(
+        appState.mediaOverlayData = MediaOverlayData(
             model = screenshot.painterModel,
             title = screenshot.name,
             toolbarContent = {
@@ -150,10 +150,10 @@ class ScreenshotsViewModel(
                     onConfirmDelete = {
                         showDeleteDialog = false
                         scope.launch { deleteScreenshot(screenshot, context) }
-                        mainViewModel.dismissMediaOverlay()
+                        appState.mediaOverlayData = null
                     }
                 )
             }
-        ))
+        )
     }
 }

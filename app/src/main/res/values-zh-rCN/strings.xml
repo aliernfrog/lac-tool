@@ -94,9 +94,6 @@
     <string name="maps_share_short">分享</string>
     <string name="maps_edit">编辑此地图</string>
     <string name="maps_edit_description">编辑此地图的选项和角色</string>
-    <string name="maps_edit_opening">正在打开 {NAME}</string>
-    <string name="maps_edit_saving">正在保存 {NAME}</string>
-    <string name="maps_edit_saved">已保存对 {NAME} 的更改</string>
     <string name="maps_merge">合并此地图</string>
     <string name="maps_merge_short">合并</string>
     <string name="maps_delete">删除此地图</string>
@@ -114,13 +111,14 @@
     <string name="mapsList_count">{COUNT} 个地图</string>
     <string name="mapsList_storage">存储</string>
     <string name="mapsList_imported">您的地图</string>
-    <string name="mapsList_exported">导出的地图</string>
-    <string name="mapsList_shared">已分享</string>
     <string name="mapsList_imported_noMaps">您还没有任何地图</string>
+    <string name="mapsList_exported">导出的地图</string>
     <string name="mapsList_exported_noMaps">您尚未导出任何地图</string>
+    <string name="mapsList_shared">已分享</string>
     <string name="mapsList_shared_noMaps">您尚未分享任何地图至 LAC Tool</string>
     <string name="mapsList_searchNoMatches">未找到匹配的地图</string>
     <string name="mapsEdit">编辑地图</string>
+    <string name="mapsEdit_opening">正在打开 {NAME}</string>
     <string name="mapsEdit_general">通用</string>
     <string name="mapsEdit_serverName">服务器名称</string>
     <string name="mapsEdit_mapType">地图类型</string>
@@ -146,6 +144,8 @@
     <string name="mapsEdit_saveWarning_description">您有未保存的更改，确定要退出吗？</string>
     <string name="mapsEdit_saveWarning_keepEditing">继续编辑</string>
     <string name="mapsEdit_saveWarning_discardChanges">退出</string>
+    <string name="mapsEdit_saving">正在保存 {NAME}</string>
+    <string name="mapsEdit_saved">已保存对 {NAME} 的更改</string>
     <string name="mapsRoles">编辑身份组</string>
     <string name="mapsRoles_description">目前有 {COUNT} 个身份组</string>
     <string name="mapsRoles_showingCount">正在显示 {COUNT} 个身份组</string>
@@ -163,9 +163,7 @@
     <string name="mapsMaterials">材质</string>
     <string name="mapsMaterials_description">目前有 %n 个材质</string>
     <string name="mapsMaterials_noConnection">无网络连接</string>
-    <string name="mapsMaterials_noConnection_description">您未连接到互联网，有效的材料可能会被标记为无效。</string>
     <string name="mapsMaterials_failedMaterials">材料无效</string>
-    <string name="mapsMaterials_failedMaterials_description">%n 个材料加载失败。这可能会导致在 LAC 中加载地图时出错，请删除它们以避免错误</string>
     <string name="mapsMaterials_unusedMaterials">未使用的材料</string>
     <string name="mapsMaterials_unusedMaterials_description">%n 个材料未使用，可以删除</string>
     <string name="mapsMaterials_clickToViewMore">点击查看更多</string>
@@ -261,6 +259,8 @@
     <string name="settings_about">关于</string>
     <string name="settings_about_changelog">更新日志</string>
     <string name="settings_about_update">更新</string>
+    <string name="settings_about_issues_copyDebugInfo">复制调试信息</string>
+    <string name="settings_about_issues_copyDebugInfo_copied">已复制调试信息</string>
     <string name="settings_about_credits">鸣谢</string>
     <string name="settings_about_libs">库</string>
     <string name="settings_about_libs_description">用于制作 LAC Tool 的库</string>
@@ -283,13 +283,11 @@
     <string name="mediaOverlay_guide_toggleOverlay">点按查看完整图片，再次点按显示选项</string>
     <string name="mediaOverlay_guide_toggleZoom">快速双击可切换缩放</string>
     <string name="mediaOverlay_guide_zoom">捏合手指可放大或缩小，拖动手指可移动</string>
-    <string name="updates_updateAvailable">LAC Tool 有可用的更新！点击了解更多详情</string>
-    <string name="updates_noUpdates">无可用更新</string>
-    <string name="updates_error">检查更新时出错</string>
-    <string name="updates_stable">稳定版</string>
-    <string name="updates_preRelease">预发布版</string>
-    <string name="updates_openInGithub">在 GitHub 中查看</string>
-    <string name="updates_update">更新</string>
-    <string name="updates_checkUpdates">检查更新</string>
+    <string name="updates_changelog">更新日志</string>
     <string name="updates_noChangelog">检查更新以查看更新日志</string>
+    <string name="updates_checkUpdates">检查更新</string>
+    <string name="updates_noUpdates">无可用更新</string>
+    <string name="updates_update">更新</string>
+    <string name="updates_updateAvailable">LAC Tool 有可用的更新！点击了解更多详情</string>
+    <string name="updates_error">检查更新时出错</string>
 </resources>

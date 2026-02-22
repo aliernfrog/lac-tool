@@ -9,7 +9,7 @@ import com.aliernfrog.lactool.util.AppSettingsDestination
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
 import io.github.aliernfrog.pftool_shared.data.PermissionData
 import io.github.aliernfrog.pftool_shared.ui.screen.permissions.PermissionsScreen
-import io.github.aliernfrog.shared.ui.settings.SettingsDestination
+import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
