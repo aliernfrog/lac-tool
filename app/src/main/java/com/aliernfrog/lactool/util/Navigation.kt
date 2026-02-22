@@ -25,7 +25,7 @@ import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.util.extension.removeLastIfMultiple
 import io.github.aliernfrog.shared.ui.screen.settings.SettingsDestination
 import io.github.aliernfrog.shared.ui.screen.settings.category
-import io.github.aliernfrog.shared.util.SharedString
+import io.github.aliernfrog.shared.util.SharedStringResolvable
 
 object NavigationConstant {
     val INITIAL_DESTINATION = MainDestinationGroup
@@ -106,22 +106,22 @@ class MapsNavigationBackStack {
 class AppSettingsDestination {
     companion object {
         val maps = SettingsDestination(
-            title = SharedString.fromResId(R.string.settings_maps),
-            description = SharedString.fromResId(R.string.settings_maps_description),
+            title = SharedStringResolvable.Resource(R.string.settings_maps),
+            description = SharedStringResolvable.Resource(R.string.settings_maps_description),
             icon = Icons.Rounded.PinDrop,
             iconContainerColor = Color.Green
         )
 
         val storage = SettingsDestination(
-            title = SharedString.fromResId(R.string.settings_storage),
-            description = SharedString.fromResId(R.string.settings_storage_description),
+            title = SharedStringResolvable.Resource(R.string.settings_storage),
+            description = SharedStringResolvable.Resource(R.string.settings_storage_description),
             icon = Icons.Rounded.FolderOpen,
             iconContainerColor = Color.Blue
         )
 
         val language = SettingsDestination(
-            title = SharedString.fromResId(R.string.settings_language),
-            description = SharedString.fromResId(R.string.settings_language_description),
+            title = SharedStringResolvable.Resource(R.string.settings_language),
+            description = SharedStringResolvable.Resource(R.string.settings_language_description),
             icon = Icons.Rounded.Translate,
             iconContainerColor = Color.Magenta
         )
@@ -130,14 +130,14 @@ class AppSettingsDestination {
 
 val appSettingsCategories = listOf(
     category(
-        title = SharedString.fromResId(R.string.settings_category_game)
+        title = SharedStringResolvable.Resource(R.string.settings_category_game)
     ) {
         +AppSettingsDestination.maps
         +AppSettingsDestination.storage
     },
 
     category(
-        title = SharedString.fromResId(R.string.settings_category_app)
+        title = SharedStringResolvable.Resource(R.string.settings_category_app)
     ) {
         +SettingsDestination.appearance
         +AppSettingsDestination.language
