@@ -1,5 +1,15 @@
 [
   {
+    "versionName": "v4.2.1",
+    "versionCode": 402100,
+    "prerelease": false,
+    "minSdk": 21,
+    "body": "### ♻️ Refactors\n- [`c156c0f`](https://github.com/aliernfrog/lac-tool/commit/c156c0f58a25fb81cd3d6c80f8042020a432785a) - **Shared strings**: Data class based resolving instead of key lookup *(commit by @aliernfrog)*",
+    "createdAt": 1771769447000,
+    "htmlUrl": "https://github.com/aliernfrog/lac-tool/releases/tag/v4.2.1",
+    "downloadUrl": "https://github.com/aliernfrog/lac-tool/releases/download/v4.2.1/lactool.apk"
+  },
+  {
     "versionName": "v4.2.0",
     "versionCode": 402000,
     "prerelease": false,
