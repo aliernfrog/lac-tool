@@ -180,6 +180,7 @@
     <string name="mapsEdit_options">Options</string>
     <string name="mapsEdit_options_mustBeNumber">Must be a whole number</string>
     <string name="mapsEdit_options_mustBeDecimal">Must be a decimal number</string>
+    <string name="mapsEdit_aiNavmeshObjects">AI navmesh objects</string>
     <string name="mapsEdit_misc">Miscellaneous</string>
     <string name="mapsEdit_misc_replaceOldObjects">Replace old objects</string>
     <string name="mapsEdit_misc_replaceOldObjects_description">Replaces old objects which no longer exist, such as red sofa</string>

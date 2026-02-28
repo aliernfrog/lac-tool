@@ -27,6 +27,14 @@ class MapEditorState(
             editor.mapType = value
         }
 
+    private var _aiNavmeshObjects by mutableStateOf(editor.aiNavmeshObjects?.toList())
+    var aiNavmeshObjects: List<String>?
+        get() = _aiNavmeshObjects
+        set(value) {
+            _aiNavmeshObjects = value
+            editor.aiNavmeshObjects = value?.toMutableList()
+        }
+
     private var _mapRoles by mutableStateOf(editor.mapRoles?.toList())
     var mapRoles: List<String>?
         get() = _mapRoles

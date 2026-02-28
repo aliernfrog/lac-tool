@@ -19,6 +19,7 @@ import androidx.compose.material.icons.rounded.Terrain
 import androidx.compose.material.icons.rounded.Texture
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -26,13 +27,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.aliernfrog.laclib.enum.LACMapAINavmeshObject
 import com.aliernfrog.laclib.enum.LACMapOptionType
 import com.aliernfrog.laclib.enum.LACMapType
 import com.aliernfrog.laclib.util.DEFAULT_MAP_OBJECT_FILTERS
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.laclib.MapEditorState
 import com.aliernfrog.lactool.ui.component.ChipIcon
-import com.aliernfrog.lactool.ui.component.ScrollableRow
 import com.aliernfrog.lactool.ui.dialog.SaveWarningDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.SubDestination
@@ -45,6 +46,7 @@ import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
 import io.github.aliernfrog.shared.ui.component.RadioButtons
+import io.github.aliernfrog.shared.ui.component.ScrollableRow
 import io.github.aliernfrog.shared.ui.component.SingleChoiceConnectedButtonGroup
 import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
@@ -135,7 +137,9 @@ fun MapsEditScreen(
                     OptionsActions(editor)
                 }
                 MiscActions(vm, editor)
-                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
+                Spacer(Modifier
+                    .navigationBarsPadding()
+                    .height(AppFABPadding))
             }
         }
 
@@ -353,8 +357,51 @@ private fun OptionsActions(
         }
     } }
 
+    @Composable
+    fun NavmeshObjectsInput() {
+        var input by rememberSaveable(mapEditor.aiNavmeshObjects) {
+            mutableStateOf(mapEditor.aiNavmeshObjects?.joinToString(",") ?: "")
+        }
+
+        Column {
+            TextField(
+                value = input,
+                onValueChange = {
+                    input = it
+                    mapEditor.aiNavmeshObjects = input.split(",")
+                },
+                label = {
+                    Text(stringResource(R.string.mapsEdit_aiNavmeshObjects))
+                },
+                singleLine = true,
+                colors = getTextFieldColors(),
+                modifier = Modifier.fillMaxWidth()
+            )
+            ScrollableRow(
+                gradientColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                LACMapAINavmeshObject.entries.forEach { entry ->
+                    val selected = mapEditor.aiNavmeshObjects!!.contains(entry.objectName)
+                    FilterChip(
+                        selected = selected,
+                        onClick = {
+                            mapEditor.aiNavmeshObjects = if (selected) mapEditor.aiNavmeshObjects!!.filter { it != entry.objectName }
+                            else mapEditor.aiNavmeshObjects!!.plus(entry.objectName)
+                        },
+                        label = { Text(entry.objectName) }
+                    )
+                }
+            }
+        }
+    }
+
     ExpressiveSection(title = stringResource(R.string.mapsEdit_options)) {
         VerticalSegmentor(
+            {
+                if (mapEditor.aiNavmeshObjects != null)
+                    NavmeshObjectsInput()
+            },
             *optionsComponents.toTypedArray(),
             dynamic = true,
             modifier = Modifier.padding(horizontal = 12.dp)
