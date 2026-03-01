@@ -173,6 +173,7 @@
     <string name="mapsEdit_options">Ayarlar</string>
     <string name="mapsEdit_options_mustBeNumber">Tam bir sayı olmalıdır</string>
     <string name="mapsEdit_options_mustBeDecimal">Ondalık bir sayı olmalıdır</string>
+    <string name="mapsEdit_aiNavmeshObjects">Yapay zeka navigasyon objeleri</string>
     <string name="mapsEdit_misc">Çeşitli</string>
     <string name="mapsEdit_misc_replaceOldObjects">Eski objeleri değiştir</string>
     <string name="mapsEdit_misc_replaceOldObjects_description">Kırmızı kanepe (red sofa) gibi artık oyunda olmayan objeleri yenileriyle değiştirir</string>
