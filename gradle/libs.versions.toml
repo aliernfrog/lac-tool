@@ -1,30 +1,30 @@
 [versions]
-android-plugin = "8.13.2"
-kotlin-plugin = "2.3.0"
+android-plugin = "9.0.1"
+kotlin-plugin = "2.3.10"
 
 android-desugar = "2.1.5"
 
-androidx-activity = "1.12.0-alpha02"
+androidx-activity = "1.12.4"
 androidx-appcompat = "1.7.1"
-androidx-ktx = "1.16.0"
-androidx-lifecycle = "2.9.0"
-androidx-navigation3-core = "1.0.0-alpha03"
-androidx-splashscreen = "1.0.1"
+androidx-ktx = "1.17.0"
+androidx-lifecycle = "2.10.0"
+androidx-navigation3-core = "1.0.1"
+androidx-splashscreen = "1.2.0"
 
-compose = "1.8.3"
+compose = "1.10.3"
 compose-material-icons = "1.7.8"
-compose-material3 = "1.4.0-alpha18"
+compose-material3 = "1.5.0-alpha14"
 
-aboutlibraries = "12.2.4"
+aboutlibraries = "14.0.0-b02"
 coil = "3.3.0"
-dfc = "1.2"
+dfc = "1.3"
 koin = "4.1.1"
 laclib = "1.4.0"
 markdown = "0.5.8"
-pftool-shared = "v2.2.1"
+pftool-shared = "c324992467"
 shizuku = "13.1.5"
-toptoast = "2.2.0-alpha02"
-zoomable = "2.9.0"
+toptoast = "2.2.0-alpha03"
+zoomable = "2.11.1"
 
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }
@@ -46,7 +46,10 @@ compose-material-icons = { group = "androidx.compose.material", name = "material
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 compose-material3-window = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 
-aboutlibraries = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutlibraries" }
+kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-plugin" }
+
+aboutlibraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutlibraries" }
+aboutlibraries-compose-core = { group = "com.mikepenz", name = "aboutlibraries-compose-core", version.ref = "aboutlibraries" }
 coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 dfc = { group = "com.lazygeniouz", name = "dfc", version.ref = "dfc" }
@@ -63,7 +66,6 @@ zoomable = { group = "net.engawapg.lib", name = "zoomable", version.ref = "zooma
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-plugin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-plugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-plugin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-plugin" }
-aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
+aboutlibraries-android = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutlibraries" }
