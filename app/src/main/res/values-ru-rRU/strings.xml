@@ -24,8 +24,8 @@
     <string name="warning_pickFile_failed">Не удалось выбрать файл</string>
     <string name="info">Информация</string>
     <string name="info_reminder">Напоминание</string>
-    <string name="info_copied">Скопировано в буфер обмена</string>
     <string name="info_pleaseWait">Пожалуйста, подождите…</string>
+    <string name="info_copied">Скопировано в буфер обмена</string>
     <string name="info_sharing">Отправка…</string>
     <string name="info_deleteQuestion">Вы уверены, что хотите удалить {NAME}?\nЭто действие НЕ может быть отменено!</string>
     <string name="info_shizuku_disconnected">Потеряно соединение с приложением Shizuku</string>

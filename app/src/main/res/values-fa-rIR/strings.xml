@@ -15,8 +15,8 @@
     <string name="intent_downloadMap">دانلود مپ</string>
     <string name="warning_error">مشکلی پیش آمده است</string>
     <string name="warning_pickFile_failed">دریافت فایل انجام نشد</string>
-    <string name="info_copied">کپی به کلیپ‌بورد</string>
     <string name="info_pleaseWait">لطفا صبر کنید…</string>
+    <string name="info_copied">کپی به کلیپ‌بورد</string>
     <string name="info_sharing">درحال ارسال…</string>
     <string name="info_deleteQuestion">آیا مطمئنید که می‌خواهید {NAME} را حذف کنید؟\nاین کار قابل واگرد نیست!</string>
     <string name="info_shizuku_disconnected">از شیزوکو قطع شده است</string>
