@@ -13,7 +13,7 @@
     <string name="intent_downloadMap">Baixar mapa</string>
     <string name="warning_error">Algo deu errado</string>
     <string name="warning_pickFile_failed">Falhar ao escolher o arquivo</string>
-    <string name="info_copiedToClipboard">Copiado para a área de transferência</string>
+    <string name="info_copied">Copiado para a área de transferência</string>
     <string name="info_deleteQuestion">Tem certeza de que deseja excluir {NAME}\nIsso NÃO pode ser desfeito!</string>
     <string name="info_shizuku_disconnected">Shizuku desconectado</string>
     <string name="info_useUnrecommendedAnyway_description">Só faça isso se tiver certeza de que seus dados do LAC estão armazenados em uma pasta diferente, ou se estiver apenas testando.</string>

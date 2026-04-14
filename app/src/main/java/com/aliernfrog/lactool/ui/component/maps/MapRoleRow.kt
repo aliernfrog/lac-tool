@@ -132,7 +132,7 @@ fun MapRoleRow(
                         context.getString(R.string.mapsRoles_copyRoleClipLabel),
                         role.removeHtml()
                     )))
-                    topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                    topToastState?.showToast(R.string.info_copied, Icons.Rounded.ContentCopy)
                 } }
             },
             {
@@ -148,7 +148,7 @@ fun MapRoleRow(
                         context.getString(R.string.mapsRoles_copyRoleClipLabel),
                         role
                     )))
-                    topToastState?.showToast(R.string.info_copiedToClipboard, Icons.Rounded.CopyAll)
+                    topToastState?.showToast(R.string.info_copied, Icons.Rounded.CopyAll)
                 } }
             },
             {

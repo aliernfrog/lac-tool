@@ -10,6 +10,7 @@
     <string name="action_clear">Clear</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
+    <string name="action_copy">Copy</string>
     <string name="action_more">More</string>
     <string name="action_expand">Expand</string>
     <string name="action_collapse">Collapse</string>
@@ -26,8 +27,8 @@
 
     <string name="info">Info</string>
     <string name="info_reminder">Reminder</string>
-    <string name="info_copiedToClipboard">Copied to clipboard</string>
     <string name="info_pleaseWait">Please wait…</string>
+    <string name="info_copied">Copied to clipboard</string>
     <string name="info_sharing">Sharing…</string>
     <string name="info_deleteQuestion">Are you sure you want to delete {NAME}?\nThis can NOT be undone!</string>
     <string name="info_shizuku_disconnected">Disconnected from Shizuku</string>
@@ -52,6 +53,11 @@
     <string name="permissions_notRecommendedFolder_advanced_hide">Hide advanced options</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Use the selected folder anyway</string>
     <string name="permissions_saf_foldersNeeded">Following folders must be chosen in order to proceed</string>
+    <string name="permissions_saf_documentsUiNotFound">Files app not found</string>
+    <string name="permissions_saf_documentsUiNotFound_disabled">The system Files app (DocumentsUI) is disabled on your device.\nSince this app is mandatory for LAC Tool and other apps using Scoped Storage, please enable it using the app info button below.</string>
+    <string name="permissions_saf_documentsUiNotFound_uninstalled">The system Files app (DocumentsUI) is missing from your device.\nThis is likely because you have previously uninstalled it via ADB or root permissions.\nSince this app is mandatory for LAC Tool and other apps using Scoped Storage, please re-install it.\nTry running the following commands which may re-install the app:</string>
+    <string name="permissions_saf_documentsUiNotFound_help">Having issues with this? Tap here to view support links</string>
+    <string name="permissions_saf_documentsUiNotFound_openAppInfo">Open app info</string>
     <string name="permissions_saf_allFiles">Access all files</string>
     <string name="permissions_saf_allFiles_description">Lets LAC Tool access all files, this may be easier to setup</string>
     <string name="permissions_setupShizuku">Use Shizuku</string>

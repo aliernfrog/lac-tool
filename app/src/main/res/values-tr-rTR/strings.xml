@@ -11,6 +11,7 @@
     <string name="action_clear">Temizle</string>
     <string name="action_share">Paylaş</string>
     <string name="action_delete">Sil</string>
+    <string name="action_copy">Kopyala</string>
     <string name="action_more">Daha fazla</string>
     <string name="action_expand">Genişlet</string>
     <string name="action_collapse">Daralt</string>
@@ -24,8 +25,8 @@
     <string name="warning_pickFile_failed">Dosya seçilemedi</string>
     <string name="info">Bilgi</string>
     <string name="info_reminder">Hatırlatma</string>
-    <string name="info_copiedToClipboard">Panoya kopyalandı</string>
     <string name="info_pleaseWait">Lütfen bekleyin…</string>
+    <string name="info_copied">Panoya kopyalandı</string>
     <string name="info_sharing">Paylaşılıyor…</string>
     <string name="info_deleteQuestion">{NAME} silmek istediğinizden emin misiniz?\nBu işlem geri alınamaz!</string>
     <string name="info_shizuku_disconnected">Shizuku bağlantısı kesildi</string>
@@ -49,6 +50,11 @@
     <string name="permissions_notRecommendedFolder_advanced_hide">Gelişmiş seçenekleri gizle</string>
     <string name="permissions_notRecommendedFolder_useAnyway">Yine de seçilen klasörü kullan</string>
     <string name="permissions_saf_foldersNeeded">Devam etmek için aşağıdaki klasörlerin seçilmesi gerekmektedir</string>
+    <string name="permissions_saf_documentsUiNotFound">Dosyalar uygulaması bulunamadı</string>
+    <string name="permissions_saf_documentsUiNotFound_disabled">Sistem Dosyalar uygulaması (DocumentsUI) cihazınızda devre dışı.\nBu uygulama LAC Tool ve Kapsamlı Depolama kullanan diğer uygulamalar için gerekli olduğundan, lütfen aşağıdaki uygulama bilgisi düğmesini kullanarak etkinleştirin.</string>
+    <string name="permissions_saf_documentsUiNotFound_uninstalled">Sistem Dosyalar uygulaması (DocumentsUI) cihazınızda eksik.\nBunun nedeni muhtemelen daha önce ADB veya root yetkileri aracılığıyla programı kaldırmış olmanızdır.\nBu uygulama LAC Tool ve Kapsamlı Depolama kullanan diğer uygulamalar için gerekli olduğundan, lütfen yeniden yükleyin.\nUygulamayı yeniden yüklemek için aşağıdaki komutları çalıştırmayı deneyin:</string>
+    <string name="permissions_saf_documentsUiNotFound_help">Bu konuda sorun mu yaşıyorsunuz? Destek bağlantılarını görüntülemek için buraya dokunun</string>
+    <string name="permissions_saf_documentsUiNotFound_openAppInfo">Uygulama bilgilerini aç</string>
     <string name="permissions_saf_allFiles">Tüm dosyalara eriş</string>
     <string name="permissions_saf_allFiles_description">LAC Tool\'un bütün dosyalara erişmesine izin verir, bunun kurulumu daha kolay olabilir</string>
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
