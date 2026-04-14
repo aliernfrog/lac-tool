@@ -10,6 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
+      attestations: write
+      id-token: write
       contents: write
 
     steps:
@@ -40,10 +42,10 @@ jobs:
           excludeTypes: build,chore,ci,docs,other,style
       
       - name: Create Release
-        uses: ncipollo/release-action@v1.20.0
+        uses: ncipollo/release-action@v1.21.0
         with:
-          allowUpdates: true
           draft: false
+          immutableCreate: true
           makeLatest: true
           name: ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.changes }}
@@ -51,9 +53,17 @@ jobs:
           artifacts: |
             lactool.apk
             mapping.txt
+
+      - name: Attest outputs
+        uses: actions/attest@v4
+        with:
+          subject-name: "LAC Tool ${{ github.ref_name }}"
+          subject-path: |
+            lactool.apk
+            mapping.txt
       
       - name: Upload artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: lactool
           path: |
