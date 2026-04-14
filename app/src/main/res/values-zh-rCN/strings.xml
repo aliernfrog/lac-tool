@@ -15,7 +15,7 @@
     <string name="intent_downloadMap">下载地图</string>
     <string name="warning_error">出错了</string>
     <string name="warning_pickFile_failed">选取文件失败</string>
-    <string name="info_copiedToClipboard">已复制到剪贴板</string>
+    <string name="info_copied">已复制到剪贴板</string>
     <string name="info_pleaseWait">请稍候…</string>
     <string name="info_sharing">正在分享…</string>
     <string name="info_deleteQuestion">您确定要删除 {NAME} 吗？\n此操作无法撤消！</string>

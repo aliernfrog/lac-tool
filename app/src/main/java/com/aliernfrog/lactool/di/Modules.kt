@@ -47,6 +47,9 @@ val appModules = listOf(
         ignoreDocumentsUIRestrictionsPref = {
             getKoinInstance<PreferenceManager>().ignoreDocumentsUIRestrictions
         },
+        initialDocumentsUINotFoundDialogVisibilityPref = {
+            getKoinInstance<PreferenceManager>().initialDocumentsUINotFoundDialogVisibility
+        },
         onSetStorageAccessType = {
             it.enable()
         }

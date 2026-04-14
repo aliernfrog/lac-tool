@@ -4,12 +4,14 @@ import com.aliernfrog.lactool.R
 import io.github.aliernfrog.pftool_shared.util.PFToolSharedString
 
 val pfToolSharedString = PFToolSharedString(
+    actionCopy = R.string.action_copy,
     actionMore = R.string.action_more,
     actionSelectDeselectAll = R.string.action_select_deselectAll,
     actionSelectSelectAll = R.string.action_select_selectAll,
     actionTapToDismiss = R.string.action_tapToDismiss,
 
     info = R.string.info,
+    infoCopied = R.string.info_copied,
     infoShizukuDisconnected = R.string.info_shizuku_disconnected,
 
     listOptions = R.string.list_options,
@@ -54,6 +56,11 @@ val pfToolSharedString = PFToolSharedString(
     permissionsSAFFoldersNeeded = R.string.permissions_saf_foldersNeeded,
     permissionsSAFAllFiles = R.string.permissions_saf_allFiles,
     permissionsSAFAllFilesDescription = R.string.permissions_saf_allFiles_description,
+    permissionsSAFDocumentsUiNotFound = R.string.permissions_saf_documentsUiNotFound,
+    permissionsSAFDocumentsUiNotFoundDisabled = R.string.permissions_saf_documentsUiNotFound_disabled,
+    permissionsSAFDocumentsUiNotFoundUninstalled = R.string.permissions_saf_documentsUiNotFound_uninstalled,
+    permissionsSAFDocumentsUiNotFoundHelp = R.string.permissions_saf_documentsUiNotFound_help,
+    permissionsSAFDocumentsUiNotFoundOpenAppInfo = R.string.permissions_saf_documentsUiNotFound_openAppInfo,
     permissionsShizukuIntroduction = R.string.permissions_shizuku_introduction,
     permissionsShizukuInstallTitle = R.string.permissions_shizuku_install_title,
     permissionsShizukuNotRunning = R.string.permissions_shizuku_notRunning,

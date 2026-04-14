@@ -74,7 +74,7 @@ fun MapMaterialSheetContent(
                     clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(
                         null, material.url
                     )))
-                    vm.topToastState.showToast(R.string.info_copiedToClipboard, Icons.Rounded.ContentCopy)
+                    vm.topToastState.showToast(R.string.info_copied, Icons.Rounded.ContentCopy)
                 } }
             },
             {

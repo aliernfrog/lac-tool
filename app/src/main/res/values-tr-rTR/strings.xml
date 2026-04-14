@@ -24,7 +24,7 @@
     <string name="warning_pickFile_failed">Dosya seçilemedi</string>
     <string name="info">Bilgi</string>
     <string name="info_reminder">Hatırlatma</string>
-    <string name="info_copiedToClipboard">Panoya kopyalandı</string>
+    <string name="info_copied">Panoya kopyalandı</string>
     <string name="info_pleaseWait">Lütfen bekleyin…</string>
     <string name="info_sharing">Paylaşılıyor…</string>
     <string name="info_deleteQuestion">{NAME} silmek istediğinizden emin misiniz?\nBu işlem geri alınamaz!</string>
