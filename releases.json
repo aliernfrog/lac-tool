@@ -1,5 +1,15 @@
 [
   {
+    "versionName": "v4.2.3",
+    "versionCode": 402300,
+    "prerelease": false,
+    "minSdk": 21,
+    "body": "### ✨ New Features\n- [`0e6ec95`](https://github.com/aliernfrog/lac-tool/commit/0e6ec95e4eb5f5302548cb19162ba993ccee3dcd) - Improve and update credits *(commit by @aliernfrog)*\n\n### 🐛 Bug Fixes\n- [`83bc0c2`](https://github.com/aliernfrog/lac-tool/commit/83bc0c23deeba75167910321a11f5f4520597a05) - **SAF**: Catch errors when checking for URI permissions *(commit by @aliernfrog)*\n- [`6b8a987`](https://github.com/aliernfrog/lac-tool/commit/6b8a987e4c30b1158db8a12685f54f8ea4c730e8) - Handle DocumentsUI being disabled/uninstalled *(commit by @aliernfrog)*",
+    "createdAt": 1776198671000,
+    "htmlUrl": "https://github.com/aliernfrog/lac-tool/releases/tag/v4.2.3",
+    "downloadUrl": "https://github.com/aliernfrog/lac-tool/releases/download/v4.2.3/lactool.apk"
+  },
+  {
     "versionName": "v4.2.2",
     "versionCode": 402200,
     "prerelease": false,
