@@ -76,8 +76,10 @@ val sharedString = SharedString(
 
     crashHandlerTitle = R.string.crashHandler_title,
     crashHandlerDescription = R.string.crashHandler_description,
-    crashHandlerStackTrace = R.string.crashHandler_stackTrace,
     crashHandlerReport = R.string.crashHandler_report,
+    crashHandlerStackTrace = R.string.crashHandler_stackTrace,
+    crashHandlerMessageDescription = R.string.crashHandler_message_description,
+    crashHandlerMessagePlaceholder = R.string.crashHandler_message_placeholder,
     crashHandlerSendReport = R.string.crashHandler_sendReport,
     crashHandlerSendReportSent = R.string.crashHandler_sendReport_sent,
     crashHandlerRestartApp = R.string.crashHandler_restartApp,

@@ -417,6 +417,9 @@
     <string name="crashHandler_title">Oops!</string>
     <string name="crashHandler_description">LAC Tool encountered an unexpected error and crashed</string>
     <string name="crashHandler_report">Please click the button below to send crash report to LAC Tool developer, this requires no additional steps</string>
+    <string name="crashHandler_stackTrace">Stack trace</string>
+    <string name="crashHandler_message_description">You can optionally leave a message to explain how the crash occurred.\nTo send the report without a message, leave the text field empty and click send crash report button below</string>
+    <string name="crashHandler_message_placeholder">(Optional) Explain how the crash occurred</string>
     <string name="crashHandler_sendReport">Send crash report</string>
     <string name="crashHandler_sendReport_sent">Sent report</string>
     <string name="crashHandler_restartApp">Restart app</string>
@@ -424,5 +427,4 @@
     <string name="crashHandler_support_description">Tap to expand support links</string>
     <string name="crashHandler_support_guide">To report this crash to LAC Tool developer directly, use Discord or GitHub links below.\nMake sure to copy and include the crash details in your report to speed up the process</string>
     <string name="crashHandler_support_copyDetails">Copy crash details</string>
-    <string name="crashHandler_stackTrace">Stack trace</string>
 </resources>
