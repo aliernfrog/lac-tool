@@ -33,6 +33,7 @@ val sharedString = SharedString(
     settingsAboutUpdatesAutoCheckUpdatesDescription = R.string.settings_about_updates_autoCheckUpdates_description,
     settingsAboutIssues = R.string.settings_about_issues,
     settingsAboutIssuesTitle = R.string.settings_about_issues_title,
+    settingsAboutIssuesTapToExpand = R.string.settings_about_issues_tapToExpand,
     settingsAboutIssuesDescription = R.string.settings_about_issues_description,
     settingsAboutIssuesCopyDebugInfo = R.string.settings_about_issues_copyDebugInfo,
     settingsAboutIssuesCopyDebugInfoDescription = R.string.settings_about_issues_copyDebugInfo_description,

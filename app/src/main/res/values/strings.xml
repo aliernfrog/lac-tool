@@ -368,11 +368,12 @@
     <string name="settings_about_updates_autoCheckUpdates_description">Check for LAC Tool updates automatically on launch</string>
     <string name="settings_about_issues">Issues &amp; feedback</string>
     <string name="settings_about_issues_title">Having issues or feedback?</string>
+    <string name="settings_about_issues_tapToExpand">Tap for more information</string>
     <string name="settings_about_issues_description">You can use the following links to report issues, get help, or provide feedback about LAC Tool</string>
     <string name="settings_about_issues_githubIssues">GitHub Issues</string>
     <string name="settings_about_issues_discord">Discord server</string>
     <string name="settings_about_issues_copyDebugInfo">Copy debug information</string>
-    <string name="settings_about_issues_copyDebugInfo_description">Including this in bug reports is recommended</string>
+    <string name="settings_about_issues_copyDebugInfo_description">Make sure to include debug information in bug reports</string>
     <string name="settings_about_issues_copyDebugInfo_clipLabel">LAC Tool debug info</string>
     <string name="settings_about_issues_copyDebugInfo_copied">Copied debug information</string>
     <string name="settings_about_credits">Credits</string>
