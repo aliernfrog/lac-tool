@@ -375,7 +375,6 @@ private fun OptionsActions(
                 modifier = Modifier.fillMaxWidth()
             )
             ScrollableRow(
-                gradientColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 LACMapAINavmeshObject.entries.forEach { entry ->
@@ -524,8 +523,7 @@ private fun FilterObjects(
             )
     )
     ScrollableRow(
-        modifier = Modifier.padding(horizontal = 12.dp),
-        gradientColor = containerColor
+        modifier = Modifier.padding(horizontal = 12.dp)
     ) {
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             FilterChip(
