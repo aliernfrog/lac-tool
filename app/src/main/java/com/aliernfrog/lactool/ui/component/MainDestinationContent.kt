@@ -15,17 +15,12 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
@@ -44,10 +39,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -58,15 +53,20 @@ import com.aliernfrog.lactool.ui.screen.wallpapers.WallpapersPermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.MainViewModel
 import com.aliernfrog.lactool.util.MainDestination
 import com.aliernfrog.lactool.util.NavigationBarType
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
+import io.github.aliernfrog.shared.util.toggledHazeBlur
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MainDestinationContent(
     vm: MainViewModel
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
-    val layoutDirection = LocalLayoutDirection.current
+    val hazeState = rememberHazeState()
 
     val mainDestinations = remember { MainDestination.entries }
     val currentMainDestination = vm.currentMainDestination
@@ -100,6 +100,7 @@ fun MainDestinationContent(
             bottomBar = {
                 BottomBar(
                     visible = navigationBarType == NavigationBarType.BOTTOM_BAR,
+                    hazeState = hazeState,
                     destinations = mainDestinations,
                     isDestinationSelected = ::isDestinationSelected,
                     onNavigateRequest = { changeDestination(it) }
@@ -109,14 +110,8 @@ fun MainDestinationContent(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(start = animatedSideBarWidth),
             contentWindowInsets = WindowInsets(0, 0, 0, 0)
-        ) {
-            val paddingValues = if (navigationBarType == NavigationBarType.BOTTOM_BAR) it
-            else PaddingValues(
-                start = it.calculateStartPadding(layoutDirection),
-                top = it.calculateTopPadding(),
-                end = it.calculateEndPadding(layoutDirection),
-                bottom = 0.dp
-            )
+        ) { paddingValues ->
+            val bottomPadding = paddingValues.calculateBottomPadding()
 
             AnimatedContent(
                 targetState = currentMainDestination,
@@ -130,23 +125,24 @@ fun MainDestinationContent(
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .consumeWindowInsets(paddingValues)
-                    .imePadding()
+                    .hazeSource(hazeState)
             ) { destination ->
                 when (destination) {
                     MainDestination.MAPS -> {
                         MapsScreen(
+                            bottomPadding = bottomPadding,
                             onNavigateRequest = ::onNavigateRequest
                         )
                     }
                     MainDestination.WALLPAPERS -> {
                         WallpapersPermissionsScreen(
+                            bottomPadding = bottomPadding,
                             onNavigateRequest = ::onNavigateRequest
                         )
                     }
                     MainDestination.SCREENSHOTS -> {
                         ScreenshotsPermissionsScreen(
+                            bottomPadding = bottomPadding,
                             onNavigateRequest = ::onNavigateRequest
                         )
                     }
@@ -171,6 +167,7 @@ fun MainDestinationContent(
 @Composable
 private fun BottomBar(
     visible: Boolean,
+    hazeState: HazeState,
     destinations: List<MainDestination>,
     isDestinationSelected: (MainDestination) -> Boolean,
     modifier: Modifier = Modifier,
@@ -182,7 +179,14 @@ private fun BottomBar(
         exit = slideOutVertically(animationSpec = tween(durationMillis = 150), targetOffsetY = { it }) + fadeOut(),
         modifier = modifier
     ) {
-        BottomAppBar(modifier) {
+        BottomAppBar(
+            containerColor = Color.Transparent,
+            modifier = modifier.toggledHazeBlur(
+                containerColor = BottomAppBarDefaults.containerColor,
+                containerOpacity = 0.7f,
+                input = HazeInput.Backdrop(hazeState)
+            )
+        ) {
             destinations.forEach {
                 val selected = isDestinationSelected(it)
                 NavigationBarItem(

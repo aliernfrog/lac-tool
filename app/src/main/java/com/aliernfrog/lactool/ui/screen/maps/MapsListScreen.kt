@@ -1,9 +1,8 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.mapActions
@@ -14,9 +13,9 @@ import io.github.aliernfrog.pftool_shared.ui.screen.maps.MapsListFileExtension
 import io.github.aliernfrog.pftool_shared.ui.screen.maps.MapsListScreen
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MapsListScreen(
+    bottomPadding: Dp,
     title: String = stringResource(R.string.mapsList_pickMap),
     vm: MapsListViewModel = koinViewModel(),
     showMultiSelectionActions: Boolean = true,
@@ -41,6 +40,7 @@ fun MapsListScreen(
         listViewOptions = vm.prefs.mapsListOptions,
         showThumbnailsInList = vm.prefs.showMapThumbnailsInList.value,
         showMultiSelectionActions = showMultiSelectionActions,
+        extraBottomPadding = bottomPadding,
         multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
             multiSelectFloatingActionButton(selectedMaps as List<MapFile>, clearSelection)
         },

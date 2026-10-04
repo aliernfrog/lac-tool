@@ -34,7 +34,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.SubcomposeLayout
@@ -47,7 +49,10 @@ import com.aliernfrog.lactool.impl.laclib.MutableMapToMerge
 import com.aliernfrog.lactool.ui.component.maps.MapToMerge
 import com.aliernfrog.lactool.ui.dialog.MergeMapDialog
 import com.aliernfrog.lactool.ui.viewmodel.MapsMergeViewModel
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
@@ -58,6 +63,7 @@ import io.github.aliernfrog.shared.ui.component.util.BottomSpacer
 import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
+import io.github.aliernfrog.shared.util.toggledHazeBlur
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,6 +75,7 @@ fun MapsMergeScreen(
     val scope = rememberCoroutineScope()
     AnimatedContent(vm.mapListShown) { showMapList ->
         if (showMapList) MapsListScreen(
+            bottomPadding = 0.dp,
             title = stringResource(R.string.mapsMerge_addMap),
             showMultiSelectionActions = false,
             multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
@@ -102,6 +109,7 @@ private fun MergeScreen(
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
+    val hazeState = rememberHazeState()
     val scope = rememberCoroutineScope()
 
     var showToolbarLabels by remember { mutableStateOf(true) }
@@ -111,10 +119,11 @@ private fun MergeScreen(
         onShowLabelsStateChange = { showToolbarLabels = it }
     )
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.mapsMerge),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = {
                     onNavigateBackRequest()
@@ -122,19 +131,28 @@ private fun MergeScreen(
             )
         },
         topAppBarState = vm.topAppBarState
-    ) {
+    ) { paddingValues ->
         Box {
-            Column(Modifier.fillMaxSize().verticalScroll(vm.scrollState)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(vm.scrollState)
+                    .padding(paddingValues)
+                    .hazeSource(hazeState)
+            ) {
                 MapsList(
                     vm = vm,
                     maps = vm.mapMerger.mapsToMerge,
                     onPickMapRequest = { vm.mapListShown = true }
                 )
-                BottomSpacer(Modifier.padding(top = AppFABPadding))
+                BottomSpacer(Modifier.padding(bottom = AppFABPadding))
             }
 
             HorizontalFloatingToolbar(
                 expanded = true,
+                colors = FloatingToolbarDefaults.standardFloatingToolbarColors().copy(
+                    toolbarContainerColor = Color.Transparent
+                ),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .systemBarsPadding()
@@ -142,6 +160,12 @@ private fun MergeScreen(
                     .shadow(
                         elevation = 6.dp,
                         shape = FloatingToolbarDefaults.ContainerShape
+                    )
+                    .clip(FloatingToolbarDefaults.ContainerShape)
+                    .toggledHazeBlur(
+                        containerColor = FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContainerColor,
+                        containerOpacity = 0f,
+                        input = HazeInput.Backdrop(hazeState),
                     )
             ) {
                 @Composable

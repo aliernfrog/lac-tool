@@ -30,7 +30,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +56,8 @@ import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.dialog.MaterialsNoConnectionDialog
 import com.aliernfrog.lactool.util.staticutil.GeneralUtil
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
@@ -62,7 +65,7 @@ import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
 import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
 import io.github.aliernfrog.pftool_shared.util.manager.base.PFToolBasePreferenceManager
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
@@ -70,6 +73,7 @@ import io.github.aliernfrog.shared.ui.component.FadeVisibilityColumn
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
+import io.github.aliernfrog.shared.ui.component.buildBottomSheetEnabledValues
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
@@ -88,7 +92,11 @@ fun MapsMaterialsScreen(
     onNavigateBackRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val materialsListOptionsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val hazeState = rememberHazeState()
+    val materialsListOptionsSheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = buildBottomSheetEnabledValues(skipPartiallyExpanded = true)
+    )
     val scope = rememberCoroutineScope()
 
     val isConnectedToInternet = remember { GeneralUtil.isConnectedToInternet(context) }
@@ -121,10 +129,11 @@ fun MapsMaterialsScreen(
         onGridMaxLineSpanChange = { gridMaxLineSpanPref.value = it }
     )
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.mapsMaterials),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = onNavigateBackRequest,
                 actions = {
@@ -140,12 +149,14 @@ fun MapsMaterialsScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         @Composable
         fun Header(modifier: Modifier = Modifier) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = modifier.padding(vertical = 8.dp)
+                modifier = modifier
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(vertical = 8.dp)
             ) {
                 if (!isConnectedToInternet) ElevatedCard(
                     colors = CardDefaults.elevatedCardColors(
@@ -239,10 +250,15 @@ fun MapsMaterialsScreen(
 
         @Composable
         fun Footer() {
-            BottomSpacer(Modifier.padding(top = 400.dp))
+            BottomSpacer(
+                Modifier
+                    .padding(bottom = 400.dp + paddingValues.calculateBottomPadding())
+            )
         }
 
-        Box {
+        Box(
+            modifier = Modifier.hazeSource(hazeState)
+        ) {
             AnimatedContent(targetState = listStyle) { style ->
                 when (style) {
                     ListStyle.LIST -> LazyColumn(Modifier.fillMaxSize()) {

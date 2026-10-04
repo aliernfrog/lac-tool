@@ -18,10 +18,11 @@ compose-material3 = "1.5.0-alpha29"
 aboutlibraries = "15.2.0"
 coil = "3.6.3"
 dfc = "2.0"
+haze = "2.0.1"
 koin = "4.2.2"
 laclib = "1.4.0"
 markdown = "0.7.2"
-pftool-shared = "87348676a4"
+pftool-shared = "597a5005d4"
 shizuku = "13.1.5"
 toptoast = "2.2.0-alpha04"
 zoomable = "2.15.0"
@@ -53,6 +54,9 @@ aboutlibraries-compose-core = { group = "com.mikepenz", name = "aboutlibraries-c
 coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 dfc = { group = "com.lazygeniouz", name = "dfc", version.ref = "dfc" }
+haze = { group = "dev.chrisbanes.haze", name = "haze", version.ref = "haze" }
+haze-blur = { group = "dev.chrisbanes.haze", name = "haze-blur", version.ref = "haze" }
+haze-blur-material3 = { group = "dev.chrisbanes.haze", name = "haze-blur-material3", version.ref = "haze" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 laclib = { group = "com.github.aliernfrog", name = "laclib", version.ref = "laclib" }
 markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "markdown" }

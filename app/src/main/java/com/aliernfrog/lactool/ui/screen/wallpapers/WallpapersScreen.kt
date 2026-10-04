@@ -40,17 +40,20 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
@@ -70,9 +73,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun WallpapersScreen(
     vm: WallpapersViewModel,
+    bottomPadding: Dp,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
+    val hazeState = rememberHazeState()
     val listStylePref = vm.prefs.wallpapersListOptions.styleGroup.getCurrent()
     val gridMaxLineSpanPref = vm.prefs.wallpapersListOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
@@ -94,10 +99,11 @@ fun WallpapersScreen(
         listViewOptionsPreference = vm.prefs.wallpapersListOptions
     )
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.wallpapers),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 actions = {
                     SettingsButton(onClick = onNavigateSettingsRequest)
@@ -110,6 +116,7 @@ fun WallpapersScreen(
                 icon = Icons.Default.Add,
                 text = stringResource(R.string.wallpapers_add),
                 expanded = showFABLabel,
+                modifier = Modifier.padding(bottom = bottomPadding),
                 onClick = {
                     mediaPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -117,7 +124,7 @@ fun WallpapersScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         @Composable
         fun WallpaperButton(
             wallpaper: FileWrapper,
@@ -144,12 +151,18 @@ fun WallpapersScreen(
         @Composable
         fun ListHeader(modifier: Modifier) {
             Header(
-                modifier = modifier,
+                modifier = modifier
+                    .padding(top = paddingValues.calculateTopPadding()),
                 vm = vm,
                 wallpaperButton = {
                     WallpaperButton(it)
                 }
             )
+        }
+
+        @Composable
+        fun Footer() {
+            BottomSpacer(Modifier.padding(top = AppFABPadding + bottomPadding))
         }
 
         val lazyListState = rememberLazyListState()
@@ -169,7 +182,9 @@ fun WallpapersScreen(
             when (style) {
                 ListStyle.LIST -> LazyColumn(
                     state = lazyListState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .hazeSource(hazeState)
                 ) {
                     item {
                         ListHeader(
@@ -194,7 +209,8 @@ fun WallpapersScreen(
                     state = lazyGridState,
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .hazeSource(hazeState),
                     maxLineSpan = gridMaxLineSpanPref.value
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
@@ -277,9 +293,4 @@ private fun Header(
             ) {}
         }
     }
-}
-
-@Composable
-private fun Footer() {
-    BottomSpacer(Modifier.padding(top = AppFABPadding))
 }
