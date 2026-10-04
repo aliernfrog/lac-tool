@@ -14,6 +14,7 @@
     <string name="action_more">More</string>
     <string name="action_expand">Expand</string>
     <string name="action_collapse">Collapse</string>
+    <string name="action_download">Download</string>
     <string name="action_select_selectAll">Select all</string>
     <string name="action_select_deselectAll">Deselect all</string>
 
@@ -162,7 +163,13 @@
     <string name="mapsList_search">Search maps…</string>
     <string name="mapsList_search_clear">Clear search</string>
     <string name="mapsList_count">{COUNT} maps</string>
-    <string name="mapsList_storage">Storage</string>
+    <string name="mapsList_add">Add maps</string>
+    <string name="mapsList_add_storage">From storage</string>
+    <string name="mapsList_add_url">From URL</string>
+    <string name="mapsList_download">Download map from URL</string>
+    <string name="mapsList_download_placeholder">URL to a map file</string>
+    <string name="mapsList_download_footer">Supported file extensions: %s</string>
+    <string name="mapsList_download_clipboard">Paste from clipboard</string>
     <string name="mapsList_imported">Your maps</string>
     <string name="mapsList_imported_noMaps">You do not have any maps</string>
     <string name="mapsList_exported">Exported maps</string>

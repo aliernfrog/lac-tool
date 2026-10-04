@@ -152,7 +152,7 @@
     <string name="mapsList_search">Haritaları arayın…</string>
     <string name="mapsList_search_clear">Aramayı temizle</string>
     <string name="mapsList_count">{COUNT} harita</string>
-    <string name="mapsList_storage">Depolama</string>
+    <string name="mapsList_add_storage">Depolama</string>
     <string name="mapsList_imported">Haritalarınız</string>
     <string name="mapsList_imported_noMaps">Hiç haritanız yok</string>
     <string name="mapsList_exported">Dışa aktarılanlar</string>
