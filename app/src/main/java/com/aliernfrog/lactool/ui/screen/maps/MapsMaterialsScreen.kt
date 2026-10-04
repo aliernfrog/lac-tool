@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,6 @@ import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -75,10 +73,11 @@ import io.github.aliernfrog.shared.ui.component.VerticalSegmentor
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveButtonRow
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveRowIcon
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
+import io.github.aliernfrog.shared.ui.component.util.BottomSpacer
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsMaterialsScreen(
     listOptions: PFToolBasePreferenceManager.ListViewOptionsPreference,
@@ -240,7 +239,7 @@ fun MapsMaterialsScreen(
 
         @Composable
         fun Footer() {
-            Spacer(Modifier.navigationBarsPadding().padding(200.dp))
+            BottomSpacer(Modifier.padding(top = 400.dp))
         }
 
         Box {
@@ -302,6 +301,7 @@ fun MapsMaterialsScreen(
                 visible = !isMaterialsLoadingFinished,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp)
                     .navigationBarsPadding()
             ) {
                 ElevatedCard(

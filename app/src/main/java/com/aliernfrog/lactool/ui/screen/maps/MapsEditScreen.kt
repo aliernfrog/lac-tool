@@ -57,12 +57,12 @@ import io.github.aliernfrog.shared.ui.component.expressive.getTextFieldColors
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
 import io.github.aliernfrog.shared.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 import io.github.aliernfrog.shared.ui.component.util.AnimatedVisibilityShadowWorkaround
+import io.github.aliernfrog.shared.ui.component.util.BottomSpacer
 import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsEditScreen(
     vm: MapsEditViewModel,
@@ -137,9 +137,7 @@ fun MapsEditScreen(
                     OptionsActions(editor)
                 }
                 MiscActions(vm, editor)
-                Spacer(Modifier
-                    .navigationBarsPadding()
-                    .height(AppFABPadding))
+                BottomSpacer(Modifier.padding(top = AppFABPadding))
             }
         }
 
@@ -157,7 +155,6 @@ fun MapsEditScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GeneralActions(
     vm: MapsEditViewModel,
@@ -455,7 +452,7 @@ private fun MiscActions(
         VerticalSegmentor(
             {
                 FadeVisibility(
-                    visible = !mapEditor.replaceableObjects.isEmpty()
+                    visible = mapEditor.replaceableObjects.isNotEmpty()
                 ) {
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
@@ -501,7 +498,6 @@ private fun MiscActions(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FilterObjects(
     containerColor: Color,
