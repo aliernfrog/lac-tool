@@ -12,8 +12,6 @@ import org.koin.dsl.module
 
 val appModule = module {
     singleOf(::PreferenceManager)
-    singleOf(::AppState)
-    singleOf(::MapsState)
 
     single {
         get<PreferenceManager>().let { prefs ->
@@ -31,6 +29,8 @@ val appModule = module {
         }
     }
 
+    singleOf(::AppState)
+    singleOf(::MapsState)
     single {
         TopToastState(
             composeView = null,

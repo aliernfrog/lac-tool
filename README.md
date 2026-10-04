@@ -7,8 +7,14 @@
 
   <br>
 
-  [![Download (Android 5.0 or above)](https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Download%20(Android%205.0%2B)&labelColor=green&color=grey)](https://github.com/aliernfrog/lac-tool/releases/latest/download/lactool.apk)
-  [![Download legacy (Android 4.3 or above)](https://img.shields.io/github/v/tag/aliernfrog/lac-tool-legacy?style=for-the-badge&label=Download%20legacy%20(Android%204.3%2B)&labelColor=blue&color=grey)](https://github.com/aliernfrog/lac-tool-legacy/releases/latest/download/lactool-legacy.apk)
+  [![Download](https://img.shields.io/github/v/tag/aliernfrog/lac-tool?style=for-the-badge&label=Download&labelColor=blue&color=grey)](https://github.com/aliernfrog/lac-tool/releases/latest/download/lactool.apk) 
+  <sub>
+    <br>At least <b>Android 7.0</b> is required<br>
+    <br>
+    For Android 5.0 & 6.0, latest available version is [v4.2.3](https://github.com/aliernfrog/lac-tool/releases/download/v4.2.3/lactool.apk) - can receive fixes and minor features<br>
+    <br>
+    For Android 4.3 ONLY, [LAC Tool Legacy](https://github.com/aliernfrog/lac-tool-legacy/releases/latest/download/lactool-legacy.apk) is available - UNMAINTAINED
+  </sub>
 
   <br>
 
@@ -41,7 +47,7 @@ You can help translate LAC Tool on [Crowdin](https://crowdin.com/project/lac-too
 
 Shizuku method in LAC Tool can be enabled or disabled anytime from settings.
 
-Shizuku method will automatically be enabled if there is no other way for the app to access LAC data. The app will guide you to setup Shizuku if this mode is enabled.
+Shizuku method will automatically be enabled if there is no other way for the app to access LAC data. The app will guide you to set up Shizuku if this mode is enabled.
 
 ## 🩹 Project structure
 LAC Tool uses mostly the same codebase as ["PF Tool"](https://github.com/aliernfrog/pf-tool). To avoid updating the codebase for each app, shared code was moved into 2 libraries in `pf-tool` repository: [pftool-shared-base](https://github.com/aliernfrog/pf-tool/tree/main/shared) and [pftool-shared-extra](https://github.com/aliernfrog/pf-tool/tree/main/pftool-shared).
