@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.darkColorScheme
@@ -22,7 +21,6 @@ import com.aliernfrog.lactool.ui.activity.MainActivity
 
 val supportsMaterialYou = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @SuppressLint("NewApi")
 @Composable
 fun LACToolTheme(
@@ -55,7 +53,7 @@ fun LACToolTheme(
             @Suppress("DEPRECATION")
             activity.window.statusBarColor = it
             @Suppress("DEPRECATION")
-            if (Build.VERSION.SDK_INT >= 24) activity.window.navigationBarColor = it
+            activity.window.navigationBarColor = it
         }
 
         if (Build.VERSION.SDK_INT >= 29) {
