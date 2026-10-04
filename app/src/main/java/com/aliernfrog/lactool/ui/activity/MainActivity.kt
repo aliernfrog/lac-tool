@@ -1,5 +1,6 @@
 package com.aliernfrog.lactool.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.util.Consumer
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -74,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             val context = LocalContext.current
             val view = LocalView.current
             val useDarkTheme = shouldUseDarkTheme(vm.prefs.theme.value)
-            var isAppInitialized by rememberSaveable { mutableStateOf(false) }
+            var lastHandledIntentId by rememberSaveable { mutableStateOf<String?>(null) }
 
             @Composable
             fun AppTheme(content: @Composable () -> Unit) {
@@ -96,16 +99,26 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            DisposableEffect(context) {
+                val activity = this@MainActivity
+                val listener = Consumer<Intent> { intent ->
+                    vm.handleIntent(intent, context = context)
+                }
+                activity.addOnNewIntentListener(listener)
+                onDispose {
+                    activity.removeOnNewIntentListener(listener)
+                }
+            }
+
             LaunchedEffect(Unit) {
                 vm.setSafTxtFileCreator(safTxtFileCreator)
                 vm.topToastState.setComposeView(view)
-                if (isAppInitialized) return@LaunchedEffect
-
                 vm.topToastState.setAppTheme { AppTheme(it) }
                 this@MainActivity.intent?.let {
-                    vm.handleIntent(it, context = context)
+                    val id = it.toUri(0)
+                    if (id != lastHandledIntentId) vm.handleIntent(it, context = context)
+                    lastHandledIntentId = id
                 }
-                isAppInitialized = true
             }
         }
     }
