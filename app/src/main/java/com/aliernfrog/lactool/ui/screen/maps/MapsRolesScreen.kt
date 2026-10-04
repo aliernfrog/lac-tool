@@ -2,10 +2,8 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,6 +34,7 @@ import io.github.aliernfrog.shared.ui.component.AppScaffold
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
+import io.github.aliernfrog.shared.ui.component.util.BottomSpacer
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
@@ -120,7 +119,7 @@ fun MapsRolesScreen(
                 )
             }
             item {
-                Spacer(Modifier.navigationBarsPadding().height(AppFABPadding))
+                BottomSpacer(Modifier.padding(top = AppFABPadding))
             }
         }
     }
