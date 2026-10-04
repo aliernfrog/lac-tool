@@ -35,7 +35,7 @@
     <string name="maps_permissions_exported">Pasta para exportar os mapas</string>
     <string name="maps_share_short">Compartilhar</string>
     <string name="maps_delete_short">Apagar</string>
-    <string name="mapsList_storage">Arquivos</string>
+    <string name="mapsList_add_storage">Arquivos</string>
     <string name="mapsList_imported">Seus mapas</string>
     <string name="mapsList_exported">Mapas exportados</string>
     <string name="mapsList_shared">Compartilhado</string>

@@ -146,7 +146,7 @@
     <string name="mapsList_search">Искать карты…</string>
     <string name="mapsList_search_clear">Очистить поиск</string>
     <string name="mapsList_count">Карт: {COUNT}</string>
-    <string name="mapsList_storage">Хранилище</string>
+    <string name="mapsList_add_storage">Хранилище</string>
     <string name="mapsList_imported">Ваши карты</string>
     <string name="mapsList_imported_noMaps">У вас нет карт</string>
     <string name="mapsList_exported">Экспортированные карты</string>

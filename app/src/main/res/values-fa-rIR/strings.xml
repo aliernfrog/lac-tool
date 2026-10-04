@@ -117,7 +117,7 @@
     <string name="mapsList_search">جستجوی مپ</string>
     <string name="mapsList_search_clear">پاک کردن جستجو</string>
     <string name="mapsList_count">{COUNT} نقشه ها</string>
-    <string name="mapsList_storage">حافظه</string>
+    <string name="mapsList_add_storage">حافظه</string>
     <string name="mapsList_imported">مپ های شما</string>
     <string name="mapsList_imported_noMaps">شما هیچ مپی ندارید</string>
     <string name="mapsList_exported">مپ صادر شد</string>

@@ -10,6 +10,7 @@ import com.aliernfrog.lactool.impl.mapActions
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.viewmodel.MapsListViewModel
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
+import io.github.aliernfrog.pftool_shared.ui.screen.maps.MapsListFileExtension
 import io.github.aliernfrog.pftool_shared.ui.screen.maps.MapsListScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -29,7 +30,12 @@ fun MapsListScreen(
     @Suppress("UNCHECKED_CAST")
     MapsListScreen(
         title = title,
-        fileMimeType = "text/plain",
+        supportedFileExtensions = listOf(
+            MapsListFileExtension(
+                extension = ".txt",
+                mimeType = "text/plain"
+            )
+        ),
         mapsListSegments = vm.availableSegments,
         mapActions = mapActions,
         listViewOptions = vm.prefs.mapsListOptions,
