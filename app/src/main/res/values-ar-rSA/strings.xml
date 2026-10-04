@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">LAC Tool</string>
+    <string name="info_deleteQuestion">هل أنت متأكد من حذف {NAME}؟\nلا يمكن التراجع لاحقاً!</string>
+    <string name="info_shizuku_disconnected">غير متصل مع Shizuku</string>
+    <string name="permissions_downgradeFilesApp_description">يمنع تطبيق الملفات على جهازك LAC Tool من الوصول إلى ملفات LAC. قد يكون من الممكن حل هذه المشكلة عن طريق إلغاء تثبيت تحديثات تطبيق الملفات.</string>
+    <string name="permissions_recommendedFolder_a8Hint">بعد النقر على \"حسناً\"، المجلد سيفتح في نافذة جديدة. تحقق أنك في المجلد الصحيح و \"USE THIS FOLDER\"</string>
+    <string name="permissions_recommendedFolder_importWallpaperToCreate">يمكنك إنشاء هذا المجلد يدويًا أو تشغيل لعبة LAC، ثم الدخول إلى أي خريطة، وفتح الهاتف داخل اللعبة، والنقر على الإعدادات، وكتابة نص عشوائي في حقل \"Custom wallpaper link\"، ثم إغلاق لوحة المفاتيح والانتظار حتى تظهر كلمة \"FAIL\" أو \"SUCCESS\" لإنشاء المجلد تلقائيًا.</string>
+    <string name="permissions_shizuku_installShizuku">حمل Shizuku</string>
+    <string name="permissions_shizuku_permission">يلزم الحصول على صلاحية</string>
+    <string name="permissions_shizuku_permission_description">LAC Tool لا يمتلك صلاحية لاستخدام Shizuku</string>
+    <string name="permissions_shizuku_rooted_description">في الأجهزة ألمروته يمكنك وضع Shizuku يشتغل تلقائيًا عندما جهازك يتم تشغيله، يمكنك إيجاد هذا الخيار في Shizuku\nأو يمكنك استخدام وحدة Zygisk الخاصة Shizuku \"Sui\" التي تعمل بشكل مشابه.</string>
+    <string name="permissions_shizuku_problematicVersion">قد يتسبب الإصدار الحالي من Shizuku ({CURRENT_VERSION}) في انتظار غير محدد على هذه الشاشة. يُرجى الرجوع إلى الإصدار {RECOMMENDED_VERSION} إذا واجهت هذه المشكلة</string>
+    <string name="permissions_allFiles_saf_description">يُتيح هذا LAC Tool الوصول فقط إلى الدلائل التي تحتاجها، وقد يكون إعداد ذلك معقدًا.</string>
     <string name="maps_mapName">اسم الخريطة</string>
+    <string name="mapsEdit_serverName">اسم السيرفر</string>
 </resources>

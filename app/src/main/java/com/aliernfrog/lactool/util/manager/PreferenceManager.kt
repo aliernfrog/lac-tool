@@ -53,8 +53,8 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
     // Experimental (developer) options
     val experimentalOptionsEnabled = booleanPreference("experimentalOptionsEnabled", false)
     val ignoreDocumentsUIRestrictions = booleanPreference("ignoreDocumentsUiRestrictions", false, experimental = true, includeInDebugInfo = false)
-    // TODO fix below pref (maybe)
-    val forceStorageAccessTypeCompatibility = booleanPreference("forceStorageAccessTypeCompatibility", false, experimental = true, includeInDebugInfo = false)
+    val initialDocumentsUINotFoundDialogVisibility = booleanPreference("initialDocumentsUiNotFoundDialogVisibility", false, experimental = true, includeInDebugInfo = false)
+    // TODO fix (maybe) val forceStorageAccessTypeCompatibility = booleanPreference("forceStorageAccessTypeCompatibility", false, experimental = true, includeInDebugInfo = false)
     val debug = booleanPreference("debug", false, experimental = true, includeInDebugInfo = false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
     val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", context.getAppVersionCode(), experimental = true, includeInDebugInfo = false)
