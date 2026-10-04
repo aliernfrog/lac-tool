@@ -57,6 +57,7 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
     // TODO fix (maybe) val forceStorageAccessTypeCompatibility = booleanPreference("forceStorageAccessTypeCompatibility", false, experimental = true, includeInDebugInfo = false)
     val debug = booleanPreference("debug", false, experimental = true, includeInDebugInfo = false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
+    val shizukuForceUnrecommendedVersion = booleanPreference("shizukuForceUnrecommendedVersion", false, experimental = true, includeInDebugInfo = false)
     val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", context.getAppVersionCode(), experimental = true, includeInDebugInfo = false)
     val releasesURL = stringPreference("releasesUrl", defaultReleasesURL, experimental = true, includeInDebugInfo = false)
 }

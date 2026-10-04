@@ -62,7 +62,8 @@
     <string name="permissions_saf_allFiles_description">Lets LAC Tool access all files, this may be easier to setup</string>
     <string name="permissions_setupShizuku">Use Shizuku</string>
     <string name="permissions_setupShizuku_description">You need to use Shizuku to let LAC Tool access LAC folders.\nThis is because the Files app on your device does not allow apps to get access to files inside Android/data.\nYou can toggle Shizuku mode anytime from settings.</string>
-    <string name="permissions_shizuku_introduction">Shizuku is an app which lets apps elevate permissions using Android debug bridge.\nTap to configure storage access and Shizuku mode</string>
+    <string name="permissions_shizuku_introduction">Shizuku is an app which lets apps elevate permissions using Android debug bridge</string>
+    <string name="permissions_shizuku_tapToConfigure">Tap to configure storage access and Shizuku mode</string>
     <string name="permissions_shizuku_openShizuku">Open Shizuku</string>
     <string name="permissions_shizuku_installShizuku">Install Shizuku</string>
     <string name="permissions_shizuku_install_title">Install Shizuku to get started</string>
@@ -77,10 +78,9 @@
     <string name="permissions_shizuku_waitingService">Waiting for file service…</string>
     <string name="permissions_shizuku_waitingService_timedOut">Taking long? Try restarting LAC Tool</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Restart</string>
-    <string name="permissions_shizuku_problematicVersion">Current version of Shizuku ({CURRENT_VERSION}) may cause indefinite wait on this screen. Please downgrade to {RECOMMENDED_VERSION} if you have this issue</string>
-    <string name="permissions_shizuku_problematicVersion_note">Remember to uninstall current Shizuku before downgrading. You can also upgrade to a newer version than {CURRENT_VERSION} if available</string>
-    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Download recommended version</string>
-    <string name="permissions_shizuku_problematicVersion_allVersions">All versions</string>
+    <string name="permissions_shizuku_recommendedVersion">Official Shizuku is now stale and may have various issues, especially on Android 17+ or MediaTek devices. It is recommended to switch to the fork by thedjchi</string>
+    <string name="permissions_shizuku_recommendedVersion_note">Remember to uninstall current Shizuku before installing the fork</string>
+    <string name="permissions_shizuku_recommendedVersion_download">Download recommended version</string>
     <string name="permissions_allFiles_title">Storage permissions</string>
     <string name="permissions_allFiles_description">Storage permissions are needed for LAC Tool to access LAC data</string>
     <string name="permissions_allFiles_grant">Grant permission</string>

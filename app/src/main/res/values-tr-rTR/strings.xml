@@ -59,7 +59,7 @@
     <string name="permissions_saf_allFiles_description">LAC Tool\'un bütün dosyalara erişmesine izin verir, bunun kurulumu daha kolay olabilir</string>
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
     <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan açıp kapatabilirsiniz.</string>
-    <string name="permissions_shizuku_introduction">Shizuku, uygulamaların Android hata ayıklama köprüsünü kullanarak izinleri yükseltmesine olanak tanıyan bir uygulamadır.\nDepolama erişimini ve Shizuku modunu yapılandırmak için dokunun</string>
+    <string name="permissions_shizuku_introduction">Shizuku, uygulamaların Android hata ayıklama köprüsünü kullanarak izinleri yükseltmesine olanak tanıyan bir uygulamadır</string>
     <string name="permissions_shizuku_openShizuku">Shizuku\'yu aç</string>
     <string name="permissions_shizuku_installShizuku">Shizuku\'yu yükle</string>
     <string name="permissions_shizuku_install_title">Shizuku\'yu yükleyerek başlayın</string>
@@ -74,10 +74,6 @@
     <string name="permissions_shizuku_waitingService">Dosya hizmeti bekleniyor…</string>
     <string name="permissions_shizuku_waitingService_timedOut">Uzun mu sürüyor? LAC Tool\'u yeniden başlatmayı deneyin</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Yeniden başlat</string>
-    <string name="permissions_shizuku_problematicVersion">Shizuku\'nun mevcut sürümü ({CURRENT_VERSION}), bu ekranda sonsuz beklemenize sebep olabilir. Bu sorundan etkileniyorsanız lütfen {RECOMMENDED_VERSION} sürümüne düşürün</string>
-    <string name="permissions_shizuku_problematicVersion_note">Sürüm düşürmeden önce mevcut Shizuku\'yu kaldırmayı unutmayın. Ayrıca, mevcutsa {CURRENT_VERSION} sürümünden daha yeni bir sürüme de yükseltebilirsiniz</string>
-    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Önerilen sürümü indir</string>
-    <string name="permissions_shizuku_problematicVersion_allVersions">Bütün sürümler</string>
     <string name="permissions_allFiles_title">Depolama izinleri</string>
     <string name="permissions_allFiles_description">LAC Tool\'un LAC verilerine erişmesi için depolama izinleri gereklidir</string>
     <string name="permissions_allFiles_grant">İzin ver</string>

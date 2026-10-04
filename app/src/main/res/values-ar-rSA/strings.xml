@@ -10,7 +10,6 @@
     <string name="permissions_shizuku_permission">يلزم الحصول على صلاحية</string>
     <string name="permissions_shizuku_permission_description">LAC Tool لا يمتلك صلاحية لاستخدام Shizuku</string>
     <string name="permissions_shizuku_rooted_description">في الأجهزة ألمروته يمكنك وضع Shizuku يشتغل تلقائيًا عندما جهازك يتم تشغيله، يمكنك إيجاد هذا الخيار في Shizuku\nأو يمكنك استخدام وحدة Zygisk الخاصة Shizuku \"Sui\" التي تعمل بشكل مشابه.</string>
-    <string name="permissions_shizuku_problematicVersion">قد يتسبب الإصدار الحالي من Shizuku ({CURRENT_VERSION}) في انتظار غير محدد على هذه الشاشة. يُرجى الرجوع إلى الإصدار {RECOMMENDED_VERSION} إذا واجهت هذه المشكلة</string>
     <string name="permissions_allFiles_saf_description">يُتيح هذا LAC Tool الوصول فقط إلى الدلائل التي تحتاجها، وقد يكون إعداد ذلك معقدًا.</string>
     <string name="maps_mapName">اسم الخريطة</string>
     <string name="mapsEdit_serverName">اسم السيرفر</string>

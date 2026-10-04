@@ -53,7 +53,7 @@
     <string name="permissions_saf_allFiles_description">Разрешите LAC Tool получить доступ ко всем файлам, это может ускорить настройку</string>
     <string name="permissions_setupShizuku">Использовать Shizuku</string>
     <string name="permissions_setupShizuku_description">Вам нужно использовать Shizuku, чтобы разрешить LAC Tool получить доступ к папкам LAC.\nЭто нужно из-за того, что приложение Files на вашем устройстве не позволяет другим приложениям получать доступ к файлам внутри Android/data.\nВы можете изменить режим Shizuku в любое время в настройках.</string>
-    <string name="permissions_shizuku_introduction">Shizuku — это приложение, позволяющее приложениям повышать привилегии с помощью Android Debug Bridge.\nНажмите, чтобы настроить доступ к хранилищу и режим Shizuku</string>
+    <string name="permissions_shizuku_introduction">Shizuku — это приложение, позволяющее приложениям повышать привилегии с помощью Android Debug Bridge</string>
     <string name="permissions_shizuku_openShizuku">Открыть Shizuku</string>
     <string name="permissions_shizuku_installShizuku">Установить Shizuku</string>
     <string name="permissions_shizuku_install_title">Установите Shizuku, чтобы начать</string>
@@ -68,10 +68,6 @@
     <string name="permissions_shizuku_waitingService">Ожидается файловый сервис…</string>
     <string name="permissions_shizuku_waitingService_timedOut">Слишком долго? Попробуйте перезапустить LAC Tool</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Перезапустить</string>
-    <string name="permissions_shizuku_problematicVersion">Текущая версия Shizuku ({CURRENT_VERSION}) может вызывать бесконечное ожидание на этом экране. Если у вас возникла эта проблема, пожалуйста, понизьте версию до версии:{RECOMMENDED_VERSION}</string>
-    <string name="permissions_shizuku_problematicVersion_note">Перед откатом не забудьте удалить текущую версию Shizuku. Также, если доступна более новая версия, вы можете обновиться до версии: {CURRENT_VERSION}</string>
-    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Установить рекомендованную версию</string>
-    <string name="permissions_shizuku_problematicVersion_allVersions">Все версии</string>
     <string name="permissions_allFiles_title">Хранилище</string>
     <string name="permissions_allFiles_description">Для доступа LAC Tool к данным LAC необходимы разрешения на доступ к хранилищу</string>
     <string name="permissions_allFiles_grant">Предоставить разрешение</string>

@@ -41,6 +41,9 @@ val appModules = listOf(
         shizukuNeverLoadPref = {
             getKoinInstance<PreferenceManager>().shizukuNeverLoad
         },
+        shizukuForceUnrecommendedVersionPref = {
+            getKoinInstance<PreferenceManager>().shizukuForceUnrecommendedVersion
+        },
         storageAccessTypePref = {
             getKoinInstance<PreferenceManager>().storageAccessType
         },
