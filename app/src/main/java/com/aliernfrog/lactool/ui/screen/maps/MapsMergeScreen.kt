@@ -136,9 +136,9 @@ private fun MergeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .hazeSource(hazeState)
                     .verticalScroll(vm.scrollState)
                     .padding(paddingValues)
-                    .hazeSource(hazeState)
             ) {
                 MapsList(
                     vm = vm,
