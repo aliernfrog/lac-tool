@@ -1,8 +1,5 @@
 package com.aliernfrog.lactool.ui.screen.wallpapers
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +19,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -57,7 +53,6 @@ import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
-import io.github.aliernfrog.shared.ui.component.FloatingActionButton
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
@@ -83,13 +78,6 @@ fun WallpapersScreen(
     val listStyle = ListStyle.entries[listStylePref.value]
     var showFABLabel by remember { mutableStateOf(true) }
 
-    val mediaPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) vm.onWallpaperPick(uri, context)
-        }
-    )
-
     LaunchedEffect(Unit) {
         vm.fetchImportedWallpapers(context)
     }
@@ -110,20 +98,7 @@ fun WallpapersScreen(
                 }
             )
         },
-        topAppBarState = vm.topAppBarState,
-        floatingActionButton = {
-            FloatingActionButton(
-                icon = Icons.Default.Add,
-                text = stringResource(R.string.wallpapers_add),
-                expanded = showFABLabel,
-                modifier = Modifier.padding(bottom = bottomPadding),
-                onClick = {
-                    mediaPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
-            )
-        }
+        topAppBarState = vm.topAppBarState
     ) { paddingValues ->
         @Composable
         fun WallpaperButton(

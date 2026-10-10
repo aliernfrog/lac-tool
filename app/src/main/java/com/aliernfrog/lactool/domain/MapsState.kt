@@ -32,6 +32,7 @@ class MapsState(
         get() = prefs.exportedMapsDir.value
 
     val mapsBackStack = MapsNavigationBackStack()
+    var addMapMenuExpanded by mutableStateOf(false)
     var mapsPendingDelete by mutableStateOf<List<MapFile>?>(null)
     var customDialogTitleAndText: Pair<String, String>? by mutableStateOf(null)
     var availableSegments by mutableStateOf(

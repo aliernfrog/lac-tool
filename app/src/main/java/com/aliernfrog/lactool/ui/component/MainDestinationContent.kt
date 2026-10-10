@@ -24,7 +24,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -132,7 +134,12 @@ fun MainDestinationContent(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(start = animatedSideBarWidth),
-            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            floatingActionButton = {
+                if (!isBottomBarVisible) currentMainDestination.floatingActionButton?.let {
+                    it(Modifier, false)
+                }
+            }
         ) { _ ->
             Box {
                 AnimatedContent(
@@ -177,9 +184,11 @@ fun MainDestinationContent(
                     visible = isBottomBarVisible,
                     hazeState = hazeState,
                     destinations = mainDestinations,
+                    modifier = Modifier.align(Alignment.BottomCenter),
                     isDestinationSelected = ::isDestinationSelected,
                     onNavigateRequest = { changeDestination(it) },
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    floatingActionButton = currentMainDestination.floatingActionButton,
+                    fabMenu = currentMainDestination.fabMenuForFloatingBar
                 )
             }
         }
@@ -206,115 +215,134 @@ private fun FloatingBottomBar(
     destinations: List<MainDestination>,
     isDestinationSelected: (MainDestination) -> Boolean,
     modifier: Modifier = Modifier,
-    onNavigateRequest: (MainDestination) -> Unit
+    onNavigateRequest: (MainDestination) -> Unit,
+    floatingActionButton: (@Composable (Modifier, Boolean) -> Unit)?,
+    fabMenu: (@Composable (Modifier) -> Unit)?
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = slideInVertically(
-            animationSpec = tween(durationMillis = 150),
-            initialOffsetY = { it }
-        ) + scaleIn() + fadeIn(),
-        exit = slideOutVertically(
-            animationSpec = tween(durationMillis = 150),
-            targetOffsetY = { it }
-        ) + shrinkOut() + fadeOut(),
-        modifier = modifier
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
-        Box(
-            contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Brush.verticalGradient(listOf(
-                    Color.Transparent,
-                    MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
-                    MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                )))
+        AnimatedVisibility(
+            visible = visible,
+            enter = slideInVertically(
+                animationSpec = tween(durationMillis = 150),
+                initialOffsetY = { it }
+            ) + scaleIn() + fadeIn(),
+            exit = slideOutVertically(
+                animationSpec = tween(durationMillis = 150),
+                targetOffsetY = { it }
+            ) + shrinkOut() + fadeOut(),
+            modifier = modifier
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Brush.verticalGradient(listOf(
+                        Color.Transparent,
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                    )))
                     .navigationBarsPadding()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = FloatingToolbarDefaults.ContainerShape
-                    )
-                    .clip(FloatingToolbarDefaults.ContainerShape)
-                    .toggledHazeBlur(
-                        containerColor = FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContainerColor,
-                        containerOpacity = 0.7f,
-                        input = HazeInput.Backdrop(hazeState),
-                    )
-                    .padding(8.dp)
             ) {
-                destinations.forEachIndexed { index, destination ->
-                    val selected = isDestinationSelected(destination)
-                    val addTrailingSpace = index < destinations.lastIndex
+                fabMenu?.invoke(Modifier.align(Alignment.End))
 
-                    val interactionSource = remember { MutableInteractionSource() }
-                    val pressed by interactionSource.collectIsPressedAsState()
-                    val containerColor by animateColorAsState(
-                        if (selected) MaterialTheme.colorScheme.secondaryContainer
-                        else Color.Transparent
-                    )
-                    val contentColor by animateColorAsState(
-                        if (selected) MaterialTheme.colorScheme.onSecondaryContainer
-                        else FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContentColor
-                    )
-                    val shape by animateIntAsState(
-                        if (pressed) 20 else 50
-                    )
-
-                    TooltipBox(
-                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                            positioning = TooltipAnchorPosition.Above
-                        ),
-                        tooltip = {
-                            PlainTooltip {
-                                Text(stringResource(destination.label))
-                            }
-                        },
-                        state = rememberTooltipState()
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = FloatingToolbarDefaults.ContainerShape
+                            )
+                            .clip(FloatingToolbarDefaults.ContainerShape)
+                            .toggledHazeBlur(
+                                containerColor = FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContainerColor,
+                                containerOpacity = 0.7f,
+                                input = HazeInput.Backdrop(hazeState),
+                            )
+                            .padding(8.dp)
                     ) {
-                        CompositionLocalProvider(LocalContentColor provides contentColor) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(shape))
-                                    .background(containerColor)
-                                    .clickable(
-                                        interactionSource = interactionSource,
-                                        indication = ripple()
-                                    ) {
-                                        onNavigateRequest(destination)
-                                    }
-                                    .padding(
-                                        vertical = 8.dp, horizontal = 8.dp
-                                    )
-                            ) {
-                                NavigationItemIcon(
-                                    destination = destination,
-                                    selected = selected,
-                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                )
+                        destinations.forEachIndexed { index, destination ->
+                            val selected = isDestinationSelected(destination)
+                            val addTrailingSpace = index < destinations.lastIndex
 
-                                AnimatedVisibility(
-                                    visible = selected,
-                                    enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
-                                    exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut()
-                                ) {
-                                    Text(
-                                        text = stringResource(destination.label),
-                                        style = ButtonDefaults.textStyleFor(ButtonDefaults.ExtraSmallContainerHeight),
-                                        maxLines = 1,
-                                        modifier = Modifier.padding(start = 4.dp)
-                                    )
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val pressed by interactionSource.collectIsPressedAsState()
+                            val containerColor by animateColorAsState(
+                                if (selected) MaterialTheme.colorScheme.secondaryContainer
+                                else Color.Transparent
+                            )
+                            val contentColor by animateColorAsState(
+                                if (selected) MaterialTheme.colorScheme.onSecondaryContainer
+                                else FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContentColor
+                            )
+                            val shape by animateIntAsState(
+                                if (pressed) 20 else 50
+                            )
+
+                            TooltipBox(
+                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                    positioning = TooltipAnchorPosition.Above
+                                ),
+                                tooltip = {
+                                    PlainTooltip {
+                                        Text(stringResource(destination.label))
+                                    }
+                                },
+                                state = rememberTooltipState()
+                            ) {
+                                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(shape))
+                                            .background(containerColor)
+                                            .clickable(
+                                                interactionSource = interactionSource,
+                                                indication = ripple()
+                                            ) {
+                                                onNavigateRequest(destination)
+                                            }
+                                            .padding(
+                                                vertical = 8.dp, horizontal = 8.dp
+                                            )
+                                    ) {
+                                        NavigationItemIcon(
+                                            destination = destination,
+                                            selected = selected,
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                        )
+
+                                        AnimatedVisibility(
+                                            visible = selected,
+                                            enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
+                                            exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut()
+                                        ) {
+                                            Text(
+                                                text = stringResource(destination.label),
+                                                style = ButtonDefaults.textStyleFor(ButtonDefaults.ExtraSmallContainerHeight),
+                                                maxLines = 1,
+                                                modifier = Modifier.padding(start = 4.dp)
+                                            )
+                                        }
+                                    }
                                 }
                             }
+
+                            if (addTrailingSpace) Spacer(Modifier.width(8.dp))
                         }
                     }
 
-                    if (addTrailingSpace) Spacer(Modifier.width(8.dp))
+                    floatingActionButton?.invoke(
+                        /*modifier =*/ Modifier.padding(start = 8.dp),
+                        /*isFloatingBar =*/ true
+                    )
                 }
             }
         }
