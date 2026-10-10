@@ -4,6 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.screen.permissions.PermissionsScreen
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
@@ -13,6 +14,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WallpapersPermissionsScreen(
+    bottomPadding: Dp,
     vm: WallpapersViewModel = koinViewModel(),
     onNavigateRequest: (Any) -> Unit
 ) {
@@ -32,10 +34,12 @@ fun WallpapersPermissionsScreen(
     PermissionsScreen(
         *permissions,
         title = stringResource(R.string.wallpapers),
+        bottomPadding = bottomPadding,
         onNavigateRequest = onNavigateRequest
     ) {
         WallpapersScreen(
             vm = vm,
+            bottomPadding = bottomPadding,
             onNavigateSettingsRequest = {
                 onNavigateRequest(SettingsDestination.root)
             }

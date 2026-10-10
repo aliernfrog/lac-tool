@@ -16,6 +16,7 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
     val theme = intPreference("appTheme", Theme.SYSTEM.ordinal)
     val materialYou = booleanPreference("materialYou", true)
     val pitchBlack = booleanPreference("pitchBlack", false)
+    val blur = booleanPreference("blur", true)
 
     // General options
     val language = stringPreference("appLanguage", "") // follow system if blank

@@ -26,22 +26,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
-import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
+import com.aliernfrog.lactool.domain.WallpapersState
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.shared.ui.component.ButtonIcon
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.text.ifEmpty
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportWallpaperSheetContent(
     file: FileWrapper,
-    vm: WallpapersViewModel,
     onDismissMediaOverlayRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val wallpapersState = koinInject<WallpapersState>()
+
     val originalName = remember { file.nameWithoutExtension }
     var importName by remember { mutableStateOf(originalName) }
 
@@ -79,7 +81,7 @@ fun ImportWallpaperSheetContent(
         Button(
             shapes = ButtonDefaults.shapes(),
             onClick = { scope.launch {
-                vm.importWallpaper(
+                wallpapersState.importWallpaper(
                     file = file,
                     withName = importName.ifEmpty { originalName },
                     context = context
