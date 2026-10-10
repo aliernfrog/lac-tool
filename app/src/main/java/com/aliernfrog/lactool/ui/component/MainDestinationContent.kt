@@ -29,10 +29,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -66,6 +67,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -218,91 +220,102 @@ private fun FloatingBottomBar(
         ) + shrinkOut() + fadeOut(),
         modifier = modifier
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Box(
+            contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
-                .systemBarsPadding()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .shadow(
-                    elevation = 6.dp,
-                    shape = FloatingToolbarDefaults.ContainerShape
-                )
-                .clip(FloatingToolbarDefaults.ContainerShape)
-                .toggledHazeBlur(
-                    containerColor = FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContainerColor,
-                    containerOpacity = 0.7f,
-                    input = HazeInput.Backdrop(hazeState),
-                )
-                .padding(8.dp)
+                .fillMaxWidth()
+                .background(Brush.verticalGradient(listOf(
+                    Color.Transparent,
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                )))
         ) {
-            destinations.forEachIndexed { index, destination ->
-                val selected = isDestinationSelected(destination)
-                val addTrailingSpace = index < destinations.lastIndex
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                    .shadow(
+                        elevation = 10.dp,
+                        shape = FloatingToolbarDefaults.ContainerShape
+                    )
+                    .clip(FloatingToolbarDefaults.ContainerShape)
+                    .toggledHazeBlur(
+                        containerColor = FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContainerColor,
+                        containerOpacity = 0.7f,
+                        input = HazeInput.Backdrop(hazeState),
+                    )
+                    .padding(8.dp)
+            ) {
+                destinations.forEachIndexed { index, destination ->
+                    val selected = isDestinationSelected(destination)
+                    val addTrailingSpace = index < destinations.lastIndex
 
-                val interactionSource = remember { MutableInteractionSource() }
-                val pressed by interactionSource.collectIsPressedAsState()
-                val containerColor by animateColorAsState(
-                    if (selected) MaterialTheme.colorScheme.secondaryContainer
-                    else Color.Transparent
-                )
-                val contentColor by animateColorAsState(
-                    if (selected) MaterialTheme.colorScheme.onSecondaryContainer
-                    else FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContentColor
-                )
-                val shape by animateIntAsState(
-                    if (pressed) 20 else 50
-                )
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val pressed by interactionSource.collectIsPressedAsState()
+                    val containerColor by animateColorAsState(
+                        if (selected) MaterialTheme.colorScheme.secondaryContainer
+                        else Color.Transparent
+                    )
+                    val contentColor by animateColorAsState(
+                        if (selected) MaterialTheme.colorScheme.onSecondaryContainer
+                        else FloatingToolbarDefaults.standardFloatingToolbarColors().toolbarContentColor
+                    )
+                    val shape by animateIntAsState(
+                        if (pressed) 20 else 50
+                    )
 
-                TooltipBox(
-                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                        positioning = TooltipAnchorPosition.Above
-                    ),
-                    tooltip = {
-                        PlainTooltip {
-                            Text(stringResource(destination.label))
-                        }
-                    },
-                    state = rememberTooltipState()
-                ) {
-                    CompositionLocalProvider(LocalContentColor provides contentColor) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(shape))
-                                .background(containerColor)
-                                .clickable(
-                                    interactionSource = interactionSource,
-                                    indication = ripple()
-                                ) {
-                                    onNavigateRequest(destination)
-                                }
-                                .padding(
-                                    vertical = 8.dp, horizontal = 8.dp
-                                )
-                        ) {
-                            NavigationItemIcon(
-                                destination = destination,
-                                selected = selected,
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                            )
-
-                            AnimatedVisibility(
-                                visible = selected,
-                                enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
-                                exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut()
+                    TooltipBox(
+                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                            positioning = TooltipAnchorPosition.Above
+                        ),
+                        tooltip = {
+                            PlainTooltip {
+                                Text(stringResource(destination.label))
+                            }
+                        },
+                        state = rememberTooltipState()
+                    ) {
+                        CompositionLocalProvider(LocalContentColor provides contentColor) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(shape))
+                                    .background(containerColor)
+                                    .clickable(
+                                        interactionSource = interactionSource,
+                                        indication = ripple()
+                                    ) {
+                                        onNavigateRequest(destination)
+                                    }
+                                    .padding(
+                                        vertical = 8.dp, horizontal = 8.dp
+                                    )
                             ) {
-                                Text(
-                                    text = stringResource(destination.label),
-                                    style = ButtonDefaults.textStyleFor(ButtonDefaults.ExtraSmallContainerHeight),
-                                    maxLines = 1,
-                                    modifier = Modifier.padding(start = 4.dp)
+                                NavigationItemIcon(
+                                    destination = destination,
+                                    selected = selected,
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                 )
+
+                                AnimatedVisibility(
+                                    visible = selected,
+                                    enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
+                                    exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut()
+                                ) {
+                                    Text(
+                                        text = stringResource(destination.label),
+                                        style = ButtonDefaults.textStyleFor(ButtonDefaults.ExtraSmallContainerHeight),
+                                        maxLines = 1,
+                                        modifier = Modifier.padding(start = 4.dp)
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                if (addTrailingSpace) Spacer(Modifier.width(8.dp))
+                    if (addTrailingSpace) Spacer(Modifier.width(8.dp))
+                }
             }
         }
     }

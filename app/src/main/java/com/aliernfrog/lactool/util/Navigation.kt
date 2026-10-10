@@ -8,11 +8,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Photo
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.outlined.Photo
-import androidx.compose.material.icons.outlined.PhotoCamera
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Wallpaper
+import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.PinDrop
+import androidx.compose.material.icons.outlined.Wallpaper
 import androidx.compose.material.icons.rounded.FolderOpen
 import androidx.compose.material.icons.rounded.PinDrop
 import androidx.compose.material.icons.rounded.Translate
@@ -47,14 +47,14 @@ enum class MainDestination(
 
     WALLPAPERS(
         label = R.string.wallpapers,
-        vectorFilled = Icons.Default.Photo,
-        vectorOutlined = Icons.Outlined.Photo
+        vectorFilled = Icons.Default.Wallpaper,
+        vectorOutlined = Icons.Outlined.Wallpaper
     ),
 
     SCREENSHOTS(
         label = R.string.screenshots,
-        vectorFilled = Icons.Default.PhotoCamera,
-        vectorOutlined = Icons.Outlined.PhotoCamera
+        vectorFilled = Icons.Default.Camera,
+        vectorOutlined = Icons.Outlined.Camera
     )
 }
 
@@ -83,21 +83,19 @@ class MapsNavigationBackStack {
         object MapsList
     }
 
-    private val _backStack = mutableStateListOf<Any>(MapsList)
-
     val backStack: List<Any>
-        get() = _backStack
+        field = mutableStateListOf<Any>(MapsList)
 
     fun add(map: MapFile) {
-        _backStack.add(map)
+        backStack.add(map)
     }
 
     fun removeLast() {
-        _backStack.removeLastIfMultiple()
+        backStack.removeLastIfMultiple()
     }
 
     fun removeIf(predicate: (MapFile) -> Boolean) {
-        _backStack.removeIf {
+        backStack.removeIf {
             it is MapFile && predicate(it)
         }
     }
