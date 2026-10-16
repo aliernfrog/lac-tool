@@ -1,6 +1,6 @@
 [versions]
 android-plugin = "9.4.1"
-kotlin-plugin = "2.4.20"
+kotlin-plugin = "2.4.21"
 
 android-desugar = "2.1.5"
 
@@ -13,7 +13,7 @@ androidx-splashscreen = "1.2.0"
 
 compose = "1.12.1"
 compose-material-icons = "1.7.8"
-compose-material3 = "1.5.0-alpha29"
+compose-material3 = "1.5.0-beta01"
 
 aboutlibraries = "15.2.0"
 coil = "3.6.3"
@@ -22,10 +22,10 @@ haze = "2.0.1"
 koin = "4.2.2"
 laclib = "1.4.0"
 markdown = "0.7.2"
-pftool-shared = "b89850611e"
+pftool-shared = "33833c14fc"
 shizuku = "13.1.5"
 toptoast = "2.2.0-alpha04"
-zoomable = "2.15.0"
+zoomable = "2.16.0"
 
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-desugar" }

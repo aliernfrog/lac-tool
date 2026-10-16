@@ -68,7 +68,7 @@ enum class MainDestination(
             if (isFloatingBar) MapsListFABToggleButton(
                 expanded = mapsState.addMapMenuExpanded,
                 onExpandedStateChange = { mapsState.addMapMenuExpanded = it },
-                modifier = modifier.offset(x = 4.dp)
+                modifier = modifier
             ) else MapsListFABMenu(
                 expanded = mapsState.addMapMenuExpanded,
                 supportedFileExtensions = listOf(
