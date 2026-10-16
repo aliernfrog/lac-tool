@@ -355,7 +355,6 @@
     <string name="settings_about_credits_ui">Интерфейс</string>
     <string name="settings_about_credits_crowdin">Члены Crowdin</string>
     <string name="settings_about_credits_translations">Переводы</string>
-    <string name="settings_about_credits_inspiration">Вдохновитель</string>
     <string name="settings_about_other">Разное</string>
     <string name="settings_about_other_copyDebugInfo">Скопировать отладочную информацию</string>
     <string name="settings_about_other_copyDebugInfo_description">Содержит информацию, полезную для отладки. Рекомендуется включать её в сообщения об ошибках</string>

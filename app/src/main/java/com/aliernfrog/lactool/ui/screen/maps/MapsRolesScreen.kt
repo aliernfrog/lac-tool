@@ -2,8 +2,10 @@ package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,8 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,10 +33,13 @@ import com.aliernfrog.lactool.ui.component.maps.MapRoleRow
 import com.aliernfrog.lactool.ui.sheet.AddRoleSheet
 import com.aliernfrog.lactool.util.extension.removeHtml
 import com.aliernfrog.toptoast.state.TopToastState
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
+import io.github.aliernfrog.shared.ui.component.buildBottomSheetEnabledValues
 import io.github.aliernfrog.shared.ui.component.util.BottomSpacer
 import io.github.aliernfrog.shared.ui.component.verticalSegmentedShape
 import io.github.aliernfrog.shared.ui.dialog.DeleteConfirmationDialog
@@ -49,7 +55,11 @@ fun MapsRolesScreen(
     onDeleteRoleRequest: (String) -> Unit,
     onNavigateBackRequest: () -> Unit
 ) {
-    val addRoleSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val hazeState = rememberHazeState()
+    val addRoleSheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = buildBottomSheetEnabledValues(skipPartiallyExpanded = true)
+    )
     val scope = rememberCoroutineScope()
 
     var expandedRoleIndex by rememberSaveable {
@@ -60,10 +70,11 @@ fun MapsRolesScreen(
         mutableStateOf<String?>(null)
     }
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.mapsRoles),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = {
                     onNavigateBackRequest()
@@ -79,10 +90,16 @@ fun MapsRolesScreen(
                 scope.launch { addRoleSheetState.show() }
             }
         }
-    ) {
+    ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .hazeSource(hazeState)
         ) {
+            item {
+                Spacer(Modifier.height(paddingValues.calculateTopPadding()))
+            }
+
             item {
                 Crossfade(
                     targetState = roles.isNotEmpty(),
@@ -98,6 +115,7 @@ fun MapsRolesScreen(
                     )
                 }
             }
+
             itemsIndexed(roles) { index, it ->
                 val expanded = expandedRoleIndex == index
                 MapRoleRow(
@@ -118,8 +136,12 @@ fun MapsRolesScreen(
                         )
                 )
             }
+
             item {
-                BottomSpacer(Modifier.padding(top = AppFABPadding))
+                BottomSpacer(
+                    Modifier
+                        .padding(bottom = AppFABPadding + paddingValues.calculateBottomPadding())
+                )
             }
         }
     }
