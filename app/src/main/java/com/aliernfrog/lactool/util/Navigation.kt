@@ -65,7 +65,8 @@ enum class MainDestination(
         vectorOutlined = Icons.Outlined.PinDrop,
         floatingActionButton = { modifier, isFloatingBar ->
             val mapsState = koinInject<MapsState>()
-            if (isFloatingBar) MapsListFABToggleButton(
+            if (!mapsState.permissionsGranted) { /* no FAB */ }
+            else if (isFloatingBar) MapsListFABToggleButton(
                 expanded = mapsState.addMapMenuExpanded,
                 onExpandedStateChange = { mapsState.addMapMenuExpanded = it },
                 modifier = modifier
@@ -84,7 +85,7 @@ enum class MainDestination(
         },
         fabMenuForFloatingBar = { modifier ->
             val mapsState = koinInject<MapsState>()
-            MapsListFABMenu(
+            if (mapsState.permissionsGranted) MapsListFABMenu(
                 expanded = mapsState.addMapMenuExpanded,
                 supportedFileExtensions = listOf(
                     FileExtension(
@@ -108,26 +109,28 @@ enum class MainDestination(
         vectorOutlined = Icons.Outlined.Wallpaper,
         floatingActionButton = { modifier, _ ->
             val wallpapersState = koinInject<WallpapersState>()
-            val context = LocalContext.current
-            val mediaPickerLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.PickVisualMedia(),
-                onResult = { uri ->
-                    if (uri != null) wallpapersState.onWallpaperPick(uri, context)
-                }
-            )
-
-            FloatingActionButton(
-                onClick = {
-                    mediaPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                },
-                modifier = modifier
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.wallpapers_add)
+            if (wallpapersState.permissionsGranted) {
+                val context = LocalContext.current
+                val mediaPickerLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.PickVisualMedia(),
+                    onResult = { uri ->
+                        if (uri != null) wallpapersState.onWallpaperPick(uri, context)
+                    }
                 )
+
+                FloatingActionButton(
+                    onClick = {
+                        mediaPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
+                    modifier = modifier
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.wallpapers_add)
+                    )
+                }
             }
         }
     ),

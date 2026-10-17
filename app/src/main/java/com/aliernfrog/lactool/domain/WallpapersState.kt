@@ -35,6 +35,7 @@ class WallpapersState(
     private val activeWallpaperFileName = "mywallpaper.jpg"
     val wallpapersDir : String get() = prefs.lacWallpapersDir.value
 
+    var permissionsGranted by mutableStateOf(false)
     var activeWallpaper by mutableStateOf<FileWrapper?>(null)
     var importedWallpapers by mutableStateOf(emptyList<FileWrapper>())
 

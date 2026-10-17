@@ -39,6 +39,10 @@ class WallpapersViewModel(
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
     val listViewOptionsSheetState = createSheetStateWithDensity(skipPartiallyExpanded = true, Density(context))
 
+    var permissionsGranted
+        get() = wallpapersState.permissionsGranted
+        set(value) { wallpapersState.permissionsGranted = value }
+
     val wallpapersDir : String get() = prefs.lacWallpapersDir.value
 
     private var importedWallpapers

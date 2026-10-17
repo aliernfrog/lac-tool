@@ -35,6 +35,9 @@ fun WallpapersPermissionsScreen(
         *permissions,
         title = stringResource(R.string.wallpapers),
         bottomPadding = bottomPadding,
+        onPermissionsGrantedStateChange = {
+            vm.permissionsGranted = it
+        },
         onNavigateRequest = onNavigateRequest
     ) {
         WallpapersScreen(

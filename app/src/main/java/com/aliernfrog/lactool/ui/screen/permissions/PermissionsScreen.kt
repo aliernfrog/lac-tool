@@ -16,6 +16,7 @@ fun PermissionsScreen(
     vararg permissionsData: PermissionData,
     title: String,
     bottomPadding: Dp,
+    onPermissionsGrantedStateChange: (granted: Boolean) -> Unit = {},
     onNavigateRequest: (Any) -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -26,6 +27,7 @@ fun PermissionsScreen(
         title = title,
         supportLinks = SettingsConstant.supportLinks,
         extraBottomPadding = bottomPadding,
+        onPermissionsGrantedStateChange = onPermissionsGrantedStateChange,
         onRestartAppRequest = {
             GeneralUtil.restartApp(context, withModules = true)
         },

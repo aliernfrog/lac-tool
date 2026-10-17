@@ -56,6 +56,9 @@ fun MapsScreen(
         *permissions,
         title = stringResource(R.string.maps),
         bottomPadding = bottomPadding,
+        onPermissionsGrantedStateChange = {
+            vm.permissionsGranted = it
+        },
         onNavigateRequest = onNavigateRequest
     ) {
         MapsScreenSafePermissions(
