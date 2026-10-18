@@ -152,6 +152,7 @@
     <string name="mapsList_search">Haritaları arayın…</string>
     <string name="mapsList_search_clear">Aramayı temizle</string>
     <string name="mapsList_count">{COUNT} harita</string>
+    <string name="mapsList_add">Harita ekle</string>
     <string name="mapsList_add_storage">Depolama</string>
     <string name="mapsList_imported">Haritalarınız</string>
     <string name="mapsList_imported_noMaps">Hiç haritanız yok</string>
@@ -395,6 +396,7 @@
     <string name="crashHandler_title">Hay aksi!</string>
     <string name="crashHandler_description">LAC Tool beklenmedik bir hatayla karşılaştı ve çöktü</string>
     <string name="crashHandler_report">Lütfen aşağıdaki düğmeye tıklayarak çökme raporunu LAC Tool geliştiricisine gönderin, bu ek adım gerektirmez</string>
+    <string name="crashHandler_stackTrace">Yığın izi</string>
     <string name="crashHandler_sendReport">Çökme raporunu gönder</string>
     <string name="crashHandler_sendReport_sent">Rapor gönderildi</string>
     <string name="crashHandler_restartApp">Uygulamayı yeniden başlat</string>
@@ -402,5 +404,4 @@
     <string name="crashHandler_support_description">Destek bağlantılarını genişletmek için dokunun</string>
     <string name="crashHandler_support_guide">Bu çökmeyi LAC Tool geliştiricisine direkt olarak raporlamak için aşağıdaki Discord veya GitHub bağlantısını kullanın.\nSüreci hızlandırmak için çökme detaylarını kopyalayıp raporunuza eklemeyi unutmayın</string>
     <string name="crashHandler_support_copyDetails">Çökme detaylarını kopyala</string>
-    <string name="crashHandler_stackTrace">Yığın izi</string>
 </resources>

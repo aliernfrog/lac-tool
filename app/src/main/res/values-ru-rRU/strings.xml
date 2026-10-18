@@ -146,6 +146,7 @@
     <string name="mapsList_search">Искать карты…</string>
     <string name="mapsList_search_clear">Очистить поиск</string>
     <string name="mapsList_count">Карт: {COUNT}</string>
+    <string name="mapsList_add">Добавить карты для слияния</string>
     <string name="mapsList_add_storage">Хранилище</string>
     <string name="mapsList_imported">Ваши карты</string>
     <string name="mapsList_imported_noMaps">У вас нет карт</string>
@@ -381,6 +382,7 @@
     <string name="crashHandler_title">Упс!</string>
     <string name="crashHandler_description">В программе LAC Tool произошла непредвиденная ошибка, и она сломалась</string>
     <string name="crashHandler_report">Пожалуйста, нажмите на кнопку ниже, чтобы отправить отчёт об ошибке разработчику LAC Tool, это не требует каких-либо дополнительных действий</string>
+    <string name="crashHandler_stackTrace">Трассировка стека</string>
     <string name="crashHandler_sendReport">Отправить отчёт об ошибке</string>
     <string name="crashHandler_sendReport_sent">Отправить отчет</string>
     <string name="crashHandler_restartApp">Перезапустить приложение</string>
@@ -388,5 +390,4 @@
     <string name="crashHandler_support_description">Нажмите, чтобы развернуть ссылки поддержки</string>
     <string name="crashHandler_support_guide">Чтобы сообщить эту поломку разработчику LAC Tool на прямую, используйте ссылки Discord или GitHub ниже. \nОбязательно скопируйте и включите подробности ошибки в свой отчет, чтобы ускорить процесс</string>
     <string name="crashHandler_support_copyDetails">Копировать детали повреждения</string>
-    <string name="crashHandler_stackTrace">Трассировка стека</string>
 </resources>
