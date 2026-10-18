@@ -1,8 +1,5 @@
 package com.aliernfrog.lactool.ui.screen.wallpapers
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +19,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.HideImage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -40,21 +36,23 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.viewmodel.WallpapersViewModel
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
-import io.github.aliernfrog.shared.ui.component.FloatingActionButton
 import io.github.aliernfrog.shared.ui.component.IconButtonWithTooltip
 import io.github.aliernfrog.shared.ui.component.SEGMENTOR_SMALL_ROUNDNESS
 import io.github.aliernfrog.shared.ui.component.expressive.ExpressiveSection
@@ -70,20 +68,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun WallpapersScreen(
     vm: WallpapersViewModel,
+    bottomPadding: Dp,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
+    val hazeState = rememberHazeState()
     val listStylePref = vm.prefs.wallpapersListOptions.styleGroup.getCurrent()
     val gridMaxLineSpanPref = vm.prefs.wallpapersListOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
     var showFABLabel by remember { mutableStateOf(true) }
-
-    val mediaPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) vm.onWallpaperPick(uri, context)
-        }
-    )
 
     LaunchedEffect(Unit) {
         vm.fetchImportedWallpapers(context)
@@ -94,30 +87,19 @@ fun WallpapersScreen(
         listViewOptionsPreference = vm.prefs.wallpapersListOptions
     )
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.wallpapers),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 actions = {
                     SettingsButton(onClick = onNavigateSettingsRequest)
                 }
             )
         },
-        topAppBarState = vm.topAppBarState,
-        floatingActionButton = {
-            FloatingActionButton(
-                icon = Icons.Default.Add,
-                text = stringResource(R.string.wallpapers_add),
-                expanded = showFABLabel,
-                onClick = {
-                    mediaPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
-            )
-        }
-    ) {
+        topAppBarState = vm.topAppBarState
+    ) { paddingValues ->
         @Composable
         fun WallpaperButton(
             wallpaper: FileWrapper,
@@ -144,12 +126,18 @@ fun WallpapersScreen(
         @Composable
         fun ListHeader(modifier: Modifier) {
             Header(
-                modifier = modifier,
+                modifier = modifier
+                    .padding(top = paddingValues.calculateTopPadding()),
                 vm = vm,
                 wallpaperButton = {
                     WallpaperButton(it)
                 }
             )
+        }
+
+        @Composable
+        fun Footer() {
+            BottomSpacer(Modifier.padding(top = AppFABPadding + bottomPadding))
         }
 
         val lazyListState = rememberLazyListState()
@@ -169,7 +157,9 @@ fun WallpapersScreen(
             when (style) {
                 ListStyle.LIST -> LazyColumn(
                     state = lazyListState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .hazeSource(hazeState)
                 ) {
                     item {
                         ListHeader(
@@ -194,7 +184,8 @@ fun WallpapersScreen(
                     state = lazyGridState,
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .hazeSource(hazeState),
                     maxLineSpan = gridMaxLineSpanPref.value
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
@@ -277,9 +268,4 @@ private fun Header(
             ) {}
         }
     }
-}
-
-@Composable
-private fun Footer() {
-    BottomSpacer(Modifier.padding(top = AppFABPadding))
 }

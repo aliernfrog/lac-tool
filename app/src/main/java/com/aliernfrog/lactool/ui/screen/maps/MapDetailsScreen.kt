@@ -1,6 +1,7 @@
 package com.aliernfrog.lactool.ui.screen.maps
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import com.aliernfrog.lactool.impl.MapFile
 import com.aliernfrog.lactool.impl.mapActions
 import com.aliernfrog.lactool.ui.component.SettingsButton
@@ -11,6 +12,7 @@ import io.github.aliernfrog.pftool_shared.ui.screen.maps.MapDetailsScreen
 fun MapDetailsScreen(
     map: MapFile,
     vm: MapsViewModel,
+    bottomPadding: Dp,
     onNavigateSettingsRequest: () -> Unit,
     onNavigateBackRequest: (() -> Unit)?
 ) {
@@ -19,6 +21,7 @@ fun MapDetailsScreen(
         mapActions = mapActions,
         showMapThumbnail = vm.prefs.showChosenMapThumbnail.value,
         showMapNameFieldGuide = vm.prefs.showMapNameFieldGuide.value,
+        extraBottomPadding = bottomPadding,
         settingsButton = {
             SettingsButton { onNavigateSettingsRequest() }
         },

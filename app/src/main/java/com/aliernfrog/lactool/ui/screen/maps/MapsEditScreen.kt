@@ -21,7 +21,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,9 +38,11 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.getName
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
@@ -70,6 +71,7 @@ fun MapsEditScreen(
     onNavigateRequest: (Any) -> Unit
 ) {
     val context = LocalContext.current
+    val hazeState = rememberHazeState()
     val scope = rememberCoroutineScope()
     var showFABLabel by remember { mutableStateOf(true) }
 
@@ -82,10 +84,11 @@ fun MapsEditScreen(
         onShowLabelsStateChange = { showFABLabel = it }
     )
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.mapsEdit),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = { scope.launch {
                     vm.showSaveWarning()
@@ -109,10 +112,12 @@ fun MapsEditScreen(
                 }
             }
         }
-    ) {
+    ) { paddingValues ->
         AnimatedContent(
             targetState = vm.mapEditor,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .hazeSource(hazeState)
         ) { editor ->
             if (editor == null) VerticalProgressIndicatorWithText(
                 progress = Progress(
@@ -124,6 +129,7 @@ fun MapsEditScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(vm.scrollState)
+                    .padding(top = paddingValues.calculateTopPadding())
             ) {
                 GeneralActions(
                     vm = vm,
@@ -137,7 +143,9 @@ fun MapsEditScreen(
                     OptionsActions(editor)
                 }
                 MiscActions(vm, editor)
-                BottomSpacer(Modifier.padding(top = AppFABPadding))
+                BottomSpacer(
+                    Modifier.padding(bottom = AppFABPadding + paddingValues.calculateBottomPadding())
+                )
             }
         }
 
@@ -483,10 +491,7 @@ private fun MiscActions(
                     }
                 ) {
                     Column(Modifier.padding(vertical = 8.dp)) {
-                        FilterObjects(
-                            vm = vm,
-                            containerColor = expandedRowColor
-                        )
+                        FilterObjects(vm)
                     }
                 }
             },
@@ -498,10 +503,7 @@ private fun MiscActions(
 }
 
 @Composable
-private fun FilterObjects(
-    containerColor: Color,
-    vm: MapsEditViewModel
-) {
+private fun FilterObjects(vm: MapsEditViewModel) {
     val context = LocalContext.current
     val matches = vm.getObjectFilterMatches().size
     OutlinedTextField(

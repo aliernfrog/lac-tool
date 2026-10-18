@@ -271,7 +271,6 @@
     <string name="settings_about_credits_ui">UI</string>
     <string name="settings_about_credits_crowdin">Crowdin 成员</string>
     <string name="settings_about_credits_translations">翻译</string>
-    <string name="settings_about_credits_inspiration">灵感</string>
     <string name="settings_about_other">其他</string>
     <string name="settings_about_other_copyDebugInfo">复制调试信息</string>
     <string name="settings_about_other_copyDebugInfo_description">包含对调试有用的信息。建议将其包含在错误报告中</string>
