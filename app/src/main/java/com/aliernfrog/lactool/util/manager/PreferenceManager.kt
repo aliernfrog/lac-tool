@@ -16,6 +16,8 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
     val theme = intPreference("appTheme", Theme.SYSTEM.ordinal)
     val materialYou = booleanPreference("materialYou", true)
     val pitchBlack = booleanPreference("pitchBlack", false)
+    val blur = booleanPreference("blur", false)
+    val bottomGradient = booleanPreference("bottomGradient", true)
 
     // General options
     val language = stringPreference("appLanguage", "") // follow system if blank
@@ -57,6 +59,7 @@ class PreferenceManager(context: Context) : PFToolBasePreferenceManager(
     // TODO fix (maybe) val forceStorageAccessTypeCompatibility = booleanPreference("forceStorageAccessTypeCompatibility", false, experimental = true, includeInDebugInfo = false)
     val debug = booleanPreference("debug", false, experimental = true, includeInDebugInfo = false)
     val shizukuNeverLoad = booleanPreference("shizukuNeverLoad", false, experimental = true, includeInDebugInfo = false)
+    val shizukuForceUnrecommendedVersion = booleanPreference("shizukuForceUnrecommendedVersion", false, experimental = true, includeInDebugInfo = false)
     val lastKnownInstalledVersion = longPreference("lastKnownInstalledVersion", context.getAppVersionCode(), experimental = true, includeInDebugInfo = false)
     val releasesURL = stringPreference("releasesUrl", defaultReleasesURL, experimental = true, includeInDebugInfo = false)
 }

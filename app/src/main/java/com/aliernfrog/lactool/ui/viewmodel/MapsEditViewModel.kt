@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.PriorityHigh
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material.icons.rounded.SdStorage
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.getValue
@@ -27,8 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.imageLoader
-import coil.request.ImageRequest
+import coil3.imageLoader
+import coil3.request.ImageRequest
 import com.aliernfrog.laclib.data.LACMapDownloadableMaterial
 import com.aliernfrog.laclib.data.LACMapObjectFilter
 import com.aliernfrog.laclib.enum.LACMapOptionType
@@ -57,7 +56,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@OptIn(ExperimentalMaterial3Api::class)
 class MapsEditViewModel(
     val map: MapFile,
     val onNavigateBackRequest: () -> Unit,

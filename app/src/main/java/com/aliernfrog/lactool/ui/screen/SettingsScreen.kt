@@ -2,7 +2,6 @@ package com.aliernfrog.lactool.ui.screen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Science
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +30,6 @@ import io.github.aliernfrog.shared.ui.screen.settings.SettingsRootPage
 import io.github.aliernfrog.shared.util.resolve
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     destination: SettingsDestination,
@@ -84,6 +82,8 @@ fun SettingsScreen(
                 themePref = vm.prefs.theme,
                 materialYouPref = vm.prefs.materialYou,
                 pitchBlackPref = vm.prefs.pitchBlack,
+                blurPref = vm.prefs.blur,
+                bottomGradientPref = vm.prefs.bottomGradient,
                 onNavigateBackRequest = onNavigateBackRequest
             )
         }
@@ -144,6 +144,7 @@ fun SettingsScreen(
 
         SettingsDestination.libs -> {
             LibsPage(
+                librariesJSONRes = R.raw.aboutlibraries,
                 onNavigateBackRequest = onNavigateBackRequest
             )
         }

@@ -86,20 +86,6 @@ object SettingsConstant {
             description = R.string.settings_about_credits_translations,
             fetchFromGithub = true,
             link = crowdinURL
-        ),
-        CreditData(
-            userName = "vendetta-mod",
-            displayNameOverride = "Vendetta Manager",
-            description = R.string.settings_about_credits_inspiration,
-            fetchFromGithub = true,
-            link = "https://github.com/vendetta-mod/VendettaManager"
-        ),
-        CreditData(
-            userName = "ReVanced",
-            displayNameOverride = "ReVanced Manager",
-            description = R.string.settings_about_credits_inspiration,
-            fetchFromGithub = true,
-            link = "https://github.com/ReVanced/revanced-manager"
         )
     )
 }

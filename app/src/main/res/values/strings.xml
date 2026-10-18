@@ -14,6 +14,7 @@
     <string name="action_more">More</string>
     <string name="action_expand">Expand</string>
     <string name="action_collapse">Collapse</string>
+    <string name="action_download">Download</string>
     <string name="action_select_selectAll">Select all</string>
     <string name="action_select_deselectAll">Deselect all</string>
 
@@ -62,7 +63,8 @@
     <string name="permissions_saf_allFiles_description">Lets LAC Tool access all files, this may be easier to setup</string>
     <string name="permissions_setupShizuku">Use Shizuku</string>
     <string name="permissions_setupShizuku_description">You need to use Shizuku to let LAC Tool access LAC folders.\nThis is because the Files app on your device does not allow apps to get access to files inside Android/data.\nYou can toggle Shizuku mode anytime from settings.</string>
-    <string name="permissions_shizuku_introduction">Shizuku is an app which lets apps elevate permissions using Android debug bridge.\nTap to configure storage access and Shizuku mode</string>
+    <string name="permissions_shizuku_introduction">Shizuku is an app which lets apps elevate permissions using Android debug bridge</string>
+    <string name="permissions_shizuku_tapToConfigure">Tap to configure storage access and Shizuku mode</string>
     <string name="permissions_shizuku_openShizuku">Open Shizuku</string>
     <string name="permissions_shizuku_installShizuku">Install Shizuku</string>
     <string name="permissions_shizuku_install_title">Install Shizuku to get started</string>
@@ -77,10 +79,9 @@
     <string name="permissions_shizuku_waitingService">Waiting for file service…</string>
     <string name="permissions_shizuku_waitingService_timedOut">Taking long? Try restarting LAC Tool</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Restart</string>
-    <string name="permissions_shizuku_problematicVersion">Current version of Shizuku ({CURRENT_VERSION}) may cause indefinite wait on this screen. Please downgrade to {RECOMMENDED_VERSION} if you have this issue</string>
-    <string name="permissions_shizuku_problematicVersion_note">Remember to uninstall current Shizuku before downgrading. You can also upgrade to a newer version than {CURRENT_VERSION} if available</string>
-    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Download recommended version</string>
-    <string name="permissions_shizuku_problematicVersion_allVersions">All versions</string>
+    <string name="permissions_shizuku_recommendedVersion">Official Shizuku is now stale and may have various issues, especially on Android 17+ or MediaTek devices. It is recommended to switch to the fork by thedjchi</string>
+    <string name="permissions_shizuku_recommendedVersion_note">Remember to uninstall current Shizuku before installing the fork</string>
+    <string name="permissions_shizuku_recommendedVersion_download">Download recommended version</string>
     <string name="permissions_allFiles_title">Storage permissions</string>
     <string name="permissions_allFiles_description">Storage permissions are needed for LAC Tool to access LAC data</string>
     <string name="permissions_allFiles_grant">Grant permission</string>
@@ -162,7 +163,13 @@
     <string name="mapsList_search">Search maps…</string>
     <string name="mapsList_search_clear">Clear search</string>
     <string name="mapsList_count">{COUNT} maps</string>
-    <string name="mapsList_storage">Storage</string>
+    <string name="mapsList_add">Add maps</string>
+    <string name="mapsList_add_storage">From storage</string>
+    <string name="mapsList_add_url">From URL</string>
+    <string name="mapsList_download">Download map from URL</string>
+    <string name="mapsList_download_placeholder">URL to a map file</string>
+    <string name="mapsList_download_footer">Supported file extensions: %s</string>
+    <string name="mapsList_download_clipboard">Paste from clipboard</string>
     <string name="mapsList_imported">Your maps</string>
     <string name="mapsList_imported_noMaps">You do not have any maps</string>
     <string name="mapsList_exported">Exported maps</string>
@@ -316,6 +323,11 @@
     <string name="settings_appearance_materialYou_unavailable">Only available on Android 12 and above</string>
     <string name="settings_appearance_pitchBlack">Pitch black</string>
     <string name="settings_appearance_pitchBlack_description">Pitch black background when dark mode is enabled</string>
+    <string name="settings_appearance_effects">Effects</string>
+    <string name="settings_appearance_effects_blur">Blur effects</string>
+    <string name="settings_appearance_effects_blur_description">Transparency and blur effects across the app.\nMay reduce performance and battery life when enabled</string>
+    <string name="settings_appearance_effects_bottomGradient">Bottom gradient</string>
+    <string name="settings_appearance_effects_bottomGradient_description">Gradient under the floating navigation bar</string>
     <string name="settings_maps">Maps</string>
     <string name="settings_maps_description">Various configurations for maps</string>
     <string name="settings_maps_thumbnails">Thumbnails</string>
@@ -368,11 +380,12 @@
     <string name="settings_about_updates_autoCheckUpdates_description">Check for LAC Tool updates automatically on launch</string>
     <string name="settings_about_issues">Issues &amp; feedback</string>
     <string name="settings_about_issues_title">Having issues or feedback?</string>
+    <string name="settings_about_issues_tapToExpand">Tap for more information</string>
     <string name="settings_about_issues_description">You can use the following links to report issues, get help, or provide feedback about LAC Tool</string>
     <string name="settings_about_issues_githubIssues">GitHub Issues</string>
     <string name="settings_about_issues_discord">Discord server</string>
     <string name="settings_about_issues_copyDebugInfo">Copy debug information</string>
-    <string name="settings_about_issues_copyDebugInfo_description">Including this in bug reports is recommended</string>
+    <string name="settings_about_issues_copyDebugInfo_description">Make sure to include debug information in bug reports</string>
     <string name="settings_about_issues_copyDebugInfo_clipLabel">LAC Tool debug info</string>
     <string name="settings_about_issues_copyDebugInfo_copied">Copied debug information</string>
     <string name="settings_about_credits">Credits</string>
@@ -386,7 +399,6 @@
     <string name="settings_about_credits_ui">UI</string>
     <string name="settings_about_credits_crowdin">Crowdin members</string>
     <string name="settings_about_credits_translations">Translations</string>
-    <string name="settings_about_credits_inspiration">Inspiration</string>
     <string name="settings_about_other">Other</string>
     <string name="settings_about_other_copyDebugInfo">Copy debug information</string>
     <string name="settings_about_other_copyDebugInfo_description">Includes information useful for debugging. Including this in bug reports is recommended</string>
@@ -416,6 +428,9 @@
     <string name="crashHandler_title">Oops!</string>
     <string name="crashHandler_description">LAC Tool encountered an unexpected error and crashed</string>
     <string name="crashHandler_report">Please click the button below to send crash report to LAC Tool developer, this requires no additional steps</string>
+    <string name="crashHandler_stackTrace">Stack trace</string>
+    <string name="crashHandler_message_description">You can optionally leave a message to explain how the crash occurred.\nTo send the report without a message, leave the text field empty and click send crash report button below</string>
+    <string name="crashHandler_message_placeholder">(Optional) Explain how the crash occurred</string>
     <string name="crashHandler_sendReport">Send crash report</string>
     <string name="crashHandler_sendReport_sent">Sent report</string>
     <string name="crashHandler_restartApp">Restart app</string>
@@ -423,5 +438,4 @@
     <string name="crashHandler_support_description">Tap to expand support links</string>
     <string name="crashHandler_support_guide">To report this crash to LAC Tool developer directly, use Discord or GitHub links below.\nMake sure to copy and include the crash details in your report to speed up the process</string>
     <string name="crashHandler_support_copyDetails">Copy crash details</string>
-    <string name="crashHandler_stackTrace">Stack trace</string>
 </resources>
