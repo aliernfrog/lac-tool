@@ -34,19 +34,22 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aliernfrog.lactool.R
 import com.aliernfrog.lactool.ui.component.ImageButton
 import com.aliernfrog.lactool.ui.component.ImageButtonOverlay
 import com.aliernfrog.lactool.ui.component.SettingsButton
 import com.aliernfrog.lactool.ui.viewmodel.ScreenshotsViewModel
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import io.github.aliernfrog.pftool_shared.enum.ListStyle
 import io.github.aliernfrog.pftool_shared.impl.FileWrapper
 import io.github.aliernfrog.pftool_shared.ui.component.ImageButtonInfo
 import io.github.aliernfrog.pftool_shared.ui.component.LazyAdaptiveVerticalGrid
 import io.github.aliernfrog.pftool_shared.ui.sheet.ListViewOptionsSheet
 import io.github.aliernfrog.pftool_shared.util.staticutil.PFToolSharedUtil
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.ErrorWithIcon
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
@@ -60,9 +63,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ScreenshotsScreen(
     vm: ScreenshotsViewModel,
+    bottomPadding: Dp,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
+    val hazeState = rememberHazeState()
     val listStylePref = vm.prefs.screenshotsListOptions.styleGroup.getCurrent()
     val gridMaxLineSpanPref = vm.prefs.screenshotsListOptions.gridMaxLineSpanGroup.getCurrent()
     val listStyle = ListStyle.entries[listStylePref.value]
@@ -75,11 +80,12 @@ fun ScreenshotsScreen(
         sheetState = vm.listViewOptionsSheetState,
         listViewOptionsPreference = vm.prefs.screenshotsListOptions
     )
-    
-    AppScaffold(
+
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.screenshots),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 actions = {
                     SettingsButton(onClick = onNavigateSettingsRequest)
@@ -87,7 +93,7 @@ fun ScreenshotsScreen(
             )
         },
         topAppBarState = vm.topAppBarState
-    ) {
+    ) { paddingValues ->
         @Composable
         fun ScreenshotButton(
             screenshot: FileWrapper,
@@ -118,17 +124,26 @@ fun ScreenshotsScreen(
                 }
             }
         }
+
+        @Composable
+        fun Footer() {
+            BottomSpacer(Modifier.padding(bottom = bottomPadding))
+        }
         
         AnimatedContent(targetState = listStyle) { style ->
             when (style) {
                 ListStyle.LIST -> LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .hazeSource(hazeState),
                     state = vm.lazyListState
                 ) {
                     item {
                         Header(
                             vm = vm,
-                            modifier = Modifier.padding(horizontal = 12.dp)
+                            modifier = Modifier
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .padding(horizontal = 12.dp)
                         )
                     }
 
@@ -145,16 +160,20 @@ fun ScreenshotsScreen(
                         Footer()
                     }
                 }
+
                 ListStyle.GRID -> LazyAdaptiveVerticalGrid(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .hazeSource(hazeState),
                     maxLineSpan = gridMaxLineSpanPref.value
                 ) { maxLineSpan: Int ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Header(
                             vm = vm,
-                            modifier = Modifier.padding(horizontal = 2.dp)
+                            modifier = Modifier
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .padding(horizontal = 2.dp)
                         )
                     }
 
@@ -217,9 +236,4 @@ private fun Header(
             }
         }
     }
-}
-
-@Composable
-private fun Footer() {
-    BottomSpacer()
 }

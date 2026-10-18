@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.TopAppBarState
 import androidx.lifecycle.ViewModel
 import com.aliernfrog.lactool.R
@@ -28,7 +26,6 @@ import io.github.aliernfrog.shared.impl.ContextUtils
 import kotlinx.coroutines.CancellationException
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
-@OptIn(ExperimentalMaterial3Api::class)
 class MapsViewModel(
     private val appState: AppState,
     private val mapsState: MapsState,
@@ -38,6 +35,10 @@ class MapsViewModel(
     val prefs: PreferenceManager
 ) : ViewModel() {
     val topAppBarState = TopAppBarState(0F, 0F, 0F)
+
+    var permissionsGranted
+        get() = mapsState.permissionsGranted
+        set(value) { mapsState.permissionsGranted = value }
 
     var mapsPendingDelete
         get() = mapsState.mapsPendingDelete
@@ -117,7 +118,6 @@ class MapsViewModel(
         activeProgress = null
     }
 
-    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun openMapThumbnailViewer(map: MapFile) {
         val hasThumbnail = map.thumbnailModel != null
         appState.mediaOverlayData = MediaOverlayData(
