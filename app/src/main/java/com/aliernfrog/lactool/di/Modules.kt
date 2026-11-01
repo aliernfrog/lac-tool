@@ -34,7 +34,11 @@ val appModules = listOf(
             pathPref = { getKoinInstance<PreferenceManager>().exportedMapsDir },
             isMapFile = { it.isFile && it.name.endsWith(".txt", ignoreCase = true) }
         ),
-        getFileAsMapFile = { MapFile(it) },
+        getFileAsMapFile = { file, _ ->
+            val file = MapFile(file)
+            file.loadThumbnailPainterModel()
+            file
+        },
         languagePref = {
             getKoinInstance<PreferenceManager>().language
         },

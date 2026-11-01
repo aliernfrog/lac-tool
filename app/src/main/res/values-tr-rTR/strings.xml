@@ -159,7 +159,7 @@
     <string name="mapsList_exported_noMaps">Hiç harita dışa aktarmadınız</string>
     <string name="mapsList_shared">Paylaşılan</string>
     <string name="mapsList_shared_noMaps">LAC Tool ile herhangi bir harita paylaşmadınız</string>
-    <string name="mapsList_searchNoMatches">Eşleşen harita bulunamadı</string>
+    <string name="mapsList_search_noMatches">Eşleşen harita bulunamadı</string>
     <string name="mapsEdit">Haritayı düzenle</string>
     <string name="mapsEdit_opening">{NAME} açılıyor…</string>
     <string name="mapsEdit_save">Kaydet</string>

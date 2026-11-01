@@ -3,6 +3,7 @@ package com.aliernfrog.lactool.domain
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.aliernfrog.lactool.R
@@ -30,6 +31,8 @@ class MapsState(
 
     val exportedMapsDir: String
         get() = prefs.exportedMapsDir.value
+
+    val byteArrayThumbnailCache = mutableStateMapOf<String, ByteArray?>()
 
     var permissionsGranted by mutableStateOf(false)
     val mapsBackStack = MapsNavigationBackStack()

@@ -1,5 +1,5 @@
 [versions]
-android-plugin = "9.4.1"
+android-plugin = "9.5.0"
 kotlin-plugin = "2.4.21"
 
 android-desugar = "2.1.5"
@@ -13,16 +13,16 @@ androidx-splashscreen = "1.2.0"
 
 compose = "1.12.1"
 compose-material-icons = "1.7.8"
-compose-material3 = "1.5.0-beta01"
+compose-material3 = "1.5.0-beta02"
 
-aboutlibraries = "15.2.0"
+aboutlibraries = "15.3.0"
 coil = "3.6.3"
 dfc = "2.0"
 haze = "2.0.1"
 koin = "4.2.2"
 laclib = "1.4.0"
 markdown = "0.7.2"
-pftool-shared = "a0ac8e6618"
+pftool-shared = "0eb33df072"
 shizuku = "13.1.5"
 toptoast = "2.2.0-alpha04"
 zoomable = "2.16.0"

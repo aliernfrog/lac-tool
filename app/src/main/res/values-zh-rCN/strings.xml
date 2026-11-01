@@ -116,7 +116,7 @@
     <string name="mapsList_exported_noMaps">您尚未导出任何地图</string>
     <string name="mapsList_shared">已分享</string>
     <string name="mapsList_shared_noMaps">您尚未分享任何地图至 LAC Tool</string>
-    <string name="mapsList_searchNoMatches">未找到匹配的地图</string>
+    <string name="mapsList_search_noMatches">未找到匹配的地图</string>
     <string name="mapsEdit">编辑地图</string>
     <string name="mapsEdit_opening">正在打开 {NAME}</string>
     <string name="mapsEdit_general">通用</string>

@@ -153,7 +153,7 @@
     <string name="mapsList_exported_noMaps">Вы ещё не экспортировали ни одной карты</string>
     <string name="mapsList_shared">Отправленные</string>
     <string name="mapsList_shared_noMaps">Вы ещё не отправили ни одной карты в LAC tool</string>
-    <string name="mapsList_searchNoMatches">Ничего не найдено</string>
+    <string name="mapsList_search_noMatches">Ничего не найдено</string>
     <string name="mapsEdit">Редактировать карту</string>
     <string name="mapsEdit_opening">Открытие: {NAME}…</string>
     <string name="mapsEdit_save">Сохранить</string>
