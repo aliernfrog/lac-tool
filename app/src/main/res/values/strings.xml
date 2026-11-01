@@ -162,6 +162,7 @@
     <string name="mapsList_reload">Reload maps</string>
     <string name="mapsList_search">Search maps…</string>
     <string name="mapsList_search_clear">Clear search</string>
+    <string name="mapsList_search_noMatches">No matching maps found</string>
     <string name="mapsList_count">{COUNT} maps</string>
     <string name="mapsList_add">Add maps</string>
     <string name="mapsList_add_storage">From storage</string>
@@ -176,7 +177,7 @@
     <string name="mapsList_exported_noMaps">You have not exported any maps</string>
     <string name="mapsList_shared">Shared</string>
     <string name="mapsList_shared_noMaps">You have not shared any maps to LAC Tool</string>
-    <string name="mapsList_searchNoMatches">No matching maps found</string>
+    <string name="mapsList_showThumbnails">Thumbnails</string>
 
     <string name="mapsEdit">Edit map</string>
     <string name="mapsEdit_opening">Opening {NAME}…</string>
