@@ -44,7 +44,7 @@ class MapFile(
     else file.parentFile?.findFile(thumbnailFileName)
     override var thumbnailModel by mutableStateOf(
         if (importedState != MapImportedState.IMPORTED) null
-        else thumbnailFile?.painterModel
+        else getThumbnailPainterModel() ?: thumbnailFile?.painterModel
     )
 
     /**
@@ -77,6 +77,7 @@ class MapFile(
             val newFileName = relatedFile.name.replaceFirst(name, newName)
             relatedFile.rename(newFileName)
         }
+        mapsState.byteArrayThumbnailCache.remove(path)
         return MapActionResult(
             successful = true,
             newFile = file.parentFile!!.findFile(outputName)
@@ -166,9 +167,12 @@ class MapFile(
         relatedFiles.plus(file).forEach {
             it.delete()
         }
+        mapsState.byteArrayThumbnailCache.remove(path)
     }
 
     override fun getThumbnailFile() = thumbnailFile
+
+    override fun getThumbnailPainterModel() = mapsState.byteArrayThumbnailCache[path]
 
     fun setThumbnailFile(
         context: Context,
@@ -204,6 +208,13 @@ class MapFile(
                 topToastState.showReportableErrorToast(e)
                 Log.e(TAG, this.toString(), e)
             }
+        }
+    }
+
+    fun loadThumbnailPainterModel() {
+        if (mapsState.byteArrayThumbnailCache.contains(path)) return
+        thumbnailFile?.painterModel?.let { painterModel ->
+            if (painterModel is ByteArray) mapsState.byteArrayThumbnailCache[path] = painterModel
         }
     }
 }

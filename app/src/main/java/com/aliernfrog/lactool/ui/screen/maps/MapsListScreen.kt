@@ -35,7 +35,7 @@ fun MapsListScreen(
         mapsListSegments = vm.availableSegments,
         mapActions = mapActions,
         listViewOptions = vm.prefs.mapsListOptions,
-        showThumbnailsInList = vm.prefs.showMapThumbnailsInList.value,
+        showThumbnailsInListPref = vm.prefs.showMapThumbnailsInList,
         dimList = mapsState.addMapMenuExpanded,
         showMultiSelectionActions = showMultiSelectionActions,
         extraBottomPadding = bottomPadding,

@@ -122,7 +122,7 @@
     <string name="mapsList_exported_noMaps">شما هیچ مپی صادر نکرده اید</string>
     <string name="mapsList_shared">ارسال شد</string>
     <string name="mapsList_shared_noMaps">شما هیچ نقشه ای را با ابزار LAC به اشتراک نگذاشته اید</string>
-    <string name="mapsList_searchNoMatches">هیچ مپ منطبقی پیدا نشد</string>
+    <string name="mapsList_search_noMatches">هیچ مپ منطبقی پیدا نشد</string>
     <string name="mapsEdit">تغییر اطلاعات و تنظیمات مپ</string>
     <string name="mapsEdit_opening">باز کردن {NAME}</string>
     <string name="mapsEdit_general">عمومی</string>
