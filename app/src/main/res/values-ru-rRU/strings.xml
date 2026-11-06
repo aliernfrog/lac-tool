@@ -145,7 +145,9 @@
     <string name="mapsList_reload">Обновить список карт</string>
     <string name="mapsList_search">Искать карты…</string>
     <string name="mapsList_search_clear">Очистить поиск</string>
+    <string name="mapsList_search_noMatches">Ничего не найдено</string>
     <string name="mapsList_count">Карт: {COUNT}</string>
+    <string name="mapsList_add">Добавить карты для слияния</string>
     <string name="mapsList_add_storage">Хранилище</string>
     <string name="mapsList_imported">Ваши карты</string>
     <string name="mapsList_imported_noMaps">У вас нет карт</string>
@@ -153,7 +155,7 @@
     <string name="mapsList_exported_noMaps">Вы ещё не экспортировали ни одной карты</string>
     <string name="mapsList_shared">Отправленные</string>
     <string name="mapsList_shared_noMaps">Вы ещё не отправили ни одной карты в LAC tool</string>
-    <string name="mapsList_search_noMatches">Ничего не найдено</string>
+    <string name="mapsList_showThumbnails">Миниатюры</string>
     <string name="mapsEdit">Редактировать карту</string>
     <string name="mapsEdit_opening">Открытие: {NAME}…</string>
     <string name="mapsEdit_save">Сохранить</string>
@@ -381,6 +383,7 @@
     <string name="crashHandler_title">Упс!</string>
     <string name="crashHandler_description">В программе LAC Tool произошла непредвиденная ошибка, и она сломалась</string>
     <string name="crashHandler_report">Пожалуйста, нажмите на кнопку ниже, чтобы отправить отчёт об ошибке разработчику LAC Tool, это не требует каких-либо дополнительных действий</string>
+    <string name="crashHandler_stackTrace">Трассировка стека</string>
     <string name="crashHandler_sendReport">Отправить отчёт об ошибке</string>
     <string name="crashHandler_sendReport_sent">Отправить отчет</string>
     <string name="crashHandler_restartApp">Перезапустить приложение</string>
@@ -388,5 +391,4 @@
     <string name="crashHandler_support_description">Нажмите, чтобы развернуть ссылки поддержки</string>
     <string name="crashHandler_support_guide">Чтобы сообщить эту поломку разработчику LAC Tool на прямую, используйте ссылки Discord или GitHub ниже. \nОбязательно скопируйте и включите подробности ошибки в свой отчет, чтобы ускорить процесс</string>
     <string name="crashHandler_support_copyDetails">Копировать детали повреждения</string>
-    <string name="crashHandler_stackTrace">Трассировка стека</string>
 </resources>

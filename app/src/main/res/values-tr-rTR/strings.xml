@@ -15,6 +15,7 @@
     <string name="action_more">Daha fazla</string>
     <string name="action_expand">Genişlet</string>
     <string name="action_collapse">Daralt</string>
+    <string name="action_download">İndir</string>
     <string name="action_select_selectAll">Tümünü seç</string>
     <string name="action_select_deselectAll">Tüm seçimleri kaldır</string>
     <string name="intent_openMap">Harita aç</string>
@@ -60,6 +61,7 @@
     <string name="permissions_setupShizuku">Shizuku kullanın</string>
     <string name="permissions_setupShizuku_description">LAC Tool\'un LAC klasörlerine erişmesine izin vermek için Shizuku kullanmanız gerekiyor.\nÇünkü cihazındaki Dosyalar uygulaması diğer uygulamaların Android/data klasörü içindeki dosyalara erişim izni almasını engelliyor.\nShizuku modunu istediğiniz zaman ayarlardan açıp kapatabilirsiniz.</string>
     <string name="permissions_shizuku_introduction">Shizuku, uygulamaların Android hata ayıklama köprüsünü kullanarak izinleri yükseltmesine olanak tanıyan bir uygulamadır</string>
+    <string name="permissions_shizuku_tapToConfigure">Shizuku modunu ve depolama erişimini yapılandırmak için dokunun</string>
     <string name="permissions_shizuku_openShizuku">Shizuku\'yu aç</string>
     <string name="permissions_shizuku_installShizuku">Shizuku\'yu yükle</string>
     <string name="permissions_shizuku_install_title">Shizuku\'yu yükleyerek başlayın</string>
@@ -74,6 +76,9 @@
     <string name="permissions_shizuku_waitingService">Dosya hizmeti bekleniyor…</string>
     <string name="permissions_shizuku_waitingService_timedOut">Uzun mu sürüyor? LAC Tool\'u yeniden başlatmayı deneyin</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Yeniden başlat</string>
+    <string name="permissions_shizuku_recommendedVersion">Resmi Shizuku artık güncel değil ve özellikle Android 17+ veya MediaTek cihazlarda çeşitli sorunlara yol açabilir. thedjchi tarafından geliştirilen çatala geçmeniz önerilir</string>
+    <string name="permissions_shizuku_recommendedVersion_note">Çatal sürümü indirmeden önce mevcut Shizuku\'yu kaldırmayı unutmayın</string>
+    <string name="permissions_shizuku_recommendedVersion_download">Önerilen sürümü indir</string>
     <string name="permissions_allFiles_title">Depolama izinleri</string>
     <string name="permissions_allFiles_description">LAC Tool\'un LAC verilerine erişmesi için depolama izinleri gereklidir</string>
     <string name="permissions_allFiles_grant">İzin ver</string>
@@ -151,15 +156,22 @@
     <string name="mapsList_reload">Haritaları yeniden yükle</string>
     <string name="mapsList_search">Haritaları arayın…</string>
     <string name="mapsList_search_clear">Aramayı temizle</string>
+    <string name="mapsList_search_noMatches">Eşleşen harita bulunamadı</string>
     <string name="mapsList_count">{COUNT} harita</string>
-    <string name="mapsList_add_storage">Depolama</string>
+    <string name="mapsList_add">Harita ekle</string>
+    <string name="mapsList_add_storage">Depolamadan</string>
+    <string name="mapsList_add_url">URL\'den</string>
+    <string name="mapsList_download">URL\'den harita indir</string>
+    <string name="mapsList_download_placeholder">Bir harita dosyası URL\'si</string>
+    <string name="mapsList_download_footer">Desteklenen dosya uzantıları: %s</string>
+    <string name="mapsList_download_clipboard">Panodan yapıştır</string>
     <string name="mapsList_imported">Haritalarınız</string>
     <string name="mapsList_imported_noMaps">Hiç haritanız yok</string>
     <string name="mapsList_exported">Dışa aktarılanlar</string>
     <string name="mapsList_exported_noMaps">Hiç harita dışa aktarmadınız</string>
     <string name="mapsList_shared">Paylaşılan</string>
     <string name="mapsList_shared_noMaps">LAC Tool ile herhangi bir harita paylaşmadınız</string>
-    <string name="mapsList_search_noMatches">Eşleşen harita bulunamadı</string>
+    <string name="mapsList_showThumbnails">Küçük resimler</string>
     <string name="mapsEdit">Haritayı düzenle</string>
     <string name="mapsEdit_opening">{NAME} açılıyor…</string>
     <string name="mapsEdit_save">Kaydet</string>
@@ -299,6 +311,11 @@
     <string name="settings_appearance_materialYou_unavailable">Sadece Android 12 ve üzerinde kullanılabilir</string>
     <string name="settings_appearance_pitchBlack">Zifiri karanlık</string>
     <string name="settings_appearance_pitchBlack_description">Karanlık mod etkinken zifiri karanlık arka plan</string>
+    <string name="settings_appearance_effects">Efektler</string>
+    <string name="settings_appearance_effects_blur">Bulanıklık efektleri</string>
+    <string name="settings_appearance_effects_blur_description">Uygulama genelinde şeffaflık ve bulanıklık efektleri.\nEtkinleştirildiğinde performansı ve pil ömrünü azaltabilir</string>
+    <string name="settings_appearance_effects_bottomGradient">Alt renk geçişi</string>
+    <string name="settings_appearance_effects_bottomGradient_description">Yüzen gezinti çubuğu altında renk geçişi</string>
     <string name="settings_maps">Haritalar</string>
     <string name="settings_maps_description">Haritalarla ilgili çeşitli yapılandırmalar</string>
     <string name="settings_maps_thumbnails">Küçük resimler</string>
@@ -351,11 +368,12 @@
     <string name="settings_about_updates_autoCheckUpdates_description">LAC Tool başlatıldığında otomatik olarak güncellemeleri denetle</string>
     <string name="settings_about_issues">Sorunlar &amp; geri bildirim</string>
     <string name="settings_about_issues_title">Sorun veya geri bildiriminiz mi var?</string>
+    <string name="settings_about_issues_tapToExpand">Daha fazla bilgi için dokunun</string>
     <string name="settings_about_issues_description">LAC Tool hakkında sorunları bildirmek, yardım almak veya geri bildirim sağlamak için aşağıdaki bağlantıları kullanabilirsiniz</string>
     <string name="settings_about_issues_githubIssues">GitHub Issues</string>
     <string name="settings_about_issues_discord">Discord sunucusu</string>
     <string name="settings_about_issues_copyDebugInfo">Hata ayıklama bilgilerini kopyala</string>
-    <string name="settings_about_issues_copyDebugInfo_description">Bunun hata raporlarına dahil edilmesi önerilir</string>
+    <string name="settings_about_issues_copyDebugInfo_description">Hata raporlarına hata ayıklama bilgilerini eklediğinizden emin olun</string>
     <string name="settings_about_issues_copyDebugInfo_clipLabel">LAC Tool hata ayıklama bilgileri</string>
     <string name="settings_about_issues_copyDebugInfo_copied">Hata ayıklama bilgileri kopyalandı</string>
     <string name="settings_about_credits">Emeği geçenler</string>
@@ -395,6 +413,9 @@
     <string name="crashHandler_title">Hay aksi!</string>
     <string name="crashHandler_description">LAC Tool beklenmedik bir hatayla karşılaştı ve çöktü</string>
     <string name="crashHandler_report">Lütfen aşağıdaki düğmeye tıklayarak çökme raporunu LAC Tool geliştiricisine gönderin, bu ek adım gerektirmez</string>
+    <string name="crashHandler_stackTrace">Yığın izi</string>
+    <string name="crashHandler_message_description">Çökmenin nasıl oluştuğunu açıklamak için isteğe bağlı olarak bir mesaj bırakabilirsiniz.\nRaporu mesaj olmadan göndermek için, yazı alanını boş bırakıp aşağıdaki hata raporunu gönder düğmesine tıklayın</string>
+    <string name="crashHandler_message_placeholder">(İsteğe bağlı) Çökmenin nasıl oluştuğunu açıklayın</string>
     <string name="crashHandler_sendReport">Çökme raporunu gönder</string>
     <string name="crashHandler_sendReport_sent">Rapor gönderildi</string>
     <string name="crashHandler_restartApp">Uygulamayı yeniden başlat</string>
@@ -402,5 +423,4 @@
     <string name="crashHandler_support_description">Destek bağlantılarını genişletmek için dokunun</string>
     <string name="crashHandler_support_guide">Bu çökmeyi LAC Tool geliştiricisine direkt olarak raporlamak için aşağıdaki Discord veya GitHub bağlantısını kullanın.\nSüreci hızlandırmak için çökme detaylarını kopyalayıp raporunuza eklemeyi unutmayın</string>
     <string name="crashHandler_support_copyDetails">Çökme detaylarını kopyala</string>
-    <string name="crashHandler_stackTrace">Yığın izi</string>
 </resources>
