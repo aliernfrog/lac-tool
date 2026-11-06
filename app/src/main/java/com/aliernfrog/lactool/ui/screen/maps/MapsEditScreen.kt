@@ -21,7 +21,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,9 +38,11 @@ import com.aliernfrog.lactool.ui.viewmodel.MapsEditViewModel
 import com.aliernfrog.lactool.util.SubDestination
 import com.aliernfrog.lactool.util.extension.getName
 import com.aliernfrog.lactool.util.staticutil.FileUtil
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import io.github.aliernfrog.pftool_shared.impl.Progress
 import io.github.aliernfrog.pftool_shared.ui.component.VerticalProgressIndicatorWithText
-import io.github.aliernfrog.shared.ui.component.AppScaffold
+import io.github.aliernfrog.shared.ui.component.AppScaffoldNoContentPadding
 import io.github.aliernfrog.shared.ui.component.AppTopBar
 import io.github.aliernfrog.shared.ui.component.FadeVisibility
 import io.github.aliernfrog.shared.ui.component.FloatingActionButton
@@ -57,12 +58,12 @@ import io.github.aliernfrog.shared.ui.component.expressive.getTextFieldColors
 import io.github.aliernfrog.shared.ui.component.form.ExpandableRow
 import io.github.aliernfrog.shared.ui.component.form.getExpandableRowDefaultExpandedContainerColor
 import io.github.aliernfrog.shared.ui.component.util.AnimatedVisibilityShadowWorkaround
+import io.github.aliernfrog.shared.ui.component.util.BottomSpacer
 import io.github.aliernfrog.shared.ui.component.util.ScrollAccessibilityListener
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsEditScreen(
     vm: MapsEditViewModel,
@@ -70,6 +71,7 @@ fun MapsEditScreen(
     onNavigateRequest: (Any) -> Unit
 ) {
     val context = LocalContext.current
+    val hazeState = rememberHazeState()
     val scope = rememberCoroutineScope()
     var showFABLabel by remember { mutableStateOf(true) }
 
@@ -82,10 +84,11 @@ fun MapsEditScreen(
         onShowLabelsStateChange = { showFABLabel = it }
     )
 
-    AppScaffold(
+    AppScaffoldNoContentPadding(
         topBar = { scrollBehavior ->
             AppTopBar(
                 title = stringResource(R.string.mapsEdit),
+                hazeState = hazeState,
                 scrollBehavior = scrollBehavior,
                 onNavigationClick = { scope.launch {
                     vm.showSaveWarning()
@@ -109,10 +112,12 @@ fun MapsEditScreen(
                 }
             }
         }
-    ) {
+    ) { paddingValues ->
         AnimatedContent(
             targetState = vm.mapEditor,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .hazeSource(hazeState)
         ) { editor ->
             if (editor == null) VerticalProgressIndicatorWithText(
                 progress = Progress(
@@ -124,6 +129,7 @@ fun MapsEditScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(vm.scrollState)
+                    .padding(top = paddingValues.calculateTopPadding())
             ) {
                 GeneralActions(
                     vm = vm,
@@ -137,9 +143,9 @@ fun MapsEditScreen(
                     OptionsActions(editor)
                 }
                 MiscActions(vm, editor)
-                Spacer(Modifier
-                    .navigationBarsPadding()
-                    .height(AppFABPadding))
+                BottomSpacer(
+                    Modifier.padding(bottom = AppFABPadding + paddingValues.calculateBottomPadding())
+                )
             }
         }
 
@@ -157,7 +163,6 @@ fun MapsEditScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GeneralActions(
     vm: MapsEditViewModel,
@@ -378,7 +383,6 @@ private fun OptionsActions(
                 modifier = Modifier.fillMaxWidth()
             )
             ScrollableRow(
-                gradientColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 LACMapAINavmeshObject.entries.forEach { entry ->
@@ -455,7 +459,7 @@ private fun MiscActions(
         VerticalSegmentor(
             {
                 FadeVisibility(
-                    visible = !mapEditor.replaceableObjects.isEmpty()
+                    visible = mapEditor.replaceableObjects.isNotEmpty()
                 ) {
                     ExpressiveButtonRow(
                         title = stringResource(R.string.mapsEdit_misc_replaceOldObjects),
@@ -487,10 +491,7 @@ private fun MiscActions(
                     }
                 ) {
                     Column(Modifier.padding(vertical = 8.dp)) {
-                        FilterObjects(
-                            vm = vm,
-                            containerColor = expandedRowColor
-                        )
+                        FilterObjects(vm)
                     }
                 }
             },
@@ -501,12 +502,8 @@ private fun MiscActions(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun FilterObjects(
-    containerColor: Color,
-    vm: MapsEditViewModel
-) {
+private fun FilterObjects(vm: MapsEditViewModel) {
     val context = LocalContext.current
     val matches = vm.getObjectFilterMatches().size
     OutlinedTextField(
@@ -528,8 +525,7 @@ private fun FilterObjects(
             )
     )
     ScrollableRow(
-        modifier = Modifier.padding(horizontal = 12.dp),
-        gradientColor = containerColor
+        modifier = Modifier.padding(horizontal = 12.dp)
     ) {
         DEFAULT_MAP_OBJECT_FILTERS.forEach { suggestion ->
             FilterChip(

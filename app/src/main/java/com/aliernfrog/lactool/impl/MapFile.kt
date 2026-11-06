@@ -44,7 +44,7 @@ class MapFile(
     else file.parentFile?.findFile(thumbnailFileName)
     override var thumbnailModel by mutableStateOf(
         if (importedState != MapImportedState.IMPORTED) null
-        else thumbnailFile?.painterModel
+        else getThumbnailPainterModel() ?: thumbnailFile?.painterModel
     )
 
     /**
@@ -77,6 +77,7 @@ class MapFile(
             val newFileName = relatedFile.name.replaceFirst(name, newName)
             relatedFile.rename(newFileName)
         }
+        mapsState.byteArrayThumbnailCache.remove(path)
         return MapActionResult(
             successful = true,
             newFile = file.parentFile!!.findFile(outputName)
@@ -166,9 +167,12 @@ class MapFile(
         relatedFiles.plus(file).forEach {
             it.delete()
         }
+        mapsState.byteArrayThumbnailCache.remove(path)
     }
 
     override fun getThumbnailFile() = thumbnailFile
+
+    override fun getThumbnailPainterModel() = mapsState.byteArrayThumbnailCache[path]
 
     fun setThumbnailFile(
         context: Context,
@@ -177,8 +181,14 @@ class MapFile(
         getThumbnailFile().let { found ->
             if (found?.exists() == true) found else this.file.parentFile!!.createFile(thumbnailFileName)
         }!!.copyFrom(file, context)
-        thumbnailFile = this.file.parentFile!!.findFile(thumbnailFileName)
-        thumbnailModel = thumbnailFile?.painterModel
+        this.file.parentFile!!.findFile(thumbnailFileName).let {
+            thumbnailFile = it
+            it?.painterModel.let { painterModel ->
+                thumbnailModel = painterModel
+                if (painterModel is ByteArray) mapsState.byteArrayThumbnailCache[path] = painterModel
+                else mapsState.byteArrayThumbnailCache.remove(path)
+            }
+        }
 
         thumbnailModel?.toString()?.let { key ->
             val coilLoader = context.imageLoader
@@ -194,6 +204,7 @@ class MapFile(
         thumbnailFile?.delete()
         thumbnailFile = null
         thumbnailModel = null
+        mapsState.byteArrayThumbnailCache.remove(path)
     }
 
     override suspend fun runInIOThreadSafe(block: suspend () -> Unit) {
@@ -204,6 +215,13 @@ class MapFile(
                 topToastState.showReportableErrorToast(e)
                 Log.e(TAG, this.toString(), e)
             }
+        }
+    }
+
+    fun loadThumbnailPainterModel() {
+        if (mapsState.byteArrayThumbnailCache.contains(path)) return
+        thumbnailFile?.painterModel?.let { painterModel ->
+            if (painterModel is ByteArray) mapsState.byteArrayThumbnailCache[path] = painterModel
         }
     }
 }
