@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
@@ -78,11 +77,10 @@ fun MapsMergeScreen(
             bottomPadding = 0.dp,
             title = stringResource(R.string.mapsMerge_addMap),
             showMultiSelectionActions = false,
-            multiSelectFloatingActionButton = { selectedMaps, clearSelection ->
+            multiSelectFAB = { selectedMaps, clearSelection ->
                 FloatingActionButton(
                     icon = Icons.Default.AddLocationAlt,
                     text = stringResource(R.string.maps_merge_short),
-                    modifier = Modifier.navigationBarsPadding(),
                     onClick = { scope.launch {
                         vm.addMaps(context, *selectedMaps.toTypedArray())
                         vm.mapListShown = false

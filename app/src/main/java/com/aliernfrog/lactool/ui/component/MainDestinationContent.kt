@@ -2,6 +2,7 @@ package com.aliernfrog.lactool.ui.component
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -112,6 +113,7 @@ fun MainDestinationContent(
     val navigationBarType = if (mainDestinations.size <= 1) NavigationBarType.HIDDEN
     else if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) NavigationBarType.BOTTOM_BAR
     else NavigationBarType.SIDE_RAIL
+    val dimState = currentMainDestination.dimState?.invoke()
     val isBottomBarVisible = navigationBarType == NavigationBarType.BOTTOM_BAR
 
     var sideBarWidth by remember { mutableStateOf(0.dp) }
@@ -130,6 +132,10 @@ fun MainDestinationContent(
     fun changeDestination(destination: MainDestination) {
         if (!isDestinationSelected(destination) && isAtMainDestination)
             vm.currentMainDestination = destination
+    }
+
+    BackHandler(dimState?.enabled == true) {
+        dimState?.disable()
     }
 
     Box {
@@ -180,6 +186,20 @@ fun MainDestinationContent(
                                 onNavigateRequest = ::onNavigateRequest
                             )
                         }
+                    }
+
+                    Crossfade(dimState?.enabled == true) {
+                        if (it) Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+                                .clickable(
+                                    interactionSource = null,
+                                    indication = null
+                                ) {
+                                    dimState?.disable()
+                                }
+                        )
                     }
                 }
 

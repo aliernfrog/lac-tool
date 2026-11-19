@@ -384,7 +384,6 @@
     <string name="updates">Güncellemeler</string>
     <string name="updates_changelog">Değişiklik günlüğü</string>
     <string name="updates_noChangelog">Değişiklik günlüğünü yüklemek için güncellemelerin denetlenmesi gerekmektedir</string>
-    <string name="updates_incompatible">LAC Tool\'un en son sürümü Android {ANDROID_VERSION} gerektirir</string>
     <string name="updates_checkUpdates">Güncellemeleri denetle</string>
     <string name="updates_currentVersion">Şu anki sürüm</string>
     <string name="updates_prerelease">Ön sürüm</string>

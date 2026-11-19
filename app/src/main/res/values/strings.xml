@@ -417,7 +417,6 @@
     <string name="updates">Updates</string>
     <string name="updates_changelog">Changelog</string>
     <string name="updates_noChangelog">Updates must be checked in order to fetch the changelog</string>
-    <string name="updates_incompatible">Latest version of LAC Tool requires at least Android {ANDROID_VERSION}</string>
     <string name="updates_checkUpdates">Check updates</string>
     <string name="updates_currentVersion">Current version</string>
     <string name="updates_prerelease">Pre-release</string>

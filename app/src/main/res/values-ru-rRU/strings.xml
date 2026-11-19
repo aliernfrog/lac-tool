@@ -370,7 +370,6 @@
     <string name="updates">Обновления</string>
     <string name="updates_changelog">Список изменений</string>
     <string name="updates_noChangelog">Проверьте обновления, чтобы просмотреть список изменений</string>
-    <string name="updates_incompatible">Для последней версии LAC Tool требуется как минимум {ANDROID_VERSION}</string>
     <string name="updates_checkUpdates">Проверить обновления</string>
     <string name="updates_currentVersion">Текущая версия</string>
     <string name="updates_prerelease">Пред релиз</string>

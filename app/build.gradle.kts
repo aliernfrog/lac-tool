@@ -22,8 +22,11 @@ plugins {
 
 android {
     namespace = "com.aliernfrog.lactool"
-    compileSdk = 37
-    buildToolsVersion = "36.1.0"
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 2
+        }
+    }
 
     defaultConfig {
         applicationId = "com.aliernfrog.lactool"

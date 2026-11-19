@@ -5,6 +5,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -57,7 +58,8 @@ enum class MainDestination(
     val vectorFilled: ImageVector,
     val vectorOutlined: ImageVector,
     val floatingActionButton: (@Composable (modifier: Modifier, isFloatingBar: Boolean) -> Unit)? = null,
-    val fabMenuForFloatingBar: (@Composable (modifier: Modifier) -> Unit)? = null
+    val fabMenuForFloatingBar: (@Composable (modifier: Modifier) -> Unit)? = null,
+    val dimState: (@Composable () -> DimState)? = null
 ) {
     MAPS(
         label = R.string.maps,
@@ -65,23 +67,28 @@ enum class MainDestination(
         vectorOutlined = Icons.Outlined.PinDrop,
         floatingActionButton = { modifier, isFloatingBar ->
             val mapsState = koinInject<MapsState>()
-            if (!mapsState.permissionsGranted) { /* no FAB */ }
-            else if (isFloatingBar) MapsListFABToggleButton(
-                expanded = mapsState.addMapMenuExpanded,
-                onExpandedStateChange = { mapsState.addMapMenuExpanded = it },
-                modifier = modifier
-            ) else MapsListFABMenu(
-                expanded = mapsState.addMapMenuExpanded,
-                supportedFileExtensions = listOf(
-                    FileExtension(
-                        extension = ".txt",
-                        mimeType = "text/plain"
-                    )
-                ),
-                modifier = modifier,
-                onExpandedStateChange = { mapsState.addMapMenuExpanded = it },
-                onMapPick = { mapsState.mapsBackStack.add(MapFile(it)) }
-            )
+            AnimatedVisibility(
+                mapsState.permissionsGranted
+                        && mapsState.selectedMaps.isEmpty()
+                        && mapsState.mapsBackStack.backStack.size <= 1
+            ) {
+                if (isFloatingBar) MapsListFABToggleButton(
+                    expanded = mapsState.addMapMenuExpanded,
+                    onExpandedStateChange = { mapsState.addMapMenuExpanded = it },
+                    modifier = modifier
+                ) else MapsListFABMenu(
+                    expanded = mapsState.addMapMenuExpanded,
+                    supportedFileExtensions = listOf(
+                        FileExtension(
+                            extension = ".txt",
+                            mimeType = "text/plain"
+                        )
+                    ),
+                    modifier = modifier,
+                    onExpandedStateChange = { mapsState.addMapMenuExpanded = it },
+                    onMapPick = { mapsState.mapsBackStack.add(MapFile(it)) }
+                )
+            }
         },
         fabMenuForFloatingBar = { modifier ->
             val mapsState = koinInject<MapsState>()
@@ -100,6 +107,12 @@ enum class MainDestination(
                     // Not needed, floating bar has its own FAB
                 }
             )
+        },
+        dimState = {
+            val mapsState = koinInject<MapsState>()
+            DimState(mapsState.addMapMenuExpanded) {
+                mapsState.addMapMenuExpanded = false
+            }
         }
     ),
 
@@ -109,7 +122,7 @@ enum class MainDestination(
         vectorOutlined = Icons.Outlined.Wallpaper,
         floatingActionButton = { modifier, _ ->
             val wallpapersState = koinInject<WallpapersState>()
-            if (wallpapersState.permissionsGranted) {
+            AnimatedVisibility(wallpapersState.permissionsGranted) {
                 val context = LocalContext.current
                 val mediaPickerLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.PickVisualMedia(),
@@ -141,6 +154,11 @@ enum class MainDestination(
         vectorOutlined = Icons.Outlined.Camera
     )
 }
+
+data class DimState(
+    val enabled: Boolean,
+    val disable: () -> Unit
+)
 
 sealed class SubDestination {
     sealed class MapsEdit : SubDestination() {
