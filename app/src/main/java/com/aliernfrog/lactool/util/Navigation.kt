@@ -122,7 +122,7 @@ enum class MainDestination(
         vectorOutlined = Icons.Outlined.Wallpaper,
         floatingActionButton = { modifier, _ ->
             val wallpapersState = koinInject<WallpapersState>()
-            AnimatedVisibility(wallpapersState.permissionsGranted) {
+            if (wallpapersState.permissionsGranted) {
                 val context = LocalContext.current
                 val mediaPickerLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.PickVisualMedia(),

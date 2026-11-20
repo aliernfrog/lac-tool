@@ -92,6 +92,7 @@ import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
+import io.github.aliernfrog.shared.ui.component.util.AnimatedContentShadowWorkaround
 import io.github.aliernfrog.shared.ui.theme.AppFABPadding
 import io.github.aliernfrog.shared.util.toggledHazeBlur
 
@@ -145,8 +146,13 @@ fun MainDestinationContent(
                 .padding(start = animatedSideBarWidth),
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             floatingActionButton = {
-                if (!isBottomBarVisible) currentMainDestination.floatingActionButton?.let {
-                    it(Modifier, false)
+                if (!isBottomBarVisible) AnimatedContentShadowWorkaround(
+                    currentMainDestination.floatingActionButton
+                ) {
+                    it?.invoke(
+                        /*modifier =*/ Modifier.padding(start = 8.dp),
+                        /*isFloatingBar =*/ true
+                    )
                 }
             }
         ) { _ ->
