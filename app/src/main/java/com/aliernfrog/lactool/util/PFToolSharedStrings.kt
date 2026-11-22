@@ -88,6 +88,7 @@ val pfToolSharedString = PFToolSharedString(
     permissionsShizukuRecommendedVersion = R.string.permissions_shizuku_recommendedVersion,
     permissionsShizukuRecommendedVersionNote = R.string.permissions_shizuku_recommendedVersion_note,
     permissionsShizukuRecommendedVersionDownload = R.string.permissions_shizuku_recommendedVersion_download,
+    permissionsShizukuRecommendedVersionOther = R.string.permissions_shizuku_recommendedVersion_other,
     permissionsAllFilesTitle = R.string.permissions_allFiles_title,
     permissionsAllFilesDescription = R.string.permissions_allFiles_description,
     permissionsAllFilesGrant = R.string.permissions_allFiles_grant,
