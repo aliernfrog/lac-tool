@@ -65,7 +65,6 @@ val sharedString = SharedString(
 
     updates = R.string.updates,
     updatesChangelog = R.string.updates_changelog,
-    updatesIncompatible = R.string.updates_incompatible,
     updatesNoChangelog = R.string.updates_noChangelog,
     updatesCheckUpdates = R.string.updates_checkUpdates,
     updatesCurrentVersion = R.string.updates_currentVersion,
