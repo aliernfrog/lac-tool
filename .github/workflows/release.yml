@@ -15,11 +15,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: zulu
-          java-version: 21
+          java-version: 25
           cache: gradle
 
       - name: Build with Gradle
@@ -42,7 +42,7 @@ jobs:
           excludeTypes: build,chore,ci,docs,other,style
       
       - name: Create Release
-        uses: ncipollo/release-action@v1.21.0
+        uses: ncipollo/release-action@v1
         with:
           draft: false
           immutableCreate: true
