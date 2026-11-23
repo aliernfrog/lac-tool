@@ -150,8 +150,8 @@ fun MainDestinationContent(
                     currentMainDestination.floatingActionButton
                 ) {
                     it?.invoke(
-                        /*modifier =*/ Modifier.padding(start = 8.dp),
-                        /*isFloatingBar =*/ true
+                        /*modifier =*/ Modifier,
+                        /*isFloatingBar =*/ false
                     )
                 }
             }
