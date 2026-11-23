@@ -43,11 +43,16 @@ You can help translate LAC Tool on [Crowdin](https://crowdin.com/project/lac-too
 [![Crowdin](https://badges.crowdin.net/lac-tool/localized.svg)](https://crowdin.com/project/lac-tool)
 
 ## 🦝 Shizuku support
-[Shizuku](https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api) is an app which lets other apps elevate their permissions using wireless debugging or root access.
+[Shizuku](https://github.com/thedjchi/Shizuku) lets other apps elevate their permissions using wireless debugging or root access.
 
 Shizuku method in LAC Tool can be enabled or disabled anytime from settings.
 
-Shizuku method will automatically be enabled if there is no other way for the app to access LAC data. The app will guide you to set up Shizuku if this mode is enabled.
+Shizuku method will automatically be enabled if there is no other way for the app to access Polyfield data. The app will guide you to set up Shizuku if this mode is enabled.
+
+> [!NOTE]
+> As original Shizuku is stale and it may have issues with Android 17 and above or with MediaTek devices, it is recommended to use the fork [thedjchi/Shizuku](https://github.com/thedjchi/Shizuku), or another fork that you feel comfortable with.
+> 
+> <sub>That said, LAC Tool still supports [original Shizuku](https://github.com/RikkaApps/Shizuku), and you can keep using it if it works well on your device.</sub>
 
 ## 🩹 Project structure
 LAC Tool uses mostly the same codebase as ["PF Tool"](https://github.com/aliernfrog/pf-tool). To avoid updating the codebase for each app, shared code was moved into 2 libraries in `pf-tool` repository: [pftool-shared-base](https://github.com/aliernfrog/pf-tool/tree/main/shared) and [pftool-shared-extra](https://github.com/aliernfrog/pf-tool/tree/main/pftool-shared).
