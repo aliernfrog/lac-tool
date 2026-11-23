@@ -53,7 +53,7 @@
     <string name="permissions_saf_allFiles_description">Разрешите LAC Tool получить доступ ко всем файлам, это может ускорить настройку</string>
     <string name="permissions_setupShizuku">Использовать Shizuku</string>
     <string name="permissions_setupShizuku_description">Вам нужно использовать Shizuku, чтобы разрешить LAC Tool получить доступ к папкам LAC.\nЭто нужно из-за того, что приложение Files на вашем устройстве не позволяет другим приложениям получать доступ к файлам внутри Android/data.\nВы можете изменить режим Shizuku в любое время в настройках.</string>
-    <string name="permissions_shizuku_introduction">Shizuku — это приложение, позволяющее приложениям повышать привилегии с помощью Android Debug Bridge.\nНажмите, чтобы настроить доступ к хранилищу и режим Shizuku</string>
+    <string name="permissions_shizuku_introduction">Shizuku — это приложение, позволяющее приложениям повышать привилегии с помощью Android Debug Bridge</string>
     <string name="permissions_shizuku_openShizuku">Открыть Shizuku</string>
     <string name="permissions_shizuku_installShizuku">Установить Shizuku</string>
     <string name="permissions_shizuku_install_title">Установите Shizuku, чтобы начать</string>
@@ -68,10 +68,6 @@
     <string name="permissions_shizuku_waitingService">Ожидается файловый сервис…</string>
     <string name="permissions_shizuku_waitingService_timedOut">Слишком долго? Попробуйте перезапустить LAC Tool</string>
     <string name="permissions_shizuku_waitingService_timedOut_restart">Перезапустить</string>
-    <string name="permissions_shizuku_problematicVersion">Текущая версия Shizuku ({CURRENT_VERSION}) может вызывать бесконечное ожидание на этом экране. Если у вас возникла эта проблема, пожалуйста, понизьте версию до версии:{RECOMMENDED_VERSION}</string>
-    <string name="permissions_shizuku_problematicVersion_note">Перед откатом не забудьте удалить текущую версию Shizuku. Также, если доступна более новая версия, вы можете обновиться до версии: {CURRENT_VERSION}</string>
-    <string name="permissions_shizuku_problematicVersion_downloadRecommended">Установить рекомендованную версию</string>
-    <string name="permissions_shizuku_problematicVersion_allVersions">Все версии</string>
     <string name="permissions_allFiles_title">Хранилище</string>
     <string name="permissions_allFiles_description">Для доступа LAC Tool к данным LAC необходимы разрешения на доступ к хранилищу</string>
     <string name="permissions_allFiles_grant">Предоставить разрешение</string>
@@ -149,15 +145,17 @@
     <string name="mapsList_reload">Обновить список карт</string>
     <string name="mapsList_search">Искать карты…</string>
     <string name="mapsList_search_clear">Очистить поиск</string>
+    <string name="mapsList_search_noMatches">Ничего не найдено</string>
     <string name="mapsList_count">Карт: {COUNT}</string>
-    <string name="mapsList_storage">Хранилище</string>
+    <string name="mapsList_add">Добавить карты для слияния</string>
+    <string name="mapsList_add_storage">Хранилище</string>
     <string name="mapsList_imported">Ваши карты</string>
     <string name="mapsList_imported_noMaps">У вас нет карт</string>
     <string name="mapsList_exported">Экспортированные карты</string>
     <string name="mapsList_exported_noMaps">Вы ещё не экспортировали ни одной карты</string>
     <string name="mapsList_shared">Отправленные</string>
     <string name="mapsList_shared_noMaps">Вы ещё не отправили ни одной карты в LAC tool</string>
-    <string name="mapsList_searchNoMatches">Ничего не найдено</string>
+    <string name="mapsList_showThumbnails">Миниатюры</string>
     <string name="mapsEdit">Редактировать карту</string>
     <string name="mapsEdit_opening">Открытие: {NAME}…</string>
     <string name="mapsEdit_save">Сохранить</string>
@@ -359,7 +357,6 @@
     <string name="settings_about_credits_ui">Интерфейс</string>
     <string name="settings_about_credits_crowdin">Члены Crowdin</string>
     <string name="settings_about_credits_translations">Переводы</string>
-    <string name="settings_about_credits_inspiration">Вдохновитель</string>
     <string name="settings_about_other">Разное</string>
     <string name="settings_about_other_copyDebugInfo">Скопировать отладочную информацию</string>
     <string name="settings_about_other_copyDebugInfo_description">Содержит информацию, полезную для отладки. Рекомендуется включать её в сообщения об ошибках</string>
@@ -385,6 +382,7 @@
     <string name="crashHandler_title">Упс!</string>
     <string name="crashHandler_description">В программе LAC Tool произошла непредвиденная ошибка, и она сломалась</string>
     <string name="crashHandler_report">Пожалуйста, нажмите на кнопку ниже, чтобы отправить отчёт об ошибке разработчику LAC Tool, это не требует каких-либо дополнительных действий</string>
+    <string name="crashHandler_stackTrace">Трассировка стека</string>
     <string name="crashHandler_sendReport">Отправить отчёт об ошибке</string>
     <string name="crashHandler_sendReport_sent">Отправить отчет</string>
     <string name="crashHandler_restartApp">Перезапустить приложение</string>
@@ -392,5 +390,4 @@
     <string name="crashHandler_support_description">Нажмите, чтобы развернуть ссылки поддержки</string>
     <string name="crashHandler_support_guide">Чтобы сообщить эту поломку разработчику LAC Tool на прямую, используйте ссылки Discord или GitHub ниже. \nОбязательно скопируйте и включите подробности ошибки в свой отчет, чтобы ускорить процесс</string>
     <string name="crashHandler_support_copyDetails">Копировать детали повреждения</string>
-    <string name="crashHandler_stackTrace">Трассировка стека</string>
 </resources>

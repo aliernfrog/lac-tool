@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation3.runtime.entry
+import androidx.compose.ui.unit.Dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.aliernfrog.lactool.R
@@ -26,6 +26,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapsScreen(
+    bottomPadding: Dp,
     vm: MapsViewModel = koinViewModel(),
     onNavigateRequest: (Any) -> Unit
 ) {
@@ -54,10 +55,15 @@ fun MapsScreen(
     PermissionsScreen(
         *permissions,
         title = stringResource(R.string.maps),
+        bottomPadding = bottomPadding,
+        onPermissionsGrantedStateChange = {
+            vm.permissionsGranted = it
+        },
         onNavigateRequest = onNavigateRequest
     ) {
         MapsScreenSafePermissions(
             vm = vm,
+            bottomPadding = bottomPadding,
             onNavigateSettingsRequest = {
                 onNavigateRequest(SettingsDestination.root)
             }
@@ -68,6 +74,7 @@ fun MapsScreen(
 @Composable
 private fun MapsScreenSafePermissions(
     vm: MapsViewModel,
+    bottomPadding: Dp,
     onNavigateSettingsRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -78,6 +85,7 @@ private fun MapsScreenSafePermissions(
         entryProvider = entryProvider {
             entry(MapsNavigationBackStack.Companion.MapsList) {
                 MapsListScreen(
+                    bottomPadding = bottomPadding,
                     title = stringResource(R.string.maps),
                     onNavigateSettingsRequest = onNavigateSettingsRequest,
                     onBackClick = null,
@@ -93,6 +101,7 @@ private fun MapsScreenSafePermissions(
                 MapDetailsScreen(
                     map = it,
                     vm = vm,
+                    bottomPadding = bottomPadding,
                     onNavigateSettingsRequest = onNavigateSettingsRequest,
                     onNavigateBackRequest = {
                         vm.mapsBackStack.removeLast()
