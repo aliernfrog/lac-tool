@@ -1,5 +1,15 @@
 [
   {
+    "versionName": "v4.2.4",
+    "versionCode": 402400,
+    "prerelease": false,
+    "minSdk": 21,
+    "body": "### 🐛 Bug Fixes\n- [`fef5ffd`](https://github.com/aliernfrog/lac-tool/commit/fef5ffdf207c6e408e6dfb8be575731c694be18d) - **Updates**: Remove misleading incompatible version warning *(commit by @aliernfrog)*",
+    "createdAt": 1795373304000,
+    "htmlUrl": "https://github.com/aliernfrog/lac-tool/releases/tag/v4.2.4",
+    "downloadUrl": "https://github.com/aliernfrog/lac-tool/releases/download/v4.2.4/lactool.apk"
+  },
+  {
     "versionName": "v4.2.3",
     "versionCode": 402300,
     "prerelease": false,
