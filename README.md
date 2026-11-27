@@ -11,7 +11,7 @@
   <sub>
     <br>At least <b>Android 7.0</b> is required<br>
     <br>
-    For Android 5.0 & 6.0, latest available version is [v4.2.3](https://github.com/aliernfrog/lac-tool/releases/download/v4.2.3/lactool.apk) - can receive fixes and minor features<br>
+    For Android 5.0 & 6.0, latest available version is [v4.2.4](https://github.com/aliernfrog/lac-tool/releases/download/v4.2.4/lactool.apk) - can receive fixes and minor features<br>
     <br>
     For Android 4.3 ONLY, [LAC Tool Legacy](https://github.com/aliernfrog/lac-tool-legacy/releases/latest/download/lactool-legacy.apk) is available - UNMAINTAINED
   </sub>
